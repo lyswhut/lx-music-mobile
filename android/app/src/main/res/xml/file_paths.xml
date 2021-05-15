@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+  <!-- Select one of the following based on your apk location -->
+
+  <!-- cache dir is always available and requires no permissions, but space may be limited -->
+  <cache-path name="cache" path="/" />
+  <!-- <files-path name="name" path="/" />  -->
+
+  <!-- External cache dir is maybe user-friendly for downloaded APKs, but you must be careful. -->
+  <!-- 1) in API <19 (KitKat) this requires WRITE_EXTERNAL_STORAGE permission. >=19, no permission -->
+  <!-- 2) this directory may not be available, check Environment.isExternalStorageEmulated(file) to see -->
+  <!-- 3) there may be no beneifit versus cache-path if external storage is emulated. Check Environment.isExternalStorageEmulated(File) to verify -->
+  <!-- 4) the path will change for each app 'com.example' must be replaced by your application package -->
+  <!-- <external-cache-path name="external-cache" path="/data/user/0/com.example/cache" /> -->
+
+  <!-- Note that these external paths require WRITE_EXTERNAL_STORAGE permission -->
+  <!-- <external-path name="some_external_path" path="put-your-specific-external-path-here" />  -->
+  <!-- <external-files-path name="external-files" path="/data/user/0/com.example/cache" />  -->
+  <!-- <external-media-path name="external-media" path="put-your-path-to-media-here" />  -->
+</paths>

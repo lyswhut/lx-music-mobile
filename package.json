@@ -1,0 +1,123 @@
+{
+  "name": "lx-music-mobile",
+  "version": "0.1.1",
+  "versionCode": 2,
+  "private": true,
+  "scripts": {
+    "ar": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "sc": "react-native start --reset-cache",
+    "test": "jest",
+    "lint": "eslint .",
+    "rd": "react-devtools",
+    "pack": "npm run pack:android",
+    "pack:android": "./gradlew assembleRelease",
+    "clear": "react-native clean-project",
+    "publish": "node publish",
+    "nodeify": "rn-nodeify --hack --yarn --install process,crypto,events,constant,console,stream,url,util",
+    "postinstall": "yarn nodeify"
+  },
+  "engines": {
+    "node": ">= 12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lyswhut/lx-music-mobile.git"
+  },
+  "keywords": [
+    "music-player",
+    "react-native-app"
+  ],
+  "author": {
+    "name": "lyswhut",
+    "email": "lyswhut@qq.com"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/lyswhut/lx-music-mobile/issues"
+  },
+  "homepage": "https://github.com/lyswhut/lx-music-mobile#readme",
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.15.4",
+    "@react-native-community/checkbox": "^0.5.7",
+    "buffer": "^6.0.3",
+    "console-browserify": "^1.2.0",
+    "events": "^3.3.0",
+    "i18next": "^20.2.2",
+    "js-htmlencode": "^0.3.0",
+    "lrc-file-parser": "^1.0.7",
+    "pako": "^2.0.3",
+    "process": "^0.11.10",
+    "prop-types": "^15.7.2",
+    "react": "17.0.1",
+    "react-i18next": "^11.8.15",
+    "react-native": "0.64.0",
+    "react-native-background-timer": "^2.4.1",
+    "react-native-crypto": "^2.2.0",
+    "react-native-fs": "^2.18.0",
+    "react-native-navigation": "^7.14.0",
+    "react-native-pager-view": "^5.1.8",
+    "react-native-randombytes": "^3.6.1",
+    "react-native-splash-screen": "^3.2.0",
+    "react-native-track-player": "lyswhut/react-native-track-player#63d6e5147bba3ce476ee751756d0a7de5fe88757",
+    "react-native-vector-icons": "^8.1.0",
+    "react-redux": "^7.2.4",
+    "readable-stream": "1.0.33",
+    "redux": "^4.1.0",
+    "redux-subscriber": "^1.1.0",
+    "redux-thunk": "^2.3.0",
+    "reselect": "^4.0.0",
+    "stream-browserify": "^1.0.0",
+    "url": "~0.10.1",
+    "util": "~0.10.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.2",
+    "@babel/runtime": "^7.14.0",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^26.6.3",
+    "babel-plugin-module-resolver": "^4.1.0",
+    "changelog-parser": "^2.8.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.26.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-html": "^6.1.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-standard": "^5.0.0",
+    "jest": "^26.6.3",
+    "metro-react-native-babel-preset": "^0.64.0",
+    "react-devtools": "^4.13.2",
+    "react-native-clean-project": "^3.6.3",
+    "react-test-renderer": "17.0.1",
+    "redux-logger": "^3.0.6",
+    "rn-nodeify": "^10.3.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "react-native": {
+    "console": "console-browserify",
+    "crypto": "react-native-crypto",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify"
+  },
+  "browser": {
+    "console": "console-browserify",
+    "crypto": "react-native-crypto",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify"
+  }
+}

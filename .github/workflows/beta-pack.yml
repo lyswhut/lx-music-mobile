@@ -1,0 +1,80 @@
+name: Build Beta
+
+on:
+  push:
+    branches:
+      - beta
+
+jobs:
+  Android:
+    name: Android
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out git repository
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12.x'
+
+      - name: Cache Gradle Wrapper
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-
+
+      - name: Cache Node Dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-caches-${{ hashFiles('**/yarn-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-caches-
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build Packages
+        run: |
+          cd android
+          echo ${{ secrets.KEYSTORE_STORE_FILE_BASE64 }} | base64 --decode > app/${{ secrets.KEYSTORE_STORE_FILE }}
+          ./gradlew assembleRelease -PMYAPP_UPLOAD_STORE_FILE='${{ secrets.KEYSTORE_STORE_FILE }}' -PMYAPP_UPLOAD_KEY_ALIAS='${{ secrets.KEYSTORE_KEY_ALIAS }}' -PMYAPP_UPLOAD_STORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}' -PMYAPP_UPLOAD_KEY_PASSWORD='${{ secrets.KEYSTORE_KEY_PASSWORD }}'
+
+      - name: Upload Artifact arm64-v8a
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-arm64-v8a-release
+          path: android/app/build/outputs/apk/release/app-arm64-v8a-release.apk
+
+      - name: Upload Artifact armeabi-v7a
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-armeabi-v7a-release
+          path: android/app/build/outputs/apk/release/app-armeabi-v7a-release.apk
+
+      - name: Upload Artifact universal
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-universal-release
+          path: android/app/build/outputs/apk/release/app-universal-release.apk
+
+      - name: Upload Artifact x86_64
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-x86_64-release
+          path: android/app/build/outputs/apk/release/app-x86_64-release.apk
+
+      - name: Upload Artifact x86
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-x86-release
+          path: android/app/build/outputs/apk/release/app-x86-release.apk

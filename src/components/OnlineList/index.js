@@ -44,6 +44,7 @@ export default memo(({
   const [selectMode, setSelectMode] = useState('single')
   const selectModeRef = useRef('single')
   const prevSelectIndexRef = useRef(-1)
+  const addMultiMusicToList = useDispatch('list', 'listAddMultiple')
 
   useEffect(() => {
     defaultListRef.current = defaultList
@@ -157,6 +158,10 @@ export default memo(({
   const handleMenuPress = useCallback(({ action }) => {
     switch (action) {
       case 'play':
+        if (selectedListRef.current.length) {
+          addMultiMusicToList({ id: 'default', list: [...selectedListRef.current] })
+          handleCancelMultiSelect()
+        }
         handlePlay(selectedData.current.data, selectedData.current.index)
         break
       case 'playLater':
@@ -178,7 +183,7 @@ export default memo(({
       default:
         break
     }
-  }, [handleCancelMultiSelect, handlePlay, setTempPlayList])
+  }, [addMultiMusicToList, handleCancelMultiSelect, handlePlay, setTempPlayList])
 
   useEffect(() => {
     if (isLoading && page == 1) {

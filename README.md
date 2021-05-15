@@ -20,6 +20,7 @@
 所用技术栈：
 
 - React native
+- Redux
 
 支持的平台：
 

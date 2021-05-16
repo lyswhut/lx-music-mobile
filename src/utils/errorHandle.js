@@ -19,7 +19,7 @@ ${isFatal ? 'Fatal:' : ''} ${e.name} ${e.message}
   }
 }
 
-setJSExceptionHandler(errorHandler, true)
+setJSExceptionHandler(errorHandler)
 
 setNativeExceptionHandler((errorString) => {
   console.error('+++++', errorString, '+++++')

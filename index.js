@@ -24,6 +24,7 @@ console.log('starting app...')
 
 let store
 let isInited = false
+let isFirstRun = true
 
 const init = () => {
   if (isInited) return Promise.resolve()
@@ -77,10 +78,13 @@ initNavigation(async() => {
   init().then(() => {
     navigations.pushHomeScreen()
     SplashScreen.hide()
-    if (!store.getState().common.setting.isAgreePact) {
-      showPactModal()
-    } else {
-      store.dispatch(commonAction.checkVersion())
+    if (isFirstRun) {
+      isFirstRun = false
+      if (!store.getState().common.setting.isAgreePact) {
+        showPactModal()
+      } else {
+        store.dispatch(commonAction.checkVersion())
+      }
     }
   })
 })

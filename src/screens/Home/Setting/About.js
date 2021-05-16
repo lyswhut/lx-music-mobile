@@ -19,7 +19,7 @@ export default memo(() => {
     openUrl('https://github.com/lyswhut/lx-music-mobile#readme')
   }
   const openNetdiskPage = () => {
-    openUrl('https://www.lanzous.com/b0bf2cfa/')
+    openUrl('https://www.lanzoui.com/b0bf2cfa/')
   }
   const openFAQPage = () => {
     openUrl('https://github.com/lyswhut/lx-music-mobile/blob/master/FAQ.md')

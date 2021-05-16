@@ -46,7 +46,6 @@ const exportList = async(allList, path) => {
     }
   }
   await handleSaveFile(path + '/lx_list.lxmc', JSON.stringify(data))
-  toast('导出完成')
 }
 const importList = async path => {
   let listData
@@ -91,14 +90,35 @@ export default memo(() => {
     setShowChoosePath(false)
     switch (actionTypeRef.current) {
       case 'import_list':
-        importList(path).then(listData => {
-          // 兼容0.6.2及以前版本的列表数据
-          if (listData.type === 'defautlList') return setList({ id: 'default', list: listData.data.list, name: '试听列表' })
+        InteractionManager.runAfterInteractions(() => {
+          toast(t('setting_backup_part_import_list_tip_unzip'))
+          importList(path).then(listData => {
+            // 兼容0.6.2及以前版本的列表数据
+            if (listData.type === 'defautlList') {
+              setList({ id: 'default', list: listData.data.list, name: '试听列表' })
+              toast(t('setting_backup_part_import_list_tip_success'))
+              return
+            }
 
-          if (listData.type !== 'playList') return
+            switch (listData.type) {
+              case 'playList':
+                toast(t('setting_backup_part_import_list_tip_runing'))
+                for (const list of listData.data) setList(list)
+                toast(t('setting_backup_part_import_list_tip_success'))
+                break
+              case 'allData':
+                toast(t('setting_backup_part_import_list_tip_runing'))
+                if (listData.defaultList) { // 兼容pc端 0.6.2及以前版本的列表数据
+                  setList({ id: 'default', list: listData.defaultList.list, name: '试听列表' })
+                } else {
+                  for (const list of listData.playList) setList(list)
+                }
+                toast(t('setting_backup_part_import_list_tip_success'))
+                break
 
-          for (const list of listData.data) setList(list)
-          toast('导入完成')
+              default: return toast(t('setting_backup_part_import_list_tip_failed'))
+            }
+          })
         })
         break
       // case 'import_setting':
@@ -108,7 +128,15 @@ export default memo(() => {
       //   setTitle(t('setting_backup_part_import_setting_desc'))
       //   break
       case 'export_list':
-        exportList(allList, path)
+        InteractionManager.runAfterInteractions(() => {
+          toast(t('setting_backup_part_export_list_tip_zip'))
+          exportList(allList, path).then(() => {
+            toast(t('setting_backup_part_export_list_tip_success'))
+          }).catch(err => {
+            console.log(err)
+            toast(t('setting_backup_part_export_list_tip_failed'))
+          })
+        })
         break
       // case 'export_setting':
       //   setTitle(t('setting_backup_part_import_setting_desc'))
@@ -120,7 +148,7 @@ export default memo(() => {
       //   setTitle(t('setting_backup_all_import_desc'))
       //   break
     }
-  }, [allList, setList])
+  }, [allList, setList, t])
 
 
   return (

@@ -5,6 +5,7 @@
 
 // import '@/utils/log'
 import './shim'
+import '@/utils/errorHandle'
 import '@/config/globalData'
 import SplashScreen from 'react-native-splash-screen'
 import { init as initNavigation, navigations, showPactModal } from '@/navigation'

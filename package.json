@@ -54,6 +54,7 @@
     "react-native": "0.64.0",
     "react-native-background-timer": "^2.4.1",
     "react-native-crypto": "^2.2.0",
+    "react-native-exception-handler": "^2.10.10",
     "react-native-fs": "^2.18.0",
     "react-native-navigation": "^7.14.0",
     "react-native-pager-view": "^5.1.8",

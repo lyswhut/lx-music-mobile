@@ -6,6 +6,12 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.1.4](https://github.com/lyswhut/lx-music-mobile/compare/v0.1.3...v0.1.4) - 2021-05-16
+
+### 修复
+
+- 修复获取在线列表时快速切换会导致APP闪退的问题
+
 ## [0.1.3](https://github.com/lyswhut/lx-music-mobile/compare/v0.1.2...v0.1.3) - 2021-05-16
 
 ### 优化

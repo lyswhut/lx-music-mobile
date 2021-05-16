@@ -1,7 +1,7 @@
 {
   "name": "lx-music-mobile",
-  "version": "0.1.3",
-  "versionCode": 4,
+  "version": "0.1.4",
+  "versionCode": 5,
   "scripts": {
     "ar": "react-native run-android",
     "ios": "react-native run-ios",

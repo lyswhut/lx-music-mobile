@@ -131,7 +131,7 @@ def getNpmPackageJson() {
 def npmPackageJson = getNpmPackageJson()
 def verCode = npmPackageJson["versionCode"]
 def verName = npmPackageJson["version"]
-
+def applicationName = npmPackageJson["name"]
 
 android {
     ndkVersion rootProject.ext.ndkVersion
@@ -211,9 +211,14 @@ android {
             // Example: versionCode 1 will generate 1001 for armeabi-v7a, 1002 for x86, etc.
             def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
             def abi = output.getFilter(OutputFile.ABI)
-            if (abi != null) {  // null for the universal-debug, universal-release variants
+            if (abi == null) {  // null for the universal-debug, universal-release variants
+                output.outputFileName =
+                        "${applicationName}-v${defaultConfig.versionName}-universal.apk"
+            } else {
                 output.versionCodeOverride =
                         defaultConfig.versionCode * 1000 + versionCodes.get(abi)
+                output.outputFileName =
+                        "${applicationName}-v${defaultConfig.versionName}-${abi}.apk"
             }
 
         }

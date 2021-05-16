@@ -36,12 +36,12 @@ jobs:
         uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-caches-${{ hashFiles('**/yarn-lock.json') }}
+          key: ${{ runner.os }}-node-caches-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-caches-
 
       - name: Install dependencies
-        run: yarn install
+        run: npm install
 
       - name: Build Packages
         run: |
@@ -49,32 +49,36 @@ jobs:
           echo ${{ secrets.KEYSTORE_STORE_FILE_BASE64 }} | base64 --decode > app/${{ secrets.KEYSTORE_STORE_FILE }}
           ./gradlew assembleRelease -PMYAPP_UPLOAD_STORE_FILE='${{ secrets.KEYSTORE_STORE_FILE }}' -PMYAPP_UPLOAD_KEY_ALIAS='${{ secrets.KEYSTORE_KEY_ALIAS }}' -PMYAPP_UPLOAD_STORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}' -PMYAPP_UPLOAD_KEY_PASSWORD='${{ secrets.KEYSTORE_KEY_PASSWORD }}'
 
+      # Push tag to GitHub if package.json version's tag is not tagged
+      - name: Get package version
+        run: node -p -e '`PACKAGE_VERSION=${require("./package.json").version}`' >> $GITHUB_ENV
+
       - name: Upload Artifact arm64-v8a
         uses: actions/upload-artifact@v2
         with:
           name: app-arm64-v8a-release
-          path: android/app/build/outputs/apk/release/app-arm64-v8a-release.apk
+          path: android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-arm64-v8a.apk
 
       - name: Upload Artifact armeabi-v7a
         uses: actions/upload-artifact@v2
         with:
           name: app-armeabi-v7a-release
-          path: android/app/build/outputs/apk/release/app-armeabi-v7a-release.apk
+          path: android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-armeabi-v7a.apk
 
       - name: Upload Artifact universal
         uses: actions/upload-artifact@v2
         with:
           name: app-universal-release
-          path: android/app/build/outputs/apk/release/app-universal-release.apk
+          path: android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-universal.apk
 
       - name: Upload Artifact x86_64
         uses: actions/upload-artifact@v2
         with:
           name: app-x86_64-release
-          path: android/app/build/outputs/apk/release/app-x86_64-release.apk
+          path: android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86_64.apk
 
       - name: Upload Artifact x86
         uses: actions/upload-artifact@v2
         with:
           name: app-x86-release
-          path: android/app/build/outputs/apk/release/app-x86-release.apk
+          path: android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86.apk

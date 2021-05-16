@@ -6,6 +6,13 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.1.3](https://github.com/lyswhut/lx-music-mobile/compare/v0.1.2...v0.1.3) - 2021-05-16
+
+### 优化
+
+- 添加导入提示，兼容从PC端“全部数据”类型的备份文件中导入歌单
+- 添加全局异常错误捕获，现在一般情况下APP崩溃前会弹窗提示错误信息。
+
 ## [0.1.2](https://github.com/lyswhut/lx-music-mobile/compare/v0.1.1...v0.1.2) - 2021-05-16
 
 ### 优化

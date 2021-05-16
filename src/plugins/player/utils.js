@@ -273,7 +273,7 @@ export const updateOptions = (options = {
   // stopIcon: require('./stop-icon.png'),
   // previousIcon: require('./previous-icon.png'),
   // nextIcon: require('./next-icon.png'),
-  // icon: require('./notification-icon.png'), // The notification icon
+  // icon: notificationIcon, // The notification icon
 }) => {
   return TrackPlayer.updateOptions(options)
 }

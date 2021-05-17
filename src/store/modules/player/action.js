@@ -22,7 +22,7 @@ import { playInfo as playInfoGetter } from './getter'
 import { play as lrcPlay, setLyric, pause as lrcPause } from '@/plugins/lyric'
 import { action as listAction } from '@/store/modules/list'
 import { LIST_ID_PLAY_LATER } from '@/config/constant'
-import { defaultList } from '../list/getter'
+// import { defaultList } from '../list/getter'
 
 const listPrefix = storageDataPrefix.list
 

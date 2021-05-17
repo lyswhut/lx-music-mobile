@@ -1,4 +1,5 @@
 import { TYPES, STATUS } from './action'
+import { LIST_ID_PLAY_LATER } from '@/config/constant'
 
 const initialState = {
   listInfo: {
@@ -21,9 +22,17 @@ const initialState = {
 // mitations
 const mutations = {
   [TYPES.setPic](state, datas) {
-    const targetMusic = state.listInfo.list.find(s => s.songmid === datas.musicInfo.songmid)
+    let targetMusic
+    if (!state.playMusicInfo) return state
+    switch (state.playMusicInfo.listId) {
+      case LIST_ID_PLAY_LATER:
+        targetMusic = datas.musicInfo
+        break
+      default:
+        targetMusic = state.listInfo.list.find(s => s.songmid === datas.musicInfo.songmid)
+        break
+    }
     // console.log('+++++++targetMusic+++++++', targetMusic)
-    if (!targetMusic) return state
     targetMusic.img = datas.url
     const newState = { ...state }
     if (state.playMusicInfo.musicInfo.source == datas.musicInfo.source && state.playMusicInfo.musicInfo.songmid === datas.musicInfo.songmid) {

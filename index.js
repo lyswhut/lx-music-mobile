@@ -78,11 +78,11 @@ initNavigation(async() => {
   init().then(() => {
     navigations.pushHomeScreen()
     SplashScreen.hide()
-    if (isFirstRun) {
-      isFirstRun = false
-      if (!store.getState().common.setting.isAgreePact) {
-        showPactModal()
-      } else {
+    if (!store.getState().common.setting.isAgreePact) {
+      showPactModal()
+    } else {
+      if (isFirstRun) {
+        isFirstRun = false
         store.dispatch(commonAction.checkVersion())
       }
     }

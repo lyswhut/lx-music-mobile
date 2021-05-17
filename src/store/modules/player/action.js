@@ -165,7 +165,7 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
   // console.log(AppState.currentState)
   if (!isRefresh && state.common.setting.player.togglePlayMethod == 'random') dispatch({ type: TYPES.addMusicToPlayedList, payload: playMusicInfo })
 
-  console.log(musicInfo.img)
+  // console.log(musicInfo.img)
   if (!musicInfo.img) {
     dispatch(getPic(musicInfo)).then(async() => {
       if (playMusicId != id) return
@@ -378,7 +378,7 @@ export const getUrl = ({ musicInfo, type, isRefresh }) => async(dispatch, getSta
 
   return handleGetUrl(dispatch, getState().player.listInfo.id, musicInfo, type).then(result => {
     saveMusicUrl(musicInfo, type, result.url)
-    console.log('get' + musicInfo.name + ' url success: ' + result.url)
+    // console.log('get' + musicInfo.name + ' url success: ' + result.url)
     return result.url
   }).catch(err => {
     console.log('get' + musicInfo.name + ' url fail: ' + err.message)

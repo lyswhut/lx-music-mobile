@@ -722,10 +722,15 @@ export const checkPlayList = listIds => async(dispatch, getState) => {
   if (!_playMusicInfo || !listIds.some(id => player.listInfo.id === id)) return
   const listInfo = global.allList[player.listInfo.id]
   if (!listInfo) {
-    if (listState.defaultList.list.length) {
-      await dispatch(setList({ list: listState.defaultList, index: 0 }))
+    if (player.playMusicInfo.listId == LIST_ID_PLAY_LATER) {
+      dispatch(setListInfo(listState.defaultList))
+      dispatch(setPlayIndex(-1))
     } else {
-      await dispatch(stopMusic())
+      if (listState.defaultList.list.length) {
+        await dispatch(setList({ list: listState.defaultList, index: 0 }))
+      } else {
+        await dispatch(stopMusic())
+      }
     }
     return
   }
@@ -734,27 +739,31 @@ export const checkPlayList = listIds => async(dispatch, getState) => {
 
   const list = listInfo.list
 
-  // let index = this.listId == 'download'
-  //   ? n.findIndex(s => s.musicInfo.songmid === this.musicInfo.songmid)
-  //   : n.findIndex(s => s.songmid === this.musicInfo.songmid)
-  let index = list.indexOf(_playMusicInfo)
-  // console.log(index)
-  if (index < 0) {
-    // console.log(this.playIndex)
-    if (list.length) {
-      dispatch(setPlayIndex(Math.min(player.playIndex - 1, list.length - 1)))
-      if (isChnagedList) dispatch(setListInfo(listInfo))
-      await dispatch(playNext())
-    } else {
-      if (isChnagedList) dispatch(setListInfo(listInfo))
-      await dispatch(stopMusic())
+  if (player.playMusicInfo.listId == LIST_ID_PLAY_LATER) {
+    if (player.playIndex > listInfo.list.length) {
+      dispatch(setPlayIndex(listInfo.list.length))
     }
-  } else {
-    // console.log(isChnagedList)
     if (isChnagedList) dispatch(setListInfo(listInfo))
-    dispatch(setPlayIndex(index))
+  } else {
+    let index = list.indexOf(_playMusicInfo)
+    // console.log(index)
+    if (index < 0) {
+      // console.log(this.playIndex)
+      if (list.length) {
+        dispatch(setPlayIndex(Math.min(player.playIndex - 1, list.length - 1)))
+        if (isChnagedList) dispatch(setListInfo(listInfo))
+        await dispatch(playNext())
+      } else {
+        if (isChnagedList) dispatch(setListInfo(listInfo))
+        await dispatch(stopMusic())
+      }
+    } else {
+      // console.log(isChnagedList)
+      if (isChnagedList) dispatch(setListInfo(listInfo))
+      dispatch(setPlayIndex(index))
+    }
+    // console.log(this.playIndex)
   }
-  // console.log(this.playIndex)
 }
 
 export const destroy = () => async(dispatch, getState) => {

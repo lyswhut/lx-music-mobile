@@ -6,6 +6,14 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.1.5](https://github.com/lyswhut/lx-music-mobile/compare/v0.1.4...v0.1.5) - 2021-05-18
+
+### 修复
+
+- 修复修复协议弹窗可以被绕过的问题
+- 修复从在线列表使用稍后播放功能播放歌曲时，歌曲封面不显示的问题
+- 修复正在播放“稍后播放”的歌曲时，对“稍后播放”前播放的列表进行添加、删除操作会导致切歌的问题
+
 ## [0.1.4](https://github.com/lyswhut/lx-music-mobile/compare/v0.1.3...v0.1.4) - 2021-05-16
 
 ### 修复

@@ -114,7 +114,7 @@ const VersionModal = ({ componentId }) => {
         setIgnoreBtn({ text: t('version_btn_ignore'), show: true, disabled: false })
         setConfirmBtn({ text: t('version_btn_new'), show: true, disabled: false })
         // setTip(t('version_btn_new'))
-        setCloseBtnText({ text: t('version_btn_close') })
+        setCloseBtnText(t('version_btn_close'))
         break
       case VERSION_STATUS.downloading:
         setTitle(t('version_title_new'))
@@ -125,35 +125,35 @@ const VersionModal = ({ componentId }) => {
         }))
         if (ignoreBtn.show) setIgnoreBtn({ text: t('version_btn_ignore'), show: false, disabled: true })
         if (!confirmBtn.disabled) setConfirmBtn({ text: t('version_btn_update'), show: true, disabled: true })
-        setCloseBtnText({ text: t('version_btn_min') })
+        setCloseBtnText(t('version_btn_min'))
         break
       case VERSION_STATUS.downloaded:
         setTitle(t('version_title_update'))
         setTip('')
         if (ignoreBtn.show) setIgnoreBtn({ text: t('version_btn_ignore'), show: false, disabled: true })
         setConfirmBtn({ text: t('version_btn_update'), show: true, disabled: false })
-        setCloseBtnText({ text: t('version_btn_close') })
+        setCloseBtnText(t('version_btn_close'))
         break
       case VERSION_STATUS.checking:
         setTitle(t('version_title_checking'))
         setTip(t(''))
         setIgnoreBtn({ text: t('version_btn_ignore'), show: false, disabled: true })
         setConfirmBtn({ text: t('version_btn_new'), show: false, disabled: true })
-        setCloseBtnText({ text: t('version_btn_close') })
+        setCloseBtnText(t('version_btn_close'))
         break
       case VERSION_STATUS.failed:
         setTitle(t('version_title_failed'))
         setTip(t('version_tip_failed'))
         setIgnoreBtn({ text: t('version_btn_ignore'), show: true, disabled: false })
         setConfirmBtn({ text: t('version_btn_failed'), show: true, disabled: false })
-        setCloseBtnText({ text: t('version_btn_close') })
+        setCloseBtnText(t('version_btn_close'))
         break
       case VERSION_STATUS.unknown:
         setTitle(t('version_title_unknown'))
         setTip(t('version_tip_unknown'))
         setIgnoreBtn({ text: t('version_btn_ignore'), show: false, disabled: true })
         setConfirmBtn({ text: t('version_btn_unknown'), show: true, disabled: false })
-        setCloseBtnText({ text: t('version_btn_close') })
+        setCloseBtnText(t('version_btn_close'))
         break
       case VERSION_STATUS.latest:
       default:
@@ -161,7 +161,7 @@ const VersionModal = ({ componentId }) => {
         setTip('')
         setIgnoreBtn({ text: t('version_btn_ignore'), show: false, disabled: true })
         setConfirmBtn({ text: t('version_btn_new'), show: false, disabled: true })
-        setCloseBtnText({ text: t('version_btn_close') })
+        setCloseBtnText(t('version_btn_close'))
         break
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

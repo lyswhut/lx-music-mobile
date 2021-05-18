@@ -99,7 +99,7 @@ const VersionModal = ({ componentId }) => {
 
       case VERSION_STATUS.unknown:
       default:
-        openUrl('https://reactnative.dev/')
+        openUrl('https://github.com/lyswhut/lx-music-mobile#readme')
         break
     }
     // setVersionInfo({ showModal: false })

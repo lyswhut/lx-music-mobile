@@ -10,12 +10,14 @@ const styles = StyleSheet.create({
     // flexGrow: 0,
     flexShrink: 1,
     marginTop: 15,
-    marginLeft: 15,
-    marginRight: 15,
+    marginLeft: 5,
+    marginRight: 5,
     marginBottom: 25,
   },
   content: {
     flexGrow: 0,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   title: {
     fontSize: 14,
@@ -24,8 +26,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     paddingBottom: 15,
-    paddingLeft: 15,
     // paddingRight: 15,
+  },
+  btnsDirection: {
+    paddingLeft: 15,
+  },
+  btnsReversedDirection: {
+    paddingLeft: 15,
+    flexDirection: 'row-reverse',
   },
   btn: {
     flex: 1,
@@ -35,7 +43,12 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     alignItems: 'center',
     borderRadius: 4,
+  },
+  btnDirection: {
     marginRight: 15,
+  },
+  btnReversedDirection: {
+    marginLeft: 15,
   },
 })
 
@@ -51,8 +64,9 @@ export default ({
   text = '',
   cancelText = '',
   confirmText = '',
-  showCancel = true,
+  showConfirm = true,
   children,
+  reverseBtn = false,
 }) => {
   const theme = useGetter('common', 'theme')
   const { t } = useTranslation()
@@ -64,15 +78,15 @@ export default ({
           {children || <Text style={{ ...styles.title, color: theme.normal }}>{text}</Text>}
         </ScrollView>
       </View>
-      <View style={styles.btns}>
-        {showCancel
-          ? <Button style={{ ...styles.btn, backgroundColor: theme.secondary45 }} onPress={onCancel}>
-              <Text style={{ color: theme.secondary_5 }}>{cancelText || t('cancel')}</Text>
+      <View style={{ ...styles.btns, ...(reverseBtn ? styles.btnsReversedDirection : styles.btnsDirection) }}>
+        <Button style={{ ...styles.btn, ...(reverseBtn ? styles.btnReversedDirection : styles.btnDirection), backgroundColor: theme.secondary45 }} onPress={onCancel}>
+          <Text style={{ color: theme.secondary_5 }}>{cancelText || t('cancel')}</Text>
+        </Button>
+        {showConfirm
+          ? <Button style={{ ...styles.btn, ...(reverseBtn ? styles.btnReversedDirection : styles.btnDirection), backgroundColor: theme.secondary45 }} onPress={onConfirm}>
+              <Text style={{ fontSize: 14, color: theme.secondary_5 }}>{confirmText || t('confirm')}</Text>
             </Button>
           : null}
-        <Button style={{ ...styles.btn, backgroundColor: theme.secondary45 }} onPress={onConfirm}>
-          <Text style={{ fontSize: 14, color: theme.secondary_5 }}>{confirmText || t('confirm')}</Text>
-        </Button>
       </View>
     </Dialog>
   )

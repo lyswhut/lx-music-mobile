@@ -1,7 +1,11 @@
 import { Alert } from 'react-native'
+import { exitApp } from '@/utils/tools'
 import { setJSExceptionHandler, setNativeExceptionHandler } from 'react-native-exception-handler'
+import { log } from '@/utils/log'
+
 const errorHandler = (e, isFatal) => {
   if (isFatal) {
+    log.error(e.message)
     Alert.alert(
       '💥Unexpected error occurred💥',
       `
@@ -12,15 +16,20 @@ ${isFatal ? 'Fatal:' : ''} ${e.name} ${e.message}
 `,
       [{
         text: '关闭 (Close)',
+        onPress: () => {
+          exitApp()
+        },
       }],
     )
   } else {
+    log.error(e.message)
     console.log(e) // So that we can see it in the ADB logs in case of Android if needed
   }
 }
 
-setJSExceptionHandler(errorHandler)
+setJSExceptionHandler(errorHandler, true)
 
 setNativeExceptionHandler((errorString) => {
+  log.error(errorString)
   console.error('+++++', errorString, '+++++')
 })

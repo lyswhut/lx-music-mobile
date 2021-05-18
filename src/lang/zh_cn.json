@@ -169,10 +169,16 @@
   "setting_backup_part_export_list_desc": "选择歌单备份文件保存位置",
 
   "setting_other": "其他",
-  "setting_other_cache": "缓存管理（包括歌曲、歌词等缓存，没有歌曲播放相关的问题不建议清理）",
+  "setting_other_cache": "缓存管理（包括歌曲、歌词、错误日志等缓存，没有歌曲播放相关的问题不建议清理）",
   "setting_other_cache_size": "当前已用缓存大小：",
   "setting_other_cache_clear_btn": "清理缓存",
   "setting_other_cache_clear_success_tip": "缓存清理完成",
+  "setting_other_log": "错误日志（软件崩溃💥时的错误日志）",
+  "setting_other_log_tip_clean_success": "日志清理完成",
+  "setting_other_log_tip_null": "日志是空的哦~",
+  "setting_other_log_btn_show": "查看日志",
+  "setting_other_log_btn_hide": "关闭",
+  "setting_other_log_btn_clean": "清空",
 
   "setting_version": "软件更新",
   "setting_version_show_ver_modal": "打开更新窗口 🚀",

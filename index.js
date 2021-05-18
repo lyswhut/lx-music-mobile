@@ -6,6 +6,7 @@
 // import '@/utils/log'
 import './shim'
 import '@/utils/errorHandle'
+import { init as initLog } from '@/utils/log'
 import '@/config/globalData'
 import SplashScreen from 'react-native-splash-screen'
 import { init as initNavigation, navigations, showPactModal } from '@/navigation'
@@ -25,6 +26,7 @@ console.log('starting app...')
 let store
 let isInited = false
 let isFirstRun = true
+initLog()
 
 const init = () => {
   if (isInited) return Promise.resolve()

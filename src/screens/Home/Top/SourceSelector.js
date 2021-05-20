@@ -11,6 +11,7 @@ export default memo(({ layout }) => {
   const sourceNameType = useGetter('common', 'sourceNameType')
   const sourceList = useGetter('top', 'sources')
   const sourceId = useGetter('top', 'sourceId')
+  const theme = useGetter('common', 'theme')
   // const currentSourceName = useGetter('search', 'currentSourceName')
   const { t } = useTranslation()
 
@@ -24,7 +25,7 @@ export default memo(({ layout }) => {
       width={layout.width}
       onPress={({ action }) => setTop({ source: action })}
     >
-      <Text style={styles.sourceMenu}>{t(`source_${sourceNameType}_${sourceId}`)}</Text>
+      <Text style={{ ...styles.sourceMenu, color: theme.normal }}>{t(`source_${sourceNameType}_${sourceId}`)}</Text>
     </DorpDownMenu>
   )
 })

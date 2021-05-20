@@ -1,10 +1,10 @@
 import React, { useCallback, memo, useMemo, useEffect, useState } from 'react'
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, InteractionManager } from 'react-native'
 import { useGetter, useDispatch } from '@/store'
 import { toast } from '@/utils/tools'
 import { useTranslation } from '@/plugins/i18n'
 import { LIST_ID_PLAY_TEMP, LIST_ID_PLAY_LATER, NAV_VIEW_NAMES } from '@/config/constant'
-
+import { navigations } from '@/navigation'
 
 export default () => {
   const playMusicInfo = useGetter('player', 'playMusicInfo')
@@ -13,11 +13,18 @@ export default () => {
   const setNavActiveIndex = useDispatch('common', 'setNavActiveIndex')
   const setPrevSelectListId = useDispatch('common', 'setPrevSelectListId')
   const setJumpPosition = useDispatch('list', 'setJumpPosition')
-  const { t } = useTranslation()
+  // const { t } = useTranslation()
+  const componentIds = useGetter('common', 'componentIds')
   const handlePress = useCallback(() => {
     // console.log('')
-    toast(t('play_detail_todo_tip'), 'long')
-  }, [t])
+    // console.log(playMusicInfo)
+    if (!playMusicInfo) return
+    InteractionManager.runAfterInteractions(() => {
+      navigations.pushPlayDetailScreen(componentIds.home)
+    })
+    // toast(t('play_detail_todo_tip'), 'long')
+  }, [componentIds.home, playMusicInfo])
+
   const handleLongPress = useCallback(() => {
     if (!playMusicInfo || playMusicInfo.listId == LIST_ID_PLAY_TEMP || playMusicInfo.listId == LIST_ID_PLAY_LATER) return
     setNavActiveIndex(NAV_VIEW_NAMES.list)

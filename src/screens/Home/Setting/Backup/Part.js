@@ -1,6 +1,7 @@
 import React, { memo, useCallback, useState, useRef } from 'react'
 import { StyleSheet, View, Text, InteractionManager } from 'react-native'
 import { readFile, writeFile, temporaryDirectoryPath, unlink } from '@/utils/fs'
+import { log } from '@/utils/log'
 
 import { useGetter, useDispatch } from '@/store'
 // import { gzip, ungzip } from 'pako'
@@ -58,6 +59,28 @@ const importList = async path => {
   return listData
 }
 
+const handleSetList = (setList, lists) => {
+  if (!lists.length) return Promise.resolve()
+  const list = lists.shift()
+  for (const item of list.list) {
+    if (item.otherSource) item.otherSource = null
+    if (item.typeUrl['128k']) delete item.typeUrl['128k']
+    if (item.typeUrl['320k']) delete item.typeUrl['320k']
+    if (item.typeUrl.flac) delete item.typeUrl.flac
+    if (item.typeUrl.wav) delete item.typeUrl.wav
+
+    // PC v1.8.2以前的Lyric
+    if (item.lxlrc) delete item.lxlrc
+    if (item.lrc) delete item.lrc
+    if (item.tlrc) delete item.tlrc
+  }
+  return setList(list).then(() => handleSetList(setList, lists)).catch(err => {
+    toast(err.message)
+    log.error(err.message)
+    return handleSetList(setList, lists)
+  })
+}
+
 export default memo(() => {
   const { t } = useTranslation()
   const [isShowChoosePath, setShowChoosePath] = useState(false)
@@ -95,23 +118,33 @@ export default memo(() => {
           importList(path).then(listData => {
             // 兼容0.6.2及以前版本的列表数据
             if (listData.type === 'defautlList') {
-              setList({ id: 'default', list: listData.data.list, name: '试听列表' })
-              toast(t('setting_backup_part_import_list_tip_success'))
+              handleSetList(setList, [
+                { id: 'default', list: listData.data.list, name: '试听列表' },
+              ]).then(() => {
+                toast(t('setting_backup_part_import_list_tip_success'))
+              })
               return
             }
 
             switch (listData.type) {
               case 'playList':
                 toast(t('setting_backup_part_import_list_tip_runing'))
-                for (const list of listData.data) setList(list)
-                toast(t('setting_backup_part_import_list_tip_success'))
+                handleSetList(setList, listData.data).then(() => {
+                  toast(t('setting_backup_part_import_list_tip_success'))
+                })
                 break
               case 'allData':
                 toast(t('setting_backup_part_import_list_tip_runing'))
                 if (listData.defaultList) { // 兼容pc端 0.6.2及以前版本的列表数据
-                  setList({ id: 'default', list: listData.defaultList.list, name: '试听列表' })
+                  handleSetList(setList, [
+                    { id: 'default', list: listData.defaultList.list, name: '试听列表' },
+                  ]).then(() => {
+                    toast(t('setting_backup_part_import_list_tip_success'))
+                  })
                 } else {
-                  for (const list of listData.playList) setList(list)
+                  handleSetList(setList, listData.playList).then(() => {
+                    toast(t('setting_backup_part_import_list_tip_success'))
+                  })
                 }
                 toast(t('setting_backup_part_import_list_tip_success'))
                 break

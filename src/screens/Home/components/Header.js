@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { View, Text, StyleSheet, SafeAreaView, StatusBar, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, StatusBar, TouchableOpacity } from 'react-native'
 // import Button from '@/components/common/Button'
 import Icon from '@/components/common/Icon'
 import { useGetter, useDispatch } from '@/store'
@@ -35,14 +35,14 @@ const Header = ({ componentId }) => {
   return (
     <View style={{ ...styles.header, backgroundColor: theme.primary }}>
       <StatusBar backgroundColor="rgba(0,0,0,0)" barStyle="dark-content" translucent={true} />
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         {/* <View style={styles.left}> */}
           {menus.map((item, index) => <HeaderItem info={item} index={index} key={item.id} onPress={setNavActiveIndex} />)}
         {/* </View>
         <View style={styles.right}>
           <HeaderItem info={settingItem} index={-1} onPress={() => navigations.pushSettingScreen(componentId)} />
         </View> */}
-      </SafeAreaView>
+      </View>
     </View>
   )
 }

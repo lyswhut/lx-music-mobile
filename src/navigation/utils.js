@@ -3,6 +3,10 @@ import { VERSION_MODAL, PACT_MODAL } from './screenNames'
 
 export const dismissOverlay = compId => Navigation.dismissOverlay(compId)
 
+export const pop = compId => Navigation.pop(compId)
+export const popToRoot = compId => Navigation.popToRoot(compId)
+export const popTo = compId => Navigation.popTo(compId)
+
 export const showPactModal = () => {
   Navigation.showOverlay({
     component: {

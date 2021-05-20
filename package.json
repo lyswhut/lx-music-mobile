@@ -15,7 +15,7 @@
     "clear": "react-native clean-project",
     "publish": "node publish",
     "nodeify": "rn-nodeify --hack --install process,crypto,events,constant,console,stream,url,util",
-    "postinstall": "yarn nodeify"
+    "postinstall": "npm run nodeify"
   },
   "engines": {
     "node": ">= 12"

@@ -13,6 +13,8 @@ export const navActiveIndex = state => state.common.nav.activeIndex
 
 export const setting = state => state.common.setting
 
+export const componentIds = state => state.common.componentIds
+
 export const activeLangId = state => state.common.setting.langId
 
 export const isAgreePact = state => state.common.setting.isAgreePact

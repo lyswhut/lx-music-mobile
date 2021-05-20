@@ -10,7 +10,7 @@ import PlayInfo from './components/PlayInfo'
 import ControlBtn from './components/ControlBtn'
 
 
-export default ({ playNextModes }) => {
+export default memo(({ playNextModes }) => {
   // const { onLayout, ...layout } = useLayout()
   const { keyboardShown } = useKeyboard()
   const theme = useGetter('common', 'theme')
@@ -34,7 +34,7 @@ export default ({ playNextModes }) => {
   // console.log(layout)
 
   return keyboardShown ? null : playerComponent
-}
+})
 
 const styles = StyleSheet.create({
   container: {

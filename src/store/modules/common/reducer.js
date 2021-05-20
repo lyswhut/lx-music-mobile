@@ -39,6 +39,7 @@ const initialState = {
     desc: '',
     history: [],
   },
+  componentIds: {},
 }
 
 initialState.nav.menus.forEach(({ id }, index) => {
@@ -52,6 +53,15 @@ const mutations = {
       setting: {
         ...state.setting,
         ...setting,
+      },
+    }
+  },
+  [TYPES.setComponentId](state, { name, id }) {
+    return {
+      ...state,
+      componentIds: {
+        ...state.componentIds,
+        [name]: id,
       },
     }
   },

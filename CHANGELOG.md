@@ -6,6 +6,16 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.1.7](https://github.com/lyswhut/lx-music-mobile/compare/v0.1.6...v0.1.7) - 2021-05-20
+
+### 优化
+
+- 修改歌单导入流程，添加对歌单导入错误的捕获
+
+### 修复
+
+- 修复在系统暗主题下，应用内文字输入框的字体会变成白色的问题
+
 ## [0.1.6](https://github.com/lyswhut/lx-music-mobile/compare/v0.1.5...v0.1.6) - 2021-05-18
 
 ### 优化

@@ -16,7 +16,7 @@ export default memo(() => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playMusicInfo])
 
-  const imgWidth = useMemo(() => layout.width * 0.75, [layout.width])
+  const imgWidth = useMemo(() => layout.width * 0.8, [layout.width])
 
   return (
     <View style={styles.container} onLayout={onLayout}>

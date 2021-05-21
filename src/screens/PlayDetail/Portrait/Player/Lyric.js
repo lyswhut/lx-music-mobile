@@ -8,7 +8,7 @@ const LrcLine = memo(({ text, line, activeLine }) => {
   const theme = useGetter('common', 'theme')
 
   return (
-    <Text style={{ ...styles.line, color: activeLine == line ? theme.secondary : theme.normal10 }}>{text}</Text>
+    <Text style={{ ...styles.line, color: activeLine == line ? theme.secondary : theme.normal30 }}>{text}</Text>
   )
 }, (prevProps, nextProps) => {
   return prevProps.text == nextProps.text &&

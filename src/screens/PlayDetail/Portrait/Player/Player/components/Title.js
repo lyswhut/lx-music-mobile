@@ -21,8 +21,8 @@ export default () => {
   // console.log(playMusicInfo)
   return (
     <View style={styles.container}>
-      <Text style={{ width: '100%', fontSize: 14, color: theme.normal }} numberOfLines={2}>{titleInfo.name}</Text>
-      <Text style={{ width: '100%', fontSize: 14, color: theme.normal }} numberOfLines={2}>{titleInfo.singer}</Text>
+      <Text style={{ width: '100%', fontSize: 14, color: theme.normal20 }} numberOfLines={2}>{titleInfo.name}</Text>
+      <Text style={{ width: '100%', fontSize: 14, color: theme.normal20 }} numberOfLines={2}>{titleInfo.singer}</Text>
     </View>
   )
 }

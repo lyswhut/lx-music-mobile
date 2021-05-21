@@ -15,16 +15,12 @@ import {
   destroy as msDestroy,
 } from '@/plugins/player/utils'
 import { getRandom } from '@/utils'
-import { getMusicUrl, saveMusicUrl, getLyric, saveLyric, assertApiSupport, savePlayInfo } from '@/utils/tools'
-import { setData } from '@/plugins/storage'
-import { storageDataPrefix } from '@/config'
+import { getMusicUrl, saveMusicUrl, getLyric, saveLyric, assertApiSupport, savePlayInfo, saveList } from '@/utils/tools'
 import { playInfo as playInfoGetter } from './getter'
 import { play as lrcPlay, setLyric, pause as lrcPause } from '@/plugins/lyric'
 import { action as listAction } from '@/store/modules/list'
 import { LIST_ID_PLAY_LATER } from '@/config/constant'
 // import { defaultList } from '../list/getter'
-
-const listPrefix = storageDataPrefix.list
 
 export const TYPES = {
   setPic: null,
@@ -474,7 +470,7 @@ export const getPic = musicInfo => (dispatch, getState) => {
     // picRequest = null
     dispatch({ type: TYPES.setPic, payload: { musicInfo, url } })
     const state = getState()
-    if (state.player.listInfo.id) setData(listPrefix + state.player.listInfo.id, global.allList[state.player.listInfo.id])
+    if (state.player.listInfo.id) saveList(global.allList[state.player.listInfo.id])
   }).catch(err => {
     // picRequest = null
     return Promise.reject(err)

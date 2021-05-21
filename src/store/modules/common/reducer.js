@@ -65,6 +65,19 @@ const mutations = {
       },
     }
   },
+  [TYPES.removeComponentId](state, removeId) {
+    const newComponentIds = { ...state.componentIds }
+    for (const [name, id] of Object.entries(state.componentIds)) {
+      if (id == removeId) {
+        newComponentIds[name] = null
+        break
+      }
+    }
+    return {
+      ...state,
+      componentIds: newComponentIds,
+    }
+  },
   [TYPES.setNavActiveIndex](state, index) {
     if (index === state.nav.activeIndex) return state
     return {

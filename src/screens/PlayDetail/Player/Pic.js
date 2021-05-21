@@ -46,5 +46,6 @@ const styles = StyleSheet.create({
   },
   img: {
     borderRadius: 4,
+    // opacity: 0,
   },
 })

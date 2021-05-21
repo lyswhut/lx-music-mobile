@@ -24,7 +24,7 @@ export default ({ playNextModes }) => {
 
   const btnPrev = useMemo(() => (
     <TouchableOpacity style={{ ...styles.cotrolBtn }} activeOpacity={0.5} onPress={playPrev}>
-      <Icon name='prevMusic' style={{ color: theme.secondary10 }} size={20} />
+      <Icon name='prevMusic' style={{ color: theme.secondary10 }} size={30} />
     </TouchableOpacity>
   ), [playPrev, theme])
 
@@ -45,12 +45,12 @@ export default ({ playNextModes }) => {
   }, [])
   const btnPlay = useMemo(() => (
     <TouchableOpacity style={{ ...styles.cotrolBtn }} activeOpacity={0.5} onPress={() => togglePlay(playStatus)}>
-      <Icon name={playStatus == STATUS.playing ? 'pause' : 'play'} style={{ color: theme.secondary10 }} size={20} />
+      <Icon name={playStatus == STATUS.playing ? 'pause' : 'play'} style={{ color: theme.secondary10 }} size={30} />
     </TouchableOpacity>
   ), [playStatus, theme, togglePlay])
   const btnNext = useMemo(() => (
     <TouchableOpacity style={{ ...styles.cotrolBtn }} activeOpacity={0.5} onPress={playNext}>
-      <Icon name='nextMusic' style={{ color: theme.secondary10 }} size={20} />
+      <Icon name='nextMusic' style={{ color: theme.secondary10 }} size={30} />
     </TouchableOpacity>
   ), [playNext, theme])
 
@@ -72,8 +72,8 @@ export default ({ playNextModes }) => {
 
 const styles = StyleSheet.create({
   cotrolBtn: {
-    width: 32,
-    height: 32,
+    width: 42,
+    height: 42,
     justifyContent: 'center',
     alignItems: 'center',
 

@@ -1,10 +1,10 @@
 import React, { useEffect, useCallback } from 'react'
 import { View, StyleSheet } from 'react-native'
 
-import Header from './components/Header'
+import Header from '../components/Header'
 // import Aside from './components/Aside'
 // import Main from './components/Main'
-// import FooterPlayer from './components/FooterPlayer'
+import Player from './Player'
 import { useGetter, useDispatch } from '@/store'
 import PagerView from 'react-native-pager-view'
 import Pic from './Pic'
@@ -32,7 +32,7 @@ export default () => {
           </View>
         </PagerView>
         <View style={styles.player}>
-
+          <Player />
         </View>
       </View>
     </>

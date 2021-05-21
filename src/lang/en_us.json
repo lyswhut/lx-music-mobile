@@ -35,6 +35,8 @@
   "collect_toplist": "Collection Toplist",
   "play_all": "Play all",
   "back": "Back",
+  "name": "Name: {{name}}",
+  "singer": "Artist: {{name}}",
 
   "cancel": "Cancel",
   "confirm": "Confirm",
@@ -98,10 +100,10 @@
   "theme_mid_autumn": "Mid-Autumn",
   "theme_naruto": "Naruto",
 
-  "version_label_latest_ver": "Latest version:",
-  "version_label_current_ver": "Current version:",
-  "version_label_change_log": "Update description:",
-  "version_label_history": "History version:",
+  "version_label_latest_ver": "Latest version: ",
+  "version_label_current_ver": "Current version: ",
+  "version_label_change_log": "Update description: ",
+  "version_label_history": "History version: ",
   "version_tip_checking": "Checking for updates...⏳",
   "version_tip_downloaded": "The installation package has been downloaded.",
   "version_tip_failed": "The download of the installation package failed. You can try again or go to the project address to manually download the new version update.",
@@ -170,7 +172,7 @@
 
   "setting_other": "Other",
   "setting_other_cache": "Cache management (including the cache of songs, lyrics, error logs, etc., it is not recommended to clean up if there is no problem related to song playback)",
-  "setting_other_cache_size": "Currently used cache size:",
+  "setting_other_cache_size": "Currently used cache size: ",
   "setting_other_cache_clear_btn": "Clear Cache",
   "setting_other_cache_clear_success_tip": "Cache clearing completed",
   "setting_other_log": "Error log (error log when the software crashes 💥)",

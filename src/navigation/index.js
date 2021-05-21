@@ -3,14 +3,16 @@ import * as screenNames from './screenNames'
 import * as navigations from './navigation'
 
 import registerScreens from './registerScreens'
+import { getStore } from '@/store'
+import { action as commonAction } from '@/store/modules/common'
 
-// let unRegisterEvent
+let unRegisterEvent
 
 const init = callback => {
   // Register all screens on launch
   registerScreens()
 
-  // if (unRegisterEvent) unRegisterEvent()
+  if (unRegisterEvent) unRegisterEvent()
 
   Navigation.setDefaultOptions({
     animations: {
@@ -19,9 +21,10 @@ const init = callback => {
       },
     },
   })
-  // unRegisterEvent = Navigation.events().registerCommandListener((name, params) => {
-  //   console.log(name, params)
-  // })
+  unRegisterEvent = Navigation.events().registerScreenPoppedListener(({ componentId }) => {
+    const store = getStore()
+    store.dispatch(commonAction.removeComponentId(componentId))
+  })
   Navigation.events().registerAppLaunchedListener(() => {
     console.log('Register app launched listener')
     callback()

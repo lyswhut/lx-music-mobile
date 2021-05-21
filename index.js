@@ -61,7 +61,7 @@ const init = () => {
     getPlayInfo().then(info => {
       if (!info) return
       global.restorePlayInfo = info
-      if (info.listId != LIST_ID_PLAY_TEMP && info.listId != LIST_ID_PLAY_LATER) {
+      if (info.listId != LIST_ID_PLAY_TEMP) {
         info.list = global.allList[info.listId]
         if (info.list) info.list = info.list.list
       }
@@ -76,7 +76,7 @@ const init = () => {
   })
 }
 
-initNavigation(async() => {
+initNavigation(() => {
   init().then(() => {
     navigations.pushHomeScreen()
     SplashScreen.hide()

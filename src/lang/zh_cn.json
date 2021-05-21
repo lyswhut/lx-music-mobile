@@ -35,6 +35,8 @@
   "collect_toplist": "收藏排行榜",
   "play_all": "播放全部",
   "back": "返回",
+  "name": "歌曲名：{{name}}",
+  "singer": "艺术家：{{name}}",
 
   "cancel": "取消",
   "confirm": "确认",

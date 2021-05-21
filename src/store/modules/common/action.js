@@ -13,6 +13,7 @@ import { VERSION_STATUS } from '@/config/constant'
 export const TYPES = {
   updateSetting: null,
   setComponentId: null,
+  removeComponentId: null,
   setNavActiveIndex: null,
   setNavScreenName: null,
   setPlayNextMode: null,
@@ -105,6 +106,10 @@ export const updateSetting = setting => async(dispatch, getState) => {
 export const setComponentId = data => ({
   type: TYPES.setComponentId,
   payload: data,
+})
+export const removeComponentId = id => ({
+  type: TYPES.removeComponentId,
+  payload: id,
 })
 
 export const setNavActiveIndex = index => ({

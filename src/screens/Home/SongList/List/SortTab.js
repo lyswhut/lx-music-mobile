@@ -32,7 +32,7 @@ export default memo(() => {
 
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps={'always'} horizontal={true}>
+    <ScrollView style={styles.container} keyboardShouldPersistTaps={'always'} horizontal={true} showsHorizontalScrollIndicator={false}>
       {
         sorts.map(s => (
           <TouchableOpacity style={styles.button} onPress={() => setSongList({ sortId: s.id })} key={s.id}>

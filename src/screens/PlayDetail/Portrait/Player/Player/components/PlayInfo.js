@@ -3,7 +3,7 @@ import { Text, StyleSheet, View } from 'react-native'
 import { usePlayTime } from '@/utils/hooks'
 import { useGetter } from '@/store'
 
-import Progress from '@/components/player/Progress'
+import Progress from './Progress'
 import Status from './Status'
 
 const PlayTimeCurrent = ({ timeStr }) => {

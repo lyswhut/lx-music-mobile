@@ -16,6 +16,10 @@ export default memo(({ playNextModes }) => {
   const theme = useGetter('common', 'theme')
   const componentIds = useGetter('common', 'componentIds')
 
+  const spaceComponent = useMemo(() => (
+    <View style={{ height: 29 }}></View>
+  ), [])
+
   const playerComponent = useMemo(() => (
     <View style={{ ...styles.container, backgroundColor: theme.primary, borderTopColor: theme.secondary10 }}>
       <View style={styles.left} elevation={1}><Pic /></View>
@@ -24,17 +28,17 @@ export default memo(({ playNextModes }) => {
           <Title />
           {/* <PlayTime /> */}
         </View>
-        <PlayInfo />
+        {componentIds.playDetail ? spaceComponent : <PlayInfo />}
       </View>
       <View style={styles.right}>
         <ControlBtn playNextModes={playNextModes} />
       </View>
     </View>
-  ), [theme, playNextModes])
+  ), [theme, componentIds.playDetail, spaceComponent, playNextModes])
 
   // console.log(layout)
 
-  return (keyboardShown || componentIds.playDetail) ? null : playerComponent
+  return keyboardShown ? null : playerComponent
 })
 
 const styles = StyleSheet.create({

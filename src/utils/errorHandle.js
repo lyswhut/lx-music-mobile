@@ -27,9 +27,11 @@ ${isFatal ? 'Fatal:' : ''} ${e.name} ${e.message}
   }
 }
 
-setJSExceptionHandler(errorHandler, true)
+if (process.env.NODE_ENV !== 'development') {
+  setJSExceptionHandler(errorHandler, true)
 
-setNativeExceptionHandler((errorString) => {
-  log.error(errorString)
-  console.error('+++++', errorString, '+++++')
-})
+  setNativeExceptionHandler((errorString) => {
+    log.error(errorString)
+    console.error('+++++', errorString, '+++++')
+  })
+}

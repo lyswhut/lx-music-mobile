@@ -23,7 +23,7 @@ export default memo(() => {
         <TouchableOpacity onPress={back} style={{ ...styles.button }}>
           <Icon name="chevron-left" style={{ color: theme.normal }} size={24} />
         </TouchableOpacity>
-        <Text style={{ ...styles.title, color: theme.normal }}>播放详情</Text>
+        {/* <Text style={{ ...styles.title, color: theme.normal }}></Text> */}
       </View>
     </View>
   )
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     height: 40,
     paddingRight: 40,
   },

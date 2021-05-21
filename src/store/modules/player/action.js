@@ -120,6 +120,29 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
     track.id += track.id + '//restorePlay'
     playMusicId = playMusicId + '//restorePlay'
     msPlayMusic([track])
+    if (!isRefresh && state.common.setting.player.togglePlayMethod == 'random') dispatch({ type: TYPES.addMusicToPlayedList, payload: playMusicInfo })
+
+    // console.log(musicInfo.img)
+    if (!musicInfo.img) {
+      dispatch(getPic(musicInfo)).then(async() => {
+        const musicUrl = await getMusicUrl(musicInfo, type)
+        if (musicUrl) {
+        // console.log('+++updateMusicInfo+++')
+        // setTimeout(() => {
+          updateMusicInfo(buildTrack(musicInfo, type, musicUrl))
+        // }, 1000)
+        }
+      })
+    }
+    dispatch(getLrc(musicInfo)).then(({ lyric, tlyric }) => {
+      setLyric(lyric)
+      const player = getState().player
+      if (player.status == STATUS.playing && !player.isGettingUrl) {
+        getPosition().then(position => {
+          lrcPlay(position * 1000)
+        })
+      }
+    })
     return
   }
 

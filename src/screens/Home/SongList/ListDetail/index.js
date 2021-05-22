@@ -6,7 +6,6 @@ import { useGetter, useDispatch } from '@/store'
 
 
 export default () => {
-  // const isGetDetailFailedRef = useRef(false)
   const [visible, setVisible] = useState(false)
   const [animatePlayed, setAnimatPlayed] = useState(true)
   const animFade = useRef(new Animated.Value(0)).current

@@ -15,6 +15,7 @@ export const TYPES = {
   setListDetailLoading: null,
   setListEnd: null,
   setListDetailEnd: null,
+  setGetListDetailFailed: null,
 }
 
 for (const key of Object.keys(TYPES)) {
@@ -112,6 +113,7 @@ export const getListDetail = ({ id, page, isRefresh = false }) => (dispatch, get
   if (isRefresh && cache.has(listKey)) cache.delete(listKey)
   if (!cache.has(listKey)) cache.set(listKey, new Map())
 
+  dispatch(setGetListDetailFailed(false))
   const listCache = cache.get(listKey)
   if (listCache.has(pageKey)) {
     return Promise.resolve(listCache.get(pageKey).data).then(result => dispatch(setListDetail({ result, listKey, pageKey, source, id, page })))
@@ -122,6 +124,12 @@ export const getListDetail = ({ id, page, isRefresh = false }) => (dispatch, get
   return getListDetailLimit({ source, id, page }).then(result => {
     dispatch(setListDetail({ result, listKey, pageKey, source, id, page }))
     // listCache.set(pageKey, result)
+  }).catch(err => {
+    console.log(err)
+    if (page == 1) {
+      dispatch(setGetListDetailFailed(true))
+    }
+    return Promise.reject(err)
   }).finally(() => {
     const state = getState().songList
     if (state.listDetail.pageKey != pageKey) return
@@ -167,6 +175,12 @@ export const setSelectListInfo = info => {
   return {
     type: TYPES.setSelectListInfo,
     payload: info,
+  }
+}
+export const setGetListDetailFailed = isFailed => {
+  return {
+    type: TYPES.setGetListDetailFailed,
+    payload: isFailed,
   }
 }
 export const setTags = ({ tags, source }) => {

@@ -37,6 +37,7 @@ const initialState = {
   },
   selectListInfo: {},
   isVisibleListDetail: false,
+  isGetListDetailFailed: false,
 }
 
 sources.forEach(source => {
@@ -144,6 +145,12 @@ const mutations = {
         isEnd: false,
         info: {},
       },
+    }
+  },
+  [TYPES.setGetListDetailFailed](state, isFailed) {
+    return {
+      ...state,
+      isGetListDetailFailed: isFailed,
     }
   },
   [TYPES.setListLoading](state, isLoading) {

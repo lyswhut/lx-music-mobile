@@ -91,9 +91,9 @@ const styles = StyleSheet.create({
     height: 38,
     lineHeight: 38,
     textAlign: 'center',
-    minWidth: 70,
-    paddingLeft: 10,
-    paddingRight: 10,
+    // minWidth: 70,
+    paddingLeft: 12,
+    paddingRight: 12,
   },
 
   container: {

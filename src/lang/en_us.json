@@ -30,6 +30,10 @@
 
   "play_detail_todo_tip": "What do you want? No, this function has not been implemented yet 😛, But you can try to locate the currently playing song by long pressing (only valid for playing songs in \"My List\")",
 
+  "load_failed": "Ah, loading failed 😥",
+  "songlist_open": "Import",
+  "songlist_open_input_placeholder": "Enter the playlist link or playlist ID",
+  "songlist_open_input_tip": "1. Cross-source opening of the playlist is not supported. Please confirm whether the playlist to be opened corresponds to the current playlist source\n2. If you encounter a playlist link that cannot be opened, feedback is welcome\n3, Kugou source Open with playlist ID is not supported, but Kugou code is supported",
   "collect_success": "Collection success",
   "collect_songlist": "Collection Songlist",
   "collect_toplist": "Collection Toplist",

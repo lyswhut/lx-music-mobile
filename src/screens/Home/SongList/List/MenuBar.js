@@ -1,19 +1,21 @@
 import React, { useCallback, useMemo } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 
-import { useGetter, useDispatch } from '@/store'
+// import { useGetter, useDispatch } from '@/store'
 import SourceSelector from './SourceSelector'
 import SortTab from './SortTab'
 import Tag from './Tag'
+import OpenList from './OpenList'
 // import { BorderWidths } from '@/theme'
 
 export default () => {
-  const theme = useGetter('common', 'theme')
+  // const theme = useGetter('common', 'theme')
 
   return (
     <View style={{ ...styles.container }}>
       <SortTab />
       <Tag />
+      <OpenList />
       <SourceSelector />
     </View>
   )

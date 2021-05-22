@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react'
 // import { View, Text, StyleSheet, Animated, FlatList, ImageBackground } from 'react-native'
 import ListDetailHeader from './Header'
+import Failed from './Failed'
 import { useGetter, useDispatch } from '@/store'
 import OnlineList from '@/components/OnlineList'
 
@@ -8,6 +9,7 @@ import OnlineList from '@/components/OnlineList'
 export default ({ animatePlayed }) => {
   const [isListRefreshing, setIsListRefreshing] = useState(false)
   const isVisibleListDetail = useGetter('songList', 'isVisibleListDetail')
+  const isGetListDetailFailed = useGetter('songList', 'isGetListDetailFailed')
 
   const selectListInfo = useGetter('songList', 'selectListInfo')
   const selectListInfoRef = useRef(selectListInfo)
@@ -28,15 +30,17 @@ export default ({ animatePlayed }) => {
   }, [getListDetail])
 
   return (
-    <OnlineList
-      list={isVisibleListDetail && animatePlayed ? listDetailData.list : []}
-      page={-1}
-        // isEnd={listDetailData.isEnd}
-      isListRefreshing={isListRefreshing}
-      onRefresh={handleListRefresh}
-      onLoadMore={handleListLoadMore}
-      isLoading={listDetailData.isLoading}
-      ListHeaderComponent={<ListDetailHeader />}
+    isGetListDetailFailed
+      ? <Failed />
+      : <OnlineList
+          list={isVisibleListDetail && animatePlayed ? listDetailData.list : []}
+          page={-1}
+            // isEnd={listDetailData.isEnd}
+          isListRefreshing={isListRefreshing}
+          onRefresh={handleListRefresh}
+          onLoadMore={handleListLoadMore}
+          isLoading={listDetailData.isLoading}
+          ListHeaderComponent={<ListDetailHeader />}
     />
   )
 }

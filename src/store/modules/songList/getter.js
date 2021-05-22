@@ -14,6 +14,7 @@ export const sortList = state => state.songList.sortList
 export const tags = state => state.songList.tags
 
 export const isVisibleListDetail = state => state.songList.isVisibleListDetail
+export const isGetListDetailFailed = state => state.songList.isGetListDetailFailed
 export const selectListInfo = state => state.songList.selectListInfo
 export const listData = state => state.songList.list
 export const listDetailData = state => state.songList.listDetail

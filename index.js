@@ -19,7 +19,7 @@ import { init as initMusicTools } from '@/utils/music'
 import { init as initLyric } from '@/plugins/lyric'
 import { init as initI18n, supportedLngs } from '@/plugins/i18n'
 import { deviceLanguage, getPlayInfo } from '@/utils/tools'
-import { LIST_ID_PLAY_TEMP, LIST_ID_PLAY_LATER } from '@/config/constant'
+import { LIST_ID_PLAY_TEMP } from '@/config/constant'
 
 console.log('starting app...')
 

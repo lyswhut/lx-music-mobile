@@ -6,6 +6,12 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.3.1](https://github.com/lyswhut/lx-music-mobile/compare/v0.3.0...v0.3.1) - 2021-05-22
+
+### 修复
+
+- 修复进入播放详情歌词界面后的屏幕常亮不会被取消的问题
+
 ## [0.3.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.2.0...v0.3.0) - 2021-05-22
 
 ### 新增

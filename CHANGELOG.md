@@ -6,6 +6,20 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.3.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.2.0...v0.3.0) - 2021-05-22
+
+### 新增
+
+- 新增通过歌单链接打开歌单的功能
+
+### 优化
+
+- 切换到播放详情歌词界面时将阻止屏幕息屏
+
+### 修复
+
+- 修复一个导致崩溃日志写入文件前会导致APP崩溃的莫名其妙问题
+
 ## [0.2.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.1.7...v0.2.0) - 2021-05-21
 
 ### 新增

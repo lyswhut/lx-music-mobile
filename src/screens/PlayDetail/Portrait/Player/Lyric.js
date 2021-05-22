@@ -42,18 +42,12 @@ export default memo(() => {
 
   // const imgWidth = useMemo(() => layout.width * 0.75, [layout.width])
   const handleScrollToActive = useCallback((index = lineRef.current) => {
-    screenkeepAwake()
-
     if (scrollViewRef.current && linesRef.current.length) {
       scrollViewRef.current.scrollToIndex({
         index,
         animated: true,
         viewPosition: 0.4,
       })
-    }
-
-    return () => {
-      screenUnkeepAwake()
     }
   }, [])
 

@@ -9,13 +9,20 @@ import { useGetter, useDispatch } from '@/store'
 import PagerView from 'react-native-pager-view'
 import Pic from './Pic'
 import Lyric from './Lyric'
+import { screenkeepAwake, screenUnkeepAwake } from '@/utils/utils'
 
+// global.iskeep = false
 export default memo(() => {
   const theme = useGetter('common', 'theme')
   const [pageIndex, setPageIndex] = useState(0)
 
   const onPageSelected = useCallback(({ nativeEvent }) => {
     setPageIndex(nativeEvent.position)
+    if (nativeEvent.position == 1) {
+      screenkeepAwake()
+    } else {
+      screenUnkeepAwake()
+    }
   }, [])
 
   const pic = useMemo(() => <Pic />, [])

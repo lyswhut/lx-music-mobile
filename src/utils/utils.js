@@ -9,5 +9,14 @@ export const getSupportedAbis = UtilsModule.getSupportedAbis
 export const installApk = (filePath, fileProviderAuthority) => UtilsModule.installApk(filePath, fileProviderAuthority)
 
 
-export const screenkeepAwake = UtilsModule.screenkeepAwake
-export const screenUnkeepAwake = UtilsModule.screenUnkeepAwake
+export const screenkeepAwake = () => {
+  if (global.isScreenKeepAwake) return
+  global.isScreenKeepAwake = true
+  UtilsModule.screenkeepAwake()
+}
+export const screenUnkeepAwake = () => {
+  // console.log('screenUnkeepAwake')
+  if (!global.isScreenKeepAwake) return
+  global.isScreenKeepAwake = false
+  UtilsModule.screenUnkeepAwake()
+}

@@ -12,3 +12,5 @@ global.allList = null
 global.globalObj = null
 global.listScrollPosition = {}
 global.listSort = {}
+
+global.isScreenKeepAwake = false

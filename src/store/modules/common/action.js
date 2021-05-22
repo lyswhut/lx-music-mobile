@@ -9,6 +9,7 @@ import { compareVer } from '@/utils'
 // import { setMaxCache } from '@/plugins/player/utils'
 import { showVersionModal } from '@/navigation'
 import { VERSION_STATUS } from '@/config/constant'
+import { screenUnkeepAwake } from '@/utils/utils'
 
 export const TYPES = {
   updateSetting: null,
@@ -107,10 +108,16 @@ export const setComponentId = data => ({
   type: TYPES.setComponentId,
   payload: data,
 })
-export const removeComponentId = id => ({
-  type: TYPES.removeComponentId,
-  payload: id,
-})
+export const removeComponentId = id => (dispatch, getState) => {
+  const { common } = getState()
+  if (common.componentIds.playDetail == id) {
+    screenUnkeepAwake()
+  }
+  dispatch({
+    type: TYPES.removeComponentId,
+    payload: id,
+  })
+}
 
 export const setNavActiveIndex = index => ({
   type: TYPES.setNavActiveIndex,

@@ -46,7 +46,10 @@ const logTools = {
 }
 
 export const init = () => {
-  return mkdir(logDir).then(() => {
+  return existsFile(logDir).then(isExists => {
+    if (isExists) return
+    return mkdir(logDir)
+  }).then(() => {
     const tasks = []
     for (const [type, path] of Object.entries(logPath)) {
       tasks.push(logTools.initLogFile(type, path))
@@ -94,29 +97,31 @@ export const clearLogs = (type = LOG_TYPE.error) => {
 
 export const log = {
   info(...msgs) {
-    console.info(...msgs)
-    let msg = msgs.map(m => typeof m == 'object' ? JSON.stringify(m) : m).join(' ')
+    // console.info(...msgs)
+    const msg = msgs.map(m => typeof m == 'string' ? m : JSON.stringify(m)).join(' ')
     if (msg.startsWith('%c')) return
-    let time = new Date().toLocaleString()
+    const time = new Date().toLocaleString()
     if (logTools.tempLog.info) {
       logTools.tempLog.info.push({ type: 'LOG', time, text: msg })
     } else logTools.writeLog(LOG_TYPE.info, `${time} LOG ${msg}`)
   },
   warn(...msgs) {
-    console.warn(...msgs)
-    let msg = msgs.map(m => typeof m == 'object' ? JSON.stringify(m) : m).join(' ')
-    let time = new Date().toLocaleString()
+    // console.warn(...msgs)
+    const msg = msgs.map(m => typeof m == 'string' ? m : JSON.stringify(m)).join(' ')
+    const time = new Date().toLocaleString()
     if (logTools.tempLog.warn) {
       logTools.tempLog.warn.push({ type: 'WARN', time, text: msg })
     } else logTools.writeLog(LOG_TYPE.warn, `${time} WARN ${msg}`)
   },
   error(...msgs) {
-    console.error(...msgs)
-    let msg = msgs.map(m => typeof m == 'object' ? JSON.stringify(m) : m).join(' ')
-    let time = new Date().toLocaleString()
+    // console.error...(msgs)
+    const msg = msgs.map(m => typeof m == 'string' ? m : JSON.stringify(m)).join(' ')
+    const time = new Date().toLocaleString()
     if (logTools.tempLog.error) {
       logTools.tempLog.error.push({ type: 'ERROR', time, text: msg })
-    } else logTools.writeLog(LOG_TYPE.error, `${time} ERROR ${msg}`)
+    } else {
+      logTools.writeLog(LOG_TYPE.error, `${time} ERROR ${msg}`)
+    }
   },
 }
 /*
@@ -133,25 +138,25 @@ if (process.env.NODE_ENV !== 'development') {
 
   window.console.log = (...msgs) => {
     log(...msgs)
-    let msg = msgs.map(m => typeof m == 'object' ? JSON.stringify(m) : m).join(' ')
+    const msg = msgs.map(m => typeof m == 'string' ? m : JSON.stringify(m)).join(' ')
     if (msg.startsWith('%c')) return
-    let time = new Date().toLocaleString()
+    const time = new Date().toLocaleString()
     if (tempLog) {
       tempLog.push({ type: 'LOG', time, text: msg })
     } else writeLog(`${time} LOG ${msg}`)
   }
   window.console.error = (...msgs) => {
     error(...msgs)
-    let msg = msgs.map(m => typeof m == 'object' ? JSON.stringify(m) : m).join(' ')
-    let time = new Date().toLocaleString()
+    const msg = msgs.map(m => typeof m == 'string' ? m : JSON.stringify(m)).join(' ')
+    const time = new Date().toLocaleString()
     if (tempLog) {
       tempLog.push({ type: 'ERROR', time, text: msg })
     } else writeLog(`${time} ERROR ${msg}`)
   }
   window.console.warn = (...msgs) => {
     warn(...msgs)
-    let msg = msgs.map(m => typeof m == 'object' ? JSON.stringify(m) : m).join(' ')
-    let time = new Date().toLocaleString()
+    const msg = msgs.map(m => typeof m == 'string' ? m : JSON.stringify(m)).join(' ')
+    const time = new Date().toLocaleString()
     if (tempLog) {
       tempLog.push({ type: 'WARN', time, text: msg })
     } else writeLog(`${time} WARN ${msg}`)

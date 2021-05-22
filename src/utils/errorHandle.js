@@ -5,7 +5,6 @@ import { log } from '@/utils/log'
 
 const errorHandler = (e, isFatal) => {
   if (isFatal) {
-    log.error(e.message)
     Alert.alert(
       '💥Unexpected error occurred💥',
       `
@@ -21,17 +20,15 @@ ${isFatal ? 'Fatal:' : ''} ${e.name} ${e.message}
         },
       }],
     )
-  } else {
-    log.error(e.message)
-    console.log(e) // So that we can see it in the ADB logs in case of Android if needed
   }
+  log.error(e.message)
 }
 
 if (process.env.NODE_ENV !== 'development') {
-  setJSExceptionHandler(errorHandler, true)
+  setJSExceptionHandler(errorHandler)
 
   setNativeExceptionHandler((errorString) => {
-    log.error(errorString)
-    console.error('+++++', errorString, '+++++')
+    log.err(errorString)
+    // console.error('+++++', errorString, '+++++')
   })
 }

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, FlatList } from 'react-native'
 import { useGetter, useDispatch } from '@/store'
 import { useLayout } from '@/utils/hooks'
 import { useLrcPlay, useLrcSet } from '@/plugins/lyric'
+import { screenkeepAwake, screenUnkeepAwake } from '@/utils/utils'
 
 const LrcLine = memo(({ text, line, activeLine }) => {
   const theme = useGetter('common', 'theme')
@@ -41,12 +42,19 @@ export default memo(() => {
 
   // const imgWidth = useMemo(() => layout.width * 0.75, [layout.width])
   const handleScrollToActive = useCallback((index = lineRef.current) => {
-    if (!scrollViewRef.current || !linesRef.current.length) return
-    scrollViewRef.current.scrollToIndex({
-      index,
-      animated: true,
-      viewPosition: 0.4,
-    })
+    screenkeepAwake()
+
+    if (scrollViewRef.current && linesRef.current.length) {
+      scrollViewRef.current.scrollToIndex({
+        index,
+        animated: true,
+        viewPosition: 0.4,
+      })
+    }
+
+    return () => {
+      screenUnkeepAwake()
+    }
   }, [])
 
   const handleScrollBeginDrag = () => {

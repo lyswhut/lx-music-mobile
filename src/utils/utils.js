@@ -7,3 +7,7 @@ export const exitApp = UtilsModule.exitApp
 export const getSupportedAbis = UtilsModule.getSupportedAbis
 
 export const installApk = (filePath, fileProviderAuthority) => UtilsModule.installApk(filePath, fileProviderAuthority)
+
+
+export const screenkeepAwake = UtilsModule.screenkeepAwake
+export const screenUnkeepAwake = UtilsModule.screenUnkeepAwake

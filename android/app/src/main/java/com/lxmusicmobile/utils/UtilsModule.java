@@ -1,9 +1,11 @@
 package com.lxmusicmobile.utils;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
+import android.view.WindowManager;
 
 import androidx.core.content.FileProvider;
 
@@ -94,6 +96,36 @@ public class UtilsModule extends ReactContextBaseJavaModule {
       intent.setDataAndType(Uri.parse("file://" + file), "application/vnd.android.package-archive");
       reactContext.startActivity(intent);
       promise.resolve(null);
+    }
+  }
+
+  @ReactMethod
+  public void screenkeepAwake() {
+    // https://github.com/corbt/react-native-keep-awake/blob/master/android/src/main/java/com/corbt/keepawake/KCKeepAwake.java
+    final Activity activity = getCurrentActivity();
+
+    if (activity != null) {
+      activity.runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+      });
+    }
+  }
+
+  @ReactMethod
+  public void screenUnkeepAwake() {
+    // https://github.com/corbt/react-native-keep-awake/blob/master/android/src/main/java/com/corbt/keepawake/KCKeepAwake.java
+    final Activity activity = getCurrentActivity();
+
+    if (activity != null) {
+      activity.runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          activity.getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+      });
     }
   }
 }

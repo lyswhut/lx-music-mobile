@@ -20,6 +20,7 @@ export default memo(() => {
   const handlePlayAll = useCallback(async() => {
     if (!listDetailData.info.name) return
     const list = await getListDetailAll(selectListInfo.id)
+    if (!list.length) return
     setPlayList({
       list: {
         list,

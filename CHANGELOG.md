@@ -6,6 +6,14 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.3.2](https://github.com/lyswhut/lx-music-mobile/compare/v0.3.1...v0.3.2) - 2021-05-23
+
+### 修复
+
+- 修复手机分享的wy歌单、某些tx、kg歌单无法打开的问题
+- 修复打开空的歌单时，点击播放全部会导致应用崩溃的问题
+- 修复企鹅音乐搜索歌曲没有结果的问题
+
 ## [0.3.1](https://github.com/lyswhut/lx-music-mobile/compare/v0.3.0...v0.3.1) - 2021-05-22
 
 ### 修复

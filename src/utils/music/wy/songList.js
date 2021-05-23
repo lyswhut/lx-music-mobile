@@ -54,10 +54,9 @@ export default {
     if (retryNum > 2) return Promise.reject(new Error('link try max num'))
 
     this._requestObj_listDetailLink = httpFetch(link)
-    const { headers: { location }, statusCode } = await this._requestObj_listDetailLink.promise
-    // console.log(headers)
+    const { url, statusCode } = await this._requestObj_listDetailLink.promise
     if (statusCode > 400) return this.handleParseId(link, ++retryNum)
-    return location == null ? link : location
+    return url
   },
 
   async getListDetail(id, page, tryNum = 0) { // 获取歌曲列表内的音乐

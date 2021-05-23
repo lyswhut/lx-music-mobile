@@ -334,7 +334,7 @@ export default {
         Referer: link,
       },
     })
-    const { headers: { location }, statusCode, body } = await this._requestObj_listDetailLink.promise
+    const { url: location, statusCode, body } = await this._requestObj_listDetailLink.promise
     // console.log(body, location)
     if (statusCode > 400) return this.getUserListDetail(link, page, ++retryNum)
     if (location) {

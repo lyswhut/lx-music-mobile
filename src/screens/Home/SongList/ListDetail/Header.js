@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import { View, Text, StyleSheet, ImageBackground } from 'react-native'
 import { AppColors, BorderWidths } from '@/theme'
 import { useGetter } from '@/store'
-import ButtonBar from './ButtonBar'
+import ButtonBar from './ActionBar'
 
 const Header = memo(() => {
   const selectListInfo = useGetter('songList', 'selectListInfo')

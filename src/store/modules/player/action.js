@@ -515,6 +515,7 @@ export const getLrc = musicInfo => async(dispatch, getState) => {
 }
 
 export const setList = ({ list, index }) => (dispatch, getState) => {
+  if (!(list && list.list && list.list[index])) return
   dispatch(setListInfo(list))
 
   const state = getState()

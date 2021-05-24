@@ -8,7 +8,7 @@ export default () => {
   const downloadFileName = useGetter('common', 'downloadFileName')
   const playMusicInfo = useGetter('player', 'playMusicInfo')
   let title = '^-^'
-  if (playMusicInfo) {
+  if (playMusicInfo && playMusicInfo.musicInfo) {
     title = downloadFileName.replace('歌手', playMusicInfo.musicInfo.singer).replace('歌名', playMusicInfo.musicInfo.name)
   }
   // console.log(playMusicInfo)

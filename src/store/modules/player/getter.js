@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect'
-import { LIST_ID_PLAY_TEMP, LIST_ID_PLAY_LATER } from '@/config/constant'
+import { LIST_ID_PLAY_LATER } from '@/config/constant'
 
 
 // sourceInfo(state, getters, rootState, { sourceNames }) {

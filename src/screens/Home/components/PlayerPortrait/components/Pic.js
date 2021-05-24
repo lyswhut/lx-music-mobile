@@ -35,7 +35,7 @@ export default () => {
   }, [playMusicInfo, setJumpPosition, setNavActiveIndex, setPrevSelectListId])
 
   useEffect(() => {
-    const url = playMusicInfo ? playMusicInfo.musicInfo.img : null
+    const url = playMusicInfo && playMusicInfo.musicInfo ? playMusicInfo.musicInfo.img : null
     if (imgUrl == url) return
     setImgUrl(url)
   // eslint-disable-next-line react-hooks/exhaustive-deps

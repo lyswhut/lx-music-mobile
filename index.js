@@ -6,7 +6,7 @@
 // import '@/utils/log'
 import './shim'
 import '@/utils/errorHandle'
-import { init as initLog } from '@/utils/log'
+import { init as initLog, log } from '@/utils/log'
 import '@/config/globalData'
 import SplashScreen from 'react-native-splash-screen'
 import { init as initNavigation, navigations, showPactModal } from '@/navigation'
@@ -18,7 +18,7 @@ import { action as listAction } from '@/store/modules/list'
 import { init as initMusicTools } from '@/utils/music'
 import { init as initLyric } from '@/plugins/lyric'
 import { init as initI18n, supportedLngs } from '@/plugins/i18n'
-import { deviceLanguage, getPlayInfo } from '@/utils/tools'
+import { deviceLanguage, getPlayInfo, toast } from '@/utils/tools'
 import { LIST_ID_PLAY_TEMP } from '@/config/constant'
 
 console.log('starting app...')
@@ -65,7 +65,17 @@ const init = () => {
         if (info.list) info.list = info.list.list
       }
 
-      if (!info.list || !info.list[info.index]) return
+      if (!info.list || !info.list[info.index]) {
+        const info2 = { ...info }
+        if (info2.list) {
+          info2.music = info2.list[info2.index]?.name
+          info2.list = info2.list.length
+        }
+        toast('恢复播放数据失败，请去错误日志查看', 'long')
+        log.warn('Restore Play Info failed: ', JSON.stringify(info2, null, 2))
+
+        return
+      }
       global.restorePlayInfo = info
 
       store.dispatch(playerAction.setList({

@@ -179,7 +179,7 @@
   "setting_other_cache_size": "当前已用缓存大小：",
   "setting_other_cache_clear_btn": "清理缓存",
   "setting_other_cache_clear_success_tip": "缓存清理完成",
-  "setting_other_log": "错误日志（软件崩溃💥时的错误日志）",
+  "setting_other_log": "错误日志（运行发生异常时的日志）",
   "setting_other_log_tip_clean_success": "日志清理完成",
   "setting_other_log_tip_null": "日志是空的哦~",
   "setting_other_log_btn_show": "查看日志",

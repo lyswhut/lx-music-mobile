@@ -179,7 +179,7 @@
   "setting_other_cache_size": "Currently used cache size: ",
   "setting_other_cache_clear_btn": "Clear Cache",
   "setting_other_cache_clear_success_tip": "Cache clearing completed",
-  "setting_other_log": "Error log (error log when the software crashes 💥)",
+  "setting_other_log": "Error log (log when abnormal operation occurs)",
   "setting_other_log_tip_clean_success": "Log cleaning completed",
   "setting_other_log_tip_null": "The log is empty~",
   "setting_other_log_btn_show": "View log",

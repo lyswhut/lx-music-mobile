@@ -1,6 +1,6 @@
 import React, { memo, useRef, useState, useEffect } from 'react'
 import { StyleSheet, View, Text, InteractionManager } from 'react-native'
-import { LOG_TYPE, getLogs, clearLogs } from '@/utils/log'
+import { getLogs, clearLogs } from '@/utils/log'
 import { useGetter } from '@/store'
 // import { gzip, ungzip } from 'pako'
 
@@ -18,11 +18,11 @@ export default memo(() => {
   const isUnmountedRef = useRef(true)
 
   const getErrorLog = () => {
-    getLogs(LOG_TYPE.error).then(log => {
+    getLogs().then(log => {
       if (isUnmountedRef.current) return
-      const logArr = log.split('\n')
+      const logArr = log.split('\n\n')
       logArr.reverse()
-      setLogText(logArr.join('\n\n').replace(/\n+$/, ''))
+      setLogText(logArr.join('\n').replace(/\n+$/, ''))
     })
   }
 
@@ -36,7 +36,7 @@ export default memo(() => {
   }
 
   const handleCleanLog = () => {
-    clearLogs(LOG_TYPE.error).then(() => {
+    clearLogs().then(() => {
       toast(t('setting_other_log_tip_clean_success'))
       getErrorLog()
     })

@@ -1,44 +1,20 @@
 // import { requestStoragePermission } from '@/utils/common'
-import { temporaryDirectoryPath, existsFile, writeFile, appendFile, mkdir, readFile, unlink } from '@/utils/fs'
+import { temporaryDirectoryPath, existsFile, writeFile, appendFile, readFile, unlink } from '@/utils/fs'
 
-export const LOG_TYPE = {
-  info: 'INFO',
-  warn: 'WARN',
-  error: 'ERROR',
-}
-const logDir = temporaryDirectoryPath + '/lx_logs'
-const logPath = {
-  info: logDir + '/info.log',
-  warn: logDir + '/warn.log',
-  error: logDir + '/error.log',
-}
+const logPath = temporaryDirectoryPath + '/error.log'
+
 const logTools = {
-  tempLog: {
-    info: [],
-    warn: [],
-    error: [],
+  tempLog: [],
+  writeLog(msg) {
+    console.log(msg)
+    appendFile(logPath, '\n\n' + msg)
   },
-  writeLog(type, msg) {
-    switch (type) {
-      case LOG_TYPE.info:
-        appendFile(logPath.info, '\n' + msg)
-        break
-      case LOG_TYPE.warn:
-        appendFile(logPath.warn, '\n' + msg)
-        break
-      case LOG_TYPE.error:
-        appendFile(logPath.error, '\n' + msg)
-        break
-      default:
-        break
-    }
-  },
-  async initLogFile(type, filePath) {
+  async initLogFile() {
     try {
-      let isExists = await existsFile(filePath)
-      if (!isExists) await writeFile(filePath, '')
-      if (this.tempLog[type].length) this.writeLog(LOG_TYPE[type], this.tempLog[type].map(m => `${m.time} ${m.type} ${m.text}`).join('\n'))
-      this.tempLog[type] = null
+      let isExists = await existsFile(logPath)
+      if (!isExists) await writeFile(logPath, '')
+      if (this.tempLog) this.writeLog(this.tempLog.map(m => `${m.time} ${m.type} ${m.text}`).join('\n'))
+      this.tempLog = null
     } catch (err) {
       console.error(err)
     }
@@ -46,53 +22,15 @@ const logTools = {
 }
 
 export const init = () => {
-  return existsFile(logDir).then(isExists => {
-    if (isExists) return
-    return mkdir(logDir)
-  }).then(() => {
-    const tasks = []
-    for (const [type, path] of Object.entries(logPath)) {
-      tasks.push(logTools.initLogFile(type, path))
-    }
-    console.log('init log tools')
-    return Promise.all(tasks)
-  })
+  return logTools.initLogFile()
 }
 
-export const getLogs = (type = LOG_TYPE.error) => {
-  let path
-  switch (type) {
-    case LOG_TYPE.info:
-      path = logPath.info
-      break
-    case LOG_TYPE.warn:
-      path = logPath.warn
-      break
-    case LOG_TYPE.error:
-      path = logPath.error
-      break
-    default:
-      return Promise.reject(new Error('Unknow log type'))
-  }
-  return readFile(path)
+export const getLogs = () => {
+  return readFile(logPath)
 }
 
-export const clearLogs = (type = LOG_TYPE.error) => {
-  let path
-  switch (type) {
-    case LOG_TYPE.info:
-      path = logPath.info
-      break
-    case LOG_TYPE.warn:
-      path = logPath.warn
-      break
-    case LOG_TYPE.error:
-      path = logPath.error
-      break
-    default:
-      return Promise.reject(new Error('Unknow log type'))
-  }
-  return unlink(path).then(() => writeFile(path, ''))
+export const clearLogs = () => {
+  return unlink(logPath).then(() => writeFile(logPath, ''))
 }
 
 export const log = {
@@ -101,26 +39,26 @@ export const log = {
     const msg = msgs.map(m => typeof m == 'string' ? m : JSON.stringify(m)).join(' ')
     if (msg.startsWith('%c')) return
     const time = new Date().toLocaleString()
-    if (logTools.tempLog.info) {
-      logTools.tempLog.info.push({ type: 'LOG', time, text: msg })
-    } else logTools.writeLog(LOG_TYPE.info, `${time} LOG ${msg}`)
+    if (logTools.tempLog) {
+      logTools.tempLog.push({ type: 'LOG', time, text: msg })
+    } else logTools.writeLog(`${time} LOG ${msg}`)
   },
   warn(...msgs) {
     // console.warn(...msgs)
     const msg = msgs.map(m => typeof m == 'string' ? m : JSON.stringify(m)).join(' ')
     const time = new Date().toLocaleString()
-    if (logTools.tempLog.warn) {
-      logTools.tempLog.warn.push({ type: 'WARN', time, text: msg })
-    } else logTools.writeLog(LOG_TYPE.warn, `${time} WARN ${msg}`)
+    if (logTools.tempLog) {
+      logTools.tempLog.push({ type: 'WARN', time, text: msg })
+    } else logTools.writeLog(`${time} WARN ${msg}`)
   },
   error(...msgs) {
     // console.error...(msgs)
     const msg = msgs.map(m => typeof m == 'string' ? m : JSON.stringify(m)).join(' ')
     const time = new Date().toLocaleString()
-    if (logTools.tempLog.error) {
-      logTools.tempLog.error.push({ type: 'ERROR', time, text: msg })
+    if (logTools.tempLog) {
+      logTools.tempLog.push({ type: 'ERROR', time, text: msg })
     } else {
-      logTools.writeLog(LOG_TYPE.error, `${time} ERROR ${msg}`)
+      logTools.writeLog(`${time} ERROR ${msg}`)
     }
   },
 }
@@ -142,7 +80,7 @@ if (process.env.NODE_ENV !== 'development') {
     if (msg.startsWith('%c')) return
     const time = new Date().toLocaleString()
     if (tempLog) {
-      tempLog.push({ type: 'LOG', time, text: msg })
+      tempLog({ type: 'LOG', time, text: msg })
     } else writeLog(`${time} LOG ${msg}`)
   }
   window.console.error = (...msgs) => {
@@ -150,7 +88,7 @@ if (process.env.NODE_ENV !== 'development') {
     const msg = msgs.map(m => typeof m == 'string' ? m : JSON.stringify(m)).join(' ')
     const time = new Date().toLocaleString()
     if (tempLog) {
-      tempLog.push({ type: 'ERROR', time, text: msg })
+      tempLog({ type: 'ERROR', time, text: msg })
     } else writeLog(`${time} ERROR ${msg}`)
   }
   window.console.warn = (...msgs) => {
@@ -158,7 +96,7 @@ if (process.env.NODE_ENV !== 'development') {
     const msg = msgs.map(m => typeof m == 'string' ? m : JSON.stringify(m)).join(' ')
     const time = new Date().toLocaleString()
     if (tempLog) {
-      tempLog.push({ type: 'WARN', time, text: msg })
+      tempLog({ type: 'WARN', time, text: msg })
     } else writeLog(`${time} WARN ${msg}`)
   }
 
@@ -169,7 +107,7 @@ if (process.env.NODE_ENV !== 'development') {
       let isExists = await existsFile(logPath)
       console.log(logPath, isExists)
       if (!isExists) await writeFile(logPath, '')
-      writeLog(tempLog.map(m => `${m.time} ${m.type} ${m.text}`).join('\n'))
+      writeLog(tempLog(m => `${m.time} ${m.type} ${m.text}`).join('\n'))
       tempLog = null
     } catch (err) {
       console.error(err)

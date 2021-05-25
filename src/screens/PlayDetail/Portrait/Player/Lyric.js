@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, FlatList } from 'react-native'
 import { useGetter, useDispatch } from '@/store'
 import { useLayout } from '@/utils/hooks'
 import { useLrcPlay, useLrcSet } from '@/plugins/lyric'
-import { screenkeepAwake, screenUnkeepAwake } from '@/utils/utils'
 
 const LrcLine = memo(({ text, line, activeLine }) => {
   const theme = useGetter('common', 'theme')
@@ -62,9 +61,9 @@ export default memo(() => {
   }
 
   const handleScrollToIndexFailed = (info) => {
-    console.log(info)
+    // console.log(info)
     wait.then(() => {
-      scrollTimoutRef.current?.scrollToIndex({ index: info.index, animated: true })
+      scrollViewRef.current?.scrollToIndex({ index: info.index, animated: true })
     })
   }
 
@@ -72,7 +71,7 @@ export default memo(() => {
     setTimeout(() => {
       isPauseScrollRef.current = false
       handleScrollToActive()
-    }, 500)
+    }, 100)
     return () => {
       if (scrollTimoutRef.current) {
         clearTimeout(scrollTimoutRef.current)
@@ -91,9 +90,7 @@ export default memo(() => {
     if (isFirstSetLrc.current) {
       isFirstSetLrc.current = false
     } else {
-      setTimeout(() => {
-        handleScrollToActive(0)
-      }, 100)
+      handleScrollToActive(0)
     }
   }, [handleScrollToActive, lyricLines])
 

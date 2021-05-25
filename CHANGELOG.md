@@ -6,6 +6,19 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.3.3](https://github.com/lyswhut/lx-music-mobile/compare/v0.3.2...v0.3.3) - 2021-05-25
+
+### 修复
+
+- 尝试修复软件启动时恢复上一次播放的歌曲可能导致软件崩溃的问题
+- 尝试修复播放详情页歌词导致UI冻结的问题
+- 修复企鹅音乐搜索歌曲没有结果的问题
+
+### 其他
+
+- 整合日志记录
+- 更新 exoPlayer 到 2.14.0
+
 ## [0.3.2](https://github.com/lyswhut/lx-music-mobile/compare/v0.3.1...v0.3.2) - 2021-05-23
 
 ### 修复

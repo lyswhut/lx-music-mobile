@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, memo, useState, useMemo } from 'react'
+import React, { useEffect, useCallback, memo, useState, useMemo, useRef } from 'react'
 import { View, StyleSheet } from 'react-native'
 
 import Header from '../components/Header'
@@ -10,6 +10,20 @@ import PagerView from 'react-native-pager-view'
 import Pic from './Pic'
 import Lyric from './Lyric'
 import { screenkeepAwake, screenUnkeepAwake } from '@/utils/utils'
+
+const LyricPage = ({ activeIndex }) => {
+  const initedRef = useRef(false)
+  const lyric = useMemo(() => <Lyric />, [])
+  switch (activeIndex) {
+    // case 3:
+    case 1:
+      if (!initedRef.current) initedRef.current = true
+      return lyric
+    default:
+      return initedRef.current ? lyric : null
+  }
+  // return activeIndex == 0 || activeIndex == 1 ? setting : null
+}
 
 // global.iskeep = false
 export default memo(() => {
@@ -25,8 +39,6 @@ export default memo(() => {
     }
   }, [])
 
-  const pic = useMemo(() => <Pic />, [])
-
   return (
     <>
       <Header />
@@ -37,10 +49,10 @@ export default memo(() => {
           style={styles.pagerView}
         >
           <View collapsable={false} style={styles.pageStyle}>
-            {pageIndex == 0 ? pic : null}
+            <Pic />
           </View>
           <View collapsable={false} style={styles.pageStyle}>
-            {pageIndex == 1 ? <Lyric /> : null}
+            <LyricPage activeIndex={pageIndex} />
           </View>
         </PagerView>
         <View style={styles.pageIndicator}>

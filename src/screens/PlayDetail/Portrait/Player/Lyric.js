@@ -41,7 +41,7 @@ export default memo(() => {
 
   // const imgWidth = useMemo(() => layout.width * 0.75, [layout.width])
   const handleScrollToActive = useCallback((index = lineRef.current) => {
-    if (scrollViewRef.current && linesRef.current.length) {
+    if (scrollViewRef.current) {
       scrollViewRef.current.scrollToIndex({
         index,
         animated: true,
@@ -68,17 +68,13 @@ export default memo(() => {
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      isPauseScrollRef.current = false
-      handleScrollToActive()
-    }, 100)
     return () => {
       if (scrollTimoutRef.current) {
         clearTimeout(scrollTimoutRef.current)
         scrollTimoutRef.current = null
       }
     }
-  }, [handleScrollToActive])
+  }, [])
 
   useEffect(() => {
     linesRef.current = lyricLines
@@ -89,6 +85,10 @@ export default memo(() => {
     })
     if (isFirstSetLrc.current) {
       isFirstSetLrc.current = false
+      setTimeout(() => {
+        isPauseScrollRef.current = false
+        handleScrollToActive()
+      }, 100)
     } else {
       handleScrollToActive(0)
     }
@@ -96,7 +96,7 @@ export default memo(() => {
 
   useEffect(() => {
     lineRef.current = line
-    if (!scrollViewRef.current || !linesRef.current.length || isPauseScrollRef.current) return
+    if (!scrollViewRef.current || isPauseScrollRef.current) return
     handleScrollToActive()
   }, [handleScrollToActive, line])
 
@@ -132,6 +132,8 @@ export default memo(() => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingLeft: 10,
+    paddingRight: 10,
     // backgroundColor: 'rgba(0,0,0,0.1)',
   },
   space: {
@@ -141,7 +143,9 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     textAlign: 'center',
     fontSize: 16,
-    lineHeight: 28,
+    lineHeight: 22,
+    paddingTop: 5,
+    paddingBottom: 5,
     // opacity: 0,
   },
 })

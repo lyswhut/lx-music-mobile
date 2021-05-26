@@ -137,11 +137,9 @@ export const getListDetail = ({ id, page, isRefresh = false }) => (dispatch, get
   })
 }
 
-export const getListDetailAll = id => (dispatch, getState) => {
-  const allState = getState()
-  const rootState = allState.common
-  let source = rootState.setting.songList.source
+export const getListDetailAll = ({ source, id }) => (dispatch, getState) => {
   let listKey = `sdetail__${source}__${id}`
+  if (!cache.has(listKey)) cache.set(listKey, new Map())
   const listCache = cache.get(listKey)
   const loadData = (id, page) => {
     let pageKey = `sdetail__${source}__${id}__${page}`

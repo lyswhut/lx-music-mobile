@@ -301,7 +301,7 @@ const List = () => {
     <View style={styles.container}>
       {listComponent}
       <View style={{ backgroundColor: theme.secondary45 }}>
-        <MyList currentList={currentList} activeListIdRef={activeListIdRef} />
+        <MyList currentList={currentList} activeListIdRef={activeListIdRef} handleCancelMultiSelect={handleCancelMultiSelect} />
         <ExitMultipleModeBar
           multipleMode={isMultiSelectMode}
           onCancel={handleCancelMultiSelect}

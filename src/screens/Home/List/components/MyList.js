@@ -12,21 +12,22 @@ import ConfirmAlert from '@/components/common/ConfirmAlert'
 import Input from '@/components/common/Input'
 import { getListScrollPosition, saveListScrollPosition } from '@/utils/tools'
 import { LIST_SCROLL_POSITION_KEY } from '@/config/constant'
+import musicSdk from '@/utils/music'
 
-const ListItem = ({ onPress, name, id, showMenu, activeId }) => {
+const ListItem = ({ onPress, name, id, showMenu, activeId, loading, index }) => {
   const theme = useGetter('common', 'theme')
   const moreButtonRef = useRef()
   const handleShowMenu = useCallback(() => {
     if (moreButtonRef.current && moreButtonRef.current.measure) {
       moreButtonRef.current.measure((fx, fy, width, height, px, py) => {
         // console.log(fx, fy, width, height, px, py)
-        showMenu(id, name, { x: Math.ceil(px), y: Math.ceil(py), w: Math.ceil(width), h: Math.ceil(height) })
+        showMenu(id, name, index, { x: Math.ceil(px), y: Math.ceil(py), w: Math.ceil(width), h: Math.ceil(height) })
       })
     }
-  }, [showMenu, id, name])
+  }, [showMenu, id, name, index])
 
   return (
-    <View style={{ ...styles.listItem, borderBottomColor: theme.secondary45 }}>
+    <View style={{ ...styles.listItem, borderBottomColor: theme.secondary45, opacity: loading ? 0.5 : 1 }}>
       <TouchableOpacity style={styles.listName} onPress={onPress}>
         <Text numberOfLines={1} style={{ color: theme.normal }}>{name}</Text>
       </TouchableOpacity>
@@ -37,7 +38,7 @@ const ListItem = ({ onPress, name, id, showMenu, activeId }) => {
   )
 }
 
-const List = memo(({ setVisiblePanel, currentList, activeListIdRef }) => {
+const List = memo(({ setVisiblePanel, currentList, activeListIdRef, handleCancelMultiSelect }) => {
   const theme = useGetter('common', 'theme')
   const defaultList = useGetter('list', 'defaultList')
   const loveList = useGetter('list', 'loveList')
@@ -49,12 +50,17 @@ const List = memo(({ setVisiblePanel, currentList, activeListIdRef }) => {
   const removeUserList = useDispatch('list', 'removeUserList')
   const [visibleMenu, setVisibleMenu] = useState(false)
   // const activeListId = useGetter('common', 'prevSelectListId')
+  const [selectedListIndex, setSelectedListIndex] = useState(-1)
   const selectedListRef = useRef({})
   const { t } = useTranslation()
   const [buttonPosition, setButtonPosition] = useState({ w: 0, h: 0, x: 0, y: 0 })
   const [visibleRename, setVisibleRename] = useState(false)
   const [listNameText, setListNameText] = useState('')
   const scrollViewRef = useRef()
+  const setList = useDispatch('list', 'setList')
+  const getBoardListAll = useDispatch('top', 'getListAll')
+  const getListDetailAll = useDispatch('songList', 'getListDetailAll')
+  const [fetchingListStatus, setFetchingListStatus] = useState({})
 
   useEffect(() => {
     userListRef.current = userList
@@ -70,29 +76,46 @@ const List = memo(({ setVisiblePanel, currentList, activeListIdRef }) => {
     removeUserList(id)
   }, [activeListIdRef, userList, removeUserList, setPrevSelectListId])
 
-  const showMenu = useCallback((id, name, position) => {
-    // console.log(position)
-    if (id == 'default' || id == 'love') return
-    setButtonPosition({ ...position })
-    selectedListRef.current.id = id
-    selectedListRef.current.name = name
-    setVisibleMenu(true)
-  }, [setButtonPosition])
+
   const hideMenu = useCallback(() => {
     setVisibleMenu(false)
   }, [setVisibleMenu])
+  const fetchList = useCallback((id, source, sourceListId) => {
+    setFetchingListStatus(fetchingListStatus => ({ ...fetchingListStatus, [id]: true }))
+    // console.log(sourceListId)
+    let promise
+    if (/board__/.test(sourceListId)) {
+      const id = sourceListId.replace(/board__/, '')
+      promise = getBoardListAll(id)
+    } else {
+      promise = getListDetailAll({ source, id: sourceListId })
+    }
+    return promise.finally(() => {
+      setFetchingListStatus(fetchingListStatus => ({ ...fetchingListStatus, [id]: false }))
+    })
+  }, [getBoardListAll, getListDetailAll])
+  const handleSyncSourceList = useCallback(async index => {
+    const targetListInfo = userList[index]
+    const list = await fetchList(targetListInfo.id, targetListInfo.source, targetListInfo.sourceListId)
+    // console.log(targetListInfo.list.length, list.length)
+    handleCancelMultiSelect()
+    setList({
+      ...targetListInfo,
+      list,
+    })
+  }, [fetchList, handleCancelMultiSelect, setList, userList])
   const handleMenuPress = useCallback(({ action }) => {
     switch (action) {
       case 'rename':
         setListNameText(selectedListRef.current.name)
         setVisibleRename(true)
         break
-        // case 'sync':
+      case 'sync':
+        handleSyncSourceList(selectedListRef.current.index)
+        break
+        // case 'changePosition':
 
       //   break
-      case 'changePosition':
-
-        break
       case 'remove':
         handleRemoveList(selectedListRef.current.id)
         break
@@ -100,16 +123,19 @@ const List = memo(({ setVisiblePanel, currentList, activeListIdRef }) => {
       default:
         break
     }
-  }, [handleRemoveList])
+  }, [handleRemoveList, handleSyncSourceList])
 
   const menus = useMemo(() => {
+    if (selectedListIndex == -1) return []
+    const source = userList[selectedListIndex].source
+
     return [
       { action: 'rename', label: t('list_rename') },
-      // { action: 'sync', label: t('list_sync') },
+      { action: 'sync', label: t('list_sync'), disabled: !source || !musicSdk[source].songList },
       // { action: 'changePosition', label: t('change_position') },
       { action: 'remove', label: t('list_remove') },
     ]
-  }, [t])
+  }, [selectedListIndex, userList, t])
 
   const handleCancelRename = useCallback(() => {
     setVisibleRename(false)
@@ -135,7 +161,16 @@ const List = memo(({ setVisiblePanel, currentList, activeListIdRef }) => {
     const offset = getListScrollPosition(LIST_SCROLL_POSITION_KEY)
     scrollViewRef.current.scrollTo({ x: 0, y: offset, animated: false })
   })
-
+  const showMenu = useCallback((id, name, index, position) => {
+    // console.log(position)
+    if (id == 'default' || id == 'love') return
+    setButtonPosition({ ...position })
+    selectedListRef.current.id = id
+    selectedListRef.current.name = name
+    selectedListRef.current.index = index
+    setSelectedListIndex(index)
+    setVisibleMenu(true)
+  }, [])
   return (
     <View style={{ ...styles.container, borderTopColor: theme.secondary10 }}>
       <ScrollView style={{ flexShrink: 1, flexGrow: 0 }} onScroll={handleScroll} ref={scrollViewRef} keyboardShouldPersistTaps={'always'}>
@@ -150,7 +185,7 @@ const List = memo(({ setVisiblePanel, currentList, activeListIdRef }) => {
               <Text numberOfLines={1} style={{ color: theme.normal }}>{loveList.name}</Text>
             </TouchableOpacity>
           </View>
-          {userList.map(({ id, name }) => <ListItem key={id} name={name} id={id} onPress={() => handleToggleList({ id, name })} activeId={currentList.id} showMenu={showMenu} />)}
+          {userList.map(({ id, name }, index) => <ListItem key={id} name={name} id={id} index={index} loading={fetchingListStatus[id]} onPress={() => handleToggleList({ id, name })} activeId={currentList.id} showMenu={showMenu} />)}
         </View>
       </ScrollView>
       <Menu menus={menus} buttonPosition={buttonPosition} onPress={handleMenuPress} visible={visibleMenu} hideMenu={hideMenu} />
@@ -174,7 +209,7 @@ const List = memo(({ setVisiblePanel, currentList, activeListIdRef }) => {
 })
 
 
-export default memo(({ currentList, activeListIdRef }) => {
+export default memo(({ currentList, activeListIdRef, handleCancelMultiSelect }) => {
   const theme = useGetter('common', 'theme')
   const [visiblePanel, setVisiblePanel] = useState(false)
 
@@ -182,9 +217,12 @@ export default memo(({ currentList, activeListIdRef }) => {
     <DorpDownPanel
       visible={visiblePanel}
       setVisible={setVisiblePanel}
-      PanelContent={<List setVisiblePanel={setVisiblePanel} currentList={currentList} activeListIdRef={activeListIdRef} />}
+      PanelContent={<List setVisiblePanel={setVisiblePanel} currentList={currentList} activeListIdRef={activeListIdRef} handleCancelMultiSelect={handleCancelMultiSelect} />}
     >
-      <Text style={{ ...styles.sourceMenu, color: theme.secondary }}>{currentList.name}</Text>
+      <View style={styles.currentList}>
+        <Text style={{ ...styles.sourceMenu, color: theme.secondary, flex: 1 }}>{currentList.name}</Text>
+        {/* <TouchableOpacity style={styles.createList}><Icon style={{ color: theme.secondary30, fontSize: 24 }} name="playlist-plus" /></TouchableOpacity> */}
+      </View>
     </DorpDownPanel>
   )
 })
@@ -222,6 +260,16 @@ const styles = StyleSheet.create({
     height: 46,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  currentList: {
+    flexDirection: 'row',
+  },
+  createList: {
+    width: 38,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'rgba(0,0,0,0.2)',
   },
 
 

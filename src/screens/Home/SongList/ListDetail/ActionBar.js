@@ -16,6 +16,7 @@ export default memo(() => {
   const createUserList = useDispatch('list', 'createUserList')
   const { t } = useTranslation()
   const theme = useGetter('common', 'theme')
+  const songListSource = useGetter('songList', 'songListSource')
 
   const handlePlayAll = useCallback(async() => {
     if (!listDetailData.info.name) return
@@ -32,9 +33,9 @@ export default memo(() => {
 
   const handleCollection = useCallback(async() => {
     if (!listDetailData.info.name) return
-    const list = await getListDetailAll(selectListInfo.id)
+    const list = await getListDetailAll({ id: selectListInfo.id, source: songListSource })
     createUserList({
-      name: listDetailData.info.name,
+      name: listDetailData.info.name || `${listDetailData.source}-list`,
       id: `${listDetailData.source}__${listDetailData.id}`,
       list,
       source: listDetailData.source,
@@ -42,7 +43,7 @@ export default memo(() => {
       isShowToast: true,
     })
     toast(t('collect_success'))
-  }, [listDetailData, getListDetailAll, selectListInfo.id, createUserList, t])
+  }, [listDetailData, getListDetailAll, selectListInfo, songListSource, createUserList, t])
 
   const handleBack = () => setVisibleListDetail(false)
 

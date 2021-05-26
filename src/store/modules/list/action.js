@@ -176,7 +176,7 @@ export const updateMusicInfo = ({ id, index, data }) => (dispatch, getState) => 
   saveList(global.allList[id])
 }
 
-export const createUserList = ({ name, id = `userlist_${Date.now()}`, source, sourceListId, list }) => async(dispatch, getState) => {
+export const createUserList = ({ name, id = `userlist_${Date.now()}`, list = [], source, sourceListId }) => async(dispatch, getState) => {
   dispatch({
     type: TYPES.createUserList,
     payload: { name, id, source, sourceListId },

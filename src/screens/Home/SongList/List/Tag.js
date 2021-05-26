@@ -88,12 +88,14 @@ export default memo(() => {
 
 const styles = StyleSheet.create({
   sourceMenu: {
-    height: 38,
-    lineHeight: 38,
+    // height: 38,
+    // lineHeight: 38,
     textAlign: 'center',
     // minWidth: 70,
     paddingLeft: 12,
     paddingRight: 12,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
 
   container: {

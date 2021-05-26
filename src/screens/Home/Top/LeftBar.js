@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     width: '26%',
+    maxWidth: 120,
     flexGrow: 0,
     flexShrink: 0,
     borderRightWidth: BorderWidths.normal,

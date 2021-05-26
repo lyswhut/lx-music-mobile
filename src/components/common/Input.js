@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'rgba(0,0,0,0.1)',
     flexGrow: 1,
     flexShrink: 1,
-    height: 38,
+    // height: 38,
     alignItems: 'center',
     // paddingRight: 5,
   },

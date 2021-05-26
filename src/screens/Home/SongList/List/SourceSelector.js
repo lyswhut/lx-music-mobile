@@ -1,9 +1,10 @@
 import React, { memo, useMemo, useCallback } from 'react'
-import { StyleSheet, Text } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
 import DorpDownMenu from '@/components/common/DorpDownMenu'
 import { useGetter, useDispatch } from '@/store'
 import { useTranslation } from '@/plugins/i18n'
+import { useLayout } from '@/utils/hooks'
 
 
 export default memo(() => {
@@ -15,6 +16,7 @@ export default memo(() => {
   const sortList = useGetter('songList', 'sortList')
   const sourceNameType = useGetter('common', 'sourceNameType')
   const theme = useGetter('common', 'theme')
+  const { onLayout, ...layout } = useLayout()
 
   const sources_t = useMemo(() => {
     return sources.map(s => ({ label: t(`source_${sourceNameType}_${s.id}`), action: s.id }))
@@ -28,10 +30,12 @@ export default memo(() => {
   return (
     <DorpDownMenu
       menus={sources_t}
-      width={80}
+      width={layout.width}
       onPress={handleSetSource}
     >
-      <Text style={{ ...styles.sourceMenu, color: theme.normal }}>{t(`source_${sourceNameType}_${songListSource}`)}</Text>
+      <View style={styles.sourceMenu} onLayout={onLayout}>
+        <Text style={{ color: theme.normal }}>{t(`source_${sourceNameType}_${songListSource}`)}</Text>
+      </View>
     </DorpDownMenu>
   )
 })
@@ -39,9 +43,10 @@ export default memo(() => {
 
 const styles = StyleSheet.create({
   sourceMenu: {
-    height: 38,
-    lineHeight: 38,
-    textAlign: 'center',
-    width: 80,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: 12,
+    paddingRight: 12,
   },
 })

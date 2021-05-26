@@ -231,11 +231,11 @@ export default memo(({ currentList, activeListIdRef, handleCancelMultiSelect }) 
 
 const styles = StyleSheet.create({
   sourceMenu: {
-    height: 38,
-    lineHeight: 38,
     minWidth: 70,
     paddingLeft: 10,
     paddingRight: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
 
   container: {
@@ -250,7 +250,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: BorderWidths.normal,
   },
   listName: {
-    height: 46,
+    // height: 46,
+    paddingTop: 12,
+    paddingBottom: 12,
     justifyContent: 'center',
     flexGrow: 1,
     flexShrink: 1,
@@ -258,7 +260,9 @@ const styles = StyleSheet.create({
   },
   listMoreBtn: {
     width: 50,
-    height: 46,
+    // height: 46,
+    paddingTop: 12,
+    paddingBottom: 12,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -32,7 +32,7 @@ export default memo(() => {
 
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps={'always'} horizontal={true} showsHorizontalScrollIndicator={false}>
+    <ScrollView style={styles.container} keyboardShouldPersistTaps={'always'} horizontal={true}>
       {
         sorts.map(s => (
           <TouchableOpacity style={styles.button} onPress={() => setSongList({ sortId: s.id })} key={s.id}>
@@ -67,11 +67,13 @@ const styles = StyleSheet.create({
     // backgroundColor: 'rgba(0,0,0,0.1)',
   },
   buttonText: {
-    height: 38,
-    lineHeight: 38,
+    // height: 38,
+    // lineHeight: 38,
     textAlign: 'center',
     paddingLeft: 15,
     paddingRight: 15,
+    paddingTop: 10,
+    paddingBottom: 10,
     // width: 80,
   },
 })

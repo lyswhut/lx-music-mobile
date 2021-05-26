@@ -24,7 +24,7 @@ export default memo(({ playNextModes }) => {
     <View style={{ ...styles.container, backgroundColor: theme.primary, borderTopColor: theme.secondary10 }}>
       <View style={styles.left} elevation={1}><Pic /></View>
       <View style={styles.center}>
-        <View style={{ ...styles.row, justifyContent: 'space-between', fontSize: 12, height: 19 }}>
+        <View style={{ ...styles.row, justifyContent: 'space-between', fontSize: 12 }}>
           <Title />
           {/* <PlayTime /> */}
         </View>
@@ -44,7 +44,7 @@ export default memo(({ playNextModes }) => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 59,
+    // height: 59,
     // paddingTop: progressContentPadding,
     // marginTop: -progressContentPadding,
     // backgroundColor: 'rgba(0, 0, 0, .1)',
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     paddingLeft: 5,
     justifyContent: 'space-evenly',
-    height: 48,
+    // height: 48,
   },
   right: {
     flexDirection: 'row',

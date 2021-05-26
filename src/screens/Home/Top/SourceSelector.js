@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react'
-import { StyleSheet, Text } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
 import DorpDownMenu from '@/components/common/DorpDownMenu'
 import { useGetter, useDispatch } from '@/store'
@@ -25,7 +25,9 @@ export default memo(({ layout }) => {
       width={layout.width}
       onPress={({ action }) => setTop({ source: action })}
     >
-      <Text style={{ ...styles.sourceMenu, color: theme.normal }}>{t(`source_${sourceNameType}_${sourceId}`)}</Text>
+      <View style={styles.sourceMenu}>
+        <Text style={{ color: theme.normal }} numberOfLines={1}>{t(`source_${sourceNameType}_${sourceId}`)}</Text>
+      </View>
     </DorpDownMenu>
   )
 })
@@ -33,11 +35,10 @@ export default memo(({ layout }) => {
 
 const styles = StyleSheet.create({
   sourceMenu: {
-    height: 38,
-    lineHeight: 38,
+    justifyContent: 'center',
+    paddingTop: 12,
+    paddingBottom: 12,
     paddingLeft: 10,
     paddingRight: 10,
-    // textAlign: 'center',
-    // width: 80,
   },
 })

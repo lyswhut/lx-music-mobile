@@ -343,12 +343,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
   },
-  lists: {
-    height: 50,
-    flexGrow: 0,
-    flexShrink: 0,
-    flexDirection: 'row',
-  },
 })
 
 export default List

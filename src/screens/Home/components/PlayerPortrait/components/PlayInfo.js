@@ -23,7 +23,7 @@ export default () => {
   return (
     <>
       <View style={styles.progress}><Progress progress={progress} bufferedProgress={bufferedProgress} duration={duration} /></View>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', height: 17 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         {/* <MusicName /> */}
         <View style={{ flexGrow: 1, flexShrink: 1, paddingRight: 5 }} >
           <Status />

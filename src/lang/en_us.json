@@ -27,6 +27,8 @@
   "change_position_music_title": "Adjust the position of {{name}} to",
   "change_position_music_multi_title": "Adjust the position of the selected {{num}} song to",
   "list_remove": "Remove",
+  "list_create": "Create a new list",
+  "list_create_input_placeholder": "What name do you think of...",
 
   "play_detail_todo_tip": "What do you want? No, this function has not been implemented yet 😛, But you can try to locate the currently playing song by long pressing (only valid for playing songs in \"My List\")",
 

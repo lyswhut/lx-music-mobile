@@ -81,13 +81,13 @@ const Menu = ({
   }, [screenSize, buttonPosition, menus, width, height])
 
   const menuPress = useCallback((menu, index) => {
-    if (menu.disabled) return
+    // if (menu.disabled) return
     onPress(menu, index)
     hideMenu()
   }, [onPress, hideMenu])
 
   const menuLongPress = useCallback((menu, index) => {
-    if (menu.disabled) return
+    // if (menu.disabled) return
     longPress(menu, index)
     // hideMenu()
   }, [longPress])
@@ -98,15 +98,28 @@ const Menu = ({
       <Animated.ScrollView keyboardShouldPersistTaps={'always'}>
         {
           menus.map((menu, index) => (
-            <TouchableHighlight
-              key={menu.action}
-              style={{ ...styles.menuItem, width: width, height: height }}
-              underlayColor={theme.secondary40}
-              onPress={() => { menuPress(menu, index) }}
-              onLongPress={() => { menuLongPress(menu, index) }}
-            >
-              <Text style={{ ...styles.menuText, textAlign: center ? 'center' : 'left', color: theme.normal }} numberOfLines={1}>{menu.label}</Text>
-            </TouchableHighlight>
+            menu.disabled
+              ? (
+                  <View
+                    key={menu.action}
+                    style={{ ...styles.menuItem, width: width, height: height, opacity: 0.4 }}
+                    underlayColor={theme.secondary40}
+                  >
+                    <Text style={{ ...styles.menuText, textAlign: center ? 'center' : 'left', color: theme.normal }} numberOfLines={1}>{menu.label}</Text>
+                  </View>
+                )
+              : (
+                  <TouchableHighlight
+                    key={menu.action}
+                    style={{ ...styles.menuItem, width: width, height: height }}
+                    underlayColor={theme.secondary40}
+                    onPress={() => { menuPress(menu, index) }}
+                    onLongPress={() => { menuLongPress(menu, index) }}
+                  >
+                    <Text style={{ ...styles.menuText, textAlign: center ? 'center' : 'left', color: theme.normal }} numberOfLines={1}>{menu.label}</Text>
+                  </TouchableHighlight>
+                )
+
           ))
         }
       </Animated.ScrollView>

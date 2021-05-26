@@ -175,7 +175,7 @@ export default memo(({
         // case 'copyName':
         //   break
       case 'add':
-        console.log(selectedListRef.current.length)
+        // console.log(selectedListRef.current.length)
         selectedListRef.current.length
           ? setVisibleMusicMultiAddModal(true)
           : setVisibleMusicAddModal(true)

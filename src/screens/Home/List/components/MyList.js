@@ -126,8 +126,9 @@ const List = memo(({ setVisiblePanel, currentList, activeListIdRef, handleCancel
   }, [handleRemoveList, handleSyncSourceList])
 
   const menus = useMemo(() => {
-    if (selectedListIndex == -1) return []
-    const source = userList[selectedListIndex].source
+    const list = userList[selectedListIndex]
+    if (!list) return []
+    const source = list.source
 
     return [
       { action: 'rename', label: t('list_rename') },

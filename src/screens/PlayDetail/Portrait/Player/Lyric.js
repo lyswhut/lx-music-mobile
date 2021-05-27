@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, FlatList } from 'react-native'
 import { useGetter, useDispatch } from '@/store'
 import { useLayout } from '@/utils/hooks'
 import { useLrcPlay, useLrcSet } from '@/plugins/lyric'
+import { log } from '@/utils/log'
+import { toast } from '@/utils/tools'
 
 const LrcLine = memo(({ text, line, activeLine }) => {
   const theme = useGetter('common', 'theme')
@@ -41,12 +43,18 @@ export default memo(() => {
 
   // const imgWidth = useMemo(() => layout.width * 0.75, [layout.width])
   const handleScrollToActive = useCallback((index = lineRef.current) => {
+    if (index < 0) return
     if (scrollViewRef.current) {
-      scrollViewRef.current.scrollToIndex({
-        index,
-        animated: true,
-        viewPosition: 0.4,
-      })
+      try {
+        scrollViewRef.current.scrollToIndex({
+          index: index,
+          animated: true,
+          viewPosition: 0.4,
+        })
+      } catch (err) {
+        toast('出了点意外...你可以去错误日志查看错误', 'long')
+        log.warn('Scroll failed: ', err.message)
+      }
     }
   }, [])
 

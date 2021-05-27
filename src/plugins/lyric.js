@@ -28,6 +28,7 @@ const lrcTools = {
   onSetLyric(lines) {
     this.currentLines = lines
     for (const hook of this.setLyricHooks) hook(lines)
+    for (const hook of this.playHooks) hook(-1, '')
   },
   addPlayHook(callback) {
     this.playHooks.push(callback)

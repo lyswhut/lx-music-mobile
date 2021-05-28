@@ -5,6 +5,7 @@ import ListItem from './ListItem'
 import LoadingMask from '@/components/common/LoadingMask'
 import { useTranslation } from '@/plugins/i18n'
 import { useDispatch, useGetter, subscribe } from '@/store'
+import { navigations } from '@/navigation'
 
 export default ({ width }) => {
   const unSubscribeRef = useRef()
@@ -14,13 +15,13 @@ export default ({ width }) => {
   const listInfo = useGetter('songList', 'listInfo')
   const getList = useDispatch('songList', 'getList')
   const setSelectListInfo = useDispatch('songList', 'setSelectListInfo')
-  const setVisibleListDetail = useDispatch('songList', 'setVisibleListDetail')
   const theme = useGetter('common', 'theme')
   const songListSource = useGetter('songList', 'songListSource')
   const songListSortId = useGetter('songList', 'songListSortId')
   const songListTagInfo = useGetter('songList', 'songListTagInfo')
   const [page, setPage] = useState(0)
   const { t } = useTranslation()
+  const componentIds = useGetter('common', 'componentIds')
 
   useEffect(() => {
     if (!initedRef.current) return
@@ -62,8 +63,8 @@ export default ({ width }) => {
   const handleListPress = useCallback((item, index) => {
     // console.log(item)
     setSelectListInfo(item)
-    setVisibleListDetail(true)
-  }, [setSelectListInfo, setVisibleListDetail])
+    navigations.pushSonglistDetailScreen(componentIds.home)
+  }, [componentIds.home, setSelectListInfo])
 
   const itemWidth = useMemo(() => Math.max(parseInt(width * 0.125), 110), [width])
   const rowNum = useMemo(() => Math.floor(width / itemWidth), [itemWidth, width])

@@ -2,17 +2,19 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import List from './List'
-import ListDetail from './ListDetail'
+import MenuBar from './MenuBar'
 
-const SongList = () => {
+import { useLayout } from '@/utils/hooks'
+
+export default () => {
+  const { onLayout, ...layout } = useLayout()
   return (
-    <View style={styles.container}>
-      <List />
-      <ListDetail />
+    <View style={styles.container} onLayout={onLayout}>
+      <MenuBar />
+      <List width={layout.width} />
     </View>
   )
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -20,6 +22,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 })
-
-export default SongList
 

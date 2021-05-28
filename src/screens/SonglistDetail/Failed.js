@@ -3,19 +3,20 @@ import { View, Text, StyleSheet, ImageBackground } from 'react-native'
 import { useGetter, useDispatch } from '@/store'
 import { useTranslation } from '@/plugins/i18n'
 import Button from '@/components/common/Button'
+import { pop } from '@/navigation'
 
 const Header = memo(() => {
   const { t } = useTranslation()
   const theme = useGetter('common', 'theme')
-  const setVisibleListDetail = useDispatch('songList', 'setVisibleListDetail')
-  const handleBack = () => {
-    setVisibleListDetail(false)
+  const componentIds = useGetter('common', 'componentIds')
+  const back = () => {
+    pop(componentIds.songlistDetail)
   }
 
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container }}>
       <Text style={{ ...styles.text, color: theme.normal20 }}>{t('load_failed')}</Text>
-      <Button onPress={handleBack} style={{ ...styles.controlBtn, backgroundColor: theme.secondary40 }}>
+      <Button onPress={back} style={{ ...styles.controlBtn, backgroundColor: theme.secondary40 }}>
         <Text style={{ ...styles.controlBtnText, color: theme.secondary }}>{t('back')}</Text>
       </Button>
     </View>

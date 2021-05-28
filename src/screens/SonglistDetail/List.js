@@ -8,7 +8,6 @@ import OnlineList from '@/components/OnlineList'
 
 export default ({ animatePlayed }) => {
   const [isListRefreshing, setIsListRefreshing] = useState(false)
-  const isVisibleListDetail = useGetter('songList', 'isVisibleListDetail')
   const isGetListDetailFailed = useGetter('songList', 'isGetListDetailFailed')
 
   const selectListInfo = useGetter('songList', 'selectListInfo')
@@ -33,7 +32,7 @@ export default ({ animatePlayed }) => {
     isGetListDetailFailed
       ? <Failed />
       : <OnlineList
-          list={isVisibleListDetail && animatePlayed ? listDetailData.list : []}
+          list={animatePlayed ? listDetailData.list : []}
           page={-1}
             // isEnd={listDetailData.isEnd}
           isListRefreshing={isListRefreshing}

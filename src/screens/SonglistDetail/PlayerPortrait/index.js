@@ -25,7 +25,7 @@ export default memo(({ playNextModes }) => {
           <Title />
           {/* <PlayTime /> */}
         </View>
-        {(componentIds.playDetail || componentIds.songlistDetail) ? null : <PlayInfo />}
+        {componentIds.playDetail ? null : <PlayInfo />}
       </View>
       <View style={styles.right}>
         <ControlBtn playNextModes={playNextModes} />

@@ -1,9 +1,10 @@
 import { Navigation } from 'react-native-navigation'
-import { Dimensions } from 'react-native'
+import { Dimensions, InteractionManager } from 'react-native'
 
 import {
   HOME_SCREEN,
   PLAY_DETAIL_SCREEN,
+  SONGLIST_DETAIL_SCREEN,
   // SETTING_SCREEN,
 } from './screenNames'
 
@@ -100,44 +101,97 @@ export function pushPlayDetailScreen(componentId) {
       },
     })
   */
-
-  Navigation.push(componentId, {
-    component: {
-      name: PLAY_DETAIL_SCREEN,
-      options: {
-        topBar: {
-          visible: false,
-          height: 0,
-          drawBehind: false,
-        },
-        statusBar: {
-          drawBehind: true,
-          visible: true,
-          style: 'dark',
-          backgroundColor: 'transparent',
-        },
-        animations: {
-          push: {
-            content: {
-              translationX: {
-                from: Dimensions.get('window').width,
-                to: 0,
-                duration: 300,
+  InteractionManager.runAfterInteractions(() => {
+    Navigation.push(componentId, {
+      component: {
+        name: PLAY_DETAIL_SCREEN,
+        options: {
+          topBar: {
+            visible: false,
+            height: 0,
+            drawBehind: false,
+          },
+          statusBar: {
+            drawBehind: true,
+            visible: true,
+            style: 'dark',
+            backgroundColor: 'transparent',
+          },
+          animations: {
+            push: {
+              content: {
+                translationX: {
+                  from: Dimensions.get('window').width,
+                  to: 0,
+                  duration: 300,
+                },
               },
             },
-          },
-          pop: {
-            content: {
-              translationX: {
-                from: 0,
-                to: Dimensions.get('window').width,
-                duration: 300,
+            pop: {
+              content: {
+                translationX: {
+                  from: 0,
+                  to: Dimensions.get('window').width,
+                  duration: 300,
+                },
               },
             },
           },
         },
       },
-    },
+    })
+  })
+}
+export function pushSonglistDetailScreen(componentId) {
+  InteractionManager.runAfterInteractions(() => {
+    Navigation.push(componentId, {
+      component: {
+        name: SONGLIST_DETAIL_SCREEN,
+        options: {
+          topBar: {
+            visible: false,
+            height: 0,
+            drawBehind: false,
+          },
+          statusBar: {
+            drawBehind: true,
+            visible: true,
+            style: 'dark',
+            backgroundColor: 'transparent',
+          },
+          animations: {
+            push: {
+              content: {
+                scaleX: {
+                  from: 1.2,
+                  to: 1,
+                  duration: 200,
+                },
+                scaleY: {
+                  from: 1.2,
+                  to: 1,
+                  duration: 200,
+                },
+                alpha: {
+                  from: 0,
+                  to: 1,
+                  duration: 200,
+                },
+              },
+            },
+            pop: {
+              content: {
+                alpha: {
+                  from: 1,
+                  to: 0,
+                  duration: 200,
+                },
+              },
+            },
+          },
+        },
+      },
+    })
   })
 }
 // export function pushSettingScreen(componentId) {

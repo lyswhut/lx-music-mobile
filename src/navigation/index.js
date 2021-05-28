@@ -32,6 +32,7 @@ const init = callback => {
 }
 
 export * from './utils'
+export * from './hooks'
 
 export {
   init,

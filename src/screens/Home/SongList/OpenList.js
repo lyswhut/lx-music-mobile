@@ -6,6 +6,7 @@ import { useTranslation } from '@/plugins/i18n'
 import Button from '@/components/common/Button'
 import ConfirmAlert from '@/components/common/ConfirmAlert'
 import Input from '@/components/common/Input'
+import { navigations } from '@/navigation'
 
 export default memo(() => {
   const theme = useGetter('common', 'theme')
@@ -13,8 +14,8 @@ export default memo(() => {
   const [visibleAlert, setVisibleAlert] = useState(false)
   const [text, setText] = useState('')
   const setSelectListInfo = useDispatch('songList', 'setSelectListInfo')
-  const setVisibleListDetail = useDispatch('songList', 'setVisibleListDetail')
   const songListSource = useGetter('songList', 'songListSource')
+  const componentIds = useGetter('common', 'componentIds')
 
   const handleShowMusicAddModal = () => {
     setText('')
@@ -35,9 +36,9 @@ export default memo(() => {
       desc: '',
       source: songListSource,
     })
-    setVisibleListDetail(true)
     setVisibleAlert(false)
-  }, [setSelectListInfo, setVisibleListDetail, songListSource, text])
+    navigations.pushSonglistDetailScreen(componentIds.home)
+  }, [componentIds.home, setSelectListInfo, songListSource, text])
 
 
   return (

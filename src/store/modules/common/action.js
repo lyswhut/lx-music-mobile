@@ -108,15 +108,11 @@ export const setComponentId = data => ({
   type: TYPES.setComponentId,
   payload: data,
 })
-export const removeComponentId = id => (dispatch, getState) => {
-  const { common } = getState()
-  if (common.componentIds.playDetail == id) {
-    screenUnkeepAwake()
-  }
-  dispatch({
+export const removeComponentId = id => {
+  return {
     type: TYPES.removeComponentId,
     payload: id,
-  })
+  }
 }
 
 export const setNavActiveIndex = index => ({

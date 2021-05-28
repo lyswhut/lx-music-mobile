@@ -6,17 +6,23 @@ import { useGetter, useDispatch } from '@/store'
 import { useTranslation } from '@/plugins/i18n'
 import { toast } from '@/utils/tools'
 import { LIST_ID_PLAY_TEMP } from '@/config/constant'
+import { pop } from '@/navigation'
 
 export default memo(() => {
   const selectListInfo = useGetter('songList', 'selectListInfo')
   const listDetailData = useGetter('songList', 'listDetailData')
   const setPlayList = useDispatch('player', 'setList')
-  const setVisibleListDetail = useDispatch('songList', 'setVisibleListDetail')
+  // const setVisibleListDetail = useDispatch('songList', 'setVisibleListDetail')
   const getListDetailAll = useDispatch('songList', 'getListDetailAll')
   const createUserList = useDispatch('list', 'createUserList')
   const { t } = useTranslation()
   const theme = useGetter('common', 'theme')
   const songListSource = useGetter('songList', 'songListSource')
+  const componentIds = useGetter('common', 'componentIds')
+
+  const back = () => {
+    pop(componentIds.songlistDetail)
+  }
 
   const handlePlayAll = useCallback(async() => {
     if (!listDetailData.info.name) return
@@ -45,8 +51,6 @@ export default memo(() => {
     toast(t('collect_success'))
   }, [listDetailData, getListDetailAll, selectListInfo, songListSource, createUserList, t])
 
-  const handleBack = () => setVisibleListDetail(false)
-
   return (
     <View style={styles.container}>
       <Button onPress={handleCollection} style={styles.controlBtn}>
@@ -55,7 +59,7 @@ export default memo(() => {
       <Button onPress={handlePlayAll} style={styles.controlBtn}>
         <Text style={{ ...styles.controlBtnText, color: theme.secondary }}>{t('play_all')}</Text>
       </Button>
-      <Button onPress={handleBack} style={styles.controlBtn}>
+      <Button onPress={back} style={styles.controlBtn}>
         <Text style={{ ...styles.controlBtnText, color: theme.secondary }}>{t('back')}</Text>
       </Button>
     </View>

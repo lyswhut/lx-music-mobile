@@ -26,7 +26,7 @@ export default memo(() => {
 
   const handlePlayAll = useCallback(async() => {
     if (!listDetailData.info.name) return
-    const list = await getListDetailAll(selectListInfo.id)
+    const list = await getListDetailAll({ id: selectListInfo.id, source: songListSource })
     // if (!list.length) return
     setPlayList({
       list: {
@@ -35,7 +35,7 @@ export default memo(() => {
       },
       index: 0,
     })
-  }, [getListDetailAll, listDetailData.info, selectListInfo.id, setPlayList])
+  }, [getListDetailAll, listDetailData, selectListInfo, setPlayList, songListSource])
 
   const handleCollection = useCallback(async() => {
     if (!listDetailData.info.name) return

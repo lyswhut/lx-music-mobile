@@ -162,7 +162,6 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     marginTop: 5,
-    marginBottom: -5,
   },
   inputContent: {
     flex: 1,

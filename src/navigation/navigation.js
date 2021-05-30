@@ -134,7 +134,7 @@ export function pushPlayDetailScreen(componentId, id) {
                     duration: 300,
                   },
                   translationY: {
-                    from: -16, // Animate translationY from 16dp to 0dp
+                    from: -32, // Animate translationY from 16dp to 0dp
                     duration: 300,
                   },
                 },
@@ -145,7 +145,7 @@ export function pushPlayDetailScreen(componentId, id) {
                     duration: 300,
                   },
                   translationX: {
-                    from: -16, // Animate translationY from 16dp to 0dp
+                    from: -32, // Animate translationY from 16dp to 0dp
                     duration: 300,
                   },
                 },
@@ -156,7 +156,7 @@ export function pushPlayDetailScreen(componentId, id) {
                     duration: 300,
                   },
                   translationY: {
-                    from: 16, // Animate translationY from 16dp to 0dp
+                    from: 32, // Animate translationY from 16dp to 0dp
                     duration: 300,
                   },
                 },

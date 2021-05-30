@@ -2,10 +2,12 @@ import React, { useCallback, memo, useMemo, useEffect } from 'react'
 import { View, StyleSheet } from 'react-native'
 import PlayModeBtn from './PlayModeBtn'
 import MusicAddBtn from './MusicAddBtn'
+import TimeoutExit from './TimeoutExit'
 
 export default () => {
   return (
     <View style={styles.container}>
+      <TimeoutExit />
       <PlayModeBtn />
       <MusicAddBtn />
     </View>

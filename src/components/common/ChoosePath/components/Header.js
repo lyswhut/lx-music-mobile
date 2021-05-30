@@ -65,7 +65,7 @@ export default memo(({ title, path, refreshDir }) => {
       </View>
       <ConfirmAlert
         visible={visibleNewFolder}
-        onCancel={handleCancelNewFolderAlert}
+        onHide={handleCancelNewFolderAlert}
         onConfirm={handleConfirmNewFolderAlert}
         >
         <View style={styles.newFolderContent}>

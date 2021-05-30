@@ -55,7 +55,8 @@ const styles = StyleSheet.create({
 
 export default ({
   visible = false,
-  onCancel = () => {},
+  onHide = () => {},
+  onCancel,
   onConfirm = () => {},
   keyHide,
   bgHide,
@@ -71,15 +72,23 @@ export default ({
   const theme = useGetter('common', 'theme')
   const { t } = useTranslation()
 
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel()
+    } else {
+      onHide()
+    }
+  }
+
   return (
-    <Dialog visible={visible} hideDialog={onCancel} keyHide={keyHide} bgHide={bgHide} closeBtn={closeBtn} title={title}>
+    <Dialog visible={visible} hideDialog={onHide} keyHide={keyHide} bgHide={bgHide} closeBtn={closeBtn} title={title}>
       <View style={styles.main}>
         <ScrollView style={styles.content} keyboardShouldPersistTaps={'always'}>
           {children || <Text style={{ ...styles.title, color: theme.normal }}>{text}</Text>}
         </ScrollView>
       </View>
       <View style={{ ...styles.btns, ...(reverseBtn ? styles.btnsReversedDirection : styles.btnsDirection) }}>
-        <Button style={{ ...styles.btn, ...(reverseBtn ? styles.btnReversedDirection : styles.btnDirection), backgroundColor: theme.secondary45 }} onPress={onCancel}>
+        <Button style={{ ...styles.btn, ...(reverseBtn ? styles.btnReversedDirection : styles.btnDirection), backgroundColor: theme.secondary45 }} onPress={handleCancel}>
           <Text style={{ color: theme.secondary_5 }}>{cancelText || t('cancel')}</Text>
         </Button>
         {showConfirm

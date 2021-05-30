@@ -48,7 +48,7 @@ export default memo(() => {
       </Button>
       <ConfirmAlert
         visible={visibleAlert}
-        onCancel={handleCancelOpen}
+        onHide={handleCancelOpen}
         onConfirm={handleOpen}
         >
         <View style={styles.alertContent}>

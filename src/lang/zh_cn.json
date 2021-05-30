@@ -30,6 +30,16 @@
   "list_create": "新建列表",
   "list_create_input_placeholder": "你想起啥名...",
 
+  "input_error": "不要乱输好吧😡",
+  "timeout_exit_tip_max": "最多只能设置{{num}}分钟哦",
+  "timeout_exit_tip_off": "设置定时停止播放",
+  "timeout_exit_tip_on": "{{time}} 后停止播放",
+  "timeout_exit_tip_cancel": "已取消定时停止播放",
+  "timeout_exit_label_isPlayed": "等待歌曲播放完毕再停止播放",
+  "timeout_exit_min": "分钟",
+  "timeout_exit_btn_cancel": "取消定时",
+  "timeout_exit_btn_update": "更新定时",
+
   "play_detail_todo_tip": "你想干嘛？不可以的，这个功能还没有实现哦😛，不过你可以试着长按来定位当前播放的歌曲（仅对播放“我的列表”里的歌曲有效哦）",
 
   "load_failed": "啊 加载失败了 😥",

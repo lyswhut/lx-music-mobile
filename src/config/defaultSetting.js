@@ -3,12 +3,14 @@
 // const { isMac } = require('./utils')
 
 const defaultSetting = {
-  version: '1.2',
+  version: '1.3',
   player: {
     togglePlayMethod: 'listLoop',
     highQuality: false,
     isSavePlayTime: false,
     cacheSize: 1024, // unit MB
+    timeoutExit: '',
+    timeoutExitPlayed: true,
   },
   list: {
     isShowSource: true,

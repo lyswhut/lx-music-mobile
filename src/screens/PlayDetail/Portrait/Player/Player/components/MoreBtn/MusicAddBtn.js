@@ -22,7 +22,7 @@ export default memo(() => {
   return (
     <>
       <TouchableOpacity style={{ ...styles.cotrolBtn }} activeOpacity={0.5} onPress={handleShowMusicAddModal}>
-        <Icon name="add-music" style={{ color: theme.secondary10 }} size={24} />
+        <Icon name="add-music" style={{ color: theme.normal30 }} size={24} />
       </TouchableOpacity>
       <MusicAddModal
         visible={visibleMusicAddModal}

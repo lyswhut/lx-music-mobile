@@ -30,6 +30,16 @@
   "list_create": "Create a new list",
   "list_create_input_placeholder": "What name do you think of...",
 
+  "input_error": "Don't input indiscriminately 😡",
+  "timeout_exit_tip_max": "You can only set up to {{num}} minutes",
+  "timeout_exit_tip_off": "Set timer to stop playing",
+  "timeout_exit_tip_on": "Stop playing after {{time}}",
+  "timeout_exit_tip_cancel": "Timeout stop playing has been cancelled",
+  "timeout_exit_label_isPlayed": "Wait for the song to finish playing and then stop playing",
+  "timeout_exit_min": "Minutes",
+  "timeout_exit_btn_cancel": "Cancel timing",
+  "timeout_exit_btn_update": "Update timing",
+
   "play_detail_todo_tip": "What do you want? No, this function has not been implemented yet 😛, But you can try to locate the currently playing song by long pressing (only valid for playing songs in \"My List\")",
 
   "load_failed": "Ah, loading failed 😥",

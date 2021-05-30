@@ -31,6 +31,7 @@ export const TYPES = {
   setTop: null,
   setIgnoreVersion: null,
   setVersionInfo: null,
+  setTimeoutExit: null,
 }
 for (const key of Object.keys(TYPES)) {
   TYPES[key] = `common__${key}`
@@ -119,6 +120,15 @@ export const setNavActiveIndex = index => ({
   type: TYPES.setNavActiveIndex,
   payload: index,
 })
+
+export const setTimeoutExit = ({ time, isPlayed }) => async(dispatch, getState) => {
+  dispatch({
+    type: TYPES.setTimeoutExit,
+    payload: { time, isPlayed },
+  })
+  const state = getState()
+  await setData(settingKey, state.common.setting)
+}
 
 export const setPrevSelectListId = id => async(dispatch, getState) => {
   dispatch({

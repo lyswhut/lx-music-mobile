@@ -45,7 +45,7 @@ export default memo(() => {
 
   return (
     <TouchableOpacity style={{ ...styles.cotrolBtn }} activeOpacity={0.5} onPress={toggleNextPlayMode}>
-      <Icon name={playModeIcon} style={{ color: theme.secondary10 }} size={24} />
+      <Icon name={playModeIcon} style={{ color: theme.normal30 }} size={24} />
     </TouchableOpacity>
   )
 })

@@ -192,7 +192,7 @@ const List = memo(({ setVisiblePanel, currentList, activeListIdRef, handleCancel
       <Menu menus={menus} buttonPosition={buttonPosition} onPress={handleMenuPress} visible={visibleMenu} hideMenu={hideMenu} />
       <ConfirmAlert
         visible={visibleRename}
-        onCancel={handleCancelRename}
+        onHide={handleCancelRename}
         onConfirm={handleRename}
         >
         <View style={styles.renameContent}>

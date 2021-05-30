@@ -65,7 +65,7 @@ export default ({
         visible={visible} />
       <ConfirmAlert
         visible={visibleTips}
-        onCancel={handleTipsCancel}
+        onHide={handleTipsCancel}
         onConfirm={handleTipsConfirm}
         bgHide={false}
         closeBtn={false}

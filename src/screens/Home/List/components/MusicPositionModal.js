@@ -40,7 +40,7 @@ export default memo(({ visible, hideModal, onConfirm, selectedList, selectedData
   return (
     <ConfirmAlert
         visible={visible}
-        onCancel={hideModal}
+        onHide={hideModal}
         onConfirm={handleSetMusicPosition}
         >
         <View style={styles.content}>

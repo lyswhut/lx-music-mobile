@@ -40,6 +40,9 @@ export const downloadFileName = state => state.common.setting.download.fileName
 
 export const sourceNameType = state => state.common.setting.sourceNameType
 
+export const timeoutExit = state => state.common.setting.player.timeoutExit
+export const timeoutExitPlayed = state => state.common.setting.player.timeoutExitPlayed
+
 export const activeApiSourceId = state => state.common.setting.apiSource
 
 const apiSourceListFormated = apiSourceInfo.map(api => ({

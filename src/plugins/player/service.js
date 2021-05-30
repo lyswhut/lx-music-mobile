@@ -159,6 +159,13 @@ export default async() => {
   })
   TrackPlayer.addEventListener('playback-track-changed', async info => {
     // console.log('nextTrack====>', info)
+    if (global.isPlayedExit) { // 销毁播放器并退出
+      TrackPlayer.pause()
+      store.dispatch(playerAction.destroy()).finally(() => {
+        exitApp()
+      })
+      return
+    }
     trackId = await TrackPlayer.getCurrentTrack()
     if (trackId && isTempTrack(trackId)) {
       console.log('====TEMP PAUSE====')

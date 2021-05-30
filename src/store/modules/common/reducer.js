@@ -259,6 +259,21 @@ const mutations = {
       },
     }
   },
+  [TYPES.setTimeoutExit](state, { time, isPlayed }) {
+    const newState = {
+      ...state,
+      setting: {
+        ...state.setting,
+        player: {
+          ...state.setting.player,
+        },
+      },
+    }
+    if (time != null) newState.setting.player.timeoutExit = time
+    if (isPlayed != null) newState.setting.player.timeoutExitPlayed = isPlayed
+
+    return newState
+  },
 }
 
 export default (state = initialState, action) =>

@@ -12,11 +12,11 @@ export default memo(({ data: { index, item }, width, onPress = () => {} }) => {
           <View style={{ ...styles.listItem, width: width - 20 }}>
             <View style={{ ...styles.listItemImg, backgroundColor: AppColors.primary }}>
               <TouchableOpacity activeOpacity={0.5} onPress={handlePress}>
-                <Image source={{ uri: item.img }} style={{ width: width - 20, height: width - 20 }} borderRadius={4} />
+                <Image source={{ uri: item.img }} nativeID={`pic${item.id}`} style={{ width: width - 20, height: width - 20 }} borderRadius={4} />
               </TouchableOpacity>
             </View>
             <TouchableOpacity activeOpacity={0.5} onPress={handlePress}>
-              <Text style={{ ...styles.listItemTitle, color: AppColors.normal }} numberOfLines={ 2 }>{item.name}</Text>
+              <Text style={{ ...styles.listItemTitle, color: AppColors.normal }} nativeID={`title${item.id}`} numberOfLines={ 2 }>{item.name}</Text>
             </TouchableOpacity>
             {/* <Text>{JSON.stringify(item)}</Text> */}
           </View>

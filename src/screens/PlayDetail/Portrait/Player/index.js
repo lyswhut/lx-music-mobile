@@ -59,7 +59,7 @@ export default memo(() => {
           <View style={{ ...styles.pageIndicatorItem, backgroundColor: pageIndex == 0 ? theme.secondary20 : theme.normal60 }}></View>
           <View style={{ ...styles.pageIndicatorItem, backgroundColor: pageIndex == 1 ? theme.secondary20 : theme.normal60 }}></View>
         </View>
-        <View style={styles.player}>
+        <View style={styles.player} nativeID="player">
           <Player />
         </View>
       </View>

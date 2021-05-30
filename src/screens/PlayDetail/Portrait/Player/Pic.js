@@ -5,23 +5,19 @@ import { useLayout } from '@/utils/hooks'
 
 export default memo(() => {
   const playMusicInfo = useGetter('player', 'playMusicInfo')
-  const [imgUrl, setImgUrl] = useState(null)
   const theme = useGetter('common', 'theme')
   const { onLayout, ...layout } = useLayout()
 
-  useEffect(() => {
-    const url = playMusicInfo ? playMusicInfo.musicInfo.img : null
-    if (imgUrl == url) return
-    setImgUrl(url)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const musicInfo = useMemo(() => {
+    return (playMusicInfo && playMusicInfo.musicInfo) || {}
   }, [playMusicInfo])
 
-  const imgWidth = useMemo(() => layout.width * 0.8, [layout.width])
+  const imgWidth = Math.max(layout.width * 0.8, 100)
 
   return (
     <View style={styles.container} onLayout={onLayout}>
       <View style={{ ...styles.content }}>
-        <Image source={{ uri: imgUrl }} progressiveRenderingEnabled={true} borderRadius={2} style={{
+        <Image source={{ uri: musicInfo.img }} nativeID={`pic${musicInfo.songmid}Dest`} progressiveRenderingEnabled={true} borderRadius={2} style={{
           ...styles.img,
           backgroundColor: theme.primary,
           width: imgWidth,

@@ -1,5 +1,5 @@
-import React, { memo } from 'react'
-import { View, Text, StyleSheet, ImageBackground } from 'react-native'
+import React, { memo, useMemo } from 'react'
+import { View, Text, StyleSheet, Image } from 'react-native'
 import { AppColors, BorderWidths } from '@/theme'
 import { useGetter } from '@/store'
 import ButtonBar from './ActionBar'
@@ -13,16 +13,16 @@ const Header = memo(() => {
     <View style={{ ...styles.container, borderBottomColor: AppColors.borderColor }}>
       <View style={{ flexDirection: 'row', flexGrow: 0, flexShrink: 0, padding: 10 }}>
         <View style={{ ...styles.listItemImg, backgroundColor: AppColors.primary }}>
-          <ImageBackground source={{ uri: selectListInfo.img || listDetailDataInfo.img || null }} borderRadius={4} style={{ flex: 1, resizeMode: 'cover', justifyContent: 'flex-end' }}>
-            {
+          <Image nativeID={`pic${selectListInfo.id}Dest`} source={{ uri: selectListInfo.img || listDetailDataInfo.img || null }} borderRadius={4} style={{ flex: 1, resizeMode: 'cover', justifyContent: 'flex-end' }}>
+            {/* {
               playCount
                 ? <Text style={{ fontSize: 12, paddingLeft: 3, paddingRight: 3, backgroundColor: 'rgba(0, 0, 0, 0.5)', color: AppColors.primary, borderBottomLeftRadius: 4, borderBottomRightRadius: 4 }} numberOfLines={ 1 }>{playCount}</Text>
                 : null
-            }
-          </ImageBackground>
+            } */}
+          </Image>
         </View>
-        <View style={{ flexDirection: 'column', flexGrow: 1, flexShrink: 1, paddingLeft: 5 }}>
-          <Text style={{ fontSize: 13, color: AppColors.normal }} numberOfLines={ 1 }>{selectListInfo.name || listDetailDataInfo.name}</Text>
+        <View style={{ flexDirection: 'column', flexGrow: 1, flexShrink: 1, paddingLeft: 5 }} nativeID="title">
+          <Text style={{ fontSize: 13, color: AppColors.normal }} numberOfLines={ 1 }>{selectListInfo.name}</Text>
           <View style={{ flexGrow: 0, flexShrink: 1 }}>
             <Text style={{ fontSize: 10, color: AppColors.normal40 }} numberOfLines={ 4 }>{selectListInfo.desc || listDetailDataInfo.desc}</Text>
           </View>

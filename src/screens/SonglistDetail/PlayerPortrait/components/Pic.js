@@ -9,19 +9,21 @@ import { navigations } from '@/navigation'
 export default () => {
   const playMusicInfo = useGetter('player', 'playMusicInfo')
   const theme = useGetter('common', 'theme')
-  const [imgUrl, setImgUrl] = useState(null)
   const setNavActiveIndex = useDispatch('common', 'setNavActiveIndex')
   const setPrevSelectListId = useDispatch('common', 'setPrevSelectListId')
   const setJumpPosition = useDispatch('list', 'setJumpPosition')
   // const { t } = useTranslation()
   const componentIds = useGetter('common', 'componentIds')
+  const musicInfo = useMemo(() => {
+    return (playMusicInfo && playMusicInfo.musicInfo) || {}
+  }, [playMusicInfo])
   const handlePress = useCallback(() => {
     // console.log('')
     // console.log(playMusicInfo)
     if (!playMusicInfo) return
-    navigations.pushPlayDetailScreen(componentIds.home)
+    navigations.pushPlayDetailScreen(componentIds.home, musicInfo.songmid)
     // toast(t('play_detail_todo_tip'), 'long')
-  }, [componentIds.home, playMusicInfo])
+  }, [componentIds.home, musicInfo, playMusicInfo])
 
   const handleLongPress = useCallback(() => {
     if (!playMusicInfo || playMusicInfo.listId == LIST_ID_PLAY_TEMP || playMusicInfo.listId == LIST_ID_PLAY_LATER) return
@@ -32,23 +34,16 @@ export default () => {
     })
   }, [playMusicInfo, setJumpPosition, setNavActiveIndex, setPrevSelectListId])
 
-  useEffect(() => {
-    const url = playMusicInfo && playMusicInfo.musicInfo ? playMusicInfo.musicInfo.img : null
-    if (imgUrl == url) return
-    setImgUrl(url)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playMusicInfo])
-
   const component = useMemo(() => (
     <TouchableOpacity onLongPress={handleLongPress} onPress={handlePress} activeOpacity={0.7} >
-      <Image source={{ uri: imgUrl }} progressiveRenderingEnabled={true} borderRadius={2} style={{
+      <Image source={{ uri: musicInfo.img }} nativeID={`pic${musicInfo.songmid}`} progressiveRenderingEnabled={true} borderRadius={2} style={{
         // ...styles.playInfoImg,
         backgroundColor: theme.primary,
         width: 48,
         height: 48,
       }} />
     </TouchableOpacity>
-  ), [handleLongPress, handlePress, imgUrl, theme])
+  ), [handleLongPress, handlePress, musicInfo, theme])
   return component
 }
 

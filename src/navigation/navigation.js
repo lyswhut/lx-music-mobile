@@ -68,7 +68,7 @@ export function pushHomeScreen() {
     },
   })
 }
-export function pushPlayDetailScreen(componentId) {
+export function pushPlayDetailScreen(componentId, id) {
   /*
     Navigation.setDefaultOptions({
       topBar: {
@@ -119,13 +119,44 @@ export function pushPlayDetailScreen(componentId) {
           },
           animations: {
             push: {
-              content: {
-                translationX: {
-                  from: Dimensions.get('window').width,
-                  to: 0,
-                  duration: 300,
+              sharedElementTransitions: [
+                {
+                  fromId: `pic${id}`,
+                  toId: `pic${id}Dest`,
+                  interpolation: { type: 'spring' },
                 },
-              },
+              ],
+              elementTransitions: [
+                {
+                  id: 'header',
+                  alpha: {
+                    from: 0, // We don't declare 'to' value as that is the element's current alpha value, here we're essentially animating from 0 to 1
+                    duration: 300,
+                  },
+                  translationY: {
+                    from: -16, // Animate translationY from 16dp to 0dp
+                    duration: 300,
+                  },
+                },
+                {
+                  id: 'player',
+                  alpha: {
+                    from: 0, // We don't declare 'to' value as that is the element's current alpha value, here we're essentially animating from 0 to 1
+                    duration: 300,
+                  },
+                  translationY: {
+                    from: 16, // Animate translationY from 16dp to 0dp
+                    duration: 300,
+                  },
+                },
+              ],
+              // content: {
+              //   translationX: {
+              //     from: Dimensions.get('window').width,
+              //     to: 0,
+              //     duration: 300,
+              //   },
+              // },
             },
             pop: {
               content: {
@@ -142,7 +173,7 @@ export function pushPlayDetailScreen(componentId) {
     })
   })
 }
-export function pushSonglistDetailScreen(componentId) {
+export function pushSonglistDetailScreen(componentId, id) {
   InteractionManager.runAfterInteractions(() => {
     Navigation.push(componentId, {
       component: {
@@ -161,32 +192,72 @@ export function pushSonglistDetailScreen(componentId) {
           },
           animations: {
             push: {
-              content: {
-                scaleX: {
-                  from: 1.2,
-                  to: 1,
-                  duration: 200,
+              sharedElementTransitions: [
+                {
+                  fromId: `pic${id}`,
+                  toId: `pic${id}Dest`,
+                  interpolation: { type: 'spring' },
                 },
-                scaleY: {
-                  from: 1.2,
-                  to: 1,
-                  duration: 200,
+              ],
+              elementTransitions: [
+                {
+                  id: 'title',
+                  alpha: {
+                    from: 0, // We don't declare 'to' value as that is the element's current alpha value, here we're essentially animating from 0 to 1
+                    duration: 300,
+                  },
+                  translationX: {
+                    from: 16, // Animate translationX from 16dp to 0dp
+                    duration: 300,
+                  },
                 },
-                alpha: {
-                  from: 0,
-                  to: 1,
-                  duration: 200,
-                },
-              },
+              ],
+              // content: {
+              //   scaleX: {
+              //     from: 1.2,
+              //     to: 1,
+              //     duration: 200,
+              //   },
+              //   scaleY: {
+              //     from: 1.2,
+              //     to: 1,
+              //     duration: 200,
+              //   },
+              //   alpha: {
+              //     from: 0,
+              //     to: 1,
+              //     duration: 200,
+              //   },
+              // },
             },
             pop: {
-              content: {
-                alpha: {
-                  from: 1,
-                  to: 0,
-                  duration: 200,
+              sharedElementTransitions: [
+                {
+                  fromId: `pic${id}Dest`,
+                  toId: `pic${id}`,
+                  interpolation: { type: 'spring' },
                 },
-              },
+              ],
+              elementTransitions: [
+                {
+                  id: 'title',
+                  alpha: {
+                    to: 0, // We don't declare 'to' value as that is the element's current alpha value, here we're essentially animating from 0 to 1
+                    duration: 300,
+                  },
+                  translationX: {
+                    to: 16, // Animate translationX from 16dp to 0dp
+                    duration: 300,
+                  },
+                },
+              ],
+              // content: {
+              //   alpha: {
+              //     from: 1,
+              //     to: 0,
+              //     duration: 200,
+              //   },
+              // },
             },
           },
         },

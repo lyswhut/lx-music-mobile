@@ -16,7 +16,7 @@ export default memo(({ playNextModes }) => {
 
   return (
     <View style={{ ...styles.container, backgroundColor: theme.primary }}>
-      <View style={{ ...styles.info }}>
+      <View style={{ ...styles.info }} >
         <Title />
         <MoreBtn />
       </View>

@@ -63,7 +63,7 @@ export default ({ width }) => {
   const handleListPress = useCallback((item, index) => {
     // console.log(item)
     setSelectListInfo(item)
-    navigations.pushSonglistDetailScreen(componentIds.home)
+    navigations.pushSonglistDetailScreen(componentIds.home, item.id)
   }, [componentIds.home, setSelectListInfo])
 
   const itemWidth = useMemo(() => Math.max(parseInt(width * 0.125), 110), [width])

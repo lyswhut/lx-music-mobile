@@ -4,10 +4,10 @@ import { useGetter, useDispatch } from '@/store'
 
 import Player from './Player'
 
-export default () => {
+export default ({ componentId }) => {
   return (
     <>
-      <Player />
+      <Player componentId={componentId} />
     </>
   )
 }

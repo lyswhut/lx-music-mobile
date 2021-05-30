@@ -49,6 +49,14 @@ let errorTime = 0
 
 //   },
 // }
+// 销毁播放器并退出
+const stopPlay = () => {
+  global.isPlayedExit = false
+  TrackPlayer.pause()
+  store.dispatch(playerAction.destroy()).finally(() => {
+    exitApp()
+  })
+}
 
 export default async() => {
   if (isInitialized) return
@@ -156,16 +164,12 @@ export default async() => {
         console.log('playback-state', info)
         break
     }
+    if (global.isPlayedExit) return stopPlay()
   })
   TrackPlayer.addEventListener('playback-track-changed', async info => {
     // console.log('nextTrack====>', info)
-    if (global.isPlayedExit) { // 销毁播放器并退出
-      TrackPlayer.pause()
-      store.dispatch(playerAction.destroy()).finally(() => {
-        exitApp()
-      })
-      return
-    }
+    if (global.isPlayedExit) return stopPlay()
+
     trackId = await TrackPlayer.getCurrentTrack()
     if (trackId && isTempTrack(trackId)) {
       console.log('====TEMP PAUSE====')

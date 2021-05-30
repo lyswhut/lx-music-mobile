@@ -6,6 +6,24 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.4.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.3.3...v0.4.0) - 2021-05-30
+
+### 新增
+
+- 新增我的列表中已收藏的在线列表的更新功能。注意：这将会覆盖本地的目标列表，歌曲将被替换成最新的在线列表（与PC端的同步一样）
+- 歌曲添加、移动弹窗新增创建新列表功能
+- 新增定时退出播放
+
+### 优化
+
+- 优化应用布局对手机系统字体大小的适配
+- 调整歌单详情页，现在在歌单详情页按手机上的返回键将会返回歌单列表，而不是直接退出APP
+- 优化进入播放详情页、歌单详情页的动画效果
+
+### 修复
+
+- 尝试修复某些情况下进播放详情歌词界面时报错的问题
+
 ## [0.3.3](https://github.com/lyswhut/lx-music-mobile/compare/v0.3.2...v0.3.3) - 2021-05-25
 
 ### 修复

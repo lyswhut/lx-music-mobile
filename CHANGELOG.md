@@ -6,6 +6,12 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.4.1](https://github.com/lyswhut/lx-music-mobile/compare/v0.4.0...v0.4.1) - 2021-05-30
+
+### 修复
+
+- 修复定时播放开启歌曲播放完毕再停止时，若倒计时已结束会导致无法播放歌曲的问题
+
 ## [0.4.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.3.3...v0.4.0) - 2021-05-30
 
 ### 新增

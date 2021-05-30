@@ -4,6 +4,7 @@ import { StyleSheet, View, Text, TouchableHighlight } from 'react-native'
 import Modal from './Modal'
 import Icon from './Icon'
 import { useGetter } from '@/store'
+import { useKeyboard } from '@/utils/hooks'
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -65,12 +66,13 @@ export default ({
   children,
 }) => {
   const theme = useGetter('common', 'theme')
+  const { keyboardShown, keyboardHeight } = useKeyboard()
 
   const closeBtnComponent = useMemo(() => closeBtn ? <TouchableHighlight style={styles.closeBtn} underlayColor={theme.secondary_5} onPress={hideDialog}><Icon name="close" style={{ color: theme.secondary40, fontSize: 10 }} /></TouchableHighlight> : null, [closeBtn, hideDialog, theme])
 
   return (
     <Modal visible={visible} hideModal={hideDialog} keyHide={keyHide} bgHide={bgHide}>
-      <View style={{ ...styles.centeredView }}>
+      <View style={{ ...styles.centeredView, paddingBottom: keyboardShown ? keyboardHeight : 0 }}>
         <View style={styles.modalView} onStartShouldSetResponder={() => true}>
           <View style={{ ...styles.header, backgroundColor: theme.secondary }}>
             <Text style={{ ...styles.title, color: theme.primary }} numberOfLines={1}>{title}</Text>

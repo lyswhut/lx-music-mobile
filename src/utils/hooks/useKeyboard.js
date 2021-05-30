@@ -16,12 +16,12 @@ export default () => {
   }
 
   useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow)
-    Keyboard.addListener('keyboardDidHide', handleKeyboardDidHide)
+    const keyboardDidShow = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow)
+    const keyboardDidHide = Keyboard.addListener('keyboardDidHide', handleKeyboardDidHide)
 
     return () => {
-      Keyboard.removeListener('keyboardDidShow', handleKeyboardDidShow)
-      Keyboard.removeListener('keyboardDidHide', handleKeyboardDidHide)
+      keyboardDidShow.remove()
+      keyboardDidHide.remove()
     }
   }, [])
 

@@ -37,7 +37,7 @@ export default ({ animatePlayed }) => {
         onRefresh={handleListRefresh}
         onLoadMore={handleListLoadMore}
         isLoading={listDetailData.isLoading}
-        ListHeaderComponent={<ListDetailHeader />}
+        ListHeaderComponent={<ListDetailHeader animatePlayed={animatePlayed} />}
       />
 
       { isGetListDetailFailed ? <Failed /> : null }

@@ -16,7 +16,6 @@ export default ({ animatePlayed }) => {
   const getListDetail = useDispatch('songList', 'getListDetail')
 
   const handleListLoadMore = useCallback(() => {
-    // console.log(listDetailData)
     if (listDetailData.isLoading || listDetailData.isEnd) return
     getListDetail({ id: selectListInfoRef.current.id, page: listDetailData.page + 1 })
   }, [getListDetail, listDetailData])
@@ -29,17 +28,19 @@ export default ({ animatePlayed }) => {
   }, [getListDetail])
 
   return (
-    isGetListDetailFailed
-      ? <Failed />
-      : <OnlineList
-          list={animatePlayed ? listDetailData.list : []}
-          page={-1}
-            // isEnd={listDetailData.isEnd}
-          isListRefreshing={isListRefreshing}
-          onRefresh={handleListRefresh}
-          onLoadMore={handleListLoadMore}
-          isLoading={listDetailData.isLoading}
-          ListHeaderComponent={<ListDetailHeader />}
-    />
+    <>
+      <OnlineList
+        list={animatePlayed ? listDetailData.list : []}
+        page={-1}
+          // isEnd={listDetailData.isEnd}
+        isListRefreshing={isListRefreshing}
+        onRefresh={handleListRefresh}
+        onLoadMore={handleListLoadMore}
+        isLoading={listDetailData.isLoading}
+        ListHeaderComponent={<ListDetailHeader />}
+      />
+
+      { isGetListDetailFailed ? <Failed /> : null }
+    </>
   )
 }

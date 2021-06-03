@@ -14,7 +14,7 @@ const Header = memo(() => {
   }
 
   return (
-    <View style={{ ...styles.container }}>
+    <View style={{ ...styles.container, backgroundColor: theme.primary }}>
       <Text style={{ ...styles.text, color: theme.normal20 }}>{t('load_failed')}</Text>
       <Button onPress={back} style={{ ...styles.controlBtn, backgroundColor: theme.secondary40 }}>
         <Text style={{ ...styles.controlBtnText, color: theme.secondary }}>{t('back')}</Text>
@@ -25,7 +25,11 @@ const Header = memo(() => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    height: '100%',
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },

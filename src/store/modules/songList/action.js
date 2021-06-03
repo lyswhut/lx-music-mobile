@@ -16,6 +16,7 @@ export const TYPES = {
   setListEnd: null,
   setListDetailEnd: null,
   setGetListDetailFailed: null,
+  clearListDetail: null,
 }
 
 for (const key of Object.keys(TYPES)) {
@@ -169,11 +170,14 @@ export const setVisibleListDetail = isShow => {
     payload: isShow,
   }
 }
-export const setSelectListInfo = info => {
-  return {
+export const setSelectListInfo = info => (dispatch, getState) => {
+  dispatch({
     type: TYPES.setSelectListInfo,
     payload: info,
-  }
+  })
+  dispatch({
+    type: TYPES.clearListDetail,
+  })
 }
 export const setGetListDetailFailed = isFailed => {
   return {

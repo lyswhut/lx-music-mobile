@@ -44,7 +44,7 @@ export default memo(() => {
   // const imgWidth = useMemo(() => layout.width * 0.75, [layout.width])
   const handleScrollToActive = useCallback((index = lineRef.current) => {
     if (index < 0) return
-    if (scrollViewRef.current) {
+    if (scrollViewRef.current && linesRef.current.length <= index + 1) {
       try {
         scrollViewRef.current.scrollToIndex({
           index: index,

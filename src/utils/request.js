@@ -101,13 +101,14 @@ const handleRequestData = async(url, {
   method = 'get',
   headers = {},
   format = 'json',
+  cache = 'no-store',
   ...options
 }) => {
   // console.log(url, options)
   headers = Object.assign({
     Accept: 'application/json',
   }, headers)
-  options.cache = 'no-store'
+  options.cache = cache
   if (method.toLocaleLowerCase() === 'post' && !headers['Content-Type']) {
     if (options.form) {
       headers['Content-Type'] = 'application/x-www-form-urlencoded'

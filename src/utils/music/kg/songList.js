@@ -154,6 +154,7 @@ export default {
   async createHttp(url, options, retryNum = 0) {
     if (retryNum > 2) throw new Error('try max num')
     let result
+    options.cache = 'default'
     try {
       result = await httpFetch(url, options).promise
     } catch (err) {

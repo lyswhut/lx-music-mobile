@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, memo } from 'react'
-import { StyleSheet, View, Text, ScrollView, TouchableHighlight } from 'react-native'
+import { StyleSheet, View, Text, ScrollView, TouchableHighlight, TouchableWithoutFeedback } from 'react-native'
 import { useDimensions } from '@/utils/hooks'
 
 import Modal from '@/components/common/Modal'
@@ -33,37 +33,28 @@ const styles = StyleSheet.create({
 const Panel = ({
   buttonPosition,
   panelStyle = {},
+  hidePanel,
   children,
 }) => {
-  const dimensions = useDimensions()
+  // const dimensions = useDimensions()
+  const { window: windowSize } = useDimensions()
   // const theme = useGetter('common', 'theme')
   // const fadeAnim = useRef(new Animated.Value(0)).current
   // console.log(buttonPosition)
 
-  const screenSize = useMemo(() => {
-    const screenSize = {}
-    if (dimensions.window.height > dimensions.window.width) {
-      screenSize.height = dimensions.screen.height
-      screenSize.width = dimensions.screen.width
-    } else {
-      screenSize.height = dimensions.screen.width
-      screenSize.width = dimensions.screen.height
-    }
-    return screenSize
-  }, [dimensions])
-
+  // console.log(dimensions)
   const style = useMemo(() => {
-    const isBottom = buttonPosition.y > screenSize.height / 2
+    const isBottom = buttonPosition.y > windowSize.height / 2
     let top
     let height
     let justifyContent
     if (isBottom) {
-      height = buttonPosition.y - screenSize.height * 0.3
+      height = buttonPosition.y - windowSize.height * 0.3
       top = buttonPosition.y - height
       justifyContent = 'flex-end'
     } else {
       top = buttonPosition.y + buttonPosition.h
-      height = screenSize.height * 0.7 - top
+      height = windowSize.height * 0.7 - top
       justifyContent = 'flex-start'
     }
     const frameStyle = {
@@ -71,15 +62,19 @@ const Panel = ({
       height,
       top,
       justifyContent,
-      width: screenSize.width,
+      width: windowSize.width,
     }
     return frameStyle
-  }, [screenSize, buttonPosition])
+  }, [windowSize, buttonPosition])
 
   return (
-    <View style={{ ...styles.menu, ...style }}>
-      {children}
-    </View>
+    <TouchableWithoutFeedback onPress={hidePanel}>
+      <View style={{ ...styles.menu, ...style }}>
+        <View onStartShouldSetResponder={() => true}>
+          {children}
+        </View>
+      </View>
+    </TouchableWithoutFeedback>
   )
 }
 
@@ -87,11 +82,9 @@ export default memo(({ visible, hidePanel, buttonPosition, children, panelStyle 
   // console.log(visible)
   return (
     <Modal visible={visible} hideModal={hidePanel} onStartShouldSetResponder={() => true}>
-      <View style={{ flex: 1 }}>
-        <Panel buttonPosition={buttonPosition} panelStyle={panelStyle} visible={visible} hidePanel={hidePanel}>
-          {children}
-        </Panel>
-      </View>
+      <Panel buttonPosition={buttonPosition} panelStyle={panelStyle} visible={visible} hidePanel={hidePanel}>
+        {children}
+      </Panel>
     </Modal>
   )
 })

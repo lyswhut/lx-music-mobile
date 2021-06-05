@@ -1,4 +1,5 @@
-import { Platform, NativeModules, ToastAndroid, BackHandler, Linking } from 'react-native'
+import { Platform, NativeModules, ToastAndroid, BackHandler, Linking, Dimensions } from 'react-native'
+import ExtraDimensions from 'react-native-extra-dimensions-android'
 import { getData, setData, getAllKeys, removeData, removeDataMultiple, setDataMultiple, getDataMultiple } from '@/plugins/storage'
 import { storageDataPrefix } from '@/config'
 import { throttle } from './index'
@@ -21,6 +22,30 @@ deviceLanguage = typeof deviceLanguage === 'string' ? deviceLanguage.substring(0
 const handleSaveListScrollPosition = throttle(data => {
   setData(listPositionPrefix, data)
 }, 1000)
+
+
+// fix https://github.com/facebook/react-native/issues/4934
+export const getWindowSise = windowDimensions => {
+  if (!windowDimensions) windowDimensions = Dimensions.get('window')
+  if (Platform.OS === 'ios') return windowDimensions
+  const windowSize = {
+    width: ExtraDimensions.getRealWindowWidth(),
+    height: ExtraDimensions.getRealWindowHeight(),
+  }
+  if (
+    (windowDimensions.height > windowDimensions.width && windowSize.height < windowSize.width) ||
+    (windowDimensions.width > windowDimensions.height && windowSize.width < windowSize.height)
+  ) {
+    windowSize.height = windowSize.width
+  }
+  windowSize.width = windowDimensions.width
+
+  if (ExtraDimensions.isSoftMenuBarEnabled()) {
+    windowSize.height -= ExtraDimensions.getSoftMenuBarHeight()
+  }
+  return windowSize
+}
+
 
 /**
  * 显示toast

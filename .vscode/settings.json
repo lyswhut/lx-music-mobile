@@ -7,5 +7,13 @@
     // "@screens": "${workspaceFolder}/src/screens",
     // "@theme": "${workspaceFolder}/src/theme",
     "@/*": "${workspaceFolder}/src/*"
-  }
+  },
+  "i18n-ally.localesPaths": [
+    "src/lang"
+  ],
+  // "i18n-ally.fullReloadOnChanged": true,
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.displayLanguage": "zh_cn",
+  "i18n-ally.sourceLanguage": "zh_cn",
+  "i18n-ally.translate.engines": ["google-cn", "google"]
 }

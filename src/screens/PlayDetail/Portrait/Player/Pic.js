@@ -1,13 +1,13 @@
 import React, { memo, useMemo, useState, useEffect } from 'react'
 import { View, Image, StyleSheet } from 'react-native'
 import { useGetter, useDispatch } from '@/store'
-import { useLayout } from '@/utils/hooks'
+// import { useLayout } from '@/utils/hooks'
 import { useNavigationComponentDidAppear } from '@/navigation'
+import { getWindowSise } from '@/utils/tools'
 
 export default memo(({ componentId }) => {
   const playMusicInfo = useGetter('player', 'playMusicInfo')
   const theme = useGetter('common', 'theme')
-  const { onLayout, ...layout } = useLayout()
   const [animated, setAnimated] = useState(false)
 
   const musicInfo = useMemo(() => {
@@ -18,10 +18,10 @@ export default memo(({ componentId }) => {
     setAnimated(true)
   })
 
-  const imgWidth = Math.max(layout.width * 0.8, 100)
+  const imgWidth = getWindowSise().width * 0.8
 
   return (
-    <View style={styles.container} onLayout={onLayout}>
+    <View style={styles.container}>
       <View style={{ ...styles.content, elevation: animated ? 3 : 0 }}>
         <Image source={{ uri: musicInfo.img }} nativeID={`pic${musicInfo.songmid}Dest`} progressiveRenderingEnabled={true} borderRadius={2} style={{
           ...styles.img,

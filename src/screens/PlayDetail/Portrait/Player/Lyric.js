@@ -18,7 +18,7 @@ const LrcLine = memo(({ text, line, activeLine }) => {
   prevProps.activeLine != nextProps.line &&
   nextProps.activeLine != nextProps.line
 })
-const wait = new Promise(resolve => setTimeout(resolve, 500))
+const wait = () => new Promise(resolve => setTimeout(resolve, 100))
 
 export default memo(() => {
   const lyricLines = useLrcSet()
@@ -44,17 +44,17 @@ export default memo(() => {
   // const imgWidth = useMemo(() => layout.width * 0.75, [layout.width])
   const handleScrollToActive = useCallback((index = lineRef.current) => {
     if (index < 0) return
-    if (scrollViewRef.current && linesRef.current.length <= index + 1) {
-      try {
-        scrollViewRef.current.scrollToIndex({
-          index: index,
-          animated: true,
-          viewPosition: 0.4,
-        })
-      } catch (err) {
-        toast('出了点意外...你可以去错误日志查看错误', 'long')
-        log.warn('Scroll failed: ', err.message)
-      }
+    if (scrollViewRef.current) {
+      // try {
+      scrollViewRef.current.scrollToIndex({
+        index: index,
+        animated: true,
+        viewPosition: 0.4,
+      })
+      // } catch (err) {
+      //   toast('出了点意外...你可以去错误日志查看错误', 'long')
+      //   log.warn('Scroll failed: ', err.message)
+      // }
     }
   }, [])
 
@@ -70,8 +70,8 @@ export default memo(() => {
 
   const handleScrollToIndexFailed = (info) => {
     // console.log(info)
-    wait.then(() => {
-      scrollViewRef.current?.scrollToIndex({ index: info.index, animated: true })
+    wait().then(() => {
+      handleScrollToActive(info.index)
     })
   }
 
@@ -86,7 +86,7 @@ export default memo(() => {
 
   useEffect(() => {
     linesRef.current = lyricLines
-    if (!scrollViewRef.current || !lyricLines.length) return
+    if (!scrollViewRef.current || !scrollViewRef.current.props.data.length) return
     scrollViewRef.current.scrollToOffset({
       offset: 0,
       animated: false,

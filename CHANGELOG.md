@@ -6,6 +6,22 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.4.2](https://github.com/lyswhut/lx-music-mobile/compare/v0.4.1...v0.4.2) - 2021-06-06
+
+### 优化
+
+- 优化wy源歌单导入匹配，现在存在链接外的其他字符也可以打开歌单了
+
+### 修复
+
+- 修复定时播放开启歌曲播放完毕再停止时，若倒计时已结束会导致无法播放歌曲的问题
+- 修复打开歌单失败时会导致应用崩溃的问题
+- 修复打开kw歌单失败时会无限重试的问题
+- 尝试修复弹出菜单、列表位置不正确的问题
+- 修复打开kg源歌单链接失败的问题
+- 尝试修复有时候进入播放详情歌词界面时会导致应用UI被冻结的问题
+- 修复有时候进入播放详情页时歌曲封面大小显示不正确的问题
+
 ## [0.4.1](https://github.com/lyswhut/lx-music-mobile/compare/v0.4.0...v0.4.1) - 2021-05-30
 
 ### 修复

@@ -250,6 +250,18 @@ const mutations = {
       },
     }
   },
+  [TYPES.setIsHandleAudioFocus](state, isHandleAudioFocus) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        player: {
+          ...state.setting.player,
+          isHandleAudioFocus,
+        },
+      },
+    }
+  },
   [TYPES.setVersionInfo](state, versionInfo) {
     return {
       ...state,

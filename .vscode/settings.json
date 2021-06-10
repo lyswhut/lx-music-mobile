@@ -15,5 +15,9 @@
   "i18n-ally.keystyle": "nested",
   "i18n-ally.displayLanguage": "zh_cn",
   "i18n-ally.sourceLanguage": "zh_cn",
-  "i18n-ally.translate.engines": ["google-cn", "google"]
+  "i18n-ally.translate.engines": [
+    "google-cn",
+    "google"
+  ],
+  "i18n-ally.sortKeys": true
 }

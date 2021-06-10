@@ -20,6 +20,7 @@ export const activeLangId = state => state.common.setting.langId
 export const isAgreePact = state => state.common.setting.isAgreePact
 
 export const isPlayHighQuality = state => state.common.setting.player.highQuality
+export const isHandleAudioFocus = state => state.common.setting.player.isHandleAudioFocus
 export const playerCacheSize = state => state.common.setting.player.cacheSize
 
 export const themes = state => state.common.themes

@@ -9,7 +9,7 @@ import { compareVer } from '@/utils'
 // import { setMaxCache } from '@/plugins/player/utils'
 import { showVersionModal } from '@/navigation'
 import { VERSION_STATUS } from '@/config/constant'
-import { screenUnkeepAwake } from '@/utils/utils'
+// import { screenUnkeepAwake } from '@/utils/utils'
 
 export const TYPES = {
   updateSetting: null,
@@ -32,6 +32,7 @@ export const TYPES = {
   setIgnoreVersion: null,
   setVersionInfo: null,
   setTimeoutExit: null,
+  setIsHandleAudioFocus: null,
 }
 for (const key of Object.keys(TYPES)) {
   TYPES[key] = `common__${key}`
@@ -255,6 +256,15 @@ export const setIsPlayHighQuality = highQuality => async(dispatch, getState) => 
   dispatch({
     type: TYPES.setIsPlayHighQuality,
     payload: highQuality,
+  })
+  const { common } = getState()
+  await setData(settingKey, common.setting)
+}
+
+export const setIsHandleAudioFocus = flag => async(dispatch, getState) => {
+  dispatch({
+    type: TYPES.setIsHandleAudioFocus,
+    payload: flag,
   })
   const { common } = getState()
   await setData(settingKey, common.setting)

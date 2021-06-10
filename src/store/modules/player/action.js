@@ -428,7 +428,12 @@ export const playMusic = playMusicInfo => async(dispatch, getState) => {
   // console.log(playMusicInfo)
   const { player, common } = getState()
 
-  if (!isInitialized()) await msInitial(common.setting.player.cacheSize)
+  if (!isInitialized()) {
+    await msInitial({
+      cacheSize: common.setting.player.cacheSize,
+      isHandleAudioFocus: common.setting.player.isHandleAudioFocus,
+    })
+  }
 
   // 从暂停播放恢复播放
   if (playMusicInfo === undefined) {

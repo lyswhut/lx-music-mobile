@@ -8,6 +8,7 @@ import {
 
 import Basic from './Basic'
 import Player from './Player'
+import List from './List'
 import Backup from './Backup'
 import Other from './Other'
 import Version from './Version'
@@ -28,6 +29,7 @@ export default () => {
       <View style={styles.content}>
         <Basic />
         <Player />
+        <List />
         <Backup />
         <Other />
         <Version />

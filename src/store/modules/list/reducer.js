@@ -113,14 +113,22 @@ const mutations = {
     allListUpdate(newList)
     return { ...state, userList: [...state.userList, newList] }
   }, */
-  [TYPES.listAdd](state, { id, musicInfo }) {
+  [TYPES.listAdd](state, { id, musicInfo, addMusicLocationType }) {
     const targetList = allList[id]
     if (!targetList) return state
     if (targetList.list.some(s => s.songmid === musicInfo.songmid)) return state
-    targetList.list = [...targetList.list, musicInfo]
+    switch (addMusicLocationType) {
+      case 'top':
+        targetList.list = [musicInfo, ...targetList.list]
+        break
+      case 'bottom':
+      default:
+        targetList.list = [...targetList.list, musicInfo]
+        break
+    }
     return updateStateList({ ...state }, [id])
   },
-  [TYPES.listMove](state, { fromId, musicInfo, toId }) {
+  [TYPES.listMove](state, { fromId, musicInfo, toId, addMusicLocationType }) {
     const fromList = allList[fromId]
     const toList = allList[toId]
     if (!fromList || !toList) return state
@@ -129,14 +137,31 @@ const mutations = {
     fromList.list = newFromList
     const index = toList.list.findIndex(s => s.songmid === musicInfo.songmid)
     if (index < 0) {
-      toList.list = [...toList.list, musicInfo]
+      switch (addMusicLocationType) {
+        case 'top':
+          toList.list = [musicInfo, ...toList.list]
+          break
+        case 'bottom':
+        default:
+          toList.list = [...toList.list, musicInfo]
+          break
+      }
     }
     return updateStateList({ ...state }, [fromId, toId])
   },
-  [TYPES.listAddMultiple](state, { id, list }) {
+  [TYPES.listAddMultiple](state, { id, list, addMusicLocationType }) {
     const targetList = allList[id]
     if (!targetList) return state
-    const newList = [...targetList.list, ...list]
+    let newList
+    switch (addMusicLocationType) {
+      case 'top':
+        newList = [...list, ...targetList.list]
+        break
+      case 'bottom':
+      default:
+        newList = [...targetList.list, ...list]
+        break
+    }
     const map = {}
     const ids = []
     for (const item of newList) {

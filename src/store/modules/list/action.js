@@ -99,11 +99,13 @@ export const setList = ({ id, list, name, location, source, sourceListId }) => a
 }
 
 export const listAdd = ({ musicInfo, id }) => (dispatch, getState) => {
+  const addMusicLocationType = getState().common.setting.list.addMusicLocationType
   dispatch({
     type: TYPES.listAdd,
     payload: {
       musicInfo,
       id,
+      addMusicLocationType,
     },
   })
   dispatch(playerAction.checkPlayList([id]))
@@ -111,18 +113,20 @@ export const listAdd = ({ musicInfo, id }) => (dispatch, getState) => {
 }
 
 export const listMove = ({ fromId, musicInfo, toId }) => (dispatch, getState) => {
+  const addMusicLocationType = getState().common.setting.list.addMusicLocationType
   dispatch({
     type: TYPES.listMove,
-    payload: { fromId, musicInfo, toId },
+    payload: { fromId, musicInfo, toId, addMusicLocationType },
   })
   dispatch(playerAction.checkPlayList([fromId, musicInfo]))
   saveList([global.allList[fromId], global.allList[toId]])
 }
 
 export const listAddMultiple = ({ id, list }) => (dispatch, getState) => {
+  const addMusicLocationType = getState().common.setting.list.addMusicLocationType
   dispatch({
     type: TYPES.listAddMultiple,
-    payload: { id, list },
+    payload: { id, list, addMusicLocationType },
   })
   dispatch(playerAction.checkPlayList([id]))
   saveList(global.allList[id])

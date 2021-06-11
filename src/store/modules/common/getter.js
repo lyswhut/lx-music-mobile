@@ -33,6 +33,7 @@ export const themeList = createSelector(themes, themes => Object.values(themes))
 export const versionInfo = state => state.common.versionInfo
 
 export const prevSelectListId = state => state.common.setting.list.prevSelectListId
+export const addMusicLocationType = state => state.common.setting.list.addMusicLocationType
 
 export const togglePlayMethod = state => state.common.setting.player.togglePlayMethod
 

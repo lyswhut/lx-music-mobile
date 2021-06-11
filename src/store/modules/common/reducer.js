@@ -100,6 +100,18 @@ const mutations = {
       },
     }
   },
+  [TYPES.setAddMusicLocationType](state, type) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        list: {
+          ...state.setting.list,
+          addMusicLocationType: type,
+        },
+      },
+    }
+  },
   [TYPES.setAgreePact](state, isAgreePact) {
     return {
       ...state,

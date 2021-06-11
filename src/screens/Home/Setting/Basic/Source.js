@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   list: {
     flexGrow: 0,
     flexShrink: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    // flexDirection: 'row',
+    // flexWrap: 'wrap',
   },
 })

@@ -3,7 +3,7 @@
 // const { isMac } = require('./utils')
 
 const defaultSetting = {
-  version: '1.4',
+  version: '1.5',
   player: {
     togglePlayMethod: 'listLoop',
     highQuality: false,
@@ -17,6 +17,7 @@ const defaultSetting = {
     isShowSource: true,
     prevSelectListId: 'default',
     isSaveScrollLocation: true,
+    addMusicLocationType: 'top',
   },
   download: {
     enable: false,

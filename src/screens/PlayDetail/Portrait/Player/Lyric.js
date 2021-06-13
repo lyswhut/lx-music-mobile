@@ -6,11 +6,18 @@ import { useLrcPlay, useLrcSet } from '@/plugins/lyric'
 import { log } from '@/utils/log'
 import { toast } from '@/utils/tools'
 
-const LrcLine = memo(({ text, line, activeLine }) => {
+const LrcLine = memo(({ lrc, line, activeLine }) => {
   const theme = useGetter('common', 'theme')
 
   return (
-    <Text style={{ ...styles.line, color: activeLine == line ? theme.secondary : theme.normal30 }}>{text}</Text>
+    <View style={styles.line}>
+      <Text style={{ ...styles.lineText, color: activeLine == line ? theme.secondary : theme.normal30 }}>{lrc.text}</Text>
+      {
+        lrc.translation
+          ? <Text style={{ ...styles.lineTranslationText, color: activeLine == line ? theme.secondary : theme.normal30 }}>{lrc.translation}</Text>
+          : null
+      }
+    </View>
   )
 }, (prevProps, nextProps) => {
   return prevProps.text == nextProps.text &&
@@ -111,7 +118,7 @@ export default memo(() => {
 
   const handleRenderItem = ({ item, index }) => {
     return (
-      <LrcLine text={item.text} line={index} activeLine={line} />
+      <LrcLine lrc={item} line={index} activeLine={line} />
     )
   }
 
@@ -148,12 +155,23 @@ const styles = StyleSheet.create({
     paddingTop: '80%',
   },
   line: {
-    borderRadius: 4,
+    paddingTop: 8,
+    paddingBottom: 8,
+    // opacity: 0,
+  },
+  lineText: {
     textAlign: 'center',
     fontSize: 16,
-    lineHeight: 22,
-    paddingTop: 5,
-    paddingBottom: 5,
+    lineHeight: 20,
+    // paddingTop: 5,
+    // paddingBottom: 5,
     // opacity: 0,
+  },
+  lineTranslationText: {
+    textAlign: 'center',
+    fontSize: 13,
+    lineHeight: 17,
+    paddingTop: 5,
+    // paddingBottom: 5,
   },
 })

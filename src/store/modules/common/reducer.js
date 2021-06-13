@@ -274,6 +274,18 @@ const mutations = {
       },
     }
   },
+  [TYPES.setIsShowLyricTranslation](state, isShowTranslation) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        player: {
+          ...state.setting.player,
+          isShowTranslation,
+        },
+      },
+    }
+  },
   [TYPES.setVersionInfo](state, versionInfo) {
     return {
       ...state,

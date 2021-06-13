@@ -18,7 +18,7 @@ export default memo(() => {
   }
 
   return (
-    <View style={{ marginTop: 5 }}>
+    <View style={{ marginTop: 15 }}>
       <CheckBoxItem check={isHandleAudioFocus} label={t('setting_play_handle_audio_focus')} onChange={handleSetAudioFocus} />
     </View>
   )

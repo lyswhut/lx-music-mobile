@@ -16,7 +16,7 @@ import { action as commonAction } from '@/store/modules/common'
 import { action as playerAction } from '@/store/modules/player'
 import { action as listAction } from '@/store/modules/list'
 import { init as initMusicTools } from '@/utils/music'
-import { init as initLyric } from '@/plugins/lyric'
+import { init as initLyric, toggleTranslation } from '@/plugins/lyric'
 import { init as initI18n, supportedLngs } from '@/plugins/i18n'
 import { deviceLanguage, getPlayInfo, toast } from '@/utils/tools'
 import { LIST_ID_PLAY_TEMP } from '@/config/constant'
@@ -39,7 +39,10 @@ const init = () => {
     initLyric(),
     registerPlaybackService(),
   ]).then(() => {
-    let lang = store.getState().common.setting.langId
+    let setting = store.getState().common.setting
+    toggleTranslation(setting.player.isShowTranslation)
+
+    let lang = setting.langId
     let needSetLang = false
     if (!supportedLngs.includes(lang)) {
       if (typeof deviceLanguage == 'string' && supportedLngs.includes(deviceLanguage)) {

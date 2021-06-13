@@ -13,7 +13,7 @@ export default memo(() => {
 
 
   return (
-    <View style={{ marginTop: 5, marginBottom: 10 }}>
+    <View style={{ marginTop: 5 }}>
       <CheckBoxItem check={isPlayHighQuality} label={t('setting_play_quality')} onChange={setIsPlayHighQuality} />
     </View>
   )

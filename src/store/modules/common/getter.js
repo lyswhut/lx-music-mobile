@@ -44,6 +44,7 @@ export const sourceNameType = state => state.common.setting.sourceNameType
 
 export const timeoutExit = state => state.common.setting.player.timeoutExit
 export const timeoutExitPlayed = state => state.common.setting.player.timeoutExitPlayed
+export const isShowLyricTranslation = state => state.common.setting.player.isShowTranslation
 
 export const activeApiSourceId = state => state.common.setting.apiSource
 

@@ -113,6 +113,7 @@
   "setting_play_lyric_transition": "显示歌词翻译",
   "setting_play_quality": "优先播放320K品质的歌曲（如果支持）",
   "setting_play_save_play_time": "记住播放进度",
+  "setting_play_show_translation": "显示歌词翻译",
   "setting_version": "软件更新",
   "setting_version_show_ver_modal": "打开更新窗口 🚀",
   "singer": "艺术家：{{name}}",

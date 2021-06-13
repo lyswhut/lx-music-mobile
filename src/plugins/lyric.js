@@ -10,6 +10,9 @@ const lrcTools = {
   playHooks: [],
   setLyricHooks: [],
   isPlay: false,
+  isShowTranslation: false,
+  lyricText: '',
+  translationText: '',
   init() {
     if (this.isInited) return
     this.isInited = true
@@ -51,9 +54,16 @@ export const init = async() => {
   lrcTools.init()
 }
 
-export const setLyric = lyric => {
+export const setLyric = (lyric, translation) => {
   lrcTools.isPlay = false
-  lrcTools.lrc.setLyric(lyric)
+  lrcTools.lyricText = lyric
+  lrcTools.translationText = translation
+  lrcTools.lrc.setLyric(lrcTools.lyricText, lrcTools.isShowTranslation ? lrcTools.translationText : '')
+}
+export const toggleTranslation = isShow => {
+  lrcTools.isShowTranslation = isShow
+  if (!lrcTools.lyricText) return
+  lrcTools.lrc.setLyric(lrcTools.lyricText, isShow ? lrcTools.translationText : '')
 }
 export const play = time => {
   // console.log(time)

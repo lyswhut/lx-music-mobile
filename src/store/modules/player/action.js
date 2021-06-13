@@ -17,7 +17,7 @@ import {
 import { getRandom } from '@/utils'
 import { getMusicUrl, saveMusicUrl, getLyric, saveLyric, assertApiSupport, savePlayInfo, saveList } from '@/utils/tools'
 import { playInfo as playInfoGetter } from './getter'
-import { play as lrcPlay, setLyric, pause as lrcPause } from '@/plugins/lyric'
+import { play as lrcPlay, setLyric, pause as lrcPause, toggleTranslation as lrcToggleTranslation } from '@/plugins/lyric'
 import { action as listAction } from '@/store/modules/list'
 import { LIST_ID_PLAY_LATER } from '@/config/constant'
 // import { defaultList } from '../list/getter'
@@ -135,8 +135,8 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
       })
     }
     dispatch(getLrc(musicInfo)).then(({ lyric, tlyric }) => {
-      setLyric(lyric)
       const player = getState().player
+      setLyric(lyric, tlyric)
       if (player.status == STATUS.playing && !player.isGettingUrl) {
         getPosition().then(position => {
           lrcPlay(position * 1000)
@@ -199,8 +199,8 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
   }
   dispatch(getLrc(musicInfo)).then(({ lyric, tlyric }) => {
     if (playMusicId != id) return
-    setLyric(lyric)
     const player = getState().player
+    setLyric(lyric, tlyric)
     if (player.status == STATUS.playing && !player.isGettingUrl) {
       getPosition().then(position => {
         lrcPlay(position * 1000)
@@ -741,6 +741,16 @@ export const setListInfo = listInfo => ({
   type: TYPES.setList,
   payload: listInfo,
 })
+
+export const toggleTranslation = isShow => async(dispatch, getState) => {
+  lrcToggleTranslation(isShow)
+  const player = getState().player
+  if (player.status == STATUS.playing && !player.isGettingUrl) {
+    getPosition().then(position => {
+      lrcPlay(position * 1000)
+    })
+  }
+}
 
 export const checkPlayList = listIds => async(dispatch, getState) => {
   const { player, list: listState } = getState()

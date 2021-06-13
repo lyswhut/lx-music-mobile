@@ -3,7 +3,7 @@
 // const { isMac } = require('./utils')
 
 const defaultSetting = {
-  version: '1.5',
+  version: '1.6',
   player: {
     togglePlayMethod: 'listLoop',
     highQuality: false,
@@ -12,6 +12,7 @@ const defaultSetting = {
     timeoutExit: '',
     timeoutExitPlayed: true,
     isHandleAudioFocus: true,
+    isShowLyricTranslation: false,
   },
   list: {
     isShowSource: true,

@@ -112,6 +112,7 @@
   "setting_play_lyric_transition": "Show lyrics translation",
   "setting_play_quality": "Play 320K quality songs first (if supported)",
   "setting_play_save_play_time": "Remember playback progress",
+  "setting_play_show_translation": "Show lyrics translation",
   "setting_version": "Software Update",
   "setting_version_show_ver_modal": "Open the update window 🚀",
   "singer": "Artist: {{name}}",

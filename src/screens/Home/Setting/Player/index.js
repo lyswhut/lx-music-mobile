@@ -7,6 +7,7 @@ import {
 import Section from '../components/Section'
 import IsPlayHighQuality from './IsPlayHighQuality'
 import IsHandleAudioFocus from './IsHandleAudioFocus'
+import IsShowLyricTranslation from './IsShowLyricTranslation'
 import MaxCache from './MaxCache'
 import { useTranslation } from '@/plugins/i18n'
 
@@ -43,6 +44,7 @@ export default memo(() => {
     <Section title={t('setting_play')}>
       <IsPlayHighQuality />
       <IsHandleAudioFocus />
+      <IsShowLyricTranslation />
       <MaxCache />
       {/* <View style={{ marginLeft: 15, marginBottom: 15 }}>
         <Text>播放歌曲切换方式</Text>

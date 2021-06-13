@@ -45,7 +45,7 @@
     "events": "^3.3.0",
     "i18next": "^20.3.1",
     "js-htmlencode": "^0.3.0",
-    "lrc-file-parser": "^1.0.7",
+    "lrc-file-parser": "^1.1.0",
     "pako": "^2.0.3",
     "process": "^0.11.10",
     "prop-types": "^15.7.2",

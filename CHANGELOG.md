@@ -6,6 +6,18 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.5.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.4.2...v0.5.0) - 2021-06-13
+
+### 新增
+
+- 新增“其他应用播放声音时，自动暂停播放”设置，默认开启
+- 新增“添加歌曲到列表时的位置”设置，可选项为列表的“顶部”与“底部”
+- 新增“显示歌词翻译设置”，默认关闭
+
+### 变更
+
+- 添加歌曲到列表时从原来的底部改为顶部，若想要恢复原来的行为则可以去更改“添加歌曲到列表时的位置”设置项
+
 ## [0.4.2](https://github.com/lyswhut/lx-music-mobile/compare/v0.4.1...v0.4.2) - 2021-06-06
 
 ### 优化

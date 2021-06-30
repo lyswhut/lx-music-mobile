@@ -23,11 +23,11 @@ export default {
       tid: 'hot',
       id: 'hot',
     },
-    {
-      name: '最新',
-      tid: 'new',
-      id: 'new',
-    },
+    // {
+    //   name: '最新',
+    //   tid: 'new',
+    //   id: 'new',
+    // },
   ],
   regExps: {
     listDetailLink: /^.+(?:\?|&)id=(\d+)(?:&.*$|#.*$|$)/,

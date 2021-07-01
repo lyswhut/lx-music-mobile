@@ -7,21 +7,21 @@ import { useTranslation } from '@/plugins/i18n'
 import { useDimensions } from '@/utils/hooks'
 import { BorderWidths } from '@/theme'
 import Input from '@/components/common/Input'
+import { toast } from '@/utils/tools'
 
 const ListItem = ({ list, onPress, musicInfo, width }) => {
   const theme = useGetter('common', 'theme')
-  const isDisabled = useMemo(() => {
+  const isExists = useMemo(() => {
     return list.list.some(s => s.songmid == musicInfo.songmid)
   }, [list, musicInfo])
 
   return (
     <View style={{ ...styles.listItem, width: width }}>
       <Button
-        disabled={isDisabled}
-        style={{ ...styles.button, backgroundColor: theme.secondary45, borderColor: theme.secondary45, opacity: isDisabled ? 0.6 : 1 }}
-        onPress={() => { onPress(list) }}
+        style={{ ...styles.button, backgroundColor: theme.secondary45, borderColor: theme.secondary45, opacity: isExists ? 0.6 : 1 }}
+        onPress={() => { onPress(list, isExists) }}
       >
-        <Text numberOfLines={1} style={{ fontSize: 12, color: isDisabled ? theme.secondary10 : theme.secondary }}>{list.name}</Text>
+        <Text numberOfLines={1} style={{ fontSize: 12, color: isExists ? theme.secondary10 : theme.secondary }}>{list.name}</Text>
       </Button>
     </View>
   )
@@ -81,6 +81,7 @@ export default memo(({ visible, hideModal, musicInfo, listId, isMove = false }) 
   const allList = useGetter('list', 'allList')
   const addMusicToList = useDispatch('list', 'listAdd')
   const moveMusicToList = useDispatch('list', 'listMove')
+  const removeMusicFromList = useDispatch('list', 'listRemove')
   const { window } = useDimensions()
   const theme = useGetter('common', 'theme')
   const [isEdit, setIsEdit] = useState(false)
@@ -95,21 +96,34 @@ export default memo(({ visible, hideModal, musicInfo, listId, isMove = false }) 
     }
   }, [window])
 
-  const handleSelect = useCallback(list => {
+  const handleSelect = useCallback((list, isRemove) => {
     if (isMove) {
       moveMusicToList({
         fromId: listId,
         toId: list.id,
         musicInfo,
       })
+      toast(t('list_edit_action_tip_move_success'))
     } else {
-      addMusicToList({
-        musicInfo,
-        id: list.id,
-      })
+      if (isRemove) {
+        const index = list.list.indexOf(musicInfo)
+        if (index > -1) {
+          removeMusicFromList({
+            id: list.id,
+            index,
+          })
+          toast(t('list_edit_action_tip_remove_success'))
+        }
+      } else {
+        addMusicToList({
+          musicInfo,
+          id: list.id,
+        })
+        toast(t('list_edit_action_tip_add_success'))
+      }
     }
     hideModal()
-  }, [addMusicToList, hideModal, isMove, listId, moveMusicToList, musicInfo])
+  }, [addMusicToList, hideModal, isMove, listId, moveMusicToList, musicInfo, removeMusicFromList, t])
 
   const hideEdit = useCallback(() => {
     setIsEdit(false)

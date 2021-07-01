@@ -7,6 +7,7 @@ import { useTranslation } from '@/plugins/i18n'
 import { useDimensions } from '@/utils/hooks'
 import { BorderWidths } from '@/theme'
 import Input from '@/components/common/Input'
+import { toast } from '@/utils/tools'
 
 
 const ListItem = ({ list, onPress, width }) => {
@@ -99,15 +100,17 @@ export default memo(({ visible, hideModal, list, onAdd, excludeList = [], listId
         toId: id,
         list,
       })
+      toast(t('list_edit_action_tip_move_success'))
     } else {
       addMultiMusicToList({
         list,
         id,
       })
+      toast(t('list_edit_action_tip_add_success'))
     }
     hideModal()
     onAdd()
-  }, [isMove, hideModal, onAdd, addMultiMusicToList, list, moveMultiMusicToList, listId])
+  }, [isMove, hideModal, onAdd, moveMultiMusicToList, listId, list, t, addMultiMusicToList])
 
   const filteredList = useMemo(() => {
     return allList.filter(({ id }) => !excludeList.includes(id))

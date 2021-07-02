@@ -71,7 +71,7 @@ export default memo(() => {
         </TouchableOpacity>
       </View>
       <View style={styles.part}>
-        <Text style={textStyle}><Text style={{ fontWeight: 'bold' }} >仔细 仔细 仔细 </Text>地阅读常见问题后，</Text>
+        <Text style={textStyle}><Text style={{ fontWeight: 'bold' }} >本软件没有客服</Text>，但我们整理了一些常见的使用问题，<Text style={{ fontWeight: 'bold' }} >仔细 仔细 仔细 </Text>地阅读常见问题后，</Text>
         <Text style={textStyle}>仍有问题可加企鹅群 </Text>
         <TouchableOpacity onPress={goToQQQroup}><Text style={textLinkStyle}>830125506</Text></TouchableOpacity>
         <Text style={textStyle}> 反馈。</Text>

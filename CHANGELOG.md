@@ -6,6 +6,21 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.5.1](https://github.com/lyswhut/lx-music-mobile/compare/v0.5.0...v0.5.1) - 2021-07-05
+
+### 优化
+
+- 添加切换播放模式时的文字提示
+- 优化单首歌曲的添加弹窗操作，当选择当前歌曲已存在目标列表时（列表名灰色显示），会将当前歌曲从目标列表移除，否则将当前歌曲添加到目标列表，添加在弹窗内对歌曲的添加、移动、删除操作时的文字提示
+
+### 修复
+
+- 修复mg源搜索失效的问题
+
+### 移除
+
+- 因wy源的歌单列表已没有“最新”排序的选项，所以现跟随移除wy源歌单列表按“最新”排序的按钮
+
 ## [0.5.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.4.2...v0.5.0) - 2021-06-13
 
 ### 新增

@@ -101,6 +101,8 @@
   "setting_list_add_music_location_type": "添加歌曲到列表时的位置",
   "setting_list_add_music_location_type_bottom": "底部",
   "setting_list_add_music_location_type_top": "顶部",
+  "setting_lyric_desktop": "桌面歌词",
+  "setting_lyric_desktop_enable": "显示桌面歌词",
   "setting_other": "其他",
   "setting_other_cache": "缓存管理（包括歌曲、歌词、错误日志等缓存，没有歌曲播放相关的问题不建议清理）",
   "setting_other_cache_clear_btn": "清理缓存",

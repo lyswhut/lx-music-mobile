@@ -19,14 +19,14 @@ const middlewares = [thunkMiddleware]
 // let debuggWrapper = data => data
 
 
-if (process.env.NODE_ENV === 'development') {
-  const { createLogger } = require('redux-logger')
-  // const { composeWithDevTools } = require('remote-redux-devtools')
-  middlewares.push(createLogger({
-    collapsed: true,
-  }))
-  // debuggWrapper = composeWithDevTools({ realtime: true, port: 8097 })
-}
+// if (process.env.NODE_ENV === 'development') {
+//   const { createLogger } = require('redux-logger')
+//   // const { composeWithDevTools } = require('remote-redux-devtools')
+//   middlewares.push(createLogger({
+//     collapsed: true,
+//   }))
+//   // debuggWrapper = composeWithDevTools({ realtime: true, port: 8097 })
+// }
 
 
 const initializeStore = () => {

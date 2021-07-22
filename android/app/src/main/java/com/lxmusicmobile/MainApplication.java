@@ -4,6 +4,7 @@ import android.content.Context;
 import com.facebook.react.PackageList;
 import com.lxmusicmobile.cache.CachePackage;
 import com.lxmusicmobile.gzip.GzipPackage;
+import com.lxmusicmobile.lyric.LyricPackage;
 import com.lxmusicmobile.utils.UtilsPackage;
 import com.reactnativenavigation.NavigationApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -32,6 +33,7 @@ public class MainApplication extends NavigationApplication {
           packages.add(new GzipPackage());
           packages.add(new CachePackage());
           packages.add(new UtilsPackage());
+          packages.add(new LyricPackage());
           return packages;
         }
 

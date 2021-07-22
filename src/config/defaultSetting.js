@@ -14,6 +14,20 @@ const defaultSetting = {
     isHandleAudioFocus: true,
     isShowLyricTranslation: false,
   },
+  desktopLyric: {
+    enable: false,
+    isLock: false,
+    width: 380,
+    height: 420,
+    x: null,
+    y: null,
+    theme: 0,
+    // style: {
+    //   fontSize: 120,
+    //   opacity: 95,
+    //   isZoomActiveLrc: true,
+    // },
+  },
   list: {
     isShowSource: true,
     prevSelectListId: 'default',

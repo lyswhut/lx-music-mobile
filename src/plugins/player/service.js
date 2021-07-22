@@ -2,7 +2,7 @@ import TrackPlayer from 'react-native-track-player'
 import { getStore } from '@/store'
 import { action as playerAction, STATUS } from '@/store/modules/player'
 import { isTempTrack } from './utils'
-import { play as lrcPlay, pause as lrcPause } from '@/plugins/lyric'
+import { play as lrcPlay, pause as lrcPause } from '@/utils/lyric'
 import { exitApp } from '@/utils/tools'
 
 const store = getStore()

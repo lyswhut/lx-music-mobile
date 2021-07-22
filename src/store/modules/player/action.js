@@ -17,7 +17,8 @@ import {
 import { getRandom } from '@/utils'
 import { getMusicUrl, saveMusicUrl, getLyric, saveLyric, assertApiSupport, savePlayInfo, saveList } from '@/utils/tools'
 import { playInfo as playInfoGetter } from './getter'
-import { play as lrcPlay, setLyric, pause as lrcPause, toggleTranslation as lrcToggleTranslation } from '@/plugins/lyric'
+import { play as lrcPlay, setLyric, pause as lrcPause, toggleTranslation as lrcToggleTranslation } from '@/utils/lyric'
+import { showLyric, hideLyric } from '@/utils/lyricDesktop'
 import { action as listAction } from '@/store/modules/list'
 import { LIST_ID_PLAY_LATER } from '@/config/constant'
 // import { defaultList } from '../list/getter'
@@ -775,6 +776,20 @@ export const toggleTranslation = isShow => async(dispatch, getState) => {
     getPosition().then(position => {
       lrcPlay(position * 1000)
     })
+  }
+}
+
+export const toggleDesktopLyric = isShow => async(dispatch, getState) => {
+  if (isShow) {
+    await showLyric()
+    const player = getState().player
+    if (player.status == STATUS.playing && !player.isGettingUrl) {
+      getPosition().then(position => {
+        lrcPlay(position * 1000)
+      })
+    }
+  } else {
+    hideLyric()
   }
 }
 

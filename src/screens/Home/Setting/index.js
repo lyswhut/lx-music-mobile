@@ -8,6 +8,7 @@ import {
 
 import Basic from './Basic'
 import Player from './Player'
+import LyricDesktop from './LyricDesktop'
 import List from './List'
 import Sync from './Sync'
 import Backup from './Backup'
@@ -30,6 +31,7 @@ export default () => {
       <View style={styles.content}>
         <Basic />
         <Player />
+        <LyricDesktop />
         <List />
         <Sync />
         <Backup />

@@ -8,7 +8,7 @@ export const buildTracks = (musicInfo, type, url) => {
   const track = []
   if (url) {
     track.push({
-      id: `${musicInfo.source}__//${musicInfo.songmid}__//${type}__//${url}`,
+      id: `${musicInfo.source}__//${musicInfo.songmid}__//${type}__//${Math.random()}__//${url}`,
       url,
       title: musicInfo.name,
       artist: musicInfo.singer,
@@ -33,7 +33,7 @@ export const buildTracks = (musicInfo, type, url) => {
 export const buildTrack = (musicInfo, type, url) => {
   return url
     ? {
-        id: `${musicInfo.source}__//${musicInfo.songmid}__//${type}__//${url}`,
+        id: `${musicInfo.source}__//${musicInfo.songmid}__//${type}__//${Math.random()}__//${url}`,
         url,
         title: musicInfo.name,
         artist: musicInfo.singer,
@@ -107,8 +107,8 @@ const handlePlayMusic = async(tracks, time) => {
   }
 
   const queue = await TrackPlayer.getQueue()
-  if (queue.length > 3) {
-    TrackPlayer.remove(queue.slice(0, queue.length - 3).map(t => t.id))
+  if (queue.length > 2) {
+    TrackPlayer.remove(queue.slice(0, queue.length - 2).map(t => t.id))
   }
 
   // if (!currentTrackId) {

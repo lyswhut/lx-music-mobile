@@ -52,16 +52,17 @@ export default memo(() => {
   const handleScrollToActive = useCallback((index = lineRef.current) => {
     if (index < 0) return
     if (scrollViewRef.current) {
-      // try {
-      scrollViewRef.current.scrollToIndex({
-        index: index,
-        animated: true,
-        viewPosition: 0.4,
-      })
-      // } catch (err) {
-      //   toast('出了点意外...你可以去错误日志查看错误', 'long')
-      //   log.warn('Scroll failed: ', err.message)
-      // }
+      try {
+        scrollViewRef.current.scrollToIndex({
+          index,
+          animated: true,
+          viewPosition: 0.4,
+        })
+      } catch (err) {
+        console.log(err)
+        // toast('出了点意外...你可以去错误日志查看错误', 'long')
+        // log.warn('Scroll failed: ', err.message)
+      }
     }
   }, [])
 

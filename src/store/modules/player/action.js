@@ -781,7 +781,12 @@ export const toggleTranslation = isShow => async(dispatch, getState) => {
 
 export const toggleDesktopLyric = isShow => async(dispatch, getState) => {
   if (isShow) {
-    const [{ lyric, tlyric }] = await Promise.all([_playMusicInfo ? getLyric(_playMusicInfo) : Promise.resolve(), showLyric()])
+    const [{ lyric, tlyric }] = await Promise.all([
+      _playMusicInfo
+        ? getLyric(_playMusicInfo).catch(() => ({ lyric: '', tlyric: '' }))
+        : Promise.resolve({ lyric: '', tlyric: '' }),
+      showLyric(),
+    ])
     await lrcdSetLyric(lyric, tlyric)
     const player = getState().player
     if (player.status == STATUS.playing && !player.isGettingUrl) {

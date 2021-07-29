@@ -41,12 +41,13 @@ export const playInfo = createSelector([playMusicInfo, listInfo, playIndex], (pl
   let listPlayIndex = playIndex
 
   if (listId != LIST_ID_PLAY_LATER) {
+    let songmid = playMusicInfo.musicInfo?.songmid
     if (isPlayList) {
-      newPlayIndex = listInfo.list.indexOf(playMusicInfo.musicInfo)
+      newPlayIndex = listInfo.list.findIndex(m => m.songmid == songmid)
       if (!isTempPlay) listPlayIndex = newPlayIndex
     } else {
       let list = global.allList[listId]
-      if (list) newPlayIndex = list.list.indexOf(playMusicInfo.musicInfo)
+      if (list) newPlayIndex = list.list.findIndex(m => m.songmid == songmid)
     }
   }
 

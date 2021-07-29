@@ -413,7 +413,8 @@ export const refreshMusicUrl = (musicInfo, restorePlayTime) => (dispatch, getSta
     dispatch(playNext())
     return
   }
-  const index = state.player.listInfo.list.indexOf(targetMusic)
+  const songmid = targetMusic.songmid
+  const index = state.player.listInfo.list.findIndex(m => m.songmid == songmid)
   handlePlayMusic({
     getState,
     dispatch,
@@ -469,7 +470,8 @@ export const playMusic = playMusicInfo => async(dispatch, getState) => {
     setLyric('')
     let listId = playMusicInfo.listId
     // console.log(playMusicInfo)
-    if (listId != LIST_ID_PLAY_LATER && !playMusicInfo.isTempPlay && listId === player.listInfo.id) playIndex = player.listInfo.list.indexOf(playMusicInfo.musicInfo)
+    const songmid = playMusicInfo.musicInfo.songmid
+    if (listId != LIST_ID_PLAY_LATER && !playMusicInfo.isTempPlay && listId === player.listInfo.id) playIndex = player.listInfo.list.findIndex(m => m.songmid == songmid)
     dispatch({
       type: TYPES.setPlayMusicInfo,
       payload: {
@@ -780,7 +782,8 @@ export const checkPlayList = listIds => async(dispatch, getState) => {
     }
     if (isChnagedList) dispatch(setListInfo(listInfo))
   } else {
-    let index = list.indexOf(_playMusicInfo)
+    let songmid = _playMusicInfo.songmid
+    let index = list.findIndex(m => m.songmid == songmid)
     // console.log(index)
     if (index < 0) {
       // console.log(this.playIndex)

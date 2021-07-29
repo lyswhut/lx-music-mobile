@@ -133,7 +133,8 @@ const mutations = {
     const toList = allList[toId]
     if (!fromList || !toList) return state
     const newFromList = [...fromList.list]
-    newFromList.splice(fromList.list.indexOf(musicInfo), 1)
+    let songmid = musicInfo.songmid
+    newFromList.splice(fromList.list.findIndex(m => m.songmid == songmid), 1)
     fromList.list = newFromList
     const index = toList.list.findIndex(s => s.songmid === musicInfo.songmid)
     if (index < 0) {

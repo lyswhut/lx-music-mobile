@@ -184,9 +184,14 @@ export const clearMusicUrlAndLyric = async() => {
   await removeDataMultiple(keys)
 }
 
-export const savePlayInfo = throttle(n => {
+export const delaySavePlayInfo = throttle(n => {
   setData(playInfoStorageKey, n)
 }, 2000)
+export const savePlayInfo = (info, isDelay) => {
+  isDelay
+    ? delaySavePlayInfo(info)
+    : setData(playInfoStorageKey, info)
+}
 export const getPlayInfo = () => getData(playInfoStorageKey)
 
 

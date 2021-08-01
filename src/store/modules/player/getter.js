@@ -50,6 +50,7 @@ export const playInfo = createSelector([playMusicInfo, listInfo, playIndex], (pl
       if (list) newPlayIndex = list.list.findIndex(m => m.songmid == songmid)
     }
   }
+  if (listPlayIndex > -1) global.prevPlayIndex = listPlayIndex
 
   return {
     listId,

@@ -226,7 +226,7 @@ export const setSyncAuthKey = async(serverId, key) => {
 let syncHostInfo
 export const getSyncHost = async() => {
   if (syncHostInfo === undefined) {
-    syncHostInfo = await getData(syncHostPrefix) || { host: '', port: '' }
+    syncHostInfo = await getData(syncHostPrefix) || { host: '', port: '23332' }
   }
   return { ...syncHostInfo }
 }

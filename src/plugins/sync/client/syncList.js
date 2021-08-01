@@ -1,6 +1,7 @@
 import { getStore } from '@/store'
 import { action as commonAction } from '@/store/modules/common'
 import { action as listAction } from '@/store/modules/list'
+import { toast } from '@/utils/tools'
 
 import { decryptMsg, encryptMsg } from './utils'
 let socket
@@ -54,6 +55,7 @@ const handleListSync = enMsg => {
       if (!syncAction) return
       syncAction[0]()
       syncAction = null
+      toast('Sync successfully')
       break
     default:
       break

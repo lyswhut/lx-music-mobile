@@ -109,8 +109,8 @@ export default memo(({ visible, hideModal, musicInfo, listId, isMove = false }) 
         const index = list.list.indexOf(musicInfo)
         if (index > -1) {
           removeMusicFromList({
-            id: list.id,
-            index,
+            listId: list.id,
+            id: musicInfo.songmid,
           })
           toast(t('list_edit_action_tip_remove_success'))
         }

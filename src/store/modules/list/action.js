@@ -1,4 +1,5 @@
 import { action as playerAction } from '@/store/modules/player'
+import { action as commonAction } from '@/store/modules/common'
 import { findMusic } from '@/utils/music'
 import {
   getAllListData,
@@ -9,6 +10,7 @@ import {
   saveListScrollPosition,
   saveListSort,
 } from '@/utils/tools'
+import { list as listSync } from '@/plugins/sync'
 
 export const TYPES = {
   initList: null,
@@ -29,6 +31,7 @@ export const TYPES = {
   setOtherSource: null,
   clearCache: null,
   jumpPosition: null,
+  setSyncList: null,
 }
 
 for (const key of Object.keys(TYPES)) {
@@ -57,7 +60,7 @@ export const initList = listData => async(dispatch, getState) => {
     listPosition = listData.listPosition
     listSort = listData.listSort
   }
-  global.listScrollPosition = listPosition
+  global.listScrollPosition = listPosition || {}
   global.listSort = listSort
 
   let isNeedSaveSortInfo = false
@@ -79,9 +82,38 @@ export const initList = listData => async(dispatch, getState) => {
     type: TYPES.initList,
     payload: { defaultList, loveList, userList },
   })
+
+  // if (listData.isSync) {
+  //   const keys = Object.keys(global.allList)
+  //   dispatch(playerAction.checkPlayList(keys))
+  //   saveList(keys)
+  // } else {
+  //   listSync.sendListAction('init_list', { defaultList, loveList, userList })
+  // }
 }
 
-export const setList = ({ id, list, name, location, source, sourceListId }) => async(dispatch, getState) => {
+export const setSyncList = ({ defaultList, loveList, userList }) => async(dispatch, getState) => {
+  const state = getState()
+  const userListIds = userList.map(l => l.id)
+  const removeUserListIds = state.list.userList.filter(l => !userListIds.includes(l.id))
+  if (removeUserListIds.includes(state.common.setting.list.prevSelectListId)) {
+    dispatch(commonAction.setPrevSelectListId(state.list.defaultList.id))
+  }
+  dispatch({
+    type: TYPES.setSyncList,
+    payload: { defaultList, loveList, userList },
+  })
+  await removeList(removeUserListIds)
+
+  dispatch(playerAction.checkPlayList([...Object.keys(global.allList), ...removeUserListIds]))
+  saveList([defaultList, loveList, ...userList])
+}
+
+export const setList = ({ id, list, name, location, source, sourceListId, isSync }) => async(dispatch, getState) => {
+  if (!isSync) {
+    listSync.sendListAction('set_list', { id, list, name, location, source, sourceListId })
+  }
+
   const targetList = global.allList[id]
   if (targetList) {
     if (name && targetList.name === name) {
@@ -89,17 +121,22 @@ export const setList = ({ id, list, name, location, source, sourceListId }) => a
         type: TYPES.listClear,
         payload: id,
       })
-      dispatch(listAddMultiple({ id, list }))
+      dispatch(listAddMultiple({ id, list, isSync: true }))
       return
     }
 
     id += '_' + Math.random()
   }
-  await dispatch(createUserList({ id, list, name, location, source, sourceListId }))
+  await dispatch(createUserList({ id, list, name, location, source, sourceListId, isSync: true }))
 }
 
-export const listAdd = ({ musicInfo, id }) => (dispatch, getState) => {
-  const addMusicLocationType = getState().common.setting.list.addMusicLocationType
+export const listAdd = ({ musicInfo, id, addMusicLocationType, isSync }) => (dispatch, getState) => {
+  if (!addMusicLocationType) addMusicLocationType = getState().common.setting.list.addMusicLocationType
+
+  if (!isSync) {
+    listSync.sendListAction('list_add', { id, musicInfo, addMusicLocationType })
+  }
+
   dispatch({
     type: TYPES.listAdd,
     payload: {
@@ -112,18 +149,26 @@ export const listAdd = ({ musicInfo, id }) => (dispatch, getState) => {
   saveList(global.allList[id])
 }
 
-export const listMove = ({ fromId, musicInfo, toId }) => (dispatch, getState) => {
-  const addMusicLocationType = getState().common.setting.list.addMusicLocationType
+export const listMove = ({ fromId, musicInfo, toId, isSync }) => (dispatch, getState) => {
+  if (!isSync) {
+    listSync.sendListAction('list_move', { fromId, musicInfo, toId })
+  }
+
   dispatch({
     type: TYPES.listMove,
-    payload: { fromId, musicInfo, toId, addMusicLocationType },
+    payload: { fromId, musicInfo, toId },
   })
-  dispatch(playerAction.checkPlayList([fromId, musicInfo]))
+  dispatch(playerAction.checkPlayList([fromId, toId]))
   saveList([global.allList[fromId], global.allList[toId]])
 }
 
-export const listAddMultiple = ({ id, list }) => (dispatch, getState) => {
-  const addMusicLocationType = getState().common.setting.list.addMusicLocationType
+export const listAddMultiple = ({ id, list, addMusicLocationType, isSync }) => (dispatch, getState) => {
+  if (!addMusicLocationType) addMusicLocationType = getState().common.setting.list.addMusicLocationType
+
+  if (!isSync) {
+    listSync.sendListAction('list_add_multiple', { id, list, addMusicLocationType })
+  }
+
   dispatch({
     type: TYPES.listAddMultiple,
     payload: { id, list, addMusicLocationType },
@@ -132,10 +177,14 @@ export const listAddMultiple = ({ id, list }) => (dispatch, getState) => {
   saveList(global.allList[id])
 }
 
-export const listMoveMultiple = ({ fromId, toId, list }) => (dispatch, getState) => {
+export const listMoveMultiple = ({ fromId, toId, list, isSync }) => (dispatch, getState) => {
+  if (!isSync) {
+    listSync.sendListAction('list_move_multiple', { fromId, toId, list })
+  }
+
   dispatch({
     type: TYPES.listRemoveMultiple,
-    payload: { id: fromId, list },
+    payload: { id: fromId, ids: list.map(s => s.songmid) },
   })
   dispatch({
     type: TYPES.listAddMultiple,
@@ -145,25 +194,37 @@ export const listMoveMultiple = ({ fromId, toId, list }) => (dispatch, getState)
   saveList([global.allList[fromId], global.allList[toId]])
 }
 
-export const listRemove = ({ id, index }) => (dispatch, getState) => {
+export const listRemove = ({ listId, id, isSync }) => (dispatch, getState) => {
+  if (!isSync) {
+    listSync.sendListAction('list_remove', { listId, id })
+  }
+
   dispatch({
     type: TYPES.listRemove,
-    payload: { id, index },
+    payload: { listId, id },
   })
-  dispatch(playerAction.checkPlayList([id]))
-  saveList(global.allList[id])
+  dispatch(playerAction.checkPlayList([listId]))
+  saveList(global.allList[listId])
 }
 
-export const listRemoveMultiple = ({ id, list }) => (dispatch, getState) => {
+export const listRemoveMultiple = ({ listId, ids, isSync }) => (dispatch, getState) => {
+  if (!isSync) {
+    listSync.sendListAction('list_remove_multiple', { listId, ids })
+  }
+
   dispatch({
     type: TYPES.listRemoveMultiple,
-    payload: { id, list },
+    payload: { listId, ids },
   })
-  dispatch(playerAction.checkPlayList([id]))
-  saveList(global.allList[id])
+  dispatch(playerAction.checkPlayList([listId]))
+  saveList(global.allList[listId])
 }
 
-export const listClear = id => (dispatch, getState) => {
+export const listClear = ({ id, isSync }) => (dispatch, getState) => {
+  if (!isSync) {
+    listSync.sendListAction('list_clear', { id })
+  }
+
   dispatch({
     type: TYPES.listClear,
     payload: id,
@@ -172,35 +233,51 @@ export const listClear = id => (dispatch, getState) => {
   saveList(global.allList[id])
 }
 
-export const updateMusicInfo = ({ id, index, data }) => (dispatch, getState) => {
+export const updateMusicInfo = ({ listId, id, data, isSync }) => (dispatch, getState) => {
+  if (!isSync) {
+    listSync.sendListAction('update_music_info', { listId, id, data })
+  }
+
   dispatch({
     type: TYPES.updateMusicInfo,
-    payload: { id, index, data },
+    payload: { listId, id, data },
   })
-  saveList(global.allList[id])
+  saveList(global.allList[listId])
 }
 
-export const createUserList = ({ name, id = `userlist_${Date.now()}`, list = [], source, sourceListId }) => async(dispatch, getState) => {
+export const createUserList = ({ name, id = `userlist_${Date.now()}`, list = [], source, sourceListId, isSync }) => async(dispatch, getState) => {
+  if (!isSync) {
+    listSync.sendListAction('create_user_list', { name, id, list, source, sourceListId })
+  }
+
   dispatch({
     type: TYPES.createUserList,
     payload: { name, id, source, sourceListId },
   })
-  dispatch(listAddMultiple({ id, list }))
+  dispatch(listAddMultiple({ id, list, isSync: true }))
   await saveList(global.allList[id])
   const state = getState()
   await saveListSort(id, state.list.userList.length)
   await saveListScrollPosition(id, 0)
 }
 
-export const removeUserList = id => async(dispatch, getState) => {
-  const { list } = getState()
+export const removeUserList = ({ id, isSync }) => async(dispatch, getState) => {
+  if (!isSync) {
+    listSync.sendListAction('remove_user_list', { id })
+  }
+
+  const { list, common } = getState()
   const index = list.userList.findIndex(l => l.id === id)
   if (index < 0) return
+  if (common.setting.list.prevSelectListId == id) {
+    dispatch(commonAction.setPrevSelectListId(list.defaultList.id))
+  }
   dispatch({
     type: TYPES.removeUserList,
     payload: index,
   })
   await removeList(id)
+  console.log(common.setting.list.prevSelectListId, id)
   dispatch(playerAction.checkPlayList([id]))
 }
 
@@ -220,12 +297,17 @@ export const getOtherSource = ({ musicInfo, id }) => (dispatch, getState) => {
   })
 }
 
-export const setUserListName = ({ id, name }) => async(dispatch, getState) => {
+export const setUserListName = ({ id, name, isSync }) => async(dispatch, getState) => {
+  if (!isSync) {
+    listSync.sendListAction('set_user_list_name', { id, name })
+  }
+
   dispatch({
     type: TYPES.setUserListName,
     payload: { id, name },
   })
-  await saveList(global.allList[id])
+  const targetList = global.allList[id]
+  await saveList(targetList)
 }
 export const setUserListPosition = ({ id, position }) => async(dispatch, getState) => {
   dispatch({
@@ -234,12 +316,15 @@ export const setUserListPosition = ({ id, position }) => async(dispatch, getStat
   })
   await saveList(global.allList[id])
 }
-export const setMusicPosition = ({ id, position, list }) => async(dispatch, getState) => {
+export const setMusicPosition = ({ id, position, list, isSync }) => async(dispatch, getState) => {
+  if (!isSync) {
+    listSync.sendListAction('set_music_position', { id, position, list })
+  }
   // const targetList = global.allList[id]
   // if (!targetList) return
   dispatch({
     type: TYPES.listRemoveMultiple,
-    payload: { id, list },
+    payload: { listId: id, ids: list.map(m => m.songmid) },
   })
   dispatch({
     type: TYPES.setMusicPosition,

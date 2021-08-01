@@ -212,10 +212,10 @@ const List = () => {
         break
       case 'remove':
         if (selectedListRef.current.length) {
-          removeListMultiItem({ id: activeListIdRef.current, list: selectedListRef.current })
+          removeListMultiItem({ listId: activeListIdRef.current, ids: selectedListRef.current.map(s => s.songmid) })
           handleCancelMultiSelect()
         } else {
-          removeListItem({ id: activeListIdRef.current, index: selectedDataRef.current.index })
+          removeListItem({ listId: activeListIdRef.current, id: selectedDataRef.current.data.songmid })
         }
         break
       default:

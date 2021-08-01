@@ -3,7 +3,7 @@
 // const { isMac } = require('./utils')
 
 const defaultSetting = {
-  version: '1.6',
+  version: '1.7',
   player: {
     togglePlayMethod: 'listLoop',
     highQuality: false,
@@ -51,6 +51,9 @@ const defaultSetting = {
     isShowHotSearch: false,
     isShowHistorySearch: false,
     isFocusSearchBox: false,
+  },
+  sync: {
+    enable: false,
   },
   // network: {
   //   proxy: {

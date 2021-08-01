@@ -9,6 +9,7 @@ import {
 import Basic from './Basic'
 import Player from './Player'
 import List from './List'
+import Sync from './Sync'
 import Backup from './Backup'
 import Other from './Other'
 import Version from './Version'
@@ -30,6 +31,7 @@ export default () => {
         <Basic />
         <Player />
         <List />
+        <Sync />
         <Backup />
         <Other />
         <Version />

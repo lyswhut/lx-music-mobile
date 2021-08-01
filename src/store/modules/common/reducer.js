@@ -39,6 +39,10 @@ const initialState = {
     desc: '',
     history: [],
   },
+  syncStatus: {
+    status: false,
+    message: '',
+  },
   componentIds: {},
 }
 
@@ -308,6 +312,30 @@ const mutations = {
     if (time != null) newState.setting.player.timeoutExit = time
     if (isPlayed != null) newState.setting.player.timeoutExitPlayed = isPlayed
 
+    return newState
+  },
+  [TYPES.setIsEnableSync](state, isEnableSync) {
+    const newState = {
+      ...state,
+      setting: {
+        ...state.setting,
+        sync: {
+          ...state.setting.sync,
+          enable: isEnableSync,
+        },
+      },
+    }
+    return newState
+  },
+  [TYPES.setSyncStatus](state, { status, message }) {
+    const newState = {
+      ...state,
+      syncStatus: {
+        ...state.syncStatus,
+      },
+    }
+    if (status != null) newState.syncStatus.status = status
+    if (message != null) newState.syncStatus.message = message
     return newState
   },
 }

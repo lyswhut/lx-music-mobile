@@ -20,6 +20,7 @@ import { init as initLyric, toggleTranslation } from '@/plugins/lyric'
 import { init as initI18n, supportedLngs } from '@/plugins/i18n'
 import { deviceLanguage, getPlayInfo, toast } from '@/utils/tools'
 import { LIST_ID_PLAY_TEMP } from '@/config/constant'
+import { connect } from '@/plugins/sync'
 
 console.log('starting app...')
 
@@ -41,6 +42,7 @@ const init = () => {
   ]).then(() => {
     let setting = store.getState().common.setting
     toggleTranslation(setting.player.isShowTranslation)
+    if (setting.sync.enable) connect(setting.sync.host, setting.sync.port)
 
     let lang = setting.langId
     let needSetLang = false

@@ -3,6 +3,9 @@ import { TYPES } from './action'
 const allList = global.allList = {}
 
 const allListInit = (defaultList, loveList, userList) => {
+  for (const id of Object.keys(allList)) {
+    delete allList[id]
+  }
   allList[defaultList.id] = defaultList
   allList[loveList.id] = loveList
   for (const list of userList) allList[list.id] = list
@@ -77,12 +80,25 @@ const mutations = {
       newState.loveList = { ...state.loveList, list: loveList.list, location: loveList.location }
       ids.push(loveList.id)
     }
-    if (userList != null) newState.userList = userList
+    if (userList != null) {
+      newState.userList = userList
+      for (const list of userList) {
+        ids.push(list.id)
+      }
+    }
     allListInit(newState.defaultList, newState.loveList, newState.userList)
     newState.isInitedList = true
     return updateStateList(newState, [ids])
     // console.log(allList.default, newState, ids)
     // return newState
+  },
+  [TYPES.setSyncList](state, { defaultList, loveList, userList }) {
+    const newState = { ...state }
+    newState.defaultList = defaultList
+    newState.loveList = loveList
+    newState.userList = userList
+    allListInit(newState.defaultList, newState.loveList, newState.userList)
+    return newState
   },
   /* [TYPES.initList](state, { defaultList, loveList, userList }) {
     const newState = { ...state }
@@ -154,36 +170,44 @@ const mutations = {
     const targetList = allList[id]
     if (!targetList) return state
     let newList
+    const map = {}
+    const ids = []
     switch (addMusicLocationType) {
       case 'top':
         newList = [...list, ...targetList.list]
+        for (let i = newList.length - 1; i > -1; i--) {
+          const item = newList[i]
+          if (map[item.songmid]) continue
+          ids.unshift(item.songmid)
+          map[item.songmid] = item
+        }
         break
       case 'bottom':
       default:
         newList = [...targetList.list, ...list]
+        for (const item of newList) {
+          if (map[item.songmid]) continue
+          ids.push(item.songmid)
+          map[item.songmid] = item
+        }
         break
-    }
-    const map = {}
-    const ids = []
-    for (const item of newList) {
-      if (map[item.songmid]) continue
-      ids.push(item.songmid)
-      map[item.songmid] = item
     }
     targetList.list = ids.map(id => map[id])
     return updateStateList({ ...state }, [id])
   },
-  [TYPES.listRemove](state, { id, index }) {
-    const targetList = allList[id]
+  [TYPES.listRemove](state, { listId, id }) {
+    const targetList = allList[listId]
     // console.log(targetList, id, index)
     if (!targetList) return state
+    const index = targetList.list.findIndex(item => item.songmid == id)
+    if (index < 0) return state
     const newTargetList = [...targetList.list]
     newTargetList.splice(index, 1)
     targetList.list = newTargetList
-    return updateStateList({ ...state }, [id])
+    return updateStateList({ ...state }, [listId])
   },
-  [TYPES.listRemoveMultiple](state, { id, list }) {
-    const targetList = allList[id]
+  [TYPES.listRemoveMultiple](state, { listId, ids: musicIds }) {
+    const targetList = allList[listId]
     if (!targetList) return state
     const map = {}
     const ids = []
@@ -191,14 +215,14 @@ const mutations = {
       ids.push(item.songmid)
       map[item.songmid] = item
     }
-    for (const item of list) {
-      if (map[item.songmid]) delete map[item.songmid]
+    for (const songmid of musicIds) {
+      if (map[songmid]) delete map[songmid]
     }
     const newList = []
     for (const id of ids) if (map[id]) newList.push(map[id])
 
     targetList.list = newList
-    return updateStateList({ ...state }, [id])
+    return updateStateList({ ...state }, [listId])
   },
   [TYPES.listClear](state, id) {
     const targetList = allList[id]
@@ -206,13 +230,15 @@ const mutations = {
     targetList.list = []
     return updateStateList({ ...state }, [id])
   },
-  [TYPES.updateMusicInfo](state, { id, index, data }) {
-    const targetList = allList[id]
+  [TYPES.updateMusicInfo](state, { listId, id, data }) {
+    const targetList = allList[listId]
     if (!targetList) return state
+    const targetMusicInfo = targetList.list.find(item => item.songmid == id)
+    if (!targetMusicInfo) return state
     const newTargetList = [...targetList.list]
-    Object.assign(newTargetList[index], data)
+    Object.assign(targetMusicInfo, data)
     targetList.list = newTargetList
-    return updateStateList({ ...state }, [id])
+    return updateStateList({ ...state }, [listId])
   },
 
   [TYPES.createUserList](state, { name, id, source, sourceListId }) {

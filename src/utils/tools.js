@@ -6,6 +6,8 @@ import { throttle } from './index'
 
 const playInfoStorageKey = storageDataPrefix.playInfo
 const listPositionPrefix = storageDataPrefix.listPosition
+const syncAuthKeyPrefix = storageDataPrefix.syncAuthKey
+const syncHostPrefix = storageDataPrefix.syncHost
 const listPrefix = storageDataPrefix.list
 const listSortPrefix = storageDataPrefix.listSort
 const defaultListKey = listPrefix + 'default'
@@ -207,6 +209,35 @@ export const removeListScrollPosition = async listIds => {
     delete global.listScrollPosition[id]
   }
   handleSaveListScrollPosition(global.listScrollPosition)
+}
+
+export const getSyncAuthKey = async serverId => {
+  const keys = await getData(syncAuthKeyPrefix)
+  if (!keys) return null
+  return keys[serverId] || null
+}
+
+export const setSyncAuthKey = async(serverId, key) => {
+  let keys = await getData(syncAuthKeyPrefix) || {}
+  keys[serverId] = key
+  await setData(syncAuthKeyPrefix, keys)
+}
+
+let syncHostInfo
+export const getSyncHost = async() => {
+  if (syncHostInfo === undefined) {
+    syncHostInfo = await getData(syncHostPrefix) || { host: '', port: '' }
+  }
+  return { ...syncHostInfo }
+}
+
+export const setSyncHost = async({ host, port }) => {
+  // let hostInfo = await getData(syncHostPrefix) || {}
+  // hostInfo.host = host
+  // hostInfo.port = port
+  syncHostInfo.host = host
+  syncHostInfo.port = port
+  await setData(syncHostPrefix, syncHostInfo)
 }
 
 export const exitApp = BackHandler.exitApp

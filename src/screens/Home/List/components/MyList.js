@@ -72,9 +72,8 @@ const List = memo(({ setVisiblePanel, currentList, activeListIdRef, handleCancel
   }, [setPrevSelectListId, setVisiblePanel])
 
   const handleRemoveList = useCallback(id => {
-    if (id == activeListIdRef.current) setPrevSelectListId(userList[0].id)
-    removeUserList(id)
-  }, [activeListIdRef, userList, removeUserList, setPrevSelectListId])
+    removeUserList({ id })
+  }, [removeUserList])
 
 
   const hideMenu = useCallback(() => {

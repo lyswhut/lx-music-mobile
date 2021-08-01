@@ -18,7 +18,10 @@ export default memo(({ value, label, onChange, ...props }) => {
   useEffect(() => {
     isMountRef.current = true
     return () => isMountRef.current = false
-  })
+  }, [])
+  useEffect(() => {
+    if (value != text) setText(String(value))
+  }, [value])
   return (
     <View style={styles.container}>
       <Text style={{ ...styles.label, color: theme.normal }}>{label}</Text>
@@ -49,5 +52,6 @@ const styles = StyleSheet.create({
     paddingTop: 2,
     paddingBottom: 2,
     fontSize: 12,
+    maxWidth: 300,
   },
 })

@@ -1,8 +1,11 @@
 package com.lxmusicmobile.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.util.Log;
 import android.view.WindowManager;
@@ -126,6 +129,52 @@ public class UtilsModule extends ReactContextBaseJavaModule {
           activity.getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
       });
+    }
+  }
+
+  /**
+   Gets the device's WiFi interface IP address
+   @return device's WiFi IP if connected to WiFi, else '0.0.0.0'
+   */
+  @ReactMethod
+  public void getWIFIIPV4Address(final Promise promise) throws Exception {
+    // https://github.com/pusherman/react-native-network-info/blob/master/android/src/main/java/com/pusherman/networkinfo/RNNetworkInfo.java
+    WifiManager wifi = (WifiManager) reactContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+    new Thread(new Runnable() {
+      public void run() {
+        try {
+          WifiInfo info = wifi.getConnectionInfo();
+          int ipAddress = info.getIpAddress();
+          String stringip = String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
+            (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
+          promise.resolve(stringip);
+        }catch (Exception e) {
+          promise.resolve(null);
+        }
+      }
+    }).start();
+  }
+
+  // https://stackoverflow.com/a/26117646
+  @ReactMethod
+  public void getDeviceName(final  Promise promise) {
+    String manufacturer = Build.MANUFACTURER;
+    String model = Build.MODEL;
+    if (model.startsWith(manufacturer)) {
+      promise.resolve(capitalize(model));
+    } else {
+      promise.resolve(capitalize(manufacturer) + " " + model);
+    }
+  }
+  private String capitalize(String s) {
+    if (s == null || s.length() == 0) {
+      return "";
+    }
+    char first = s.charAt(0);
+    if (Character.isUpperCase(first)) {
+      return s;
+    } else {
+      return Character.toUpperCase(first) + s.substring(1);
     }
   }
 }

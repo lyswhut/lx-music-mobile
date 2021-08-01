@@ -17,6 +17,8 @@ export const storageDataPrefix = {
   lyric: '@lyric__',
   musicUrl: '@music_url__',
   playInfo: '@play_info',
+  syncAuthKey: '@sync_auth_key',
+  syncHost: '@sync_host',
 }
 
 export const ITEM_HEIGHT = 60

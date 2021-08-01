@@ -69,12 +69,14 @@
     "redux-subscriber": "^1.1.0",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
+    "socket.io": "^4.1.2",
     "stream-browserify": "^1.0.0",
     "url": "~0.10.1",
     "util": "~0.10.3"
   },
   "devDependencies": {
     "@babel/core": "^7.14.8",
+    "@babel/plugin-proposal-export-namespace-from": "^7.14.5",
     "@babel/runtime": "^7.14.8",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.6.3",

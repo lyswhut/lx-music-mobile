@@ -48,6 +48,9 @@ export const isShowLyricTranslation = state => state.common.setting.player.isSho
 
 export const activeApiSourceId = state => state.common.setting.apiSource
 
+export const isEnableSync = state => state.common.setting.sync.enable
+export const syncStatus = state => state.common.syncStatus
+
 const apiSourceListFormated = apiSourceInfo.map(api => ({
   id: api.id,
   name: api.name,

@@ -46,7 +46,9 @@ const mutations = {
   [TYPES.setList](state, list) {
     return {
       ...state,
-      listInfo: list,
+      listInfo: {
+        ...list,
+      },
     }
   },
   [TYPES.setPlayIndex](state, index) {

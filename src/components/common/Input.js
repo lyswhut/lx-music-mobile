@@ -1,5 +1,5 @@
-import React, { useRef, useImperativeHandle, forwardRef, useCallback, useEffect, useState } from 'react'
-import { TextInput, StyleSheet, View, TouchableOpacity, Animated } from 'react-native'
+import React, { useRef, useImperativeHandle, forwardRef, useCallback } from 'react'
+import { TextInput, StyleSheet, View, TouchableOpacity } from 'react-native'
 import Icon from './Icon'
 import { useGetter } from '@/store'
 

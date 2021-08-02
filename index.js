@@ -42,7 +42,7 @@ const init = () => {
   ]).then(() => {
     let setting = store.getState().common.setting
     toggleTranslation(setting.player.isShowTranslation)
-    if (setting.sync.enable) connect(setting.sync.host, setting.sync.port)
+    if (setting.sync.enable) connect()
 
     let lang = setting.langId
     let needSetLang = false

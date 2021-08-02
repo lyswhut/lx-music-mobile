@@ -95,7 +95,7 @@ export const initList = listData => async(dispatch, getState) => {
 export const setSyncList = ({ defaultList, loveList, userList }) => async(dispatch, getState) => {
   const state = getState()
   const userListIds = userList.map(l => l.id)
-  const removeUserListIds = state.list.userList.filter(l => !userListIds.includes(l.id))
+  const removeUserListIds = state.list.userList.filter(l => !userListIds.includes(l.id)).map(l => l.id)
   if (removeUserListIds.includes(state.common.setting.list.prevSelectListId)) {
     dispatch(commonAction.setPrevSelectListId(state.list.defaultList.id))
   }

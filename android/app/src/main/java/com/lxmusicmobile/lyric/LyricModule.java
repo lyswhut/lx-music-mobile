@@ -7,13 +7,14 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
-public class LyricModule  extends ReactContextBaseJavaModule {
+public class LyricModule extends ReactContextBaseJavaModule {
   private final ReactApplicationContext reactContext;
-  Lyric lyric = null;
+  Lyric lyric;
 
   LyricModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
+    lyric = new Lyric();
   }
 
   @Override
@@ -22,19 +23,14 @@ public class LyricModule  extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void showLyric(Promise promise) {
-    if (lyric == null) {
-      lyric = new Lyric(reactContext);
-    }
+  public void showLyric(boolean isLook, Promise promise) {
+    lyric.showLyric(reactContext, isLook);
     promise.resolve(null);
   }
 
   @ReactMethod
   public void hideLyric(Promise promise) {
-    if (lyric != null) {
-      lyric.destroy();
-      lyric = null;
-    }
+    lyric.hideLyric();
     promise.resolve(null);
   }
 
@@ -43,6 +39,7 @@ public class LyricModule  extends ReactContextBaseJavaModule {
   public void setLyric(String lyric, String translation, Promise promise) {
     Log.e("Lyric", "set lyric: " + lyric);
     Log.e("Lyric", "set lyric translation: " + translation);
+    this.lyric.setLyric(lyric, translation);
     promise.resolve(null);
   }
 
@@ -55,12 +52,23 @@ public class LyricModule  extends ReactContextBaseJavaModule {
   @ReactMethod
   public void play(int time, Promise promise) {
     Log.e("Lyric", "play lyric: " + time);
+    lyric.play(time);
     promise.resolve(null);
   }
 
   @ReactMethod
   public void pause(Promise promise) {
     Log.e("Lyric", "play pause");
+    lyric.pause();
     promise.resolve(null);
+  }
+
+  @ReactMethod
+  public void toggleLock(boolean isLock, Promise promise) {
+    if (isLock) {
+      lyric.lockLyric();
+    } else {
+      lyric.unlockLyric();
+    }
   }
 }

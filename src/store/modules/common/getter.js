@@ -43,6 +43,7 @@ export const downloadFileName = state => state.common.setting.download.fileName
 export const sourceNameType = state => state.common.setting.sourceNameType
 
 export const isEnableDesktopLyric = state => state.common.setting.desktopLyric.enable
+export const isLockDesktopLyric = state => state.common.setting.desktopLyric.isLock
 
 export const timeoutExit = state => state.common.setting.player.timeoutExit
 export const timeoutExitPlayed = state => state.common.setting.player.timeoutExitPlayed

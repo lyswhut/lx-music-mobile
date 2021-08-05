@@ -6,11 +6,12 @@ let isShowLyric = false
 
 /**
  * show lyric
+ * @param {Number} isLock is lock lyric window
  * @returns {Promise} Promise
  */
-export const showLyric = () => {
+export const showLyric = (isLock = false) => {
   if (isShowLyric) return Promise.resolve()
-  return LyricModule.showLyric().then(() => {
+  return LyricModule.showLyric(isLock).then(() => {
     isShowLyric = true
   })
 }
@@ -65,5 +66,15 @@ export const setLyric = (lyric, translation) => {
 export const toggleTranslation = isShowTranslation => {
   if (!isShowLyric) return Promise.resolve()
   return LyricModule.toggleTranslation(isShowTranslation)
+}
+
+/**
+ * toggle is lock lyric window
+ * @param {Boolean} isLock is lock lyric window
+ * @returns {Promise} Promise
+ */
+export const toggleLock = isLock => {
+  if (!isShowLyric) return Promise.resolve()
+  return LyricModule.toggleLock(isLock)
 }
 

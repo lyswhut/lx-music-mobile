@@ -101,6 +101,7 @@
   "setting_list_add_music_location_type_bottom": "Bottom",
   "setting_list_add_music_location_type_top": "Top",
   "setting_lyric_desktop": "Desktop lyrics",
+  "setting_lyric_desktop_lock": "Lock lyrics",
   "setting_other": "Other",
   "setting_other_cache": "Cache management (including the cache of songs, lyrics, error logs, etc., it is not recommended to clean up if there is no problem related to song playback)",
   "setting_other_cache_clear_btn": "Clear Cache",

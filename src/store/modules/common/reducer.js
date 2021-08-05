@@ -302,6 +302,18 @@ const mutations = {
       },
     }
   },
+  [TYPES.setIsLockDesktopLyric](state, isLock) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        desktopLyric: {
+          ...state.setting.desktopLyric,
+          isLock,
+        },
+      },
+    }
+  },
   [TYPES.setVersionInfo](state, versionInfo) {
     return {
       ...state,

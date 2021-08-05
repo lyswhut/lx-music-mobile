@@ -44,7 +44,7 @@ const init = () => {
     let setting = store.getState().common.setting
     toggleTranslation(setting.player.isShowTranslation)
     if (setting.sync.enable) connect()
-    if (setting.desktopLyric.enable) showLyric()
+    if (setting.desktopLyric.enable) showLyric(setting.desktopLyric.isLock)
 
     let lang = setting.langId
     let needSetLang = false

@@ -18,7 +18,7 @@ import { getRandom } from '@/utils'
 import { getMusicUrl, saveMusicUrl, getLyric, saveLyric, assertApiSupport, savePlayInfo, saveList } from '@/utils/tools'
 import { playInfo as playInfoGetter } from './getter'
 import { play as lrcPlay, setLyric, pause as lrcPause, toggleTranslation as lrcToggleTranslation } from '@/utils/lyric'
-import { showLyric, hideLyric, setLyric as lrcdSetLyric } from '@/utils/lyricDesktop'
+import { showLyric, hideLyric, setLyric as lrcdSetLyric, toggleLock } from '@/utils/lyricDesktop'
 import { action as listAction } from '@/store/modules/list'
 import { LIST_ID_PLAY_LATER } from '@/config/constant'
 // import { defaultList } from '../list/getter'
@@ -781,14 +781,14 @@ export const toggleTranslation = isShow => async(dispatch, getState) => {
 
 export const toggleDesktopLyric = isShow => async(dispatch, getState) => {
   if (isShow) {
+    const { common, player } = getState()
     const [{ lyric, tlyric }] = await Promise.all([
       _playMusicInfo
         ? getLyric(_playMusicInfo).catch(() => ({ lyric: '', tlyric: '' }))
         : Promise.resolve({ lyric: '', tlyric: '' }),
-      showLyric(),
+      showLyric(common.setting.desktopLyric.isLock),
     ])
     await lrcdSetLyric(lyric, tlyric)
-    const player = getState().player
     if (player.status == STATUS.playing && !player.isGettingUrl) {
       getPosition().then(position => {
         lrcPlay(position * 1000)
@@ -797,6 +797,10 @@ export const toggleDesktopLyric = isShow => async(dispatch, getState) => {
   } else {
     hideLyric()
   }
+}
+
+export const toggleDesktopLyricLock = isLock => async(dispatch, getState) => {
+  toggleLock(isLock)
 }
 
 export const checkPlayList = listIds => async(dispatch, getState) => {

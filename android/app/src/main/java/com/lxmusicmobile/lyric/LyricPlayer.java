@@ -1,7 +1,5 @@
 package com.lxmusicmobile.lyric;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,10 +24,12 @@ public class LyricPlayer {
   int curLineNum = 0;
   int maxLine = 0;
   int offset = 150;
-  boolean isOffseted = false;
+  boolean isOffered = false;
   long performanceTime = 0;
   int delay = 0;
   Object tid = null;
+  boolean tempPause = false;
+  boolean tempPaused = false;
 
   LyricPlayer() {
 //    tagRegMap = new HashMap<String, String>();
@@ -43,6 +43,17 @@ public class LyricPlayer {
     timePattern = Pattern.compile(timeExp);
   }
 
+  public void setTempPause(boolean isPaused) {
+    if (isPaused) {
+      tempPause = true;
+    } else {
+      tempPause = false;
+      if (tempPaused) {
+        tempPaused = false;
+        if (isPlay) refresh();
+      }
+    }
+  }
 
 //  @RequiresApi(api = Build.VERSION_CODES.N)
 //  private void initTag() {
@@ -167,7 +178,8 @@ public class LyricPlayer {
   public void pause() {
     if (!isPlay) return;
     isPlay = false;
-    isOffseted = false;
+    isOffered = false;
+    tempPaused = false;
     stopTimeout();
     if (curLineNum == maxLine) return;
     int curLineNum = this.findCurLineNum(getCurrentTime());
@@ -192,7 +204,7 @@ public class LyricPlayer {
   private int findCurLineNum(int curTime) {
     int length = lines.size();
     for (int index = 0; index < length; index++) {
-      if (curTime <= (Integer) ((HashMap)lines.get(index)).get("time")) return index == 0 ? 0 : index - 1;
+      if (curTime <= (int) ((HashMap)lines.get(index)).get("time")) return index == 0 ? 0 : index - 1;
     }
     return length - 1;
   }
@@ -203,6 +215,9 @@ public class LyricPlayer {
   }
 
   private void refresh() {
+    if (tempPaused) tempPaused = false;
+    // Log.d("Lyric", "refresh: " + curLineNum);
+
     curLineNum++;
     if (curLineNum == maxLine) {
       handleMaxLine();
@@ -211,20 +226,26 @@ public class LyricPlayer {
     HashMap curLine = lines.get(curLineNum);
     HashMap nextLine = lines.get(curLineNum + 1);
     int currentTime = getCurrentTime();
-    int driftTime = currentTime - (Integer) curLine.get("time");
-    Log.e("Lyric", "driftTime: " + driftTime);
+    int driftTime = currentTime - (int) curLine.get("time");
+    // Log.d("Lyric", "driftTime: " + driftTime);
 
     if (driftTime >= 0 || curLineNum == 0) {
-      delay = (Integer) nextLine.get("time") - (Integer) curLine.get("time") - driftTime;
-      Log.e("Lyric", "delay: " + delay + "  driftTime: " + driftTime);
+      delay = (int) nextLine.get("time") - (int) curLine.get("time") - driftTime;
+      // Log.d("Lyric", "delay: " + delay + "  driftTime: " + driftTime);
       if (delay > 0) {
-        if (!isOffseted && delay >= offset) {
+        if (!isOffered && delay >= offset) {
           delay -= offset;
-          isOffseted = true;
+          isOffered = true;
         }
-        startTimeout(() -> {
-          refresh();
-        }, delay);
+        if (isPlay) {
+          startTimeout(() -> {
+            if (tempPause) {
+              tempPaused = true;
+              return;
+            }
+            refresh();
+          }, delay);
+        }
         onPlay(curLineNum, (String) curLine.get("text"));
         return;
       }

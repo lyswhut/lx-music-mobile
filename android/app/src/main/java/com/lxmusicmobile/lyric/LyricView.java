@@ -5,20 +5,29 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.WritableMap;
+
+import cn.toside.music.mobile.R;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class LyricView extends Activity implements View.OnTouchListener {
   TextView textView = null;
   WindowManager windowManager = null;
   WindowManager.LayoutParams layoutParams = null;
-  ReactApplicationContext reactContext;
+  final private ReactApplicationContext reactContext;
+  final private LyricEvent lyricEvent;
 
   private int winWidth = 0;
 
@@ -28,14 +37,22 @@ public class LyricView extends Activity implements View.OnTouchListener {
   private float nowY;
   private float tranX; //悬浮窗移动位置的相对值
   private float tranY;
+  private int prevViewX = 0;
+  private int prevViewY = 0;
 
   private float preY = 0;
   // private static boolean isVibrated = false;
 
-  public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5469;
-
-  LyricView(ReactApplicationContext reactContext) {
+  LyricView(ReactApplicationContext reactContext, LyricEvent lyricEvent) {
     this.reactContext = reactContext;
+    this.lyricEvent = lyricEvent;
+  }
+
+  private void sendPositionEvent(int x, int y) {
+    WritableMap params = Arguments.createMap();
+    params.putInt("x", x);
+    params.putInt("y", y);
+    lyricEvent.sendEvent(lyricEvent.SET_VIEW_POSITION, params);
   }
 
 //  public void permission(){
@@ -58,7 +75,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
 //    }
 //  }
 
-  public void showLyricView(boolean isLock) {
+  public void showLyricView(boolean isLock, String themeColor, int lyricViewX, int lyricViewY) {
     if (windowManager == null) {
       windowManager = (WindowManager) reactContext.getSystemService(Context.WINDOW_SERVICE);
       //设置TextView的属性
@@ -66,7 +83,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
 
       DisplayMetrics outMetrics = new DisplayMetrics();
       windowManager.getDefaultDisplay().getMetrics(outMetrics);
-      winWidth = (int)(outMetrics.widthPixels * 0.6);
+      winWidth = (int)(outMetrics.widthPixels * 0.92);
     }
 
     // 注意，悬浮窗只有一个，而当打开应用的时候才会产生悬浮窗，所以要判断悬浮窗是否已经存在，
@@ -77,14 +94,15 @@ public class LyricView extends Activity implements View.OnTouchListener {
     // 使用Application context
     // 创建UI控件，避免Activity销毁导致上下文出现问题,因为现在的悬浮窗是系统级别的，不依赖与Activity存在
     //创建自定义的TextView
-    View view = new View(reactContext);
     textView = new TextView(reactContext);
     textView.setText("LX Music ^-^");
-    textView.setTextColor(Color.rgb(205, 220, 57));
+    textView.setTextSize(18);
+    // textView.setGravity(Gravity.CENTER);
+    textView.setTextColor(Color.parseColor(themeColor));
     textView.setShadowLayer(1, 0, 0, Color.BLACK);
+    textView.setMaxLines(2);
+    textView.setEllipsize(TextUtils.TruncateAt.END);
 
-
-    // textView.setBackgroundColor(0x66000000);
     //监听 OnTouch 事件 为了实现"移动歌词"功能
     textView.setOnTouchListener(this);
 
@@ -94,9 +112,16 @@ public class LyricView extends Activity implements View.OnTouchListener {
       WindowManager.LayoutParams.TYPE_SYSTEM_ALERT :
       WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
 
-    layoutParams.flags = isLock
-      ? WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-      : WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+    // layoutParams.flags = isLock
+    //  ? WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+    //  : WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+    if (isLock) {
+      layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+      textView.setBackgroundColor(Color.TRANSPARENT);
+    } else {
+      layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+      textView.setBackgroundResource(R.drawable.rounded_corner);
+    }
 
     // TYPE_SYSTEM_ALERT  系统提示,它总是出现在应用程序窗口之上
     // TYPE_SYSTEM_OVERLAY   系统顶层窗口。显示在其他一切内容之上。此窗口不能获得输入焦点，否则影响锁屏
@@ -105,15 +130,16 @@ public class LyricView extends Activity implements View.OnTouchListener {
     layoutParams.gravity = Gravity.TOP | Gravity.CENTER_VERTICAL;  //显示在屏幕上中部
 
     //显示位置与指定位置的相对位置差
-    layoutParams.x = 0;
-    layoutParams.y = 0;
+    layoutParams.x = this.prevViewX = lyricViewX;
+    layoutParams.y = this.prevViewY = lyricViewY;
     //悬浮窗的宽高
     // layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
     // layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
     // layoutParams.width= DisplayUtil.dp2px(mContext,55);
     // layoutParams.height= DisplayUtil.dp2px(mContext,55);
-    layoutParams.width = winWidth;
-    layoutParams.height = 80;
+    layoutParams.width = MATCH_PARENT;
+    // layoutParams.height = 100;
+    layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, reactContext.getResources().getDisplayMetrics());
 
     //设置透明
     layoutParams.format = PixelFormat.TRANSPARENT;
@@ -123,6 +149,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
   }
 
   public void setLyric(String text) {
+    if (textView == null) return;
     textView.setText(text);
   }
 
@@ -158,7 +185,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
         break;
       case MotionEvent.ACTION_UP:
         // float dy = nowY - preY;
-        // Log.e("Lyric","dy: " + dy);
+        // Log.d("Lyric","dy: " + dy);
         // if (isVibrated){
         //   if (dy > 10){
         //     //down
@@ -175,6 +202,11 @@ public class LyricView extends Activity implements View.OnTouchListener {
         //根据移动的位置来判断
         // dy = 0;
         tranY = 0;
+        if (layoutParams.x != prevViewX || layoutParams.y != prevViewX) {
+          prevViewX = layoutParams.x;
+          prevViewY = layoutParams.y;
+          sendPositionEvent(prevViewX, prevViewY);
+        }
         break;
     }
     return ret;
@@ -183,12 +215,20 @@ public class LyricView extends Activity implements View.OnTouchListener {
   public void lockView() {
     if (windowManager == null || textView == null) return;
     layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+    textView.setBackgroundColor(Color.TRANSPARENT);
     windowManager.updateViewLayout(textView, layoutParams);
   }
 
   public void unlockView() {
     if (windowManager == null || textView == null) return;
     layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+    textView.setBackgroundResource(R.drawable.rounded_corner);
+    windowManager.updateViewLayout(textView, layoutParams);
+  }
+
+  public void setColor(String color) {
+    if (windowManager == null || textView == null) return;
+    textView.setTextColor(Color.parseColor(color));
     windowManager.updateViewLayout(textView, layoutParams);
   }
 

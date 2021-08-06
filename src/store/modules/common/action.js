@@ -39,6 +39,8 @@ export const TYPES = {
   setSyncStatus: null,
   setIsShowDesktopLyric: null,
   setIsLockDesktopLyric: null,
+  setThemeDesktopLyric: null,
+  setDesktopLyricPosition: null,
 }
 for (const key of Object.keys(TYPES)) {
   TYPES[key] = `common__${key}`
@@ -309,6 +311,23 @@ export const setIsLockDesktopLyric = flag => async(dispatch, getState) => {
   dispatch({
     type: TYPES.setIsLockDesktopLyric,
     payload: flag,
+  })
+  const { common } = getState()
+  await setData(settingKey, common.setting)
+}
+export const setThemeDesktopLyric = theme => async(dispatch, getState) => {
+  dispatch(playerAction.setDesktopLyricTheme(theme))
+  dispatch({
+    type: TYPES.setThemeDesktopLyric,
+    payload: theme,
+  })
+  const { common } = getState()
+  await setData(settingKey, common.setting)
+}
+export const setDesktopLyricPosition = position => async(dispatch, getState) => {
+  dispatch({
+    type: TYPES.setDesktopLyricPosition,
+    payload: position,
   })
   const { common } = getState()
   await setData(settingKey, common.setting)

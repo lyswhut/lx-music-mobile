@@ -1,17 +1,31 @@
-import { NativeModules } from 'react-native'
+import { NativeModules, NativeEventEmitter } from 'react-native'
 
 const { LyricModule } = NativeModules
 
 let isShowLyric = false
+
+
+export const themes = [
+  { id: 'green', value: '#07c556' },
+  { id: 'yellow', value: '#fffa12' },
+  { id: 'blue', value: '#19b5fe' },
+  { id: 'red', value: '#ff1222' },
+  { id: 'pink', value: '#f1828d' },
+  { id: 'purple', value: '#c851d4' },
+  { id: 'orange', value: '#ffad12' },
+  { id: 'grey', value: '#bdc3c7' },
+]
+
+const getThemeColor = themeId => (themes.find(t => t.id == themeId) || themes[0]).value
 
 /**
  * show lyric
  * @param {Number} isLock is lock lyric window
  * @returns {Promise} Promise
  */
-export const showLyric = (isLock = false) => {
+export const showLyric = (isLock = false, themeId, lyricViewX, lyricViewY) => {
   if (isShowLyric) return Promise.resolve()
-  return LyricModule.showLyric(isLock).then(() => {
+  return LyricModule.showLyric(isLock, getThemeColor(themeId), lyricViewX, lyricViewY).then(() => {
     isShowLyric = true
   })
 }
@@ -78,3 +92,20 @@ export const toggleLock = isLock => {
   return LyricModule.toggleLock(isLock)
 }
 
+
+export const setTheme = themeId => {
+  if (!isShowLyric) return Promise.resolve()
+  return LyricModule.setColor(getThemeColor(themeId))
+}
+
+export const onPositionChange = callback => {
+  console.log('onPositionChange')
+  const eventEmitter = new NativeEventEmitter(LyricModule)
+  const eventListener = eventEmitter.addListener('set-position', event => {
+    callback(event)
+  })
+
+  return () => {
+    eventListener.remove()
+  }
+}

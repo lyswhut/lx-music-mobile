@@ -3,7 +3,7 @@
 // const { isMac } = require('./utils')
 
 const defaultSetting = {
-  version: '1.8',
+  version: '1.10',
   player: {
     togglePlayMethod: 'listLoop',
     highQuality: false,
@@ -17,11 +17,13 @@ const defaultSetting = {
   desktopLyric: {
     enable: false,
     isLock: false,
+    theme: 'green',
     // width: 380,
     // height: 420,
-    // x: null,
-    // y: null,
-    // theme: 0,
+    position: {
+      x: 0,
+      y: 0,
+    },
     // style: {
     //   fontSize: 120,
     //   opacity: 95,

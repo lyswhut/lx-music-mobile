@@ -314,6 +314,30 @@ const mutations = {
       },
     }
   },
+  [TYPES.setThemeDesktopLyric](state, theme) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        desktopLyric: {
+          ...state.setting.desktopLyric,
+          theme,
+        },
+      },
+    }
+  },
+  [TYPES.setDesktopLyricPosition](state, position) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        desktopLyric: {
+          ...state.setting.desktopLyric,
+          position,
+        },
+      },
+    }
+  },
   [TYPES.setVersionInfo](state, versionInfo) {
     return {
       ...state,

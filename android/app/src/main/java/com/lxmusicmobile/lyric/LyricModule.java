@@ -10,11 +10,20 @@ import com.facebook.react.bridge.ReactMethod;
 public class LyricModule extends ReactContextBaseJavaModule {
   private final ReactApplicationContext reactContext;
   Lyric lyric;
+  // final Map<String, Object> constants = new HashMap<>();
 
   LyricModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
-    lyric = new Lyric();
+
+    // constants.put("THEME_GREEN", "#07c556");
+    // constants.put("THEME_YELLOW", "#fffa12");
+    // constants.put("THEME_BLUE", "#19b5fe");
+    // constants.put("THEME_RED", "#ff1222");
+    // constants.put("THEME_PINK", "#f1828d");
+    // constants.put("THEME_PURPLE", "#c851d4");
+    // constants.put("THEME_ORANGE", "#fffa12");
+    // constants.put("THEME_GREY", "#bdc3c7");
   }
 
   @Override
@@ -22,9 +31,15 @@ public class LyricModule extends ReactContextBaseJavaModule {
     return "LyricModule";
   }
 
+//  @Override
+//  public Map<String, Object> getConstants() {
+//    return constants;
+//  }
+
   @ReactMethod
-  public void showLyric(boolean isLook, Promise promise) {
-    lyric.showLyric(reactContext, isLook);
+  public void showLyric(boolean isLook, String themeColor, int lyricViewX, int lyricViewY, Promise promise) {
+    if (lyric == null) lyric = new Lyric(reactContext);
+    lyric.showLyric(isLook, themeColor, lyricViewX, lyricViewY);
     promise.resolve(null);
   }
 
@@ -37,8 +52,8 @@ public class LyricModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void setLyric(String lyric, String translation, Promise promise) {
-    Log.e("Lyric", "set lyric: " + lyric);
-    Log.e("Lyric", "set lyric translation: " + translation);
+    // Log.d("Lyric", "set lyric: " + lyric);
+    // Log.d("Lyric", "set lyric translation: " + translation);
     this.lyric.setLyric(lyric, translation);
     promise.resolve(null);
   }
@@ -51,14 +66,14 @@ public class LyricModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void play(int time, Promise promise) {
-    Log.e("Lyric", "play lyric: " + time);
+    Log.d("Lyric", "play lyric: " + time);
     lyric.play(time);
     promise.resolve(null);
   }
 
   @ReactMethod
   public void pause(Promise promise) {
-    Log.e("Lyric", "play pause");
+    Log.d("Lyric", "play pause");
     lyric.pause();
     promise.resolve(null);
   }
@@ -70,5 +85,12 @@ public class LyricModule extends ReactContextBaseJavaModule {
     } else {
       lyric.unlockLyric();
     }
+    promise.resolve(null);
+  }
+
+  @ReactMethod
+  public void setColor(String themeColor, Promise promise) {
+    lyric.setColor(themeColor);
+    promise.resolve(null);
   }
 }

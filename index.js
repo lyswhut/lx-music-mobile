@@ -44,7 +44,16 @@ const init = () => {
     let setting = store.getState().common.setting
     toggleTranslation(setting.player.isShowTranslation)
     if (setting.sync.enable) connect()
-    if (setting.desktopLyric.enable) showLyric(setting.desktopLyric.isLock, setting.desktopLyric.theme, setting.desktopLyric.position.x, setting.desktopLyric.position.y)
+    if (setting.desktopLyric.enable) {
+      showLyric(
+        setting.desktopLyric.isLock,
+        setting.desktopLyric.theme,
+        setting.desktopLyric.position.x,
+        setting.desktopLyric.position.y,
+        setting.desktopLyric.textPosition.x,
+        setting.desktopLyric.textPosition.y,
+      )
+    }
     onPositionChange(position => {
       store.dispatch(commonAction.setDesktopLyricPosition(position))
     })

@@ -16,16 +16,37 @@ export const themes = [
   { id: 'grey', value: '#bdc3c7' },
 ]
 
+export const textPositionX = [
+  { id: 'left', value: 'LEFT' },
+  { id: 'center', value: 'CENTER' },
+  { id: 'right', value: 'RIGHT' },
+]
+export const textPositionY = [
+  { id: 'top', value: 'TOP' },
+  { id: 'center', value: 'CENTER' },
+  { id: 'bottom', value: 'BOTTOM' },
+]
+
 const getThemeColor = themeId => (themes.find(t => t.id == themeId) || themes[0]).value
+const getTextPositionX = x => (textPositionX.find(t => t.id == x) || textPositionX[0]).value
+const getTextPositionY = y => (textPositionY.find(t => t.id == y) || textPositionY[0]).value
+
 
 /**
  * show lyric
  * @param {Number} isLock is lock lyric window
  * @returns {Promise} Promise
  */
-export const showLyric = (isLock = false, themeId, lyricViewX, lyricViewY) => {
+export const showLyric = (isLock = false, themeId, lyricViewX, lyricViewY, textX, textY) => {
   if (isShowLyric) return Promise.resolve()
-  return LyricModule.showLyric(isLock, getThemeColor(themeId), lyricViewX, lyricViewY).then(() => {
+  return LyricModule.showLyric(
+    isLock,
+    getThemeColor(themeId),
+    lyricViewX,
+    lyricViewY,
+    getTextPositionX(textX),
+    getTextPositionY(textY),
+  ).then(() => {
     isShowLyric = true
   })
 }
@@ -98,8 +119,12 @@ export const setTheme = themeId => {
   return LyricModule.setColor(getThemeColor(themeId))
 }
 
+export const setLyricTextPosition = (textX, textY) => {
+  if (!isShowLyric) return Promise.resolve()
+  return LyricModule.setLyricTextPosition(getTextPositionX(textX), getTextPositionY(textY))
+}
+
 export const onPositionChange = callback => {
-  console.log('onPositionChange')
   const eventEmitter = new NativeEventEmitter(LyricModule)
   const eventListener = eventEmitter.addListener('set-position', event => {
     callback(event)

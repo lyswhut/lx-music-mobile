@@ -75,7 +75,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
 //    }
 //  }
 
-  public void showLyricView(boolean isLock, String themeColor, int lyricViewX, int lyricViewY) {
+  public void showLyricView(boolean isLock, String themeColor, int lyricViewX, int lyricViewY, String textX, String textY) {
     if (windowManager == null) {
       windowManager = (WindowManager) reactContext.getSystemService(Context.WINDOW_SERVICE);
       //设置TextView的属性
@@ -97,7 +97,34 @@ public class LyricView extends Activity implements View.OnTouchListener {
     textView = new TextView(reactContext);
     textView.setText("LX Music ^-^");
     textView.setTextSize(18);
-    // textView.setGravity(Gravity.CENTER);
+    // Log.d("Lyric", "textX: " + textX + "  textY: " + textY);
+    int textPositionX;
+    int textPositionY;
+    switch (textX) {
+      case "CENTER":
+        textPositionX = Gravity.CENTER;
+        break;
+      case "RIGHT":
+        textPositionX = Gravity.RIGHT;
+        break;
+      case "left":
+      default:
+        textPositionX = Gravity.LEFT;
+        break;
+    }
+    switch (textY) {
+      case "CENTER":
+        textPositionY = Gravity.CENTER;
+        break;
+      case "BOTTOM":
+        textPositionY = Gravity.BOTTOM;
+        break;
+      case "TOP":
+      default:
+        textPositionY = Gravity.TOP;
+        break;
+    }
+    textView.setGravity(textPositionX | textPositionY);
     textView.setTextColor(Color.parseColor(themeColor));
     textView.setShadowLayer(1, 0, 0, Color.BLACK);
     textView.setMaxLines(2);
@@ -229,6 +256,39 @@ public class LyricView extends Activity implements View.OnTouchListener {
   public void setColor(String color) {
     if (windowManager == null || textView == null) return;
     textView.setTextColor(Color.parseColor(color));
+    windowManager.updateViewLayout(textView, layoutParams);
+  }
+
+  public void setLyricTextPosition(String textX, String textY) {
+    if (windowManager == null || textView == null) return;
+    int textPositionX;
+    int textPositionY;
+    // Log.d("Lyric", "textX: " + textX + "  textY: " + textY);
+    switch (textX) {
+      case "CENTER":
+        textPositionX = Gravity.CENTER;
+        break;
+      case "RIGHT":
+        textPositionX = Gravity.RIGHT;
+        break;
+      case "left":
+      default:
+        textPositionX = Gravity.LEFT;
+        break;
+    }
+    switch (textY) {
+      case "CENTER":
+        textPositionY = Gravity.CENTER;
+        break;
+      case "BOTTOM":
+        textPositionY = Gravity.BOTTOM;
+        break;
+      case "TOP":
+      default:
+        textPositionY = Gravity.TOP;
+        break;
+    }
+    textView.setGravity(textPositionX | textPositionY);
     windowManager.updateViewLayout(textView, layoutParams);
   }
 

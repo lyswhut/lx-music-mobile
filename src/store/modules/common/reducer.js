@@ -338,6 +338,18 @@ const mutations = {
       },
     }
   },
+  [TYPES.setDesktopLyricTextPosition](state, textPosition) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        desktopLyric: {
+          ...state.setting.desktopLyric,
+          textPosition,
+        },
+      },
+    }
+  },
   [TYPES.setVersionInfo](state, versionInfo) {
     return {
       ...state,

@@ -37,9 +37,9 @@ public class LyricModule extends ReactContextBaseJavaModule {
 //  }
 
   @ReactMethod
-  public void showLyric(boolean isLook, String themeColor, int lyricViewX, int lyricViewY, Promise promise) {
+  public void showLyric(boolean isLook, String themeColor, int lyricViewX, int lyricViewY, String textX, String textY , Promise promise) {
     if (lyric == null) lyric = new Lyric(reactContext);
-    lyric.showLyric(isLook, themeColor, lyricViewX, lyricViewY);
+    lyric.showLyric(isLook, themeColor, lyricViewX, lyricViewY, textX, textY);
     promise.resolve(null);
   }
 
@@ -91,6 +91,12 @@ public class LyricModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void setColor(String themeColor, Promise promise) {
     lyric.setColor(themeColor);
+    promise.resolve(null);
+  }
+
+  @ReactMethod
+  public void setLyricTextPosition(String positionX, String positionY, Promise promise) {
+    lyric.setLyricTextPosition(positionX, positionY);
     promise.resolve(null);
   }
 }

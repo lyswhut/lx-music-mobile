@@ -3,7 +3,7 @@
 // const { isMac } = require('./utils')
 
 const defaultSetting = {
-  version: '1.10',
+  version: '1.11',
   player: {
     togglePlayMethod: 'listLoop',
     highQuality: false,
@@ -23,6 +23,10 @@ const defaultSetting = {
     position: {
       x: 0,
       y: 0,
+    },
+    textPosition: {
+      x: 'left',
+      y: 'top',
     },
     // style: {
     //   fontSize: 120,

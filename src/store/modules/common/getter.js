@@ -46,6 +46,7 @@ export const isEnableDesktopLyric = state => state.common.setting.desktopLyric.e
 export const isLockDesktopLyric = state => state.common.setting.desktopLyric.isLock
 export const themeDesktopLyric = state => state.common.setting.desktopLyric.theme
 export const desktopLyricPosition = state => state.common.setting.desktopLyric.position
+export const desktopLyricTextPosition = state => state.common.setting.desktopLyric.textPosition
 
 export const timeoutExit = state => state.common.setting.player.timeoutExit
 export const timeoutExitPlayed = state => state.common.setting.player.timeoutExitPlayed

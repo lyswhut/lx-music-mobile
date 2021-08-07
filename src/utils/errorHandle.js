@@ -1,5 +1,5 @@
 import { Alert } from 'react-native'
-import { exitApp } from '@/utils/tools'
+import { exitApp } from '@/utils/utils'
 import { setJSExceptionHandler, setNativeExceptionHandler } from 'react-native-exception-handler'
 import { log } from '@/utils/log'
 

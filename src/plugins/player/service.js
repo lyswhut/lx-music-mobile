@@ -3,7 +3,7 @@ import { getStore } from '@/store'
 import { action as playerAction, STATUS } from '@/store/modules/player'
 import { isTempTrack } from './utils'
 import { play as lrcPlay, pause as lrcPause } from '@/utils/lyric'
-import { exitApp } from '@/utils/tools'
+import { exitApp } from '@/utils/utils'
 
 const store = getStore()
 
@@ -50,9 +50,9 @@ let errorTime = 0
 //   },
 // }
 // 销毁播放器并退出
-const stopPlay = () => {
+const handleExitApp = async() => {
   global.isPlayedExit = false
-  TrackPlayer.pause()
+  await TrackPlayer.pause()
   store.dispatch(playerAction.destroy()).finally(() => {
     exitApp()
   })
@@ -88,8 +88,20 @@ export default async() => {
 
   TrackPlayer.addEventListener('remote-stop', async() => {
     console.log('remote-stop')
-    await store.dispatch(playerAction.destroy())
-    exitApp()
+    handleExitApp()
+  })
+
+  TrackPlayer.addEventListener('remote-duck', async({ permanent, paused, ducking }) => {
+    console.log('remote-duck')
+    if (paused) {
+      store.dispatch(playerAction.setStatus({ status: STATUS.pause, text: '已暂停' }))
+      lrcPause()
+    } else {
+      store.dispatch(playerAction.setStatus({ status: STATUS.playing, text: '播放中...' }))
+      TrackPlayer.getPosition().then(position => {
+        lrcPlay(position * 1000)
+      })
+    }
   })
 
   TrackPlayer.addEventListener('playback-error', async err => {
@@ -164,11 +176,11 @@ export default async() => {
         console.log('playback-state', info)
         break
     }
-    if (global.isPlayedExit) return stopPlay()
+    if (global.isPlayedExit) return handleExitApp()
   })
   TrackPlayer.addEventListener('playback-track-changed', async info => {
     // console.log('nextTrack====>', info)
-    if (global.isPlayedExit) return stopPlay()
+    if (global.isPlayedExit) return handleExitApp()
 
     trackId = await TrackPlayer.getCurrentTrack()
     if (trackId && isTempTrack(trackId)) {

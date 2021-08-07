@@ -37,7 +37,23 @@ public class UtilsModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void exitApp() {
     // https://github.com/wumke/react-native-exit-app/blob/master/android/src/main/java/com/github/wumke/RNExitApp/RNExitAppModule.java
-    android.os.Process.killProcess(android.os.Process.myPid());
+    // android.os.Process.killProcess(android.os.Process.myPid());
+
+    // https://stackoverflow.com/questions/6330200/how-to-quit-android-application-programmatically
+    Activity currentActivity = reactContext.getCurrentActivity();
+    if (currentActivity == null) {
+      Log.d("Utils", "killProcess");
+      android.os.Process.killProcess(android.os.Process.myPid());
+    } else {
+      if(Build.VERSION.SDK_INT >= 21){
+        currentActivity.finishAndRemoveTask();
+      } else if(Build.VERSION.SDK_INT >= 16){
+        currentActivity.finishAffinity();
+      } else{
+        currentActivity.finish();
+      }
+      System.exit(0);
+    }
   }
 
   @ReactMethod

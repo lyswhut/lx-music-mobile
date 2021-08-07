@@ -16,7 +16,7 @@ const VersionModal = ({ componentId }) => {
 
   const handleRejct = () => {
     exitApp()
-    Navigation.dismissOverlay(componentId)
+    // Navigation.dismissOverlay(componentId)
   }
 
   const handleConfirm = () => {

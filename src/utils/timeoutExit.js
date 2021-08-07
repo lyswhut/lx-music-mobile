@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import BackgroundTimer from 'react-native-background-timer'
 import { getStore } from '@/store'
 import { action as playerAction, STATUS } from '@/store/modules/player'
-import { exitApp } from '@/utils/tools'
+import { exitApp } from '@/utils/utils'
 
 const isStop = status => {
   switch (status) {
@@ -23,8 +23,10 @@ const timeoutTools = {
     if (state.common.setting.player.timeoutExitPlayed && !isStop(state.player.status)) {
       global.isPlayedExit = true
     } else {
-      store.dispatch(playerAction.destroy()).finally(() => {
-        exitApp()
+      store.dispatch(playerAction.pauseMusic()).finally(() => {
+        store.dispatch(playerAction.destroy()).finally(() => {
+          exitApp()
+        })
       })
     }
   },

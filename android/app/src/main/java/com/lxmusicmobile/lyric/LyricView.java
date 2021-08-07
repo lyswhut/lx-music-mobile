@@ -46,7 +46,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
 
   private boolean isLock = false;
   private String themeColor = "#07c556";
-  private String lastText = "LX Music ^-^";
+  // private String lastText = "LX Music ^-^";
   private String textX = "LEFT";
   private String textY = "TOP";
 
@@ -264,6 +264,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
   }
 
   public void lockView() {
+    isLock = true;
     if (windowManager == null || textView == null) return;
     layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
     textView.setBackgroundColor(Color.TRANSPARENT);
@@ -271,6 +272,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
   }
 
   public void unlockView() {
+    isLock = false;
     if (windowManager == null || textView == null) return;
     layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
     textView.setBackgroundResource(R.drawable.rounded_corner);
@@ -278,12 +280,15 @@ public class LyricView extends Activity implements View.OnTouchListener {
   }
 
   public void setColor(String color) {
+    themeColor = color;
     if (windowManager == null || textView == null) return;
     textView.setTextColor(Color.parseColor(color));
     windowManager.updateViewLayout(textView, layoutParams);
   }
 
   public void setLyricTextPosition(String textX, String textY) {
+    this.textX = textX;
+    this.textY = textY;
     if (windowManager == null || textView == null) return;
     int textPositionX;
     int textPositionY;

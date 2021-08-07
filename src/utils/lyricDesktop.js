@@ -113,7 +113,11 @@ export const toggleLock = isLock => {
   return LyricModule.toggleLock(isLock)
 }
 
-
+/**
+ * set theme
+ * @param {*} themeId theme id
+ * @returns {Promise} Promise
+ */
 export const setTheme = themeId => {
   if (!isShowLyric) return Promise.resolve()
   return LyricModule.setColor(getThemeColor(themeId))
@@ -122,6 +126,10 @@ export const setTheme = themeId => {
 export const setLyricTextPosition = (textX, textY) => {
   if (!isShowLyric) return Promise.resolve()
   return LyricModule.setLyricTextPosition(getTextPositionX(textX), getTextPositionY(textY))
+}
+
+export const openOverlayPermissionActivity = () => {
+  return LyricModule.openOverlayPermissionActivity()
 }
 
 export const onPositionChange = callback => {
@@ -134,3 +142,4 @@ export const onPositionChange = callback => {
     eventListener.remove()
   }
 }
+

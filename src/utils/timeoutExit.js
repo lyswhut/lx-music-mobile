@@ -23,10 +23,10 @@ const timeoutTools = {
     if (state.common.setting.player.timeoutExitPlayed && !isStop(state.player.status)) {
       global.isPlayedExit = true
     } else {
-      store.dispatch(playerAction.pauseMusic()).finally(() => {
-        store.dispatch(playerAction.destroy()).finally(() => {
+      store.dispatch(playerAction.destroy()).finally(() => {
+        BackgroundTimer.setTimeout(() => {
           exitApp()
-        })
+        }, 1000)
       })
     }
   },

@@ -52,7 +52,9 @@ const init = () => {
         setting.desktopLyric.position.y,
         setting.desktopLyric.textPosition.x,
         setting.desktopLyric.textPosition.y,
-      )
+      ).catch(() => {
+        store.dispatch(commonAction.setIsShowDesktopLyric(false))
+      })
     }
     onPositionChange(position => {
       store.dispatch(commonAction.setDesktopLyricPosition(position))

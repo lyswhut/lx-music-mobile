@@ -299,7 +299,7 @@ export const setIsShowLyricTranslation = flag => async(dispatch, getState) => {
 }
 
 export const setIsShowDesktopLyric = flag => async(dispatch, getState) => {
-  dispatch(playerAction.toggleDesktopLyric(flag))
+  await dispatch(playerAction.toggleDesktopLyric(flag))
   dispatch({
     type: TYPES.setIsShowDesktopLyric,
     payload: flag,

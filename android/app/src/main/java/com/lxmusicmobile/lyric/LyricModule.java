@@ -1,5 +1,9 @@
 package com.lxmusicmobile.lyric;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.facebook.react.bridge.Promise;
@@ -39,8 +43,7 @@ public class LyricModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void showLyric(boolean isLook, String themeColor, int lyricViewX, int lyricViewY, String textX, String textY , Promise promise) {
     if (lyric == null) lyric = new Lyric(reactContext);
-    lyric.showLyric(isLook, themeColor, lyricViewX, lyricViewY, textX, textY);
-    promise.resolve(null);
+    lyric.showLyric(isLook, themeColor, lyricViewX, lyricViewY, textX, textY, promise);
   }
 
   @ReactMethod
@@ -99,4 +102,14 @@ public class LyricModule extends ReactContextBaseJavaModule {
     lyric.setLyricTextPosition(positionX, positionY);
     promise.resolve(null);
   }
+
+  @ReactMethod
+  public void openOverlayPermissionActivity(Promise promise) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(reactContext)) {
+      Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + reactContext.getApplicationContext().getPackageName()));
+      reactContext.startActivityForResult(intent, 1, null);
+    }
+    promise.resolve(null);
+  }
+
 }

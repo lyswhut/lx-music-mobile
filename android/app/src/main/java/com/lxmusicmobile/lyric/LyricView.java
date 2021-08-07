@@ -7,6 +7,7 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -91,7 +92,11 @@ public class LyricView extends Activity implements View.OnTouchListener {
     handleShowLyric(isLock, themeColor, lyricViewX, lyricViewY, textX, textY);
   }
   public void showLyricView() {
-    handleShowLyric(isLock, themeColor, prevViewX, prevViewY, textX, textY);
+    try {
+      handleShowLyric(isLock, themeColor, prevViewX, prevViewY, textX, textY);
+    } catch (Exception e) {
+      Log.e("Lyric", e.getMessage());
+    }
   }
 
   private void handleShowLyric(boolean isLock, String themeColor, int lyricViewX, int lyricViewY, String textX, String textY) {

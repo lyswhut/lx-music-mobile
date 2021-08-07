@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useState, useRef } from 'react'
-import { StyleSheet, View, Text, StatusBar, ScrollView } from 'react-native'
+// import { StyleSheet, View, Text, StatusBar, ScrollView } from 'react-native'
 
-import { useGetter, useDispatch } from '@/store'
+// import { useGetter, useDispatch } from '@/store'
 import List from './List'
 
 import { useTranslation } from '@/plugins/i18n'

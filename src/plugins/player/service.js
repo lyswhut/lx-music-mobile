@@ -4,6 +4,7 @@ import { action as playerAction, STATUS } from '@/store/modules/player'
 import { isTempTrack } from './utils'
 import { play as lrcPlay, pause as lrcPause } from '@/utils/lyric'
 import { exitApp } from '@/utils/utils'
+import BackgroundTimer from 'react-native-background-timer'
 
 const store = getStore()
 
@@ -52,9 +53,10 @@ let errorTime = 0
 // 销毁播放器并退出
 const handleExitApp = async() => {
   global.isPlayedExit = false
-  await TrackPlayer.pause()
   store.dispatch(playerAction.destroy()).finally(() => {
-    exitApp()
+    BackgroundTimer.setTimeout(() => {
+      exitApp()
+    }, 1000)
   })
 }
 

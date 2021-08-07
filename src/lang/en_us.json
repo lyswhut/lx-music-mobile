@@ -101,6 +101,7 @@
   "setting_list_add_music_location_type": "Position when the song was added to the list",
   "setting_list_add_music_location_type_bottom": "Bottom",
   "setting_list_add_music_location_type_top": "Top",
+  "setting_lyric_dektop_permission_tip": "The desktop lyrics function needs to be granted the permission of LX Music to display the floating window in the system permission setting before it can be used. Do you go to the relevant interface to grant this permission?",
   "setting_lyric_desktop": "Desktop lyrics",
   "setting_lyric_desktop_enable": "Show desktop lyrics",
   "setting_lyric_desktop_lock": "Lock lyrics",

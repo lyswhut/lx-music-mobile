@@ -30,7 +30,7 @@ export default memo(() => {
   const setThemeDesktopLyric = useDispatch('common', 'setThemeDesktopLyric')
 
   return (
-    <SubTitle title={t('setting_basic_theme')}>
+    <SubTitle title={t('setting_lyric_desktop_theme')}>
       <View style={styles.list}>
         {
           themes.map(({ id, value }) => <ThemeItem key={id} color={value} id={id} setTheme={setThemeDesktopLyric} />)

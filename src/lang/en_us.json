@@ -113,6 +113,7 @@
   "setting_lyric_desktop_text_y_bottom": "Bottom",
   "setting_lyric_desktop_text_y_center": "Center",
   "setting_lyric_desktop_text_y_top": "Top",
+  "setting_lyric_desktop_theme": "Lyrics theme color",
   "setting_other": "Other",
   "setting_other_cache": "Cache management (including the cache of songs, lyrics, error logs, etc., it is not recommended to clean up if there is no problem related to song playback)",
   "setting_other_cache_clear_btn": "Clear Cache",

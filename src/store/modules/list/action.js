@@ -105,6 +105,14 @@ export const setSyncList = ({ defaultList, loveList, userList }) => async(dispat
   })
   await removeList(removeUserListIds)
 
+  const listPosition = {}
+  userList.forEach((list, index) => {
+    listPosition[list.id] = index
+    delete list.location
+  })
+  global.listScrollPosition = listPosition
+  await saveListAllSort(listPosition)
+
   dispatch(playerAction.checkPlayList([...Object.keys(global.allList), ...removeUserListIds]))
   saveList([defaultList, loveList, ...userList])
 }

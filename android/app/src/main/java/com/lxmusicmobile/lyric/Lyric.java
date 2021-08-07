@@ -17,13 +17,7 @@ public class Lyric extends LyricPlayer {
   ReactApplicationContext reactAppContext;
 
   boolean isShowLyric = false;
-  boolean isLock = false;
-  String themeColor = "#07c556";
   String lastText = "LX Music ^-^";
-  int lyricViewX = 0;
-  int lyricViewY = 0;
-  String textX = "LEFT";
-  String textY = "TOP";
 
   Lyric(ReactApplicationContext reactContext) {
     this.reactAppContext = reactContext;
@@ -77,7 +71,7 @@ public class Lyric extends LyricPlayer {
     lyricView.runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        lyricView.showLyricView(isLock, themeColor, lyricViewX, lyricViewY, textX, textY);
+        lyricView.showLyricView();
         lyricView.setLyric(lastText);
         setTempPause(false);
       }
@@ -87,12 +81,6 @@ public class Lyric extends LyricPlayer {
   public void showLyric(boolean isLock, String themeColor, int lyricViewX, int lyricViewY, String textX, String textY) {
     if (lyricEvent == null) lyricEvent = new LyricEvent(reactAppContext);
     if (lyricView == null) lyricView = new LyricView(reactAppContext, lyricEvent);
-    this.isLock = isLock;
-    this.themeColor = themeColor;
-    this.lyricViewX = lyricViewX;
-    this.lyricViewY = lyricViewY;
-    this.textX = textX;
-    this.textY = textY;
     lyricView.showLyricView(isLock, themeColor, lyricViewX, lyricViewY, textX, textY);
     isShowLyric = true;
   }
@@ -129,13 +117,11 @@ public class Lyric extends LyricPlayer {
 
   public void lockLyric() {
     if (lyricView == null) return;
-    this.isLock = true;
     lyricView.lockView();
   }
 
   public void unlockLyric() {
     if (lyricView == null) return;
-    this.isLock = false;
     lyricView.unlockView();
   }
 
@@ -145,12 +131,9 @@ public class Lyric extends LyricPlayer {
 
   public void setColor(String color) {
     lyricView.setColor(color);
-    this.themeColor = color;
   }
 
   public void setLyricTextPosition(String positionX, String positionY) {
-    this.textX = positionX;
-    this.textY = positionY;
     lyricView.setLyricTextPosition(positionX, positionY);
   }
 }

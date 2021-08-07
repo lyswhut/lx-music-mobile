@@ -43,12 +43,18 @@ public class LyricView extends Activity implements View.OnTouchListener {
   private float preY = 0;
   // private static boolean isVibrated = false;
 
+  private boolean isLock = false;
+  private String themeColor = "#07c556";
+  private String lastText = "LX Music ^-^";
+  private String textX = "LEFT";
+  private String textY = "TOP";
+
   LyricView(ReactApplicationContext reactContext, LyricEvent lyricEvent) {
     this.reactContext = reactContext;
     this.lyricEvent = lyricEvent;
   }
 
-  private void sendPositionEvent(int x, int y) {
+  public void sendPositionEvent(int x, int y) {
     WritableMap params = Arguments.createMap();
     params.putInt("x", x);
     params.putInt("y", y);
@@ -76,6 +82,19 @@ public class LyricView extends Activity implements View.OnTouchListener {
 //  }
 
   public void showLyricView(boolean isLock, String themeColor, int lyricViewX, int lyricViewY, String textX, String textY) {
+    this.isLock = isLock;
+    this.themeColor = themeColor;
+    this.prevViewX = lyricViewX;
+    this.prevViewY = lyricViewY;
+    this.textX = textX;
+    this.textY = textY;
+    handleShowLyric(isLock, themeColor, lyricViewX, lyricViewY, textX, textY);
+  }
+  public void showLyricView() {
+    handleShowLyric(isLock, themeColor, prevViewX, prevViewY, textX, textY);
+  }
+
+  private void handleShowLyric(boolean isLock, String themeColor, int lyricViewX, int lyricViewY, String textX, String textY) {
     if (windowManager == null) {
       windowManager = (WindowManager) reactContext.getSystemService(Context.WINDOW_SERVICE);
       //设置TextView的属性

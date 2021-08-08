@@ -584,7 +584,7 @@ export const playPrev = () => async(dispatch, getState) => {
   if (player.playedList.length) {
     // 从已播放列表移除播放列表已删除的歌曲
     let index
-    for (index = player.playedList.findIndex(m => m.songmid === player.playMusicInfo.musicInfo.songmid) - 1; index > -1; index--) {
+    for (index = player.playedList.findIndex(m => m.musicInfo.songmid === player.playMusicInfo.musicInfo.songmid) - 1; index > -1; index--) {
       const playMusicInfo = player.playedList[index]
       if (playMusicInfo.listId == currentListId && !currentList.some(m => m.songmid === playMusicInfo.musicInfo.songmid)) {
         dispatch({ type: TYPES.removeMusicFormPlayedList, payload: index })
@@ -660,7 +660,7 @@ export const playNext = () => async(dispatch, getState) => {
   if (player.playedList.length) {
     // 从已播放列表移除播放列表已删除的歌曲
     let index
-    for (index = player.playedList.findIndex(m => m.songmid === player.playMusicInfo.musicInfo.songmid) + 1; index < player.playedList.length; index++) {
+    for (index = player.playedList.findIndex(m => m.musicInfo.songmid === player.playMusicInfo.musicInfo.songmid) + 1; index < player.playedList.length; index++) {
       const playMusicInfo = player.playedList[index]
       if (playMusicInfo.listId == currentListId && !currentList.some(m => m.songmid === playMusicInfo.musicInfo.songmid)) {
         dispatch({ type: TYPES.removeMusicFormPlayedList, payload: index })

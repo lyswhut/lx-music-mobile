@@ -121,11 +121,13 @@ export default memo(() => {
 
 
   const setHost = useCallback(host => {
+    if (host == hostInfo.host) return
     const newHostInfo = { ...hostInfo, host }
     setSyncHost(newHostInfo)
     setHostInfo(newHostInfo)
   }, [hostInfo])
   const setPort = useCallback(port => {
+    if (port == hostInfo.host) return
     const newHostInfo = { ...hostInfo, port }
     setSyncHost(newHostInfo)
     setHostInfo(newHostInfo)

@@ -7,7 +7,8 @@ import { SYNC_CODE } from './config'
 
 const handleConnect = async authCode => {
   const hostInfo = await getSyncHost()
-  if (!hostInfo || !hostInfo.host || !hostInfo.port) throw new Error('Unknown service address')
+  // console.log(hostInfo)
+  if (!hostInfo || !hostInfo.host || !hostInfo.port) throw new Error(SYNC_CODE.unknownServiceAddress)
   await disconnect(false)
   const keyInfo = await handleAuth(hostInfo.host, hostInfo.port, authCode)
   await socketConnect(hostInfo.host, hostInfo.port, keyInfo)
@@ -34,6 +35,7 @@ const connect = authCode => {
       status: false,
       message: err.message,
     }))
+    return Promise.reject(err)
   })
 }
 

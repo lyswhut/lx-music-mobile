@@ -21,7 +21,7 @@ import { showLyric, onPositionChange } from '@/utils/lyricDesktop'
 import { init as initI18n, supportedLngs } from '@/plugins/i18n'
 import { deviceLanguage, getPlayInfo, toast } from '@/utils/tools'
 import { LIST_ID_PLAY_TEMP } from '@/config/constant'
-import { connect } from '@/plugins/sync'
+import { connect, SYNC_CODE } from '@/plugins/sync'
 
 console.log('starting app...')
 
@@ -43,7 +43,13 @@ const init = () => {
   ]).then(() => {
     let setting = store.getState().common.setting
     toggleTranslation(setting.player.isShowTranslation)
-    if (setting.sync.enable) connect()
+    if (setting.sync.enable) {
+      connect().catch(err => {
+        if (err.message == SYNC_CODE.unknownServiceAddress) {
+          store.dispatch(commonAction.setIsEnableSync(false))
+        }
+      })
+    }
     if (setting.desktopLyric.enable) {
       showLyric(
         setting.desktopLyric.isLock,

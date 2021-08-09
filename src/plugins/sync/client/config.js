@@ -7,4 +7,5 @@ export const SYNC_CODE = {
   getServiceIdFailed: 'Get service id failed',
   connectServiceFailed: 'Connect service failed',
   connecting: 'Connecting...',
+  unknownServiceAddress: 'Unknown service address',
 }

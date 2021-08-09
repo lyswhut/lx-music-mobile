@@ -33,7 +33,7 @@ export default memo(({ visible, hideModal, onConfirm, selectedList, selectedData
     if (!visible) return
 
     setText('')
-    inputRef.current.focus()
+    // inputRef.current.focus()
   }, [visible])
 
 

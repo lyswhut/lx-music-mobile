@@ -63,9 +63,9 @@ export default memo(() => {
   const handleShowTimeoutAlert = () => {
     setText(timeoutExit)
     setVisibleAlert(true)
-    global.requestAnimationFrame(() => {
-      inputRef.current.focus()
-    })
+    // global.requestAnimationFrame(() => {
+    //   inputRef.current.focus()
+    // })
   }
   const handleAlertHide = () => {
     setVisibleAlert(false)

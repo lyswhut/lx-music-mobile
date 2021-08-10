@@ -8,7 +8,7 @@ import CheckBoxItem from '../components/CheckBoxItem'
 
 import { useTranslation } from '@/plugins/i18n'
 import { toast } from '@/utils/tools'
-import { openOverlayPermissionActivity } from '@/utils/lyricDesktop'
+import { checkOverlayPermission, openOverlayPermissionActivity } from '@/utils/lyricDesktop'
 
 export default memo(() => {
   const { t } = useTranslation()
@@ -19,6 +19,7 @@ export default memo(() => {
   const handleChangeEnableDesktopLyric = useCallback(async isEnable => {
     if (isEnable) {
       try {
+        await checkOverlayPermission()
         await setIsShowDesktopLyric(isEnable)
       } catch (err) {
         setVisibleTips(true)
@@ -31,13 +32,11 @@ export default memo(() => {
   const handleTipsCancel = useCallback(() => {
     toast(t('disagree_tip'), 'long')
     setVisibleTips(false)
-    isEnableDesktopLyric(false)
-  }, [isEnableDesktopLyric, t])
+  }, [t])
   const handleTipsConfirm = useCallback(() => {
     setVisibleTips(false)
     openOverlayPermissionActivity()
-    isEnableDesktopLyric(false)
-  }, [isEnableDesktopLyric])
+  }, [])
 
   return (
     <View style={{ marginTop: 5, marginBottom: 15 }}>

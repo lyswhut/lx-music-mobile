@@ -128,6 +128,10 @@ export const setLyricTextPosition = (textX, textY) => {
   return LyricModule.setLyricTextPosition(getTextPositionX(textX), getTextPositionY(textY))
 }
 
+export const checkOverlayPermission = () => {
+  return LyricModule.checkOverlayPermission()
+}
+
 export const openOverlayPermissionActivity = () => {
   return LyricModule.openOverlayPermissionActivity()
 }

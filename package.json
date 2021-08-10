@@ -39,7 +39,7 @@
   "homepage": "https://github.com/lyswhut/lx-music-mobile#readme",
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.5",
-    "@react-native-community/checkbox": "^0.5.8",
+    "@react-native-community/checkbox": "git+https://github.com/lyswhut/react-native-checkbox.git#e8a3e8ac176957f786f0dfdb917ea9cea9d2e1db",
     "buffer": "^6.0.3",
     "console-browserify": "^1.2.0",
     "events": "^3.3.0",

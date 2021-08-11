@@ -106,13 +106,14 @@ export const getListAll = tabId => (dispatch, getState) => {
   // console.log(tabId)
   const [source, bangId] = tabId.split('__')
   const listKey = `${source}__${tabId}`
+  if (!cache.has(listKey)) cache.set(listKey, new Map())
   const listCache = cache.get(listKey)
   const loadData = (bangId, page) => {
     const pageKey = `${source}__${tabId}__${page}`
     return listCache.has(pageKey)
-      ? Promise.resolve(listCache.get(pageKey))
-      : music[source].leaderboard.getList(bangId, page).then(result => {
-        listCache.set(pageKey, result)
+      ? Promise.resolve(listCache.get(pageKey).data)
+      : getListLimit({ source, tabId, bangId, page }).then(result => {
+        // listCache.set(pageKey, result)
         return result
       })
   }
@@ -120,10 +121,10 @@ export const getListAll = tabId => (dispatch, getState) => {
     if (result.total <= result.limit) return result.list
 
     let maxPage = Math.ceil(result.total / result.limit)
-    const loadDetail = (loadPage = 1) => {
+    const loadDetail = (loadPage = 2) => {
       return loadPage == maxPage
-        ? loadData(bangId, ++loadPage).then(result => result.list)
-        : loadData(bangId, ++loadPage).then(result1 => loadDetail(loadPage).then(result2 => [...result1.list, ...result2]))
+        ? loadData(bangId, loadPage).then(result => result.list)
+        : loadData(bangId, loadPage).then(result1 => loadDetail(++loadPage).then(result2 => [...result1.list, ...result2]))
     }
     return loadDetail().then(result2 => [...result.list, ...result2])
   })

@@ -6,6 +6,22 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.6.2](https://github.com/lyswhut/lx-music-mobile/compare/v0.6.1...v0.6.2) - 2021-08-11
+
+### 优化
+
+- 优化设置界面的输入框输入机制，现在只要键盘收起即可自动保存输入的内容
+- 添加在启用桌面歌词时对悬浮层权限的检查，这应该可以修复某些设备上点击启用桌面歌词时不显示无权限弹窗也不显示桌面歌词的情况
+
+### 变更
+
+- 不再自动聚焦定时退出、调整位置弹窗内的输入框，这应该可以修复某些设备无法在这两个地方弹出键盘的问题
+
+### 修复
+
+- 修复启用桌面歌词时的权限提示弹窗会导致应用报错的问题
+- 修复我的列表无法更新从收藏的排行榜的问题
+
 ## [0.6.1](https://github.com/lyswhut/lx-music-mobile/compare/v0.6.0...v0.6.1) - 2021-08-08
 
 ### 修复

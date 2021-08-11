@@ -83,7 +83,6 @@ export default memo(() => {
     isUnmountedRef.current = false
     getSyncHost().then(hostInfo => {
       if (isUnmountedRef.current) return
-      console.log(hostInfo)
       setHostInfo(hostInfo)
     })
     getWIFIIPV4Address().then(address => {

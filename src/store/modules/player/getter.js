@@ -38,19 +38,21 @@ export const playInfo = createSelector([playMusicInfo, listInfo, playIndex], (pl
   const isTempPlay = !!playMusicInfo.isTempPlay
   const isPlayList = listId === playListId
   let newPlayIndex = -1
-  let listPlayIndex = playIndex
+  let listPlayIndex = Math.min(playIndex, listInfo.list.length - 1)
 
   if (listId != LIST_ID_PLAY_LATER) {
-    let songmid = playMusicInfo.musicInfo?.songmid
+    const currentSongmid = playMusicInfo.musicInfo.songmid || playMusicInfo.musicInfo.musicInfo.songmid
     if (isPlayList) {
-      newPlayIndex = listInfo.list.findIndex(m => m.songmid == songmid)
+      newPlayIndex = listInfo.list.findIndex(m => (m.songmid || m.musicInfo.songmid) == currentSongmid)
       if (!isTempPlay) listPlayIndex = newPlayIndex
+    } else if (listId == 'download') {
+      playIndex = global.downloadList.findIndex(m => m.musicInfo.songmid == currentSongmid)
     } else {
       let list = global.allList[listId]
-      if (list) newPlayIndex = list.list.findIndex(m => m.songmid == songmid)
+      if (list) newPlayIndex = list.list.findIndex(m => m.songmid == currentSongmid)
     }
   }
-  if (listPlayIndex > -1) global.prevPlayIndex = listPlayIndex
+  if (listPlayIndex > -1) global.prevListPlayIndex = listPlayIndex
 
   return {
     listId,

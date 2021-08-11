@@ -18,7 +18,7 @@ global.isScreenKeepAwake = false
 // 是否播放完后退出应用
 global.isPlayedExit = false
 
-global.prevPlayIndex = -1
+global.prevListPlayIndex = -1
 
 global.syncKeyInfo = {}
 global.isSyncEnableing = false

@@ -190,7 +190,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
     // layoutParams.height= DisplayUtil.dp2px(mContext,55);
     layoutParams.width = MATCH_PARENT;
     // layoutParams.height = 100;
-    layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 90, reactContext.getResources().getDisplayMetrics());
+    layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, reactContext.getResources().getDisplayMetrics());
 
     //设置透明
     layoutParams.format = PixelFormat.TRANSPARENT;

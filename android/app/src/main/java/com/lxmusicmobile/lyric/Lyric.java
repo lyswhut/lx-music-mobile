@@ -89,6 +89,7 @@ public class Lyric extends LyricPlayer {
   private void setViewLyric(int lineNum) {
     lastLine = lineNum;
     if (lyricView == null) return;
+    if (lineNum > lines.size() - 1) return;
     HashMap line = (HashMap) lines.get(lineNum);
     if (line == null) {
       lyricView.setLyric("", "");

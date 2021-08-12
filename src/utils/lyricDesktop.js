@@ -99,7 +99,7 @@ export const setLyric = (lyric, translation) => {
  * @returns {Promise} Promise
  */
 export const toggleTranslation = isShowTranslation => {
-  if (!isShowLyric) return Promise.resolve()
+  // if (!isShowLyric) return Promise.resolve()
   return LyricModule.toggleTranslation(isShowTranslation)
 }
 

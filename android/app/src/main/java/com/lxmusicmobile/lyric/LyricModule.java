@@ -16,6 +16,8 @@ public class LyricModule extends ReactContextBaseJavaModule {
   Lyric lyric;
   // final Map<String, Object> constants = new HashMap<>();
 
+  boolean isShowTranslation = false;
+
   LyricModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
@@ -42,7 +44,7 @@ public class LyricModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void showLyric(boolean isLook, String themeColor, int lyricViewX, int lyricViewY, String textX, String textY , Promise promise) {
-    if (lyric == null) lyric = new Lyric(reactContext);
+    if (lyric == null) lyric = new Lyric(reactContext, isShowTranslation);
     lyric.showLyric(isLook, themeColor, lyricViewX, lyricViewY, textX, textY, promise);
   }
 
@@ -63,7 +65,9 @@ public class LyricModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void toggleTranslation(boolean isShowTranslation, Promise promise) {
-
+    this.isShowTranslation = isShowTranslation;
+    if (lyric == null) return;
+    lyric.toggleTranslation(isShowTranslation);
     promise.resolve(null);
   }
 

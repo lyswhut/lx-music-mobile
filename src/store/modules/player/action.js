@@ -127,6 +127,7 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
     if (!musicInfo.img) {
       dispatch(getPic(musicInfo)).then(async() => {
         const musicUrl = await getMusicUrl(musicInfo, type)
+        if (playMusicId != id) return
         if (musicUrl) {
         // console.log('+++updateMusicInfo+++')
         // setTimeout(() => {
@@ -136,6 +137,7 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
       })
     }
     dispatch(getLrc(musicInfo)).then(({ lyric, tlyric }) => {
+      if (playMusicId != id) return
       const player = getState().player
       setLyric(lyric, tlyric)
       if (player.status == STATUS.playing && !player.isGettingUrl) {

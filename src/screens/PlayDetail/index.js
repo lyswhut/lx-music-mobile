@@ -21,6 +21,6 @@ export default (props) => {
   })
 
   return (
-    window.width > window.height ? <Landscape /> : <Portrait componentId={props.componentId} />
+    window.width > window.height ? <Landscape componentId={props.componentId} /> : <Portrait componentId={props.componentId} />
   )
 }

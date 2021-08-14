@@ -1,5 +1,7 @@
 package com.lxmusicmobile.lyric;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -20,8 +22,6 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.WritableMap;
 
 import cn.toside.music.mobile.R;
-
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class LyricView extends Activity implements View.OnTouchListener {
   TextView textView = null;
@@ -151,7 +151,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
     textView.setGravity(textPositionX | textPositionY);
     textView.setTextColor(Color.parseColor(themeColor));
     textView.setShadowLayer(1, 0, 0, Color.BLACK);
-    textView.setMaxLines(2);
+    textView.setMaxLines(4);
     textView.setEllipsize(TextUtils.TruncateAt.END);
 
     //监听 OnTouch 事件 为了实现"移动歌词"功能
@@ -190,7 +190,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
     // layoutParams.height= DisplayUtil.dp2px(mContext,55);
     layoutParams.width = MATCH_PARENT;
     // layoutParams.height = 100;
-    layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, reactContext.getResources().getDisplayMetrics());
+    layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, reactContext.getResources().getDisplayMetrics());
 
     //设置透明
     layoutParams.format = PixelFormat.TRANSPARENT;
@@ -199,9 +199,13 @@ public class LyricView extends Activity implements View.OnTouchListener {
     windowManager.addView(textView, layoutParams);
   }
 
-  public void setLyric(String text) {
+  public void setLyric(String text, String transText) {
     if (textView == null) return;
-    textView.setText(text);
+    if (transText.equals("")) {
+      textView.setText(text);
+    } else {
+      textView.setText(text + "\n" + transText);
+    }
   }
 
   @Override

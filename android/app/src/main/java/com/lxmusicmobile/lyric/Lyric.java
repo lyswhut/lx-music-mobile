@@ -9,6 +9,7 @@ import android.util.Log;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,10 +19,16 @@ public class Lyric extends LyricPlayer {
   ReactApplicationContext reactAppContext;
 
   boolean isShowLyric = false;
-  String lastText = "LX Music ^-^";
+  // String lastText = "LX Music ^-^";
+  int lastLine = 0;
+  List lines = new ArrayList();
+  boolean isShowTranslation = false;
+  String lyricText = "";
+  String lyricTransText = "";
 
-  Lyric(ReactApplicationContext reactContext) {
+  Lyric(ReactApplicationContext reactContext, boolean isShowTranslation) {
     this.reactAppContext = reactContext;
+    this.isShowTranslation = isShowTranslation;
     registerScreenBroadcastReceiver();
   }
 
@@ -73,10 +80,22 @@ public class Lyric extends LyricPlayer {
       @Override
       public void run() {
         lyricView.showLyricView();
-        lyricView.setLyric(lastText);
+        setViewLyric(lastLine);
         setTempPause(false);
       }
     });
+  }
+
+  private void setViewLyric(int lineNum) {
+    lastLine = lineNum;
+    if (lyricView == null) return;
+    if (lineNum > lines.size() - 1) return;
+    HashMap line = (HashMap) lines.get(lineNum);
+    if (line == null) {
+      lyricView.setLyric("", "");
+    } else {
+      lyricView.setLyric((String) line.get("text"), (String) line.get("translation"));
+    }
   }
 
   public void showLyric(boolean isLock, String themeColor, int lyricViewX, int lyricViewY, String textX, String textY, Promise promise) {
@@ -104,23 +123,23 @@ public class Lyric extends LyricPlayer {
 
   @Override
   public void setLyric(String lyric, String translationLyric) {
-    if (lyricView != null) super.setLyric(lyric, translationLyric);
+    lyricText = lyric;
+    lyricTransText = translationLyric;
+    if (lyricView != null) super.setLyric(lyric, isShowTranslation ? translationLyric : "");
   }
 
   @Override
   public void onSetLyric(List lines) {
-    for (int i = 0; i < lines.size(); i++) {
-      HashMap line = (HashMap) lines.get(i);
+    this.lines = lines;
+    // for (int i = 0; i < lines.size(); i++) {
+      // HashMap line = (HashMap) lines.get(i);
       // Log.d("Lyric", (String) line.get("text") + " " + (String) line.get("translation"));
-    }
+    // }
   }
 
   @Override
   public void onPlay(int lineNum, String text) {
-    // HashMap line = (HashMap) lines.get(lineNum);
-    lastText = text;
-    if (lyricView == null) return;
-    lyricView.setLyric(text);
+    setViewLyric(lineNum);
     // Log.d("Lyric", lineNum + " " + text + " " + (String) line.get("translation"));
   }
 
@@ -135,7 +154,8 @@ public class Lyric extends LyricPlayer {
   }
 
   public void toggleTranslation(boolean isShowTranslation) {
-
+    this.isShowTranslation = isShowTranslation;
+    if (lyricView != null) super.setLyric(lyricText, isShowTranslation ? lyricTransText : "");
   }
 
   public void setColor(String color) {

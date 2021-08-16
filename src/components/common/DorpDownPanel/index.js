@@ -23,7 +23,7 @@ export default ({
     if (buttonRef.current && buttonRef.current.measure) {
       buttonRef.current.measure((fx, fy, width, height, px, py) => {
         // console.log(fx, fy, width, height, px, py)
-        setButtonPosition({ x: Math.ceil(px), y: Math.ceil(py), w: Math.ceil(width), h: Math.ceil(height) })
+        setButtonPosition({ x: px, y: py, w: width, h: height })
         callback()
       })
     }

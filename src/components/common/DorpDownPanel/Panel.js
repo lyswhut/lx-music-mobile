@@ -49,11 +49,12 @@ const Panel = ({
     let height
     let justifyContent
     if (isBottom) {
-      height = buttonPosition.y - windowSize.height * 0.3
-      top = buttonPosition.y - height
+      const buttonPositionY = Math.ceil(buttonPosition.y)
+      height = buttonPositionY - windowSize.height * 0.3
+      top = buttonPositionY - height
       justifyContent = 'flex-end'
     } else {
-      top = buttonPosition.y + buttonPosition.h
+      top = Math.floor(buttonPosition.y) + Math.floor(buttonPosition.h)
       height = windowSize.height * 0.7 - top
       justifyContent = 'flex-start'
     }

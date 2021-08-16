@@ -12,6 +12,7 @@ import { getListScrollPosition, saveListScrollPosition, toast } from '@/utils/to
 import { useTranslation } from '@/plugins/i18n'
 import { LIST_ITEM_HEIGHT } from '@/config/constant'
 import MusicPositionModal from './components/MusicPositionModal'
+import { BorderWidths } from '@/theme'
 // const shadow = {
 //   shadowOffset: 2,
 //   shadowOpacity: 0.23,
@@ -299,8 +300,7 @@ const List = () => {
 
   return (
     <View style={styles.container}>
-      {listComponent}
-      <View style={{ backgroundColor: theme.secondary45 }}>
+      <View>
         <MyList currentList={currentList} activeListIdRef={activeListIdRef} handleCancelMultiSelect={handleCancelMultiSelect} />
         <ExitMultipleModeBar
           multipleMode={isMultiSelectMode}
@@ -310,6 +310,7 @@ const List = () => {
           selectMode={selectMode}
           isSelectAll={selectedList.length && currentList.list.length == selectedList.length} />
       </View>
+      {listComponent}
       <Menu menus={menus} buttonPosition={buttonPosition} onPress={handleMenuPress} visible={visibleMenu} hideMenu={hideMenu} />
       <MusicPositionModal
         selectedList={selectedListRef.current}

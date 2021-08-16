@@ -24,7 +24,7 @@ export default memo(({ multipleMode, onCancel, onSelectAll, selectMode, onSwitch
       setVisible(true)
     } else {
       animFade.setValue(0)
-      animTranslateY.setValue(20)
+      animTranslateY.setValue(-20)
       setVisible(false)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -34,7 +34,7 @@ export default memo(({ multipleMode, onCancel, onSelectAll, selectMode, onSwitch
     // console.log('show List')
     setVisible(true)
     setAnimatPlayed(false)
-    animTranslateY.setValue(20)
+    animTranslateY.setValue(-20)
 
     Animated.parallel([
       Animated.timing(animFade, {
@@ -61,7 +61,7 @@ export default memo(({ multipleMode, onCancel, onSelectAll, selectMode, onSwitch
         useNativeDriver: true,
       }),
       Animated.timing(animTranslateY, {
-        toValue: 20,
+        toValue: -20,
         duration: 200,
         useNativeDriver: true,
       }),

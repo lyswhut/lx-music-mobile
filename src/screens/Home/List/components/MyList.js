@@ -172,7 +172,7 @@ const List = memo(({ setVisiblePanel, currentList, activeListIdRef, handleCancel
     setVisibleMenu(true)
   }, [])
   return (
-    <View style={{ ...styles.container, borderTopColor: theme.secondary10 }}>
+    <View style={{ ...styles.container, borderBottomColor: theme.secondary10 }}>
       <ScrollView style={{ flexShrink: 1, flexGrow: 0 }} onScroll={handleScroll} ref={scrollViewRef} keyboardShouldPersistTaps={'always'}>
         <View style={{ ...styles.listContainer, backgroundColor: theme.primary }} onStartShouldSetResponder={() => true}>
           <View style={{ ...styles.listItem, borderBottomColor: theme.secondary45 }}>
@@ -219,7 +219,7 @@ export default memo(({ currentList, activeListIdRef, handleCancelMultiSelect }) 
       setVisible={setVisiblePanel}
       PanelContent={<List setVisiblePanel={setVisiblePanel} currentList={currentList} activeListIdRef={activeListIdRef} handleCancelMultiSelect={handleCancelMultiSelect} />}
     >
-      <View style={styles.currentList}>
+      <View style={{ ...styles.currentList, borderBottomWidth: BorderWidths.normal, borderBottomColor: theme.borderColor }}>
         <Text style={{ ...styles.sourceMenu, color: theme.secondary, flex: 1 }}>{currentList.name}</Text>
         {/* <TouchableOpacity style={styles.createList}><Icon style={{ color: theme.secondary30, fontSize: 24 }} name="playlist-plus" /></TouchableOpacity> */}
       </View>
@@ -238,10 +238,10 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    borderTopWidth: BorderWidths.normal2,
+    borderBottomWidth: BorderWidths.normal2,
   },
   listContainer: {
-    // borderTopWidth: BorderWidths.normal2,
+    // borderBottomWidth: BorderWidths.normal2,
   },
   listItem: {
     flexDirection: 'row',

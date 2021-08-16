@@ -55,12 +55,13 @@ export default memo(() => {
 const styles = StyleSheet.create({
   list: {
     flexDirection: 'row',
-    marginTop: 5,
+    flexWrap: 'wrap',
   },
   item: {
     marginRight: 15,
     alignItems: 'center',
     width: 54,
+    marginTop: 5,
     // backgroundColor: 'rgba(0,0,0,0.2)',
   },
   colorContent: {

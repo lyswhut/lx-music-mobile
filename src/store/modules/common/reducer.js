@@ -278,14 +278,14 @@ const mutations = {
       },
     }
   },
-  [TYPES.setIsShowLyricTranslation](state, isShowTranslation) {
+  [TYPES.setIsShowLyricTranslation](state, isShowLyricTranslation) {
     return {
       ...state,
       setting: {
         ...state.setting,
         player: {
           ...state.setting.player,
-          isShowTranslation,
+          isShowLyricTranslation,
         },
       },
     }

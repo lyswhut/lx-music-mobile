@@ -50,7 +50,7 @@ export const desktopLyricTextPosition = state => state.common.setting.desktopLyr
 
 export const timeoutExit = state => state.common.setting.player.timeoutExit
 export const timeoutExitPlayed = state => state.common.setting.player.timeoutExitPlayed
-export const isShowLyricTranslation = state => state.common.setting.player.isShowTranslation
+export const isShowLyricTranslation = state => state.common.setting.player.isShowLyricTranslation
 
 export const activeApiSourceId = state => state.common.setting.apiSource
 

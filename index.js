@@ -42,7 +42,7 @@ const init = () => {
     registerPlaybackService(),
   ]).then(() => {
     let setting = store.getState().common.setting
-    toggleTranslation(setting.player.isShowTranslation)
+    toggleTranslation(setting.player.isShowLyricTranslation)
     if (setting.sync.enable) {
       connect().catch(err => {
         if (err.message == SYNC_CODE.unknownServiceAddress) {

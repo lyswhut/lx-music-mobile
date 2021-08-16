@@ -17,7 +17,7 @@ export default memo(() => {
   }
 
   return (
-    <View style={{ ...styles.header, backgroundColor: theme.primary }}>
+    <View style={{ ...styles.header, backgroundColor: theme.primary }} nativeID="header">
       <StatusBar backgroundColor="rgba(0,0,0,0)" barStyle="dark-content" translucent={true} />
       <View style={{ ...styles.container }}>
         <TouchableOpacity onPress={back} style={{ ...styles.button }}>

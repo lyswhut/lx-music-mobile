@@ -25,7 +25,7 @@ export default memo(({ componentId, animated }) => {
         <View style={styles.container}>
           <View style={styles.left}>
             <Pic componentId={componentId} animated={animated} />
-            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }} nativeID="pageIndicator">
               <Title />
               <View>
                 <MoreBtn />

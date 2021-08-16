@@ -13,7 +13,7 @@ export default memo(({ playNextModes }) => {
   const theme = useGetter('common', 'theme')
 
   return (
-    <View style={{ ...styles.container, flexDirection: 'row', backgroundColor: theme.primary }}>
+    <View style={{ ...styles.container, backgroundColor: theme.primary }} nativeID="player">
       <PlayInfo />
       <ControlBtn playNextModes={playNextModes} />
     </View>
@@ -23,6 +23,7 @@ export default memo(({ playNextModes }) => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    flexDirection: 'row',
     // paddingTop: progressContentPadding,
     // marginTop: -progressContentPadding,
     // backgroundColor: 'rgba(0, 0, 0, .1)',

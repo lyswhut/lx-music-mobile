@@ -26,7 +26,7 @@ const LyricPage = ({ activeIndex }) => {
 }
 
 // global.iskeep = false
-export default memo(({ componentId }) => {
+export default memo(({ componentId, animated }) => {
   const theme = useGetter('common', 'theme')
   const [pageIndex, setPageIndex] = useState(0)
 
@@ -49,7 +49,7 @@ export default memo(({ componentId }) => {
           style={styles.pagerView}
         >
           <View collapsable={false} style={styles.pageStyle}>
-            <Pic componentId={componentId} />
+            <Pic componentId={componentId} animated={animated} />
           </View>
           <View collapsable={false} style={styles.pageStyle}>
             <LyricPage activeIndex={pageIndex} />

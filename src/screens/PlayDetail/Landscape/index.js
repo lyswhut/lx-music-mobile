@@ -10,7 +10,7 @@ import Lyric from './Lyric'
 import Player from './Player'
 import MoreBtn from './MoreBtn'
 
-export default memo(({ componentId }) => {
+export default memo(({ componentId, animated }) => {
   const theme = useGetter('common', 'theme')
   useEffect(() => {
     screenkeepAwake()
@@ -24,7 +24,7 @@ export default memo(({ componentId }) => {
       <View style={{ flex: 1, backgroundColor: theme.primary }}>
         <View style={styles.container}>
           <View style={styles.left}>
-            <Pic componentId={componentId} />
+            <Pic componentId={componentId} animated={animated} />
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
               <Title />
               <View>

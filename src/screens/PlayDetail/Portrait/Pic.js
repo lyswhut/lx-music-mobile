@@ -1,22 +1,15 @@
-import React, { memo, useMemo, useState, useEffect } from 'react'
+import React, { memo, useMemo } from 'react'
 import { View, Image, StyleSheet } from 'react-native'
 import { useGetter, useDispatch } from '@/store'
 // import { useLayout } from '@/utils/hooks'
-import { useNavigationComponentDidAppear } from '@/navigation'
 import { getWindowSise } from '@/utils/tools'
 
-export default memo(({ componentId }) => {
+export default memo(({ componentId, animated }) => {
   const playMusicInfo = useGetter('player', 'playMusicInfo')
   const theme = useGetter('common', 'theme')
-  const [animated, setAnimated] = useState(false)
-
   const musicInfo = useMemo(() => {
     return (playMusicInfo && playMusicInfo.musicInfo) || {}
   }, [playMusicInfo])
-
-  useNavigationComponentDidAppear(componentId, () => {
-    setAnimated(true)
-  })
 
   const imgWidth = getWindowSise().width * 0.8
 

@@ -185,7 +185,7 @@ public class LyricPlayer {
     int curLineNum = this.findCurLineNum(getCurrentTime());
     if (this.curLineNum != curLineNum) {
       this.curLineNum = curLineNum;
-      this.onPlay(curLineNum, (String) ((HashMap) lines.get(curLineNum)).get("text"));
+      this.onPlay(curLineNum);
     }
   }
 
@@ -210,7 +210,7 @@ public class LyricPlayer {
   }
 
   private void handleMaxLine() {
-    this.onPlay(this.curLineNum, (String) lines.get(curLineNum).get("text"));
+    this.onPlay(this.curLineNum);
     this.pause();
   }
 
@@ -219,17 +219,18 @@ public class LyricPlayer {
     // Log.d("Lyric", "refresh: " + curLineNum);
 
     curLineNum++;
-    if (curLineNum == maxLine) {
+    if (curLineNum >= maxLine) {
       handleMaxLine();
       return;
     }
     HashMap curLine = lines.get(curLineNum);
-    HashMap nextLine = lines.get(curLineNum + 1);
+
     int currentTime = getCurrentTime();
     int driftTime = currentTime - (int) curLine.get("time");
     // Log.d("Lyric", "driftTime: " + driftTime);
 
     if (driftTime >= 0 || curLineNum == 0) {
+      HashMap nextLine = lines.get(curLineNum + 1);
       delay = (int) nextLine.get("time") - (int) curLine.get("time") - driftTime;
       // Log.d("Lyric", "delay: " + delay + "  driftTime: " + driftTime);
       if (delay > 0) {
@@ -246,7 +247,7 @@ public class LyricPlayer {
             refresh();
           }, delay);
         }
-        onPlay(curLineNum, (String) curLine.get("text"));
+        onPlay(curLineNum);
         return;
       }
     }
@@ -262,7 +263,7 @@ public class LyricPlayer {
     init();
   }
 
-  public void onPlay(int lineNum, String text) {}
+  public void onPlay(int lineNum) {}
 
   public void onSetLyric(List lines) {}
 

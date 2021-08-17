@@ -89,7 +89,7 @@ public class Lyric extends LyricPlayer {
   private void setViewLyric(int lineNum) {
     lastLine = lineNum;
     if (lyricView == null) return;
-    if (lineNum > lines.size() - 1) return;
+    if (lineNum < 0 || lineNum > lines.size() - 1) return;
     HashMap line = (HashMap) lines.get(lineNum);
     if (line == null) {
       lyricView.setLyric("", "");
@@ -138,7 +138,7 @@ public class Lyric extends LyricPlayer {
   }
 
   @Override
-  public void onPlay(int lineNum, String text) {
+  public void onPlay(int lineNum) {
     setViewLyric(lineNum);
     // Log.d("Lyric", lineNum + " " + text + " " + (String) line.get("translation"));
   }

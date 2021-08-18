@@ -10,7 +10,9 @@ import { openUrl } from '@/utils/tools'
 import { showPactModal } from '@/navigation'
 
 const qqGroupUrl = 'mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26jump_from%3Dwebapi%26k%3Du1zyxek8roQAwic44nOkBXtG9CfbAxFw'
+const qqGroupUrl2 = 'mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26jump_from%3Dwebapi%26k%3D-l4kNZ2bPQAuvfCQFFhl1UoibvF5wcrQ'
 const qqGroupWebUrl = 'https://qm.qq.com/cgi-bin/qm/qr?k=jRZkyFSZ4FmUuTHA3P_RAXbbUO_Rrn5e&jump_from=webapi'
+const qqGroupWebUrl2 = 'https://qm.qq.com/cgi-bin/qm/qr?k=HPNJEfrZpBZ9T8szYWbe2d5JrAAeOt_l&jump_from=webapi'
 
 export default memo(() => {
   const theme = useGetter('common', 'theme')
@@ -34,9 +36,14 @@ export default memo(() => {
     openUrl('https://github.com/lyswhut/lx-music-mobile#%E9%A1%B9%E7%9B%AE%E5%8D%8F%E8%AE%AE')
   }
 
-  const goToQQQroup = () => {
+  const goToQQGroup = () => {
     openUrl(qqGroupUrl).catch(() => {
       openUrl(qqGroupWebUrl)
+    })
+  }
+  const goToQQGroup2 = () => {
+    openUrl(qqGroupUrl2).catch(() => {
+      openUrl(qqGroupWebUrl2)
     })
   }
 
@@ -73,9 +80,15 @@ export default memo(() => {
       <View style={styles.part}>
         <Text style={textStyle}><Text style={{ fontWeight: 'bold' }} >本软件没有客服</Text>，但我们整理了一些常见的使用问题，<Text style={{ fontWeight: 'bold' }} >仔细 仔细 仔细 </Text>地阅读常见问题后，</Text>
         <Text style={textStyle}>仍有问题可加企鹅群 </Text>
-        <TouchableOpacity onPress={goToQQQroup}><Text style={textLinkStyle}>830125506</Text></TouchableOpacity>
+        <TouchableOpacity onPress={goToQQGroup}><Text style={textLinkStyle}>830125506</Text></TouchableOpacity>
         <Text style={textStyle}> 反馈。</Text>
         <Text style={textStyle}>注意：<Text style={{ fontWeight: 'bold' }}>为免满人，无事勿加，入群先看群公告</Text></Text>
+      </View>
+      <View style={styles.part}>
+        <Text style={textStyle}>如果你喜欢并经常使用洛雪音乐，并想要第一时间尝鲜洛雪的新功能<Text style={{ textDecorationLine: 'line-through' }}>（当小白鼠）</Text>，</Text>
+        <Text style={textStyle}>可以加入测试企鹅群 </Text>
+        <TouchableOpacity onPress={goToQQGroup2}><Text style={textLinkStyle}>768786588</Text></TouchableOpacity>
+        <Text style={textStyle}>注意：测试版的功可能会不稳定，<Text style={{ fontWeight: 'bold' }}>打算潜水的勿加</Text></Text>
       </View>
       <View style={styles.part}>
         <Text style={textStyle}>由于软件开发的初衷仅是为了对新技术的学习与研究，因此软件直至停止维护都将会一直保持纯净。</Text>

@@ -27,7 +27,7 @@ const PreassBar = memo(({ duration }) => {
 })
 
 
-const Progress = ({ progress, bufferedProgress, duration, height = 2 }) => {
+const Progress = ({ progress, bufferedProgress, duration }) => {
   // const { progress } = usePlayTimeBuffer()
   const theme = useGetter('common', 'theme')
   // console.log(progress)
@@ -50,7 +50,7 @@ const Progress = ({ progress, bufferedProgress, duration, height = 2 }) => {
 
 
 const progressContentPadding = 10
-const progressHeight = 2
+const progressHeight = 3
 const progressDotSize = 8
 const styles = StyleSheet.create({
   progress: {

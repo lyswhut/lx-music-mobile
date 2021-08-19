@@ -118,13 +118,10 @@ export const setSyncList = ({ defaultList, loveList, userList }) => async(dispat
 }
 
 export const setList = ({ id, list, name, location, source, sourceListId, isSync }) => async(dispatch, getState) => {
-  if (!isSync) {
-    listSync.sendListAction('set_list', { id, list, name, location, source, sourceListId })
-  }
-
   const targetList = global.allList[id]
   if (targetList) {
     if (name && targetList.name === name) {
+      if (!isSync) listSync.sendListAction('set_list', { id, list, name, location, source, sourceListId })
       dispatch({
         type: TYPES.listClear,
         payload: id,
@@ -135,6 +132,8 @@ export const setList = ({ id, list, name, location, source, sourceListId, isSync
 
     id += '_' + Math.random()
   }
+  if (!isSync) listSync.sendListAction('set_list', { id, list, name, location, source, sourceListId })
+
   await dispatch(createUserList({ id, list, name, location, source, sourceListId, isSync: true }))
 }
 

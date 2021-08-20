@@ -185,7 +185,7 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
     // console.log('set url getting done')
   })
   // console.log(AppState.currentState)
-  if (!isRefresh && state.common.setting.player.togglePlayMethod == 'random') dispatch({ type: TYPES.addMusicToPlayedList, payload: playMusicInfo })
+  if (!isRefresh && !playMusicInfo.isTempPlay && state.common.setting.player.togglePlayMethod == 'random') dispatch({ type: TYPES.addMusicToPlayedList, payload: playMusicInfo })
 
   // console.log(musicInfo.img)
   if (!musicInfo.img) {

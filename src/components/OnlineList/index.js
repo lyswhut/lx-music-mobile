@@ -1,5 +1,5 @@
 import React, { useState, useCallback, memo, useMemo, useRef, useEffect } from 'react'
-import { StyleSheet, FlatList, View } from 'react-native'
+import { StyleSheet, FlatList, View, RefreshControl } from 'react-native'
 import { useGetter, useDispatch } from '@/store'
 import Menu from '@/components/common/Menu'
 import MusicAddModal from '@/components/MusicAddModal'
@@ -45,6 +45,7 @@ export default memo(({
   const selectModeRef = useRef('single')
   const prevSelectIndexRef = useRef(-1)
   const addMultiMusicToList = useDispatch('list', 'listAddMultiple')
+  const theme = useGetter('common', 'theme')
 
   useEffect(() => {
     defaultListRef.current = defaultList
@@ -230,6 +231,14 @@ export default memo(({
       handleLongPress={handleLongPress} />
   ), [handleLongPress, handlePress, selectedList, showMenu])
 
+  const refreshControl = useMemo(() => (
+    <RefreshControl
+      colors={[theme.secondary]}
+      progressBackgroundColor={theme.primary}
+      refreshing={isListRefreshing}
+      onRefresh={onRefresh} />
+  ), [isListRefreshing, onRefresh, theme])
+
   return (
     <View style={{ flex: 1 }}>
       <FlatList
@@ -249,6 +258,7 @@ export default memo(({
         onEndReached={onLoadMore}
         progressViewOffset={progressViewOffset}
         ListHeaderComponent={ListHeaderComponent}
+        refreshControl={refreshControl}
         ListFooterComponent={<View style={{ paddingBottom: isMultiSelectMode ? 40 : 0 }}>{isLoading ? <FooterLoading /> : isEnd ? <FooterEnd /> : null}</View>}
       />
       { exitMultipleModeBtn }

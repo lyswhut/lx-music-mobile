@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react'
-import { Text, StyleSheet, FlatList, View } from 'react-native'
+import { Text, StyleSheet, FlatList, View, RefreshControl } from 'react-native'
 
 import ListItem from './ListItem'
 import LoadingMask from '@/components/common/LoadingMask'
@@ -81,6 +81,14 @@ export default ({ width }) => {
     <ListItem data={data} width={itemWidth} onPress={handleListPress} />
   ), [handleListPress, itemWidth])
 
+  const refreshControl = useMemo(() => (
+    <RefreshControl
+      colors={[theme.secondary]}
+      progressBackgroundColor={theme.primary}
+      refreshing={isListRefreshing}
+      onRefresh={handleListRefresh} />
+  ), [isListRefreshing, handleListRefresh, theme])
+
   const ListComponent = useMemo(() => <FlatList
     style={styles.list}
     columnWrapperStyle={{ justifyContent: 'space-evenly' }}
@@ -89,9 +97,8 @@ export default ({ width }) => {
     renderItem={renderItem}
     keyExtractor={item => String(item.id)}
     key={rowNum}
-    onRefresh={handleListRefresh}
-    refreshing={isListRefreshing}
     onEndReached={handleListLoadMore}
+    refreshControl={refreshControl}
     // onEndReachedThreshold={0.5}
     ListFooterComponent={
       listInfo.isEnd
@@ -99,7 +106,7 @@ export default ({ width }) => {
         : <View style={{ alignItems: 'center', padding: 10 }}><Text style={{ color: theme.normal30 }}>{t('loading')}</Text></View>
     }
     removeClippedSubviews={true}
-  />, [rowNum, list, renderItem, handleListRefresh, isListRefreshing, handleListLoadMore, listInfo, theme, t])
+  />, [rowNum, list, renderItem, handleListLoadMore, refreshControl, listInfo.isEnd, theme, t])
 
   const visibleLoadingMask = useMemo(() => page == 1 && listInfo.isLoading, [listInfo.isLoading, page])
 

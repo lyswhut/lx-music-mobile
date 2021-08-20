@@ -57,7 +57,7 @@ const Input = ({ onChangeText, onClearText, clearBtn, ...props }, ref) => {
 
   return (
     <View style={styles.content}>
-      <TextInput autoCapitalize="none" onChangeText={changeText} autoCompleteType="off" style={{ ...styles.input, color: theme.normal }} ref={inputRef} {...props} />
+      <TextInput autoCapitalize="none" onChangeText={changeText} autoCompleteType="off" style={{ ...styles.input, color: theme.normal }} placeholderTextColor={theme.normal50} ref={inputRef} {...props} />
       {/* <View style={styles.clearBtnContent}>
       <Animated.View style={{ ...styles.clearBtnContent, transform: [{ scale: scaleClearBtn }] }}> */}
         {clearBtn

@@ -40,16 +40,6 @@ const getTextSize = num => parseInt(num) / 10
  * @returns {Promise} Promise
  */
 export const showLyric = ({ isLock, themeId, opacity, textSize, positionX, positionY, textPositionX, textPositionY }) => {
-  console.log({
-    isLock,
-    themeColor: getThemeColor(themeId),
-    alpha: getAlpha(opacity),
-    textSize: getTextSize(textSize),
-    lyricViewX: positionX,
-    lyricViewY: positionY,
-    textX: getTextPositionX(textPositionX),
-    textY: getTextPositionY(textPositionY),
-  })
   if (isShowLyric) return Promise.resolve()
   return LyricModule.showLyric({
     isLock,

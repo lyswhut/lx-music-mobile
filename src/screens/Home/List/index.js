@@ -293,7 +293,7 @@ const List = () => {
     return (
       <Button style={styles.searchListItem} onPress={() => handleSearchListItemPress(item)} key={index}>
         <View style={styles.searchListItemName}>
-          <Text numberOfLines={1} style={{ ...styles.searchListItemNameText, color: theme.normal, fontSize: 12 }}>{item.name}</Text>
+          <Text numberOfLines={1} style={{ ...styles.searchListItemNameText, color: theme.normal, fontSize: 14 }}>{item.name}</Text>
           <Text numberOfLines={1} style={{ ...styles.searchListItemNameText, color: theme.normal30, fontSize: 11 }}>{item.singer} ({item.albumName})</Text>
         </View>
         <Text style={{ ...styles.searchListItemSource, color: theme.normal40 }}>{item.source}</Text>

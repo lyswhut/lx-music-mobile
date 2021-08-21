@@ -326,6 +326,21 @@ const mutations = {
       },
     }
   },
+  [TYPES.setDesktopLyricStyle](state, style) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        desktopLyric: {
+          ...state.setting.desktopLyric,
+          style: {
+            ...state.setting.desktopLyric.style,
+            ...style,
+          },
+        },
+      },
+    }
+  },
   [TYPES.setDesktopLyricPosition](state, position) {
     return {
       ...state,

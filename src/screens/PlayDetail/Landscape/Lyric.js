@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   },
   lineText: {
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 18,
     lineHeight: 20,
     // paddingTop: 5,
     // paddingBottom: 5,

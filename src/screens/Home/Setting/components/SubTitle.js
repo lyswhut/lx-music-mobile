@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 14,
     marginLeft: -10,
-    marginBottom: 10,
+    marginBottom: 6,
     // lineHeight: 16,
   },
 })

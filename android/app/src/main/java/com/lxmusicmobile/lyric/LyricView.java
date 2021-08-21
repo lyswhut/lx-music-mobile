@@ -7,10 +7,10 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Build;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,6 +49,11 @@ public class LyricView extends Activity implements View.OnTouchListener {
   // private String lastText = "LX Music ^-^";
   private String textX = "LEFT";
   private String textY = "TOP";
+  private float alpha = 1f;
+  private float textSize = 18f;
+
+  private int maxLineNum = 4;
+  // private float lineHeight = 1;
 
   LyricView(ReactApplicationContext reactContext, LyricEvent lyricEvent) {
     this.reactContext = reactContext;
@@ -81,25 +86,27 @@ public class LyricView extends Activity implements View.OnTouchListener {
 //      }
 //    }
 //  }
-
-  public void showLyricView(boolean isLock, String themeColor, int lyricViewX, int lyricViewY, String textX, String textY) {
-    this.isLock = isLock;
-    this.themeColor = themeColor;
-    this.prevViewX = lyricViewX;
-    this.prevViewY = lyricViewY;
-    this.textX = textX;
-    this.textY = textY;
-    handleShowLyric(isLock, themeColor, lyricViewX, lyricViewY, textX, textY);
+// boolean isLock, String themeColor, float alpha, int lyricViewX, int lyricViewY, String textX, String textY
+  public void showLyricView(Bundle options) {
+    isLock = options.getBoolean("isLock", isLock);
+    themeColor = options.getString("themeColor", themeColor);
+    prevViewX = (int) options.getDouble("lyricViewX", prevViewX);
+    prevViewY = (int) options.getDouble("lyricViewY", prevViewY);
+    textX = options.getString("textX", textX);
+    textY = options.getString("textY", textY);
+    alpha = (float) options.getDouble("alpha", alpha);
+    textSize = (float) options.getDouble("textSize", textSize);
+    handleShowLyric();
   }
   public void showLyricView() {
     try {
-      handleShowLyric(isLock, themeColor, prevViewX, prevViewY, textX, textY);
+      handleShowLyric();
     } catch (Exception e) {
       Log.e("Lyric", e.getMessage());
     }
   }
 
-  private void handleShowLyric(boolean isLock, String themeColor, int lyricViewX, int lyricViewY, String textX, String textY) {
+  private void handleShowLyric() {
     if (windowManager == null) {
       windowManager = (WindowManager) reactContext.getSystemService(Context.WINDOW_SERVICE);
       //设置TextView的属性
@@ -120,7 +127,6 @@ public class LyricView extends Activity implements View.OnTouchListener {
     //创建自定义的TextView
     textView = new TextView(reactContext);
     textView.setText("LX Music ^-^");
-    textView.setTextSize(18);
     // Log.d("Lyric", "textX: " + textX + "  textY: " + textY);
     int textPositionX;
     int textPositionY;
@@ -150,8 +156,11 @@ public class LyricView extends Activity implements View.OnTouchListener {
     }
     textView.setGravity(textPositionX | textPositionY);
     textView.setTextColor(Color.parseColor(themeColor));
+    textView.setAlpha(alpha);
+    textView.setTextSize(textSize);
+    Log.d("Lyric", "alpha: " + alpha + " text size: " + textSize);
     textView.setShadowLayer(1, 0, 0, Color.BLACK);
-    textView.setMaxLines(4);
+    textView.setMaxLines(maxLineNum);
     textView.setEllipsize(TextUtils.TruncateAt.END);
 
     //监听 OnTouch 事件 为了实现"移动歌词"功能
@@ -181,8 +190,8 @@ public class LyricView extends Activity implements View.OnTouchListener {
     layoutParams.gravity = Gravity.TOP | Gravity.CENTER_VERTICAL;  //显示在屏幕上中部
 
     //显示位置与指定位置的相对位置差
-    layoutParams.x = this.prevViewX = lyricViewX;
-    layoutParams.y = this.prevViewY = lyricViewY;
+    layoutParams.x = prevViewX;
+    layoutParams.y = prevViewY;
     //悬浮窗的宽高
     // layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
     // layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -190,7 +199,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
     // layoutParams.height= DisplayUtil.dp2px(mContext,55);
     layoutParams.width = MATCH_PARENT;
     // layoutParams.height = 100;
-    layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, reactContext.getResources().getDisplayMetrics());
+    layoutParams.height = textView.getPaint().getFontMetricsInt(null) * maxLineNum;
 
     //设置透明
     layoutParams.format = PixelFormat.TRANSPARENT;
@@ -322,6 +331,20 @@ public class LyricView extends Activity implements View.OnTouchListener {
         break;
     }
     textView.setGravity(textPositionX | textPositionY);
+    windowManager.updateViewLayout(textView, layoutParams);
+  }
+
+  public void setAlpha(float alpha) {
+    this.alpha = alpha;
+    if (windowManager == null || textView == null) return;
+    textView.setAlpha(alpha);
+  }
+
+  public void setTextSize(float size) {
+    this.textSize = size;
+    if (windowManager == null || textView == null) return;
+    textView.setTextSize(size);
+    layoutParams.height = textView.getPaint().getFontMetricsInt(null) * maxLineNum;
     windowManager.updateViewLayout(textView, layoutParams);
   }
 

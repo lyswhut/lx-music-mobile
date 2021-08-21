@@ -105,6 +105,8 @@
   "setting_lyric_desktop": "Desktop lyrics",
   "setting_lyric_desktop_enable": "Show desktop lyrics",
   "setting_lyric_desktop_lock": "Lock lyrics",
+  "setting_lyric_desktop_text_opacity": "Lyric font transparency",
+  "setting_lyric_desktop_text_size": "Lyric font size",
   "setting_lyric_desktop_text_x": "Lyrics horizontal alignment",
   "setting_lyric_desktop_text_x_center": "Center",
   "setting_lyric_desktop_text_x_left": "Left",

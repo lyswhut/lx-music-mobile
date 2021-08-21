@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.facebook.react.bridge.Promise;
@@ -98,11 +99,11 @@ public class Lyric extends LyricPlayer {
     }
   }
 
-  public void showLyric(boolean isLock, String themeColor, int lyricViewX, int lyricViewY, String textX, String textY, Promise promise) {
+  public void showLyric(Bundle options, Promise promise) {
     if (lyricEvent == null) lyricEvent = new LyricEvent(reactAppContext);
     if (lyricView == null) lyricView = new LyricView(reactAppContext, lyricEvent);
     try {
-      lyricView.showLyricView(isLock, themeColor, lyricViewX, lyricViewY, textX, textY);
+      lyricView.showLyricView(options);
     } catch (Exception e) {
       promise.reject(e);
       Log.e("Lyric", e.getMessage());
@@ -161,6 +162,10 @@ public class Lyric extends LyricPlayer {
   public void setColor(String color) {
     lyricView.setColor(color);
   }
+
+  public void setAlpha(float alpha) { lyricView.setAlpha(alpha); }
+
+  public void setTextSize(float size) { lyricView.setTextSize(size); }
 
   public void setLyricTextPosition(String positionX, String positionY) {
     lyricView.setLyricTextPosition(positionX, positionY);

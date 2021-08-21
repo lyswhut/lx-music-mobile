@@ -18,7 +18,7 @@ import { getRandom } from '@/utils'
 import { getMusicUrl, saveMusicUrl, getLyric, saveLyric, assertApiSupport, savePlayInfo, saveList } from '@/utils/tools'
 import { playInfo as playInfoGetter } from './getter'
 import { play as lrcPlay, setLyric, pause as lrcPause, toggleTranslation as lrcToggleTranslation } from '@/utils/lyric'
-import { showLyric, hideLyric, setLyric as lrcdSetLyric, toggleLock, setTheme, setLyricTextPosition } from '@/utils/lyricDesktop'
+import { showLyric, hideLyric, setLyric as lrcdSetLyric, toggleLock, setTheme, setLyricTextPosition, setAlpha, setTextSize } from '@/utils/lyricDesktop'
 import { action as listAction } from '@/store/modules/list'
 import { LIST_ID_PLAY_LATER } from '@/config/constant'
 // import { defaultList } from '../list/getter'
@@ -793,14 +793,16 @@ export const toggleDesktopLyric = isShow => async(dispatch, getState) => {
       _playMusicInfo
         ? getLyric(_playMusicInfo).catch(() => ({ lyric: '', tlyric: '' }))
         : Promise.resolve({ lyric: '', tlyric: '' }),
-      showLyric(
-        desktopLyric.isLock,
-        desktopLyric.theme,
-        desktopLyric.position.x,
-        desktopLyric.position.y,
-        desktopLyric.textPosition.x,
-        desktopLyric.textPosition.y,
-      ),
+      showLyric({
+        isLock: desktopLyric.isLock,
+        themeId: desktopLyric.theme,
+        opacity: desktopLyric.style.opacity,
+        textSize: desktopLyric.style.fontSize,
+        positionX: desktopLyric.position.x,
+        positionY: desktopLyric.position.y,
+        textPositionX: desktopLyric.textPosition.x,
+        textPositionY: desktopLyric.textPosition.y,
+      }),
     ])
     await lrcdSetLyric(lyric, tlyric)
     if (player.status == STATUS.playing && !player.isGettingUrl) {
@@ -818,6 +820,10 @@ export const toggleDesktopLyricLock = isLock => async(dispatch, getState) => {
 }
 export const setDesktopLyricTheme = theme => async(dispatch, getState) => {
   setTheme(theme)
+}
+export const setDesktopLyricStyle = style => async(dispatch, getState) => {
+  if (style.opacity != null) setAlpha(style.opacity)
+  if (style.fontSize != null) setTextSize(style.fontSize)
 }
 export const setDesktopLyricTextPosition = position => async(dispatch, getState) => {
   setLyricTextPosition(position.x, position.y)

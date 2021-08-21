@@ -30,6 +30,8 @@ export const textPositionY = [
 const getThemeColor = themeId => (themes.find(t => t.id == themeId) || themes[0]).value
 const getTextPositionX = x => (textPositionX.find(t => t.id == x) || textPositionX[0]).value
 const getTextPositionY = y => (textPositionY.find(t => t.id == y) || textPositionY[0]).value
+const getAlpha = num => parseInt(num) / 100
+const getTextSize = num => parseInt(num) / 10
 
 
 /**
@@ -37,16 +39,28 @@ const getTextPositionY = y => (textPositionY.find(t => t.id == y) || textPositio
  * @param {Number} isLock is lock lyric window
  * @returns {Promise} Promise
  */
-export const showLyric = (isLock = false, themeId, lyricViewX, lyricViewY, textX, textY) => {
-  if (isShowLyric) return Promise.resolve()
-  return LyricModule.showLyric(
+export const showLyric = ({ isLock, themeId, opacity, textSize, positionX, positionY, textPositionX, textPositionY }) => {
+  console.log({
     isLock,
-    getThemeColor(themeId),
-    lyricViewX,
-    lyricViewY,
-    getTextPositionX(textX),
-    getTextPositionY(textY),
-  ).then(() => {
+    themeColor: getThemeColor(themeId),
+    alpha: getAlpha(opacity),
+    textSize: getTextSize(textSize),
+    lyricViewX: positionX,
+    lyricViewY: positionY,
+    textX: getTextPositionX(textPositionX),
+    textY: getTextPositionY(textPositionY),
+  })
+  if (isShowLyric) return Promise.resolve()
+  return LyricModule.showLyric({
+    isLock,
+    themeColor: getThemeColor(themeId),
+    alpha: getAlpha(opacity),
+    textSize: getTextSize(textSize),
+    lyricViewX: positionX,
+    lyricViewY: positionY,
+    textX: getTextPositionX(textPositionX),
+    textY: getTextPositionY(textPositionY),
+  }).then(() => {
     isShowLyric = true
   })
 }
@@ -121,6 +135,26 @@ export const toggleLock = isLock => {
 export const setTheme = themeId => {
   if (!isShowLyric) return Promise.resolve()
   return LyricModule.setColor(getThemeColor(themeId))
+}
+
+/**
+ * set text alpha
+ * @param {*} alpha text alpha
+ * @returns {Promise} Promise
+ */
+export const setAlpha = alpha => {
+  if (!isShowLyric) return Promise.resolve()
+  return LyricModule.setAlpha(getAlpha(alpha))
+}
+
+/**
+ * set text size
+ * @param {*} size text size
+ * @returns {Promise} Promise
+ */
+export const setTextSize = size => {
+  if (!isShowLyric) return Promise.resolve()
+  return LyricModule.setTextSize(getTextSize(size))
 }
 
 export const setLyricTextPosition = (textX, textY) => {

@@ -51,14 +51,16 @@ const init = () => {
       })
     }
     if (setting.desktopLyric.enable) {
-      showLyric(
-        setting.desktopLyric.isLock,
-        setting.desktopLyric.theme,
-        setting.desktopLyric.position.x,
-        setting.desktopLyric.position.y,
-        setting.desktopLyric.textPosition.x,
-        setting.desktopLyric.textPosition.y,
-      ).catch(() => {
+      showLyric({
+        isLock: setting.desktopLyric.isLock,
+        themeId: setting.desktopLyric.theme,
+        opacity: setting.desktopLyric.style.opacity,
+        textSize: setting.desktopLyric.style.fontSize,
+        positionX: setting.desktopLyric.position.x,
+        positionY: setting.desktopLyric.position.y,
+        textPositionX: setting.desktopLyric.textPosition.x,
+        textPositionY: setting.desktopLyric.textPosition.y,
+      }).catch(() => {
         store.dispatch(commonAction.setIsShowDesktopLyric(false))
       })
     }

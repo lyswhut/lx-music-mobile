@@ -3,6 +3,8 @@ import React, { memo } from 'react'
 import Section from '../components/Section'
 import IsShowLyric from './IsShowLyric'
 import IsLockLyric from './IsLockLyric'
+import TextSize from './TextSize'
+import TextOpacity from './TextOpacity'
 import TextPositionX from './TextPositionX'
 import TextPositionY from './TextPositionY'
 import Theme from './Theme'
@@ -15,9 +17,11 @@ export default memo(() => {
     <Section title={t('setting_lyric_desktop')}>
       <IsShowLyric />
       <IsLockLyric />
+      <Theme />
+      <TextSize />
+      <TextOpacity />
       <TextPositionX />
       <TextPositionY />
-      <Theme />
     </Section>
   )
 })

@@ -6,10 +6,12 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableMap;
 
 public class LyricModule extends ReactContextBaseJavaModule {
   private final ReactApplicationContext reactContext;
@@ -43,9 +45,9 @@ public class LyricModule extends ReactContextBaseJavaModule {
 //  }
 
   @ReactMethod
-  public void showLyric(boolean isLook, String themeColor, int lyricViewX, int lyricViewY, String textX, String textY , Promise promise) {
+  public void showLyric(ReadableMap data, Promise promise) {
     if (lyric == null) lyric = new Lyric(reactContext, isShowTranslation);
-    lyric.showLyric(isLook, themeColor, lyricViewX, lyricViewY, textX, textY, promise);
+    lyric.showLyric(Arguments.toBundle(data), promise);
   }
 
   @ReactMethod
@@ -100,6 +102,14 @@ public class LyricModule extends ReactContextBaseJavaModule {
     lyric.setColor(themeColor);
     promise.resolve(null);
   }
+
+  @ReactMethod
+  public void setAlpha(float alpha) {
+    lyric.setAlpha(alpha);
+  }
+
+  @ReactMethod
+  public void setTextSize(float size) { lyric.setTextSize(size); }
 
   @ReactMethod
   public void setLyricTextPosition(String positionX, String positionY, Promise promise) {

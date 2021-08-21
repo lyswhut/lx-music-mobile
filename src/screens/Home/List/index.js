@@ -5,6 +5,8 @@ import { useGetter, useDispatch } from '@/store'
 import Menu from '@/components/common/Menu'
 import MusicAddModal from '@/components/MusicAddModal'
 import MusicMultiAddModal from '@/components/MusicMultiAddModal'
+import SearchTipList from '@/components/searchTipList'
+import Button from '@/components/common/Button'
 import ExitMultipleModeBar from './components/ExitMultipleModeBar'
 import MyList from './components/MyList'
 import ListItem from './components/ListItem'
@@ -13,6 +15,9 @@ import { useTranslation } from '@/plugins/i18n'
 import { LIST_ITEM_HEIGHT } from '@/config/constant'
 import MusicPositionModal from './components/MusicPositionModal'
 import { BorderWidths } from '@/theme'
+import ListSearchBar from './components/ListSearchBar'
+import { debounceSearchList } from './utils'
+import { useLayout } from '@/utils/hooks'
 // const shadow = {
 //   shadowOffset: 2,
 //   shadowOpacity: 0.23,
@@ -61,7 +66,12 @@ const List = () => {
   const [visibleMusicMultiAddModal, setVisibleMusicMultiAddModal] = useState(false)
   const [visibleMusicPosition, setVIsibleMusicPosition] = useState(false)
   const setMusicPosition = useDispatch('list', 'setMusicPosition')
+  const [listSearchBarVisible, setListSearchBarVisible] = useState(false)
+  const [listSearchListVisible, setListSearchListVisible] = useState(false)
+  const [listSearchBarText, setListSearchBarText] = useState('')
+  const [listSearchList, setListSearchList] = useState([])
   const theme = useGetter('common', 'theme')
+  const { onLayout, ...listLayout } = useLayout()
 
   useEffect(() => {
     activeListIdRef.current = activeListId
@@ -258,6 +268,50 @@ const List = () => {
     handleCancelMultiSelect()
   }, [handleCancelMultiSelect, setMusicPosition])
 
+  const handleHideSearchBar = useCallback(() => {
+    setListSearchBarVisible(false)
+    setListSearchListVisible(false)
+  }, [])
+
+  const handleSearchBarTextChange = useCallback(text => {
+    setListSearchBarText(text)
+    if (!text.length) setListSearchList([])
+    debounceSearchList(text, currentList.list, list => {
+      setListSearchList(list)
+    })
+  }, [currentList])
+  const showListSearchBar = useCallback(() => {
+    setListSearchBarVisible(true)
+  }, [])
+  const handleSearchListItemPress = useCallback(item => {
+    const index = currentList.list.findIndex(s => s.songmid == item.songmid)
+    if (index < 0) return
+    flatListRef.current.scrollToIndex({ index: index, viewPosition: 0.3, animated: true })
+    handleHideSearchBar()
+  }, [currentList, handleHideSearchBar])
+  const handleRenderSearchListItem = useCallback((item, index) => {
+    return (
+      <Button style={styles.searchListItem} onPress={() => handleSearchListItemPress(item)} key={index}>
+        <View style={styles.searchListItemName}>
+          <Text numberOfLines={1} style={{ ...styles.searchListItemNameText, color: theme.normal, fontSize: 12 }}>{item.name}</Text>
+          <Text numberOfLines={1} style={{ ...styles.searchListItemNameText, color: theme.normal30, fontSize: 11 }}>{item.singer} ({item.albumName})</Text>
+        </View>
+        <Text style={{ ...styles.searchListItemSource, color: theme.normal40 }}>{item.source}</Text>
+      </Button>
+    )
+  }, [handleSearchListItemPress, theme])
+
+  useEffect(() => {
+    if (listSearchList.length && listSearchBarVisible) {
+      if (listSearchListVisible) return
+      setListSearchListVisible(true)
+    } else {
+      if (!listSearchListVisible) return
+      setListSearchListVisible(false)
+    }
+  }, [listSearchList.length, listSearchListVisible, listSearchBarVisible])
+
+
   useEffect(() => {
     const offset = getListScrollPosition(currentList.id)
     flatListRef.current.scrollToOffset({ offset, animated: false })
@@ -301,7 +355,11 @@ const List = () => {
   return (
     <View style={styles.container}>
       <View>
-        <MyList currentList={currentList} activeListIdRef={activeListIdRef} handleCancelMultiSelect={handleCancelMultiSelect} />
+        <MyList
+          currentList={currentList}
+          activeListIdRef={activeListIdRef}
+          handleCancelMultiSelect={handleCancelMultiSelect}
+          showListSearchBar={showListSearchBar} />
         <ExitMultipleModeBar
           multipleMode={isMultiSelectMode}
           onCancel={handleCancelMultiSelect}
@@ -309,8 +367,22 @@ const List = () => {
           onSelectAll={handleSelectAll}
           selectMode={selectMode}
           isSelectAll={selectedList.length && currentList.list.length == selectedList.length} />
+        <ListSearchBar
+          visible={listSearchBarVisible}
+          onHide={handleHideSearchBar}
+          text={listSearchBarText}
+          onChangeText={handleSearchBarTextChange}
+        />
       </View>
-      {listComponent}
+      <View style={{ flex: 1 }} onLayout={onLayout}>
+        {listComponent}
+        <SearchTipList
+          list={listSearchList}
+          renderItem={handleRenderSearchListItem}
+          visible={listSearchListVisible}
+          height={listLayout.height}
+        />
+      </View>
       <Menu menus={menus} buttonPosition={buttonPosition} onPress={handleMenuPress} visible={visibleMenu} hideMenu={hideMenu} />
       <MusicPositionModal
         selectedList={selectedListRef.current}
@@ -343,6 +415,23 @@ const styles = StyleSheet.create({
   list: {
     flexGrow: 1,
     flexShrink: 1,
+  },
+  searchListItem: {
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  searchListItemName: {
+    flexGrow: 1,
+    flexShrink: 1,
+  },
+  searchListItemNameText: {
+    fontSize: 14,
+  },
+  searchListItemSource: {
+    flexGrow: 0,
+    flexShrink: 0,
+    fontSize: 11,
   },
 })
 

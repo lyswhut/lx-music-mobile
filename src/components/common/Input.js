@@ -43,8 +43,9 @@ const Input = ({ onChangeText, onClearText, clearBtn, ...props }, ref) => {
   const clearText = useCallback(() => {
     inputRef.current.clear()
     // hideClearBtn()
+    onChangeText && onChangeText('')
     onClearText && onClearText()
-  }, [inputRef, onClearText])
+  }, [onChangeText, onClearText])
 
   const changeText = useCallback(text => {
     // if (text.length) {
@@ -70,7 +71,7 @@ const Input = ({ onChangeText, onClearText, clearBtn, ...props }, ref) => {
         {clearBtn
           ? <View style={styles.clearBtnContent}>
               <TouchableOpacity style={styles.clearBtn} onPress={clearText}>
-                <Icon name="remove" style={{ fontSize: 14, color: theme.normal20 }} />
+                <Icon name="remove" style={{ fontSize: 14, color: theme.normal50 }} />
               </TouchableOpacity>
             </View>
           : null

@@ -38,7 +38,7 @@ const ListItem = ({ onPress, name, id, showMenu, activeId, loading, index }) => 
   )
 }
 
-const List = memo(({ setVisiblePanel, currentList, activeListIdRef, handleCancelMultiSelect }) => {
+const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) => {
   const theme = useGetter('common', 'theme')
   const defaultList = useGetter('list', 'defaultList')
   const loveList = useGetter('list', 'loveList')
@@ -209,7 +209,7 @@ const List = memo(({ setVisiblePanel, currentList, activeListIdRef, handleCancel
 })
 
 
-export default memo(({ currentList, activeListIdRef, handleCancelMultiSelect }) => {
+export default memo(({ currentList, handleCancelMultiSelect, showListSearchBar }) => {
   const theme = useGetter('common', 'theme')
   const [visiblePanel, setVisiblePanel] = useState(false)
 
@@ -217,11 +217,13 @@ export default memo(({ currentList, activeListIdRef, handleCancelMultiSelect }) 
     <DorpDownPanel
       visible={visiblePanel}
       setVisible={setVisiblePanel}
-      PanelContent={<List setVisiblePanel={setVisiblePanel} currentList={currentList} activeListIdRef={activeListIdRef} handleCancelMultiSelect={handleCancelMultiSelect} />}
+      PanelContent={<List setVisiblePanel={setVisiblePanel} currentList={currentList} handleCancelMultiSelect={handleCancelMultiSelect} />}
     >
       <View style={{ ...styles.currentList, borderBottomWidth: BorderWidths.normal, borderBottomColor: theme.borderColor }}>
         <Text style={{ ...styles.sourceMenu, color: theme.secondary, flex: 1 }}>{currentList.name}</Text>
-        {/* <TouchableOpacity style={styles.createList}><Icon style={{ color: theme.secondary30, fontSize: 24 }} name="playlist-plus" /></TouchableOpacity> */}
+        <TouchableOpacity style={styles.btns} onPress={showListSearchBar}>
+          <Icon style={{ color: theme.secondary30, fontSize: 16 }} name="search-2" />
+        </TouchableOpacity>
       </View>
     </DorpDownPanel>
   )
@@ -269,7 +271,7 @@ const styles = StyleSheet.create({
   currentList: {
     flexDirection: 'row',
   },
-  createList: {
+  btns: {
     width: 38,
     justifyContent: 'center',
     alignItems: 'center',

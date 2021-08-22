@@ -6,6 +6,28 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.7.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.6.2...v0.7.0) - 2021-08-22
+
+如果你喜欢并经常使用洛雪音乐，并想要第一时间尝鲜洛雪的新功能，可以加入测试企鹅群768786588，
+注意：测试版的功可能会不稳定，打算潜水的勿加。
+
+### 新增
+
+- 新增横屏状态下的播放详情页
+- 新增橙、粉、灰主题色
+- 新增桌面歌词的字体大小、透明度设置
+- 新增我的列表内歌曲搜索定位功能
+
+### 调整
+
+- 为了与搜索、歌单操作栏位置统一，现将我的列表-收藏的列表操作栏由底部挪到顶部
+
+### 修复
+
+- 修复tx源的歌词无法显示的问题
+- 修复随机播放模式下使用稍后播放功能会导致歌曲单曲循环的问题
+- 修复某些情况下桌面歌词会导致APP崩溃的问题
+
 ## [0.6.2](https://github.com/lyswhut/lx-music-mobile/compare/v0.6.1...v0.6.2) - 2021-08-11
 
 ### 优化

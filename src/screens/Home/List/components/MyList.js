@@ -220,7 +220,7 @@ export default memo(({ currentList, handleCancelMultiSelect, showListSearchBar }
       PanelContent={<List setVisiblePanel={setVisiblePanel} currentList={currentList} handleCancelMultiSelect={handleCancelMultiSelect} />}
     >
       <View style={{ ...styles.currentList, borderBottomWidth: BorderWidths.normal, borderBottomColor: theme.borderColor }}>
-        <Text style={{ ...styles.sourceMenu, color: theme.secondary, flex: 1 }}>{currentList.name}</Text>
+        <Text numberOfLines={1} style={{ ...styles.sourceMenu, color: theme.secondary, flex: 1 }}>{currentList.name}</Text>
         <TouchableOpacity style={styles.btns} onPress={showListSearchBar}>
           <Icon style={{ color: theme.secondary30, fontSize: 16 }} name="search-2" />
         </TouchableOpacity>
@@ -270,6 +270,7 @@ const styles = StyleSheet.create({
 
   currentList: {
     flexDirection: 'row',
+    paddingRight: 2,
   },
   btns: {
     width: 38,

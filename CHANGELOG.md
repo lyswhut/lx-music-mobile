@@ -6,6 +6,12 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.7.1](https://github.com/lyswhut/lx-music-mobile/compare/v0.7.0...v0.7.1) - 2021-08-23
+
+### 修复
+
+- 修复无法从歌单界面打开网易歌单详情的问题
+
 ## [0.7.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.6.2...v0.7.0) - 2021-08-22
 
 如果你喜欢并经常使用洛雪音乐，并想要第一时间尝鲜洛雪的新功能，可以加入测试企鹅群768786588，

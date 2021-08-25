@@ -26,10 +26,10 @@ export default () => {
   }, [])
 
   useEffect(() => {
-    Dimensions.addEventListener('change', onChange)
+    const removeEvent = Dimensions.addEventListener('change', onChange)
 
     return () => {
-      Dimensions.removeEventListener('change', onChange)
+      removeEvent()
     }
   }, [orientation.portrait, orientation.landscape, onChange])
 

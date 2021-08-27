@@ -348,10 +348,15 @@ public class LyricView extends Activity implements View.OnTouchListener {
     windowManager.updateViewLayout(textView, layoutParams);
   }
 
-  public void destroy() {
+  public void destroyView() {
+    if (textView == null) return;
     windowManager.removeView(textView);
-    windowManager = null;
     textView = null;
+  }
+
+  public void destroy() {
+    destroyView();
+    windowManager = null;
     layoutParams = null;
   }
 }

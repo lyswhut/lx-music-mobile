@@ -68,7 +68,7 @@ public class Lyric extends LyricPlayer {
       lyricView.runOnUiThread(new Runnable() {
         @Override
         public void run() {
-          lyricView.destroy();
+          lyricView.destroyView();
         }
       });
     }

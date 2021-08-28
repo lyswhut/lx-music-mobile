@@ -10,8 +10,8 @@ export const buildTracks = (musicInfo, type, url) => {
     track.push({
       id: `${musicInfo.source}__//${musicInfo.songmid}__//${type}__//${Math.random()}__//${url}`,
       url,
-      title: musicInfo.name,
-      artist: musicInfo.singer,
+      title: musicInfo.name || 'Unknow',
+      artist: musicInfo.singer || 'Unknow',
       album: musicInfo.albumName || null,
       artwork: musicInfo.img || null,
       userAgent: defaultUserAgent,
@@ -21,8 +21,8 @@ export const buildTracks = (musicInfo, type, url) => {
   track.push({
     id: `${musicInfo.source}__//${musicInfo.songmid}__//${type}__//${Math.random()}__//default`,
     url: defaultUrl,
-    title: musicInfo.name,
-    artist: musicInfo.singer,
+    title: musicInfo.name || 'Unknow',
+    artist: musicInfo.singer || 'Unknow',
     album: musicInfo.albumName || null,
     artwork: musicInfo.img || null,
     original: { ...musicInfo },
@@ -35,8 +35,8 @@ export const buildTrack = (musicInfo, type, url) => {
     ? {
         id: `${musicInfo.source}__//${musicInfo.songmid}__//${type}__//${Math.random()}__//${url}`,
         url,
-        title: musicInfo.name,
-        artist: musicInfo.singer,
+        title: musicInfo.name || 'Unknow',
+        artist: musicInfo.singer || 'Unknow',
         album: musicInfo.albumName || null,
         artwork: musicInfo.img || null,
         userAgent: defaultUserAgent,
@@ -45,8 +45,8 @@ export const buildTrack = (musicInfo, type, url) => {
     : {
         id: `${musicInfo.source}__//${musicInfo.songmid}__//${type}__//${Math.random()}__//default`,
         url: defaultUrl,
-        title: musicInfo.name,
-        artist: musicInfo.singer,
+        title: musicInfo.name || 'Unknow',
+        artist: musicInfo.singer || 'Unknow',
         album: musicInfo.albumName || null,
         artwork: musicInfo.img || null,
         original: { ...musicInfo },

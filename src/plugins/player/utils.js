@@ -3,6 +3,7 @@ import BackgroundTimer from 'react-native-background-timer'
 import { defaultUrl } from '@/config'
 
 const defaultUserAgent = 'Mozilla/5.0 (Linux; Android 10; Pixel 3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Mobile Safari/537.36'
+const httpRxp = /^(https?:\/\/.+|\/.+)/
 
 export const buildTracks = (musicInfo, type, url) => {
   const track = []
@@ -13,7 +14,7 @@ export const buildTracks = (musicInfo, type, url) => {
       title: musicInfo.name || 'Unknow',
       artist: musicInfo.singer || 'Unknow',
       album: musicInfo.albumName || null,
-      artwork: musicInfo.img || null,
+      artwork: httpRxp.test(musicInfo.img) ? musicInfo.img : null,
       userAgent: defaultUserAgent,
       original: { ...musicInfo },
     })
@@ -24,7 +25,7 @@ export const buildTracks = (musicInfo, type, url) => {
     title: musicInfo.name || 'Unknow',
     artist: musicInfo.singer || 'Unknow',
     album: musicInfo.albumName || null,
-    artwork: musicInfo.img || null,
+    artwork: httpRxp.test(musicInfo.img) ? musicInfo.img : null,
     original: { ...musicInfo },
   })
   return track
@@ -38,7 +39,7 @@ export const buildTrack = (musicInfo, type, url) => {
         title: musicInfo.name || 'Unknow',
         artist: musicInfo.singer || 'Unknow',
         album: musicInfo.albumName || null,
-        artwork: musicInfo.img || null,
+        artwork: httpRxp.test(musicInfo.img) ? musicInfo.img : null,
         userAgent: defaultUserAgent,
         original: { ...musicInfo },
       }
@@ -48,7 +49,7 @@ export const buildTrack = (musicInfo, type, url) => {
         title: musicInfo.name || 'Unknow',
         artist: musicInfo.singer || 'Unknow',
         album: musicInfo.albumName || null,
-        artwork: musicInfo.img || null,
+        artwork: httpRxp.test(musicInfo.img) ? musicInfo.img : null,
         original: { ...musicInfo },
       }
 }

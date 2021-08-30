@@ -120,6 +120,7 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
 
   if (global.restorePlayInfo) {
     const track = buildTrack(musicInfo, type)
+    delayUpdateMusicInfo(track)
     track.id += track.id + '//restorePlay'
     playMusicId = playMusicId + '//restorePlay'
     msPlayMusic([track])

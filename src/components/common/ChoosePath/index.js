@@ -5,7 +5,7 @@ import React, { memo, useCallback, useEffect, useState, useRef } from 'react'
 import List from './List'
 
 import { useTranslation } from '@/plugins/i18n'
-import { checkStoragePermissions, requestStoragePermission } from '@/utils/common'
+import { checkStoragePermissions, requestStoragePermission } from '@/utils/permissions'
 import ConfirmAlert from '@/components/common/ConfirmAlert'
 import { toast } from '@/utils/tools'
 

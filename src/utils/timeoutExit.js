@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import BackgroundTimer from 'react-native-background-timer'
 import { getStore } from '@/store'
 import { action as playerAction, STATUS } from '@/store/modules/player'
-import { exitApp } from '@/utils/utils'
+import { exitApp } from '@/utils/common'
 
 const isStop = status => {
   switch (status) {

@@ -5,3 +5,4 @@
 ### 其他
 
 - 升级React native到v0.65.1
+- 升级播放模块`react-native-track-player`到v2版本，优化通知栏歌曲信息显示

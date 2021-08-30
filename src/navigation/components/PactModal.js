@@ -5,7 +5,7 @@ import { Navigation } from 'react-native-navigation'
 import Button from '@/components/common/Button'
 import { useGetter, useDispatch } from '@/store'
 import { openUrl } from '@/utils/tools'
-import { exitApp } from '@/utils/utils'
+import { exitApp } from '@/utils/common'
 
 const VersionModal = ({ componentId }) => {
   const theme = useGetter('common', 'theme')

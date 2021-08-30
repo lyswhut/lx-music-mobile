@@ -2,18 +2,20 @@ import { AppState } from 'react-native'
 import music from '@/utils/music'
 import { initial as msInitial, isInitialized } from '@/plugins/player'
 import {
-  buildTrack,
-  buildTracks,
   playMusic as msPlayMusic,
   play,
   stop,
   pause,
   seekTo,
   resetPlay,
-  updateMusicInfo,
   getPosition,
   destroy as msDestroy,
 } from '@/plugins/player/utils'
+import {
+  buildTrack,
+  buildTracks,
+  delayUpdateMusicInfo,
+} from '@/plugins/player/playList'
 import { getRandom } from '@/utils'
 import { getMusicUrl, saveMusicUrl, getLyric, saveLyric, assertApiSupport, savePlayInfo, saveList } from '@/utils/tools'
 import { playInfo as playInfoGetter } from './getter'
@@ -131,7 +133,7 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
         if (musicUrl) {
         // console.log('+++updateMusicInfo+++')
         // setTimeout(() => {
-          updateMusicInfo(buildTrack(musicInfo, type, musicUrl))
+          delayUpdateMusicInfo(buildTrack(musicInfo, type, musicUrl))
         // }, 1000)
         }
       })
@@ -154,6 +156,7 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
     status: STATUS.gettingUrl,
     text: '加载中...',
   }))
+  delayUpdateMusicInfo(buildTrack(musicInfo, type))
   Promise.all([
     dispatch(getUrl({ musicInfo, type, isRefresh })),
     resetPlay(),
@@ -195,7 +198,7 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
       if (musicUrl) {
         // console.log('+++updateMusicInfo+++')
         // setTimeout(() => {
-        updateMusicInfo(buildTrack(musicInfo, type, musicUrl))
+        delayUpdateMusicInfo(buildTrack(musicInfo, type, musicUrl))
         // }, 1000)
       }
     })

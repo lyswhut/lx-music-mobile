@@ -21,7 +21,13 @@ const initial = async({ cacheSize, isHandleAudioFocus }) => {
   if (global.playerStatus.isIniting || global.playerStatus.isInitialized) return
   global.playerStatus.isIniting = true
   console.log('Cache Size', cacheSize * 1024)
-  await TrackPlayer.setupPlayer({ maxCacheSize: cacheSize * 1024, maxBuffer: 1000, waitForBuffer: true, handleAudioFocus: isHandleAudioFocus })
+  await TrackPlayer.setupPlayer({
+    maxCacheSize: cacheSize * 1024,
+    maxBuffer: 1000,
+    waitForBuffer: true,
+    handleAudioFocus: isHandleAudioFocus,
+    autoUpdateMetadata: false,
+  })
   global.playerStatus.isInitialized = true
   global.playerStatus.isIniting = false
   await updateOptions()

@@ -1,10 +1,10 @@
-import TrackPlayer from 'react-native-track-player'
+import TrackPlayer, { State as TPState } from 'react-native-track-player'
 import { getStore } from '@/store'
 import { action as playerAction, STATUS } from '@/store/modules/player'
 import { isTempTrack } from './utils'
 import { play as lrcPlay, pause as lrcPause } from '@/utils/lyric'
-import { exitApp } from '@/utils/utils'
-import BackgroundTimer from 'react-native-background-timer'
+import { exitApp } from '@/utils/common'
+import { getCurrentTrackId, getCurrentTrack } from './playList'
 
 const store = getStore()
 
@@ -16,48 +16,10 @@ let retryGetUrlNum = 0
 let trackId = ''
 let errorTime = 0
 
-// const updateTrackUrl = async track => {
-//   const playInfo = track.id.split('__//')
-//   const type = playInfo[2]
-//   let url
-//   const newMusicInfo = { ...track.original }
-//   try {
-//     url = await store.dispatch(playerAction.getUrl({
-//       musicInfo: newMusicInfo,
-//       type,
-//     }))
-//   } catch (err) {
-//     console.log('err', err)
-//     retryGetUrlNum++
-//     if (retryGetUrlNum > 2) throw err
-//     if (retryGetUrlId != track.id) throw new Error('跳过播放')
-//     return updateTrackUrl(track)
-//   }
-//   newMusicInfo.typeUrl[type] = url
-//   const newTrack = buildTrack(newMusicInfo)
-//   await replacePlayTrack(newTrack, track)
-//   return newTrack
-// }
-// const eventTool = {
-//   events: {
-
-//   },
-//   addEventListener(name, handler) {
-//     if (this.events[name]) return
-//     TrackPlayer.addEventListener(name, handler)
-//   },
-//   clearEventListeners() {
-
-//   },
-// }
 // 销毁播放器并退出
 const handleExitApp = async() => {
   global.isPlayedExit = false
-  store.dispatch(playerAction.destroy()).finally(() => {
-    BackgroundTimer.setTimeout(() => {
-      exitApp()
-    }, 1000)
-  })
+  exitApp()
 }
 
 export default async() => {
@@ -111,7 +73,7 @@ export default async() => {
     // console.log((await TrackPlayer.getQueue()))
     lrcPause()
     if (!retryTrack) errorTime = await TrackPlayer.getPosition()
-    retryTrack = await TrackPlayer.getTrack(await TrackPlayer.getCurrentTrack())
+    retryTrack = await getCurrentTrack()
     await TrackPlayer.skipToNext()
   })
   TrackPlayer.addEventListener('playback-state', async info => {
@@ -121,28 +83,28 @@ export default async() => {
     // console.log(trackId)
     if (trackId && trackId.endsWith('//default')) return
     switch (info.state) {
-      case TrackPlayer.STATE_NONE:
-        // console.log('state', 'STATE_NONE')
+      case TPState.None:
+        // console.log('state', 'State.NONE')
         break
-      case TrackPlayer.STATE_READY:
-        // console.log('state', 'STATE_READY')
+      case TPState.Ready:
+        // console.log('state', 'State.READY')
         // store.dispatch(playerAction.setStatus({ status: STATUS.pause, text: '已暂停' }))
         lrcPause()
         break
-      case TrackPlayer.STATE_PLAYING:
+      case TPState.Playing:
         retryTrack = null
-        // console.log('state', 'STATE_PLAYING')
+        // console.log('state', 'State.PLAYING')
         store.dispatch(playerAction.setStatus({ status: STATUS.playing, text: '播放中...' }))
         TrackPlayer.getPosition().then(position => {
           lrcPlay(position * 1000)
         })
         break
-      case TrackPlayer.STATE_PAUSED:
-        // console.log('state', 'STATE_PAUSED')
+      case TPState.Paused:
+        // console.log('state', 'State.PAUSED')
         store.dispatch(playerAction.setStatus({ status: STATUS.pause, text: '已暂停' }))
         lrcPause()
         break
-      case TrackPlayer.STATE_STOPPED:
+      case TPState.Stopped:
         switch (state.player.status) {
           case STATUS.none:
             break
@@ -151,15 +113,15 @@ export default async() => {
             store.dispatch(playerAction.setStatus({ status: STATUS.stop, text: '已停止' }))
             break
         }
-        // console.log('state', 'STATE_STOPPED')
+        // console.log('state', 'State.STOPPED')
         lrcPause()
         break
-      case TrackPlayer.STATE_BUFFERING:
+      case TPState.Buffering:
         store.dispatch(playerAction.setStatus({ status: STATUS.buffering, text: '缓冲中...' }))
-        // console.log('state', 'STATE_BUFFERING')
+        // console.log('state', 'State.BUFFERING')
         lrcPause()
         break
-      case TrackPlayer.STATE_CONNECTING:
+      case TPState.Connecting:
         switch (state.player.status) {
           case STATUS.none:
           case STATUS.pause:
@@ -171,7 +133,7 @@ export default async() => {
             break
         }
         lrcPause()
-        // console.log('state', 'STATE_CONNECTING')
+        // console.log('state', 'State.CONNECTING')
         break
 
       default:
@@ -184,7 +146,7 @@ export default async() => {
     // console.log('nextTrack====>', info)
     if (global.isPlayedExit) return handleExitApp()
 
-    trackId = await TrackPlayer.getCurrentTrack()
+    trackId = await getCurrentTrackId()
     if (trackId && isTempTrack(trackId)) {
       console.log('====TEMP PAUSE====')
       TrackPlayer.pause()

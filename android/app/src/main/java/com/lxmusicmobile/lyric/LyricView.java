@@ -294,9 +294,9 @@ public class LyricView extends Activity implements View.OnTouchListener {
 
   public void setColor(String color) {
     themeColor = color;
-    if (windowManager == null || textView == null) return;
+    if (textView == null) return;
     textView.setTextColor(Color.parseColor(color));
-    windowManager.updateViewLayout(textView, layoutParams);
+    // windowManager.updateViewLayout(textView, layoutParams);
   }
 
   public void setLyricTextPosition(String textX, String textY) {
@@ -336,7 +336,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
 
   public void setAlpha(float alpha) {
     this.alpha = alpha;
-    if (windowManager == null || textView == null) return;
+    if (textView == null) return;
     textView.setAlpha(alpha);
   }
 
@@ -349,7 +349,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
   }
 
   public void destroyView() {
-    if (textView == null) return;
+    if (textView == null || windowManager == null) return;
     windowManager.removeView(textView);
     textView = null;
   }

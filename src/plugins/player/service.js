@@ -78,6 +78,7 @@ export default async() => {
   })
   TrackPlayer.addEventListener('playback-state', async info => {
     const state = store.getState()
+    // console.log('playback-state', TPState[info.state])
     if (state.player.isGettingUrl) return
     // let trackInfo = await TrackPlayer.getCurrentTrack()
     // console.log(trackId)

@@ -1,7 +1,9 @@
-import TrackPlayer, { useProgress, Capability } from 'react-native-track-player'
+import TrackPlayer, { Capability } from 'react-native-track-player'
 import BackgroundTimer from 'react-native-background-timer'
 import { playMusic as handlePlayMusic } from './playList'
 
+
+export { useProgress } from './hook'
 
 export const isTempTrack = trackId => /\/\/default$/.test(trackId)
 
@@ -221,6 +223,6 @@ export const updateOptions = (options = {
 //   // }
 // }
 
-export {
-  useProgress,
-}
+// export {
+//   useProgress,
+// }

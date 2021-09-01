@@ -17,6 +17,7 @@ export const buildTracks = ({ musicInfo, type, url, duration }) => {
       album: musicInfo.albumName || null,
       artwork: httpRxp.test(musicInfo.img) ? musicInfo.img : null,
       userAgent: defaultUserAgent,
+      musicId: `${musicInfo.source}__//${musicInfo.songmid}__//${type}`,
       original: { ...musicInfo },
       duration,
       type,
@@ -29,6 +30,7 @@ export const buildTracks = ({ musicInfo, type, url, duration }) => {
     artist: musicInfo.singer || 'Unknow',
     album: musicInfo.albumName || null,
     artwork: httpRxp.test(musicInfo.img) ? musicInfo.img : null,
+    musicId: `${musicInfo.source}__//${musicInfo.songmid}__//${type}`,
     original: { ...musicInfo },
     duration: 0,
     type,
@@ -46,6 +48,7 @@ export const buildTrack = ({ musicInfo, type, url, duration }) => {
         album: musicInfo.albumName || null,
         artwork: httpRxp.test(musicInfo.img) ? musicInfo.img : null,
         userAgent: defaultUserAgent,
+        musicId: `${musicInfo.source}__//${musicInfo.songmid}__//${type}`,
         original: { ...musicInfo },
         duration,
         type,
@@ -57,6 +60,7 @@ export const buildTrack = ({ musicInfo, type, url, duration }) => {
         artist: musicInfo.singer || 'Unknow',
         album: musicInfo.albumName || null,
         artwork: httpRxp.test(musicInfo.img) ? musicInfo.img : null,
+        musicId: `${musicInfo.source}__//${musicInfo.songmid}__//${type}`,
         original: { ...musicInfo },
         duration: 0,
         type,
@@ -107,16 +111,26 @@ export const playMusic = async(tracks, time) => {
   }
 }
 
+let musicId = null
 let duration = 0
+let artwork = null
 export const updateMetaInfo = async track => {
   console.log('+++++updateMusicPic+++++', track.artwork)
-  if (track.duration != null) duration = track.duration
+
+  if (track.musicId == musicId) {
+    if (track.artwork != null) artwork = track.artwork
+    if (track.duration != null) duration = track.duration
+  } else {
+    musicId = track.musicId
+    artwork = track.artwork
+    duration = track.duration == null ? 0 : track.duration
+  }
 
   await TrackPlayer.updateNowPlayingMetadata({
     title: track.title || 'Unknow',
     artist: track.artist || 'Unknow',
     album: track.album || null,
-    artwork: track.artwork || null,
+    artwork,
     duration,
   })
 }

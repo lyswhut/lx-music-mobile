@@ -30,7 +30,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
   final private ReactApplicationContext reactContext;
   final private LyricEvent lyricEvent;
 
-  private int winWidth = 0;
+  // private int winWidth = 0;
 
   private float lastX; //上一次位置的X.Y坐标
   private float lastY;
@@ -114,7 +114,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
 
       DisplayMetrics outMetrics = new DisplayMetrics();
       windowManager.getDefaultDisplay().getMetrics(outMetrics);
-      winWidth = (int)(outMetrics.widthPixels * 0.92);
+      // winWidth = (int)(outMetrics.widthPixels * 0.92);
     }
 
     // 注意，悬浮窗只有一个，而当打开应用的时候才会产生悬浮窗，所以要判断悬浮窗是否已经存在，

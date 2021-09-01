@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LyricPlayer {
-  final String timeExp = "^\\[([\\d:.]*)\\]{1}";
+  final String timeExp = "^\\[([\\d:.]*)]";
 //  HashMap tagRegMap;
   Pattern timePattern;
 
@@ -91,14 +91,14 @@ public class LyricPlayer {
     HashMap linesMap = new HashMap<String, HashMap>();
     HashMap timeMap = new HashMap<String, Integer>();
 
-    for (int i = 0; i < linesStr.length; i++) {
-
-      String line = linesStr[i].trim();
+    for (String lineStr : linesStr) {
+      String line = lineStr.trim();
       Matcher result = timePattern.matcher(line);
       if (result.find()) {
         String text = line.replaceAll(timeExp, "").trim();
         if (text.length() > 0) {
           String timeStr = result.group(1);
+          if (timeStr == null) continue;
           String[] timeArr = timeStr.split(":");
           String hours;
           String minutes;
@@ -115,18 +115,19 @@ public class LyricPlayer {
               minutes = timeArr[0];
               seconds = timeArr[1];
               break;
-            default: return;
+            default:
+              return;
           }
-          if (seconds.indexOf(".") > -1) {
+          if (seconds.contains(".")) {
             timeArr = seconds.split("\\.");
             seconds = timeArr[0];
             milliseconds = timeArr[1];
           }
           HashMap<String, Object> lineInfo = new HashMap<String, Object>();
-          int time = Integer.valueOf(hours) * 60 * 60 * 1000
-            + Integer.valueOf(minutes) * 60 * 1000
-            + Integer.valueOf(seconds) * 1000
-            + Integer.valueOf(milliseconds);
+          int time = Integer.parseInt(hours) * 60 * 60 * 1000
+            + Integer.parseInt(minutes) * 60 * 1000
+            + Integer.parseInt(seconds) * 1000
+            + Integer.parseInt(milliseconds);
           lineInfo.put("time", time);
           lineInfo.put("text", text);
           lineInfo.put("translation", "");
@@ -137,8 +138,8 @@ public class LyricPlayer {
     }
 
     String[] translationLines = translationLyric.split("\n");
-    for (int i = 0; i < translationLines.length; i++) {
-      String line = translationLines[i].trim();
+    for (String translationLine : translationLines) {
+      String line = translationLine.trim();
       Matcher result = timePattern.matcher(line);
       if (result.find()) {
         String text = line.replaceAll(timeExp, "").trim();

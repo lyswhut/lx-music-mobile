@@ -1,10 +1,10 @@
-import TrackPlayer, { State as TPState } from 'react-native-track-player'
+import TrackPlayer, { State as TPState, Event as TPEvent } from 'react-native-track-player'
 import { getStore } from '@/store'
 import { action as playerAction, STATUS } from '@/store/modules/player'
 import { isTempTrack } from './utils'
 import { play as lrcPlay, pause as lrcPause } from '@/utils/lyric'
 import { exitApp } from '@/utils/common'
-import { getCurrentTrackId, getCurrentTrack } from './playList'
+import { getCurrentTrackId, getCurrentTrack, delayUpdateMusicInfo, buildTrack } from './playList'
 
 const store = getStore()
 
@@ -15,6 +15,8 @@ let retryGetUrlId = null
 let retryGetUrlNum = 0
 let trackId = ''
 let errorTime = 0
+let prevDuration = 0
+const tempIdRxp = /\/\/default$|\/\/default\/\/restorePlay$/
 
 // 销毁播放器并退出
 const handleExitApp = async() => {
@@ -26,36 +28,36 @@ export default async() => {
   if (isInitialized) return
 
   console.log('reg services...')
-  TrackPlayer.addEventListener('remote-play', () => {
+  TrackPlayer.addEventListener(TPEvent.RemotePlay, () => {
     // console.log('remote-play')
     // TrackPlayer.play()
     store.dispatch(playerAction.playMusic())
   })
 
-  TrackPlayer.addEventListener('remote-pause', () => {
+  TrackPlayer.addEventListener(TPEvent.RemotePause, () => {
     console.log('remote-pause')
     store.dispatch(playerAction.pauseMusic())
     // TrackPlayer.pause()
   })
 
-  TrackPlayer.addEventListener('remote-next', () => {
+  TrackPlayer.addEventListener(TPEvent.RemoteNext, () => {
     console.log('remote-next')
     store.dispatch(playerAction.playNext())
     // TrackPlayer.skipToNext()
   })
 
-  TrackPlayer.addEventListener('remote-previous', () => {
+  TrackPlayer.addEventListener(TPEvent.RemotePrevious, () => {
     console.log('remote-previous')
     store.dispatch(playerAction.playPrev())
     // TrackPlayer.skipToPrevious()
   })
 
-  TrackPlayer.addEventListener('remote-stop', async() => {
+  TrackPlayer.addEventListener(TPEvent.RemoteStop, async() => {
     console.log('remote-stop')
     handleExitApp()
   })
 
-  TrackPlayer.addEventListener('remote-duck', async({ permanent, paused, ducking }) => {
+  TrackPlayer.addEventListener(TPEvent.RemoteDuck, async({ permanent, paused, ducking }) => {
     console.log('remote-duck')
     if (paused) {
       store.dispatch(playerAction.setStatus({ status: STATUS.pause, text: '已暂停' }))
@@ -68,7 +70,7 @@ export default async() => {
     }
   })
 
-  TrackPlayer.addEventListener('playback-error', async err => {
+  TrackPlayer.addEventListener(TPEvent.PlaybackError, async err => {
     console.log('playback-error', err)
     // console.log((await TrackPlayer.getQueue()))
     lrcPause()
@@ -76,13 +78,27 @@ export default async() => {
     retryTrack = await getCurrentTrack()
     await TrackPlayer.skipToNext()
   })
-  TrackPlayer.addEventListener('playback-state', async info => {
+
+  TrackPlayer.addEventListener(TPEvent.RemoteSeek, async({ position }) => {
+    // console.log(position)
+    store.dispatch(playerAction.setProgress(position))
+  })
+
+  TrackPlayer.addEventListener(TPEvent.PlaybackState, async info => {
     const state = store.getState()
     // console.log('playback-state', TPState[info.state])
+
+    // console.log((await getCurrentTrack())?.id)
     if (state.player.isGettingUrl) return
-    // let trackInfo = await TrackPlayer.getCurrentTrack()
-    // console.log(trackId)
-    if (trackId && trackId.endsWith('//default')) return
+    if (trackId && tempIdRxp.test(trackId)) return
+    const duration = await TrackPlayer.getDuration()
+    if (prevDuration != duration) {
+      prevDuration = duration
+      const trackInfo = await getCurrentTrack()
+      if (trackInfo) {
+        delayUpdateMusicInfo(buildTrack({ musicInfo: { ...trackInfo.original }, type: trackInfo.type, url: trackInfo.url, duration }))
+      }
+    }
     switch (info.state) {
       case TPState.None:
         // console.log('state', 'State.NONE')
@@ -143,7 +159,7 @@ export default async() => {
     }
     if (global.isPlayedExit) return handleExitApp()
   })
-  TrackPlayer.addEventListener('playback-track-changed', async info => {
+  TrackPlayer.addEventListener(TPEvent.PlaybackTrackChanged, async info => {
     // console.log('nextTrack====>', info)
     if (global.isPlayedExit) return handleExitApp()
 

@@ -6,7 +6,7 @@ const list = []
 const defaultUserAgent = 'Mozilla/5.0 (Linux; Android 10; Pixel 3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Mobile Safari/537.36'
 const httpRxp = /^(https?:\/\/.+|\/.+)/
 
-export const buildTracks = (musicInfo, type, url) => {
+export const buildTracks = ({ musicInfo, type, url, duration }) => {
   const track = []
   if (url) {
     track.push({
@@ -18,6 +18,8 @@ export const buildTracks = (musicInfo, type, url) => {
       artwork: httpRxp.test(musicInfo.img) ? musicInfo.img : null,
       userAgent: defaultUserAgent,
       original: { ...musicInfo },
+      duration,
+      type,
     })
   }
   track.push({
@@ -28,11 +30,13 @@ export const buildTracks = (musicInfo, type, url) => {
     album: musicInfo.albumName || null,
     artwork: httpRxp.test(musicInfo.img) ? musicInfo.img : null,
     original: { ...musicInfo },
+    duration: 0,
+    type,
   })
   return track
   // console.log('buildTrack', musicInfo.name, url)
 }
-export const buildTrack = (musicInfo, type, url) => {
+export const buildTrack = ({ musicInfo, type, url, duration }) => {
   return url
     ? {
         id: `${musicInfo.source}__//${musicInfo.songmid}__//${type}__//${Math.random()}__//${url}`,
@@ -43,6 +47,8 @@ export const buildTrack = (musicInfo, type, url) => {
         artwork: httpRxp.test(musicInfo.img) ? musicInfo.img : null,
         userAgent: defaultUserAgent,
         original: { ...musicInfo },
+        duration,
+        type,
       }
     : {
         id: `${musicInfo.source}__//${musicInfo.songmid}__//${type}__//${Math.random()}__//default`,
@@ -52,6 +58,8 @@ export const buildTrack = (musicInfo, type, url) => {
         album: musicInfo.albumName || null,
         artwork: httpRxp.test(musicInfo.img) ? musicInfo.img : null,
         original: { ...musicInfo },
+        duration: 0,
+        type,
       }
 }
 
@@ -99,14 +107,17 @@ export const playMusic = async(tracks, time) => {
   }
 }
 
-
+let duration = 0
 export const updateMetaInfo = async track => {
   console.log('+++++updateMusicPic+++++', track.artwork)
+  if (track.duration != null) duration = track.duration
+
   await TrackPlayer.updateNowPlayingMetadata({
     title: track.title || 'Unknow',
     artist: track.artist || 'Unknow',
     album: track.album || null,
     artwork: track.artwork || null,
+    duration,
   })
 }
 
@@ -166,7 +177,7 @@ const debounceUpdateMetaInfoTools = {
       this.track = track
       return this.updateMetaPromise.then(() => {
         // console.log('run')
-        if (this.track === track) {
+        if (this.track.id === track.id) {
           this.updateMetaPromise = updateMetaInfo(track).then(() => {
             if (this.isDebounced) {
               this.delayUpdateMusicInfo()

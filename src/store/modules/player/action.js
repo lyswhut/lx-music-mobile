@@ -119,7 +119,7 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
   playMusicId = id
 
   if (global.restorePlayInfo) {
-    const track = buildTrack(musicInfo, type)
+    const track = buildTrack({ musicInfo, type })
     delayUpdateMusicInfo(track)
     track.id += track.id + '//restorePlay'
     playMusicId = playMusicId + '//restorePlay'
@@ -134,7 +134,7 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
         if (musicUrl) {
         // console.log('+++updateMusicInfo+++')
         // setTimeout(() => {
-          delayUpdateMusicInfo(buildTrack(musicInfo, type, musicUrl))
+          delayUpdateMusicInfo(buildTrack({ musicInfo, type, url: musicUrl }))
         // }, 1000)
         }
       })
@@ -157,7 +157,7 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
     status: STATUS.gettingUrl,
     text: '加载中...',
   }))
-  delayUpdateMusicInfo(buildTrack(musicInfo, type))
+  delayUpdateMusicInfo(buildTrack({ musicInfo, type }))
   Promise.all([
     dispatch(getUrl({ musicInfo, type, isRefresh })),
     resetPlay(),
@@ -169,7 +169,7 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
       case STATUS.pause:
         return
     }
-    msPlayMusic(buildTracks(musicInfo, type, url, true), time)
+    msPlayMusic(buildTracks({ musicInfo, type, url }), time)
   }).catch(err => {
     if (playMusicId != id) return
     dispatch(setStatus({ status: STATUS.error, text: err.message }))
@@ -195,7 +195,7 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
   if (!musicInfo.img) {
     dispatch(getPic(musicInfo)).then(async() => {
       if (playMusicId != id) return
-      delayUpdateMusicInfo(buildTrack(musicInfo, type))
+      delayUpdateMusicInfo(buildTrack({ musicInfo, type }))
     })
   }
   dispatch(getLrc(musicInfo)).then(({ lyric, tlyric }) => {

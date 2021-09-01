@@ -22,3 +22,5 @@ global.prevListPlayIndex = -1
 
 global.syncKeyInfo = {}
 global.isSyncEnableing = false
+
+global.isPlaying = false

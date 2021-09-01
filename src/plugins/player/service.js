@@ -17,6 +17,7 @@ let trackId = ''
 let errorTime = 0
 let prevDuration = 0
 const tempIdRxp = /\/\/default$|\/\/default\/\/restorePlay$/
+// let isPlaying = false
 
 // 销毁播放器并退出
 const handleExitApp = async() => {
@@ -86,19 +87,13 @@ export default async() => {
 
   TrackPlayer.addEventListener(TPEvent.PlaybackState, async info => {
     const state = store.getState()
-    // console.log('playback-state', TPState[info.state])
+    console.log('playback-state', TPState[info.state])
 
     // console.log((await getCurrentTrack())?.id)
     if (state.player.isGettingUrl) return
     if (trackId && tempIdRxp.test(trackId)) return
-    const duration = await TrackPlayer.getDuration()
-    if (prevDuration != duration) {
-      prevDuration = duration
-      const trackInfo = await getCurrentTrack()
-      if (trackInfo) {
-        delayUpdateMusicInfo(buildTrack({ musicInfo: { ...trackInfo.original }, type: trackInfo.type, url: trackInfo.url, duration }))
-      }
-    }
+    let currentIsPlaying = false
+
     switch (info.state) {
       case TPState.None:
         // console.log('state', 'State.NONE')
@@ -110,11 +105,12 @@ export default async() => {
         break
       case TPState.Playing:
         retryTrack = null
-        // console.log('state', 'State.PLAYING')
+        console.log('state', 'State.PLAYING')
         store.dispatch(playerAction.setStatus({ status: STATUS.playing, text: '播放中...' }))
         TrackPlayer.getPosition().then(position => {
           lrcPlay(position * 1000)
         })
+        currentIsPlaying = true
         break
       case TPState.Paused:
         // console.log('state', 'State.PAUSED')
@@ -135,7 +131,7 @@ export default async() => {
         break
       case TPState.Buffering:
         store.dispatch(playerAction.setStatus({ status: STATUS.buffering, text: '缓冲中...' }))
-        // console.log('state', 'State.BUFFERING')
+        console.log('state', 'State.BUFFERING')
         lrcPause()
         break
       case TPState.Connecting:
@@ -158,6 +154,22 @@ export default async() => {
         break
     }
     if (global.isPlayedExit) return handleExitApp()
+
+    if (currentIsPlaying == global.isPlaying) {
+      const duration = await TrackPlayer.getDuration()
+      if (prevDuration != duration) {
+        global.isPlaying = currentIsPlaying
+        prevDuration = duration
+        const trackInfo = await getCurrentTrack()
+        if (trackInfo) {
+          delayUpdateMusicInfo(buildTrack({ musicInfo: { ...trackInfo.original }, type: trackInfo.type, url: trackInfo.url, duration }), global.isPlaying)
+        }
+      }
+    } else {
+      global.isPlaying = currentIsPlaying
+      const trackInfo = await getCurrentTrack()
+      delayUpdateMusicInfo(buildTrack({ musicInfo: { ...trackInfo.original }, type: trackInfo.type, url: trackInfo.url, duration: prevDuration }), global.isPlaying)
+    }
   })
   TrackPlayer.addEventListener(TPEvent.PlaybackTrackChanged, async info => {
     // console.log('nextTrack====>', info)

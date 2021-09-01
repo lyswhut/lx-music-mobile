@@ -98,9 +98,8 @@ export const playMusic = async(tracks, time) => {
       }
     }
   } else {
-    if (isTempTrack(track.id)) {
-      await TrackPlayer.pause()
-    } else {
+    await TrackPlayer.pause()
+    if (!isTempTrack(track.id)) {
       await TrackPlayer.seekTo(time)
       await TrackPlayer.play()
     }
@@ -114,7 +113,7 @@ export const playMusic = async(tracks, time) => {
 let musicId = null
 let duration = 0
 let artwork = null
-export const updateMetaInfo = async track => {
+export const updateMetaInfo = async(track, isPlaying) => {
   console.log('+++++updateMusicPic+++++', track.artwork)
 
   if (track.musicId == musicId) {
@@ -132,7 +131,7 @@ export const updateMetaInfo = async track => {
     album: track.album || null,
     artwork,
     duration,
-  })
+  }, isPlaying)
 }
 
 
@@ -140,14 +139,13 @@ export const updateMetaInfo = async track => {
 const debounceUpdateMetaInfoTools = {
   updateMetaPromise: Promise.resolve(),
   track: null,
-  isDebounced: false,
   debounce(fn) {
     let delayTimer = null
     let isDelayRun = false
     let timer = null
     let _track = null
-    return (track, time) => {
-      if (!this.isDebounced && _track != null) this.isDebounced = true
+    let _isPlaying = null
+    return (track, isPlaying) => {
       if (timer) {
         BackgroundTimer.clearTimeout(timer)
         timer = null
@@ -158,16 +156,19 @@ const debounceUpdateMetaInfoTools = {
       }
       if (isDelayRun) {
         _track = track
+        _isPlaying = isPlaying
         timer = BackgroundTimer.setTimeout(() => {
           timer = null
           let track = _track
+          let isPlaying = _isPlaying
           _track = null
+          _isPlaying = null
           isDelayRun = false
-          fn(track, time)
-        }, 800)
+          fn(track, isPlaying)
+        }, 500)
       } else {
         isDelayRun = true
-        fn(track, time)
+        fn(track, isPlaying)
         delayTimer = BackgroundTimer.setTimeout(() => {
           delayTimer = null
           isDelayRun = false
@@ -175,29 +176,13 @@ const debounceUpdateMetaInfoTools = {
       }
     }
   },
-  delayUpdateMusicInfo() {
-    if (this.delayTimer) BackgroundTimer.clearTimeout(this.delayTimer)
-    this.delayTimer = BackgroundTimer.setTimeout(() => {
-      this.delayTimer = null
-      if (this.track) {
-        this.updateMetaPromise.then(() => {
-          this.updateMetaPromise = updateMetaInfo(this.track)
-        })
-      }
-    }, 1500)
-  },
   init() {
-    return this.debounce(track => {
+    return this.debounce((track, isPlaying) => {
       this.track = track
       return this.updateMetaPromise.then(() => {
         // console.log('run')
         if (this.track.id === track.id) {
-          this.updateMetaPromise = updateMetaInfo(track).then(() => {
-            if (this.isDebounced) {
-              this.delayUpdateMusicInfo()
-              this.isDebounced = false
-            }
-          })
+          this.updateMetaPromise = updateMetaInfo(track, isPlaying)
         }
       })
     })

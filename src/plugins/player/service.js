@@ -87,7 +87,7 @@ export default async() => {
 
   TrackPlayer.addEventListener(TPEvent.PlaybackState, async info => {
     const state = store.getState()
-    console.log('playback-state', TPState[info.state])
+    // console.log('playback-state', TPState[info.state])
 
     // console.log((await getCurrentTrack())?.id)
     if (state.player.isGettingUrl) return
@@ -105,7 +105,7 @@ export default async() => {
         break
       case TPState.Playing:
         retryTrack = null
-        console.log('state', 'State.PLAYING')
+        // console.log('state', 'State.PLAYING')
         store.dispatch(playerAction.setStatus({ status: STATUS.playing, text: '播放中...' }))
         TrackPlayer.getPosition().then(position => {
           lrcPlay(position * 1000)
@@ -131,7 +131,7 @@ export default async() => {
         break
       case TPState.Buffering:
         store.dispatch(playerAction.setStatus({ status: STATUS.buffering, text: '缓冲中...' }))
-        console.log('state', 'State.BUFFERING')
+        // console.log('state', 'State.BUFFERING')
         lrcPause()
         break
       case TPState.Connecting:
@@ -155,20 +155,21 @@ export default async() => {
     }
     if (global.isPlayedExit) return handleExitApp()
 
+    // console.log('currentIsPlaying', currentIsPlaying, global.isPlaying)
     if (currentIsPlaying == global.isPlaying) {
       const duration = await TrackPlayer.getDuration()
+      // console.log('currentIsPlaying', prevDuration, duration)
       if (prevDuration != duration) {
-        global.isPlaying = currentIsPlaying
         prevDuration = duration
         const trackInfo = await getCurrentTrack()
         if (trackInfo) {
-          delayUpdateMusicInfo(buildTrack({ musicInfo: { ...trackInfo.original }, type: trackInfo.type, url: trackInfo.url, duration }), global.isPlaying)
+          delayUpdateMusicInfo(buildTrack({ musicInfo: { ...trackInfo.original }, type: trackInfo.type, url: trackInfo.url, duration }))
         }
       }
     } else {
-      global.isPlaying = currentIsPlaying
-      const trackInfo = await getCurrentTrack()
-      delayUpdateMusicInfo(buildTrack({ musicInfo: { ...trackInfo.original }, type: trackInfo.type, url: trackInfo.url, duration: prevDuration }), global.isPlaying)
+      const [duration, trackInfo] = await Promise.all([TrackPlayer.getDuration(), getCurrentTrack()])
+      prevDuration = duration
+      delayUpdateMusicInfo(buildTrack({ musicInfo: { ...trackInfo.original }, type: trackInfo.type, url: trackInfo.url, duration: prevDuration }))
     }
   })
   TrackPlayer.addEventListener(TPEvent.PlaybackTrackChanged, async info => {

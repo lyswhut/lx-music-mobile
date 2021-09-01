@@ -1,4 +1,4 @@
-import TrackPlayer from 'react-native-track-player'
+import TrackPlayer, { State } from 'react-native-track-player'
 import BackgroundTimer from 'react-native-background-timer'
 import { defaultUrl } from '@/config'
 
@@ -113,8 +113,8 @@ export const playMusic = async(tracks, time) => {
 let musicId = null
 let duration = 0
 let artwork = null
-export const updateMetaInfo = async(track, isPlaying) => {
-  console.log('+++++updateMusicPic+++++', track.artwork)
+export const updateMetaInfo = async track => {
+  // console.log('+++++updateMusicPic+++++', track.artwork, track.duration)
 
   if (track.musicId == musicId) {
     if (track.artwork != null) artwork = track.artwork
@@ -125,13 +125,14 @@ export const updateMetaInfo = async(track, isPlaying) => {
     duration = track.duration == null ? 0 : track.duration
   }
 
+  global.isPlaying = await TrackPlayer.getState() == State.Playing
   await TrackPlayer.updateNowPlayingMetadata({
     title: track.title || 'Unknow',
     artist: track.artist || 'Unknow',
     album: track.album || null,
     artwork,
     duration,
-  }, isPlaying)
+  }, global.isPlaying)
 }
 
 
@@ -144,8 +145,8 @@ const debounceUpdateMetaInfoTools = {
     let isDelayRun = false
     let timer = null
     let _track = null
-    let _isPlaying = null
-    return (track, isPlaying) => {
+    return track => {
+      // console.log('debounceUpdateMetaInfoTools', track.duration, track.artwork)
       if (timer) {
         BackgroundTimer.clearTimeout(timer)
         timer = null
@@ -156,19 +157,16 @@ const debounceUpdateMetaInfoTools = {
       }
       if (isDelayRun) {
         _track = track
-        _isPlaying = isPlaying
         timer = BackgroundTimer.setTimeout(() => {
           timer = null
           let track = _track
-          let isPlaying = _isPlaying
           _track = null
-          _isPlaying = null
           isDelayRun = false
-          fn(track, isPlaying)
+          fn(track)
         }, 500)
       } else {
         isDelayRun = true
-        fn(track, isPlaying)
+        fn(track)
         delayTimer = BackgroundTimer.setTimeout(() => {
           delayTimer = null
           isDelayRun = false
@@ -177,12 +175,12 @@ const debounceUpdateMetaInfoTools = {
     }
   },
   init() {
-    return this.debounce((track, isPlaying) => {
+    return this.debounce(track => {
       this.track = track
       return this.updateMetaPromise.then(() => {
         // console.log('run')
         if (this.track.id === track.id) {
-          this.updateMetaPromise = updateMetaInfo(track, isPlaying)
+          this.updateMetaPromise = updateMetaInfo(track)
         }
       })
     })

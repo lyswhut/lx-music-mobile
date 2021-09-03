@@ -141,7 +141,7 @@ const debounceUpdateMetaInfoTools = {
   updateMetaPromise: Promise.resolve(),
   track: null,
   debounce(fn) {
-    let delayTimer = null
+    // let delayTimer = null
     let isDelayRun = false
     let timer = null
     let _track = null
@@ -151,24 +151,24 @@ const debounceUpdateMetaInfoTools = {
         BackgroundTimer.clearTimeout(timer)
         timer = null
       }
-      if (delayTimer) {
-        BackgroundTimer.clearTimeout(delayTimer)
-        delayTimer = null
-      }
+      // if (delayTimer) {
+      //   BackgroundTimer.clearTimeout(delayTimer)
+      //   delayTimer = null
+      // }
       if (isDelayRun) {
         _track = track
         timer = BackgroundTimer.setTimeout(() => {
           timer = null
           let track = _track
           _track = null
-          isDelayRun = false
+          // isDelayRun = false
           fn(track)
         }, 1000)
       } else {
         isDelayRun = true
         fn(track)
-        delayTimer = BackgroundTimer.setTimeout(() => {
-          delayTimer = null
+        BackgroundTimer.setTimeout(() => {
+          // delayTimer = null
           isDelayRun = false
         }, 1000)
       }

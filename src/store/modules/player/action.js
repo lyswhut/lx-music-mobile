@@ -114,11 +114,11 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
   }
   setLyric('')
   console.log('Handle Play Music ====================>', musicInfo.name)
-  _playMusicInfo = musicInfo
+  global.playInfo.currentPlayMusicInfo = _playMusicInfo = musicInfo
   let id = `${musicInfo.source}//${musicInfo.songmid}//${type}`
   playMusicId = id
 
-  global.isPlaying = false
+  global.playInfo.isPlaying = false
   if (global.restorePlayInfo) {
     const track = buildTrack({ musicInfo, type })
     delayUpdateMusicInfo(track)

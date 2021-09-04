@@ -23,4 +23,8 @@ global.prevListPlayIndex = -1
 global.syncKeyInfo = {}
 global.isSyncEnableing = false
 
-global.isPlaying = false
+global.playInfo = {
+  isPlaying: false,
+  currentPlayMusicInfo: null,
+  duration: 0,
+}

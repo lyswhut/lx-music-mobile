@@ -110,29 +110,29 @@ export const playMusic = async(tracks, time) => {
   }
 }
 
-let musicId = null
-let duration = 0
-let artwork = null
+// let musicId = null
+// let duration = 0
+// let artwork = null
 export const updateMetaInfo = async track => {
   // console.log('+++++updateMusicPic+++++', track.artwork, track.duration)
 
-  if (track.musicId == musicId) {
-    if (track.artwork != null) artwork = track.artwork
-    if (track.duration != null) duration = track.duration
-  } else {
-    musicId = track.musicId
-    artwork = track.artwork
-    duration = track.duration == null ? 0 : track.duration
-  }
+  // if (track.musicId == musicId) {
+  //   if (global.playInfo.musicInfo.img != null) artwork = global.playInfo.musicInfo.img
+  //   if (track.duration != null) duration = global.playInfo.duration
+  // } else {
+  //   musicId = track.musicId
+  //   artwork = global.playInfo.musicInfo.img
+  //   duration = global.playInfo.duration || 0
+  // }
 
-  global.isPlaying = await TrackPlayer.getState() == State.Playing
+  global.playInfo.isPlaying = await TrackPlayer.getState() == State.Playing
   await TrackPlayer.updateNowPlayingMetadata({
     title: track.title || 'Unknow',
     artist: track.artist || 'Unknow',
     album: track.album || null,
-    artwork,
-    duration,
-  }, global.isPlaying)
+    artwork: global.playInfo?.currentPlayMusicInfo?.img || null,
+    duration: global.playInfo?.duration || 0,
+  }, global.playInfo.isPlaying)
 }
 
 

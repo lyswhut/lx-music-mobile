@@ -33,6 +33,7 @@ const mutations = {
         break
     }
     // console.log('+++++++targetMusic+++++++', targetMusic)
+    datas.musicInfo.img = datas.url
     targetMusic.img = datas.url
     const newState = { ...state }
     if (state.playMusicInfo.musicInfo.source == datas.musicInfo.source && state.playMusicInfo.musicInfo.songmid === datas.musicInfo.songmid) {

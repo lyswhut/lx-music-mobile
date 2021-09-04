@@ -15,7 +15,7 @@ let retryGetUrlId = null
 let retryGetUrlNum = 0
 let trackId = ''
 let errorTime = 0
-let prevDuration = 0
+// let prevDuration = 0
 const tempIdRxp = /\/\/default$|\/\/default\/\/restorePlay$/
 // let isPlaying = false
 
@@ -155,21 +155,23 @@ export default async() => {
     }
     if (global.isPlayedExit) return handleExitApp()
 
-    // console.log('currentIsPlaying', currentIsPlaying, global.isPlaying)
-    if (currentIsPlaying == global.isPlaying) {
+    // console.log('currentIsPlaying', currentIsPlaying, global.playInfo.isPlaying)
+    if (currentIsPlaying == global.playInfo.isPlaying) {
       const duration = await TrackPlayer.getDuration()
-      // console.log('currentIsPlaying', prevDuration, duration)
-      if (prevDuration != duration) {
-        prevDuration = duration
+      // console.log('currentIsPlaying', global.playInfo.duration, duration)
+      if (global.playInfo.duration != duration) {
+        global.playInfo.duration = duration
         const trackInfo = await getCurrentTrack()
-        if (trackInfo) {
-          delayUpdateMusicInfo(buildTrack({ musicInfo: { ...trackInfo.original }, type: trackInfo.type, url: trackInfo.url, duration }))
+        if (trackInfo && global.playInfo.currentPlayMusicInfo) {
+          delayUpdateMusicInfo(buildTrack({ musicInfo: global.playInfo.currentPlayMusicInfo, type: trackInfo.type, url: trackInfo.url, duration }))
         }
       }
     } else {
       const [duration, trackInfo] = await Promise.all([TrackPlayer.getDuration(), getCurrentTrack()])
-      prevDuration = duration
-      delayUpdateMusicInfo(buildTrack({ musicInfo: { ...trackInfo.original }, type: trackInfo.type, url: trackInfo.url, duration: prevDuration }))
+      global.playInfo.duration = duration
+      if (trackInfo && global.playInfo.currentPlayMusicInfo) {
+        delayUpdateMusicInfo(buildTrack({ musicInfo: global.playInfo.currentPlayMusicInfo, type: trackInfo.type, url: trackInfo.url, duration }))
+      }
     }
   })
   TrackPlayer.addEventListener(TPEvent.PlaybackTrackChanged, async info => {

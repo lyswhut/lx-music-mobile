@@ -6,6 +6,22 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.8.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.7.1...v0.8.0) - 2021-09-06
+
+### 新增
+
+- 添加对通知栏歌曲进度条的支持
+
+### 修复
+
+- 修复某些情况下桌面歌词会导致APP崩溃的问题
+- 修复从电脑浏览器复制的企鹅歌单链接无法打开的问题
+
+### 其他
+
+- 升级React native到v0.65.1
+- 升级播放模块`react-native-track-player`到v2版本，优化通知栏歌曲信息显示逻辑
+
 ## [0.7.1](https://github.com/lyswhut/lx-music-mobile/compare/v0.7.0...v0.7.1) - 2021-08-23
 
 ### 修复

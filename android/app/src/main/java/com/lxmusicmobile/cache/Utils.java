@@ -13,14 +13,10 @@ public class Utils {
    * @return
    */
   static public long getDirSize(File dir) {
-    if (dir == null) {
-      return 0;
-    }
-    if (!dir.isDirectory()) {
-      return 0;
-    }
+    if (dir == null || !dir.isDirectory()) return 0;
     long dirSize = 0;
     File[] files = dir.listFiles();
+    if (files == null) return dirSize;
     for (File file : files) {
       if (file.isFile()) {
         dirSize += file.length();
@@ -59,21 +55,22 @@ public class Utils {
    */
   static public int clearCacheFolder(File dir, long curTime) {
     int deletedFiles = 0;
-    if (dir != null && dir.isDirectory()) {
-      try {
-        for (File child : dir.listFiles()) {
-          if (child.isDirectory()) {
-            deletedFiles += clearCacheFolder(child, curTime);
-          }
-          if (child.lastModified() < curTime) {
-            if (child.delete()) {
-              deletedFiles++;
-            }
+    if (dir == null || !dir.isDirectory()) return deletedFiles;
+    File[] files = dir.listFiles();
+    if (files == null) return deletedFiles;
+    try {
+      for (File child : files) {
+        if (child.isDirectory()) {
+          deletedFiles += clearCacheFolder(child, curTime);
+        }
+        if (child.lastModified() < curTime) {
+          if (child.delete()) {
+            deletedFiles++;
           }
         }
-      } catch (Exception e) {
-        e.printStackTrace();
       }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
     return deletedFiles;
   }

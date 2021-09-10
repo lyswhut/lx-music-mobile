@@ -7,7 +7,7 @@ const logTools = {
   tempLog: [],
   writeLog(msg) {
     console.log(msg)
-    appendFile(logPath, '\n\n' + msg)
+    appendFile(logPath, '\n' + msg)
   },
   async initLogFile() {
     try {

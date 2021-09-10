@@ -4,6 +4,7 @@ import { getSyncHost } from '@/utils/tools'
 import { action as commonAction } from '@/store/modules/common'
 import { getStore } from '@/store'
 import { SYNC_CODE } from './config'
+import { log } from '@/utils/log'
 
 const handleConnect = async authCode => {
   const hostInfo = await getSyncHost()
@@ -35,6 +36,7 @@ const connect = authCode => {
       status: false,
       message: err.message,
     }))
+    log.warn(err.message)
     return Promise.reject(err)
   })
 }

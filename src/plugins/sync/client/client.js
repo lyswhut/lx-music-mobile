@@ -4,6 +4,7 @@ import * as modules from '../modules'
 import { action as commonAction } from '@/store/modules/common'
 import { getStore } from '@/store'
 import syncList from './syncList'
+import { log } from '@/utils/log'
 
 const handleConnection = (socket) => {
   for (const module of Object.values(modules)) {
@@ -31,6 +32,7 @@ export const connect = (host, port, keyInfo) => {
       await syncList(socket)
     } catch (err) {
       console.log(err)
+      log.error(err.stack)
       return
     }
     handleConnection(socket)

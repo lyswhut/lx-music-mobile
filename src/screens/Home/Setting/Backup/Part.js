@@ -53,6 +53,7 @@ const importList = async path => {
   try {
     listData = JSON.parse(await handleReadFile(path))
   } catch (error) {
+    log.error(error.stack)
     return
   }
   console.log(listData.type)
@@ -76,7 +77,7 @@ const handleSetList = (setList, lists) => {
   }
   return setList(list).then(() => handleSetList(setList, lists)).catch(err => {
     toast(err.message)
-    log.error(err.message)
+    log.error(err.stack)
     return handleSetList(setList, lists)
   })
 }
@@ -166,8 +167,8 @@ export default memo(() => {
           exportList(allList, path).then(() => {
             toast(t('setting_backup_part_export_list_tip_success'))
           }).catch(err => {
-            console.log(err)
-            toast(t('setting_backup_part_export_list_tip_failed'))
+            log.error(err.stack)
+            toast(t('setting_backup_part_export_list_tip_failed') + ': ' + err.message)
           })
         })
         break

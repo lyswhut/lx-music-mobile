@@ -11,6 +11,7 @@ import {
   saveListSort,
 } from '@/utils/tools'
 import { list as listSync } from '@/plugins/sync'
+import { log } from '@/utils/log'
 
 export const TYPES = {
   initList: null,
@@ -53,7 +54,10 @@ export const initList = listData => async(dispatch, getState) => {
   } else {
     try {
       listData = await getAllListData()
-    } catch (err) { return }
+    } catch (err) {
+      log.error(err.stack)
+      return
+    }
     defaultList = listData.defaultList
     loveList = listData.loveList
     userList = listData.userList

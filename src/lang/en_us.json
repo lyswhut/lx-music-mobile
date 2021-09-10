@@ -72,6 +72,7 @@
   "setting_backup_part": "List data (common with PC-side list backup files)",
   "setting_backup_part_export_list": "Export list",
   "setting_backup_part_export_list_desc": "Select the save location of the playlist backup file",
+  "setting_backup_part_export_list_tip_failed": "Playlist export failed",
   "setting_backup_part_export_list_tip_success": "Export successful",
   "setting_backup_part_export_list_tip_zip": "📦The file is being packaged...\nIf the file is too large, it may take some time⏳",
   "setting_backup_part_export_setting": "Export settings",

@@ -77,7 +77,7 @@ const handleSetList = (setList, lists) => {
   }
   return setList(list).then(() => handleSetList(setList, lists)).catch(err => {
     toast(err.message)
-    log.error(err.stack)
+    log.error(err.message)
     return handleSetList(setList, lists)
   })
 }
@@ -167,7 +167,7 @@ export default memo(() => {
           exportList(allList, path).then(() => {
             toast(t('setting_backup_part_export_list_tip_success'))
           }).catch(err => {
-            log.error(err.stack)
+            log.error(err.message)
             toast(t('setting_backup_part_export_list_tip_failed') + ': ' + err.message)
           })
         })

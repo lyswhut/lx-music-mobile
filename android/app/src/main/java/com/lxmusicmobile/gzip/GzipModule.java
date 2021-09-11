@@ -1,5 +1,8 @@
 package com.lxmusicmobile.gzip;
 
+import static org.apache.commons.compress.compressors.CompressorStreamFactory.GZIP;
+
+import com.facebook.common.internal.Throwables;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -19,8 +22,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import static org.apache.commons.compress.compressors.CompressorStreamFactory.GZIP;
 
 // https://github.com/FWC1994/react-native-gzip/blob/main/android/src/main/java/com/reactlibrary/GzipModule.java
 public class GzipModule extends ReactContextBaseJavaModule {
@@ -61,7 +62,7 @@ public class GzipModule extends ReactContextBaseJavaModule {
       promise.resolve(map);
     } catch (IOException | CompressorException e) {
       e.printStackTrace();
-      promise.reject("-2", "unGzip error");
+      promise.reject("-2", "unGzip error: " + Throwables.getStackTraceAsString(e));
     }
   }
 
@@ -96,7 +97,7 @@ public class GzipModule extends ReactContextBaseJavaModule {
       promise.resolve(map);
     } catch (IOException e) {
       e.printStackTrace();
-      promise.reject("-2", "gzip error");
+      promise.reject("-2", "gzip error: " + source.length() + "\nstack: " + Throwables.getStackTraceAsString(e));
     }
   }
 }

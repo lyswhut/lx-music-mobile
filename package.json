@@ -62,7 +62,7 @@
     "react-native-pager-view": "^5.4.1",
     "react-native-randombytes": "^3.6.1",
     "react-native-splash-screen": "^3.2.0",
-    "react-native-track-player": "git+https://github.com/lyswhut/react-native-track-player.git#8a32b5ee333b82ab10435c15c6a79ca031054af4",
+    "react-native-track-player": "git+https://github.com/lyswhut/react-native-track-player.git#48e273d0222f5bfa4306a3dc8485914787cc4a12",
     "react-native-vector-icons": "^8.1.0",
     "react-redux": "^7.2.5",
     "readable-stream": "1.0.33",

@@ -1,16 +1,17 @@
 package cn.toside.music.mobile;
 
 import android.content.Context;
+
 import com.facebook.react.PackageList;
+import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.ReactNativeHost;
+import com.facebook.react.ReactPackage;
 import com.lxmusicmobile.cache.CachePackage;
 import com.lxmusicmobile.gzip.GzipPackage;
 import com.lxmusicmobile.lyric.LyricPackage;
 import com.lxmusicmobile.utils.UtilsPackage;
 import com.reactnativenavigation.NavigationApplication;
-import com.facebook.react.ReactInstanceManager;
-import com.facebook.react.ReactNativeHost;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
-import com.facebook.react.ReactPackage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;

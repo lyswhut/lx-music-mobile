@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react'
-import { View, StyleSheet, FlatList, Text } from 'react-native'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
+import { View, StyleSheet } from 'react-native'
 import { readDir, externalStorageDirectoryPath } from '@/utils/fs'
 import { toast } from '@/utils/tools'
-import { useTranslation } from '@/plugins/i18n'
+// import { useTranslation } from '@/plugins/i18n'
 import { useGetter, useDispatch } from '@/store'
 import Modal from '@/components/common/Modal'
 

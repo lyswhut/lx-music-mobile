@@ -25,6 +25,26 @@ const handleExitApp = async() => {
   exitApp()
 }
 
+const updateMetaData = async isPlaying => {
+  if (isPlaying == global.playInfo.isPlaying) {
+    const duration = await TrackPlayer.getDuration()
+    // console.log('currentIsPlaying', global.playInfo.duration, duration)
+    if (global.playInfo.duration != duration) {
+      global.playInfo.duration = duration
+      const trackInfo = await getCurrentTrack()
+      if (trackInfo && global.playInfo.currentPlayMusicInfo) {
+        delayUpdateMusicInfo(buildTrack({ musicInfo: global.playInfo.currentPlayMusicInfo, type: trackInfo.type, url: trackInfo.url, duration }))
+      }
+    }
+  } else {
+    const [duration, trackInfo] = await Promise.all([TrackPlayer.getDuration(), getCurrentTrack()])
+    global.playInfo.duration = duration
+    if (trackInfo && global.playInfo.currentPlayMusicInfo) {
+      delayUpdateMusicInfo(buildTrack({ musicInfo: global.playInfo.currentPlayMusicInfo, type: trackInfo.type, url: trackInfo.url, duration }))
+    }
+  }
+}
+
 export default async() => {
   if (isInitialized) return
 
@@ -58,18 +78,18 @@ export default async() => {
     handleExitApp()
   })
 
-  TrackPlayer.addEventListener(TPEvent.RemoteDuck, async({ permanent, paused, ducking }) => {
-    console.log('remote-duck')
-    if (paused) {
-      store.dispatch(playerAction.setStatus({ status: STATUS.pause, text: '已暂停' }))
-      lrcPause()
-    } else {
-      store.dispatch(playerAction.setStatus({ status: STATUS.playing, text: '播放中...' }))
-      TrackPlayer.getPosition().then(position => {
-        lrcPlay(position * 1000)
-      })
-    }
-  })
+  // TrackPlayer.addEventListener(TPEvent.RemoteDuck, async({ permanent, paused, ducking }) => {
+  //   console.log('remote-duck')
+  //   if (paused) {
+  //     store.dispatch(playerAction.setStatus({ status: STATUS.pause, text: '已暂停' }))
+  //     lrcPause()
+  //   } else {
+  //     store.dispatch(playerAction.setStatus({ status: STATUS.playing, text: '播放中...' }))
+  //     TrackPlayer.getPosition().then(position => {
+  //       lrcPlay(position * 1000)
+  //     })
+  //   }
+  // })
 
   TrackPlayer.addEventListener(TPEvent.PlaybackError, async err => {
     console.log('playback-error', err)
@@ -156,23 +176,7 @@ export default async() => {
     if (global.isPlayedExit) return handleExitApp()
 
     // console.log('currentIsPlaying', currentIsPlaying, global.playInfo.isPlaying)
-    if (currentIsPlaying == global.playInfo.isPlaying) {
-      const duration = await TrackPlayer.getDuration()
-      // console.log('currentIsPlaying', global.playInfo.duration, duration)
-      if (global.playInfo.duration != duration) {
-        global.playInfo.duration = duration
-        const trackInfo = await getCurrentTrack()
-        if (trackInfo && global.playInfo.currentPlayMusicInfo) {
-          delayUpdateMusicInfo(buildTrack({ musicInfo: global.playInfo.currentPlayMusicInfo, type: trackInfo.type, url: trackInfo.url, duration }))
-        }
-      }
-    } else {
-      const [duration, trackInfo] = await Promise.all([TrackPlayer.getDuration(), getCurrentTrack()])
-      global.playInfo.duration = duration
-      if (trackInfo && global.playInfo.currentPlayMusicInfo) {
-        delayUpdateMusicInfo(buildTrack({ musicInfo: global.playInfo.currentPlayMusicInfo, type: trackInfo.type, url: trackInfo.url, duration }))
-      }
-    }
+    await updateMetaData(currentIsPlaying)
   })
   TrackPlayer.addEventListener(TPEvent.PlaybackTrackChanged, async info => {
     // console.log('nextTrack====>', info)

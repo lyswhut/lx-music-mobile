@@ -6,6 +6,20 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.8.1](https://github.com/lyswhut/lx-music-mobile/compare/v0.8.0...v0.8.1) - 2021-09-16
+
+### 优化
+
+- 添加更多错误信息的记录
+
+### 修复
+
+- 修复潜在的获取缓存大小报错问题
+- 修复mg排行榜无法加载的问题
+- 修复列表导出失败时的提示信息缺失翻译的问题
+- 修复 Android 11 导入列表时，不显示备份文件的问题
+- 修复其他应用播放声音时，软件临时暂停播放后通知栏的状态仍显示正在播放的问题
+
 ## [0.8.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.7.1...v0.8.0) - 2021-09-06
 
 ### 新增

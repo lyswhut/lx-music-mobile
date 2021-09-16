@@ -126,6 +126,7 @@
   "setting_other_log_btn_clean": "清空",
   "setting_other_log_btn_hide": "关闭",
   "setting_other_log_btn_show": "查看日志",
+  "setting_other_log_sync_error_log": "记录同步连接失败错误日志",
   "setting_other_log_tip_clean_success": "日志清理完成",
   "setting_other_log_tip_null": "日志是空的哦~",
   "setting_play": "播放设置",

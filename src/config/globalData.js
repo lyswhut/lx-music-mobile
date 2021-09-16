@@ -28,3 +28,6 @@ global.playInfo = {
   currentPlayMusicInfo: null,
   duration: 0,
 }
+
+global.isEnableSyncLog = false
+

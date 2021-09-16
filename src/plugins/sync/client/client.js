@@ -43,6 +43,7 @@ export const connect = (host, port, keyInfo) => {
   })
   socket.on('connect_error', (err) => {
     console.log(err.message)
+    if (global.isEnableSyncLog) log.error(err.stack)
     const store = getStore()
     store.dispatch(commonAction.setSyncStatus({
       status: false,

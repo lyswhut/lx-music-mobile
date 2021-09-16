@@ -126,6 +126,7 @@
   "setting_other_log_btn_clean": "Clear",
   "setting_other_log_btn_hide": "Close",
   "setting_other_log_btn_show": "View log",
+  "setting_other_log_sync_error_log": "Record synchronization connection failure error log",
   "setting_other_log_tip_clean_success": "Log cleaning completed",
   "setting_other_log_tip_null": "The log is empty~",
   "setting_play": "Play",

@@ -9,6 +9,7 @@ import Button from '../components/Button'
 import { useTranslation } from '@/plugins/i18n'
 import { toast } from '@/utils/tools'
 import ConfirmAlert from '@/components/common/ConfirmAlert'
+import CheckBoxItem from '../components/CheckBoxItem'
 
 export default memo(() => {
   const { t } = useTranslation()
@@ -16,13 +17,15 @@ export default memo(() => {
   const [logText, setLogText] = useState('')
   const theme = useGetter('common', 'theme')
   const isUnmountedRef = useRef(true)
+  const [isEnableSyncErrorLog, setIsEnableSyncErrorLog] = useState(false)
 
   const getErrorLog = () => {
     getLogs().then(log => {
       if (isUnmountedRef.current) return
-      const logArr = log.split('\n\n')
+      const logArr = log.split(/^----lx log----\n|\n----lx log----\n|\n----lx log----$/)
+      // console.log(logArr)
       logArr.reverse()
-      setLogText(logArr.join('\n').replace(/\n+$/, ''))
+      setLogText(logArr.join('\n\n').replace(/^\n+|\n+$/, ''))
     })
   }
 
@@ -42,9 +45,15 @@ export default memo(() => {
     })
   }
 
+  const handleSetEnableSyncErrorLog = enable => {
+    setIsEnableSyncErrorLog(enable)
+    global.isEnableSyncLog = enable
+  }
+
 
   useEffect(() => {
     isUnmountedRef.current = false
+    setIsEnableSyncErrorLog(global.isEnableSyncLog)
     return () => {
       isUnmountedRef.current = true
     }
@@ -54,6 +63,9 @@ export default memo(() => {
   return (
     <>
       <SubTitle title={t('setting_other_log')}>
+        <View style={{ paddingTop: 10, paddingBottom: 15, marginLeft: -25 }}>
+          <CheckBoxItem check={isEnableSyncErrorLog} label={t('setting_other_log_sync_error_log')} onChange={handleSetEnableSyncErrorLog} />
+        </View>
         <View style={styles.btn}>
           <Button onPress={openLogModal}>{t('setting_other_log_btn_show')}</Button>
         </View>

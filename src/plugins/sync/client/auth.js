@@ -33,7 +33,6 @@ const codeAuth = async(host, port, serverId, authCode) => {
     try {
       msg = aesDecrypt(text, key, iv)
     } catch (err) {
-      log.warn(err.stack)
       throw new Error(SYNC_CODE.authFailed)
     }
     if (!msg) return Promise.reject(new Error(SYNC_CODE.authFailed))
@@ -50,7 +49,6 @@ const keyAuth = async(host, port, keyInfo) => {
     try {
       msg = aesDecrypt(text, keyInfo.key, keyInfo.iv)
     } catch (err) {
-      log.warn(err.stack)
       throw new Error(SYNC_CODE.authFailed)
     }
     if (msg != SYNC_CODE.helloMsg) return Promise.reject(new Error(SYNC_CODE.authFailed))

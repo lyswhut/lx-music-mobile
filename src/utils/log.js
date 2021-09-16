@@ -7,13 +7,13 @@ const logTools = {
   tempLog: [],
   writeLog(msg) {
     console.log(msg)
-    appendFile(logPath, '\n' + msg)
+    appendFile(logPath, '\n----lx log----\n' + msg)
   },
   async initLogFile() {
     try {
       let isExists = await existsFile(logPath)
       if (!isExists) await writeFile(logPath, '')
-      if (this.tempLog) this.writeLog(this.tempLog.map(m => `${m.time} ${m.type} ${m.text}`).join('\n'))
+      if (this.tempLog.length) this.writeLog(this.tempLog.map(m => `${m.time} ${m.type} ${m.text}`).join('\n----lx log----\n'))
       this.tempLog = null
     } catch (err) {
       console.error(err)

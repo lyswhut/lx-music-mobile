@@ -36,7 +36,15 @@ const connect = authCode => {
       status: false,
       message: err.message,
     }))
-    log.warn(err.message)
+    switch (err.message) {
+      case SYNC_CODE.connectServiceFailed:
+      case SYNC_CODE.missingAuthCode:
+        break
+      default:
+        log.warn(err.message)
+        break
+    }
+
     return Promise.reject(err)
   })
 }

@@ -1,4 +1,3 @@
-const { log } = require('@/utils/log')
 const fs = require('fs')
 const path = require('path')
 
@@ -7,12 +6,10 @@ exports.jp = (...p) => p.length ? path.join(__dirname, ...p) : __dirname
 exports.copyFile = (source, target) => new Promise((resolve, reject) => {
   const rd = fs.createReadStream(source)
   rd.on('error', err => {
-    log.error(err.stack)
     reject(err)
   })
   const wr = fs.createWriteStream(target)
   wr.on('error', err => {
-    log.error(err.stack)
     reject(err)
   })
   wr.on('close', () => resolve())

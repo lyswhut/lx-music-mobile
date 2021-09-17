@@ -187,7 +187,7 @@ export default async() => {
       console.log('====TEMP PAUSE====')
       TrackPlayer.pause()
       if (retryTrack) {
-        if (retryTrack.id == retryGetUrlId) {
+        if (retryTrack.musicId == retryGetUrlId) {
           if (++retryGetUrlNum > 1) {
             store.dispatch(playerAction.playNext())
             retryGetUrlId = null
@@ -195,10 +195,10 @@ export default async() => {
             return
           }
         } else {
-          retryGetUrlId = retryTrack.id
+          retryGetUrlId = retryTrack.musicId
           retryGetUrlNum = 0
         }
-        store.dispatch(playerAction.refreshMusicUrl(retryTrack.original, errorTime))
+        store.dispatch(playerAction.refreshMusicUrl(global.playInfo.currentPlayMusicInfo, errorTime))
       } else {
         store.dispatch(playerAction.playNext())
       }

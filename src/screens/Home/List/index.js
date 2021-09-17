@@ -14,7 +14,7 @@ import { getListScrollPosition, saveListScrollPosition, toast } from '@/utils/to
 import { useTranslation } from '@/plugins/i18n'
 import { LIST_ITEM_HEIGHT } from '@/config/constant'
 import MusicPositionModal from './components/MusicPositionModal'
-import { BorderWidths } from '@/theme'
+// import { BorderWidths } from '@/theme'
 import ListSearchBar from './components/ListSearchBar'
 import { debounceSearchList } from './utils'
 import { useLayout } from '@/utils/hooks'
@@ -56,7 +56,7 @@ const List = () => {
   const currentList = useMemo(() => currentListRef.current = (allList.find(l => l.id == activeListId) || allList[0]), [allList, activeListId])
   const activeItemId = useMemo(() => currentList.list && activeIndex > -1 && currentList.list[activeIndex] ? String(currentList.list[activeIndex].songmid) : null, [currentList, activeIndex])
   const setPlayList = useDispatch('player', 'setList')
-  const playMusic = useDispatch('player', 'playMusic')
+  // const playMusic = useDispatch('player', 'playMusic')
   const setTempPlayList = useDispatch('player', 'setTempPlayList')
   const removeListItem = useDispatch('list', 'listRemove')
   const removeListMultiItem = useDispatch('list', 'listRemoveMultiple')
@@ -81,18 +81,18 @@ const List = () => {
   }, [playListInfo])
 
   const handlePlay = useCallback(async(data, index) => {
-    if (playListInfoRef.current.id != activeListIdRef.current) {
-      setPlayList({
-        list: currentListRef.current,
-        index,
-      })
-    } else {
-      playMusic({
-        musicInfo: data,
-        listId: activeListIdRef.current,
-      })
-    }
-  }, [setPlayList, playMusic])
+    // if (playListInfoRef.current.id != activeListIdRef.current) {
+    setPlayList({
+      list: currentListRef.current,
+      index,
+    })
+    // } else {
+    //   playMusic({
+    //     musicInfo: data,
+    //     listId: activeListIdRef.current,
+    //   })
+    // }
+  }, [setPlayList])
 
   const handleSelect = useCallback((item, index) => {
     if (selectModeRef.current == 'single') {

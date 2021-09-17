@@ -8,12 +8,12 @@ import { useGetter, useDispatch } from '@/store'
 const DefaultBar = memo(() => {
   const theme = useGetter('common', 'theme')
 
-  return <View style={{ ...styles.progressBar, backgroundColor: theme.borderColor2, position: 'absolute', width: '100%', left: 0, top: 0 }}></View>
+  return <View style={{ ...styles.progressBar, backgroundColor: theme.normal75, position: 'absolute', width: '100%', left: 0, top: 0 }}></View>
 })
 
 const BufferedBar = memo(({ bufferedProgress }) => {
   const theme = useGetter('common', 'theme')
-  return <View style={{ ...styles.progressBar, backgroundColor: theme.borderColor2, position: 'absolute', width: bufferedProgress + '%', left: 0, top: 0 }}></View>
+  return <View style={{ ...styles.progressBar, backgroundColor: theme.secondary45, position: 'absolute', width: bufferedProgress + '%', left: 0, top: 0 }}></View>
 })
 
 const PreassBar = memo(({ duration }) => {

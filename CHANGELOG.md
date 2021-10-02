@@ -6,6 +6,18 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.8.2](https://github.com/lyswhut/lx-music-mobile/compare/v0.8.1...v0.8.2) - 2021-10-02
+
+### 优化
+
+- 缓冲进度条颜色
+- 优化数据存储，若需要存储的数据过大时会将数据切片后存储，现在存储大列表不会导致列表丢失了
+
+### 修复
+
+- 修复随机播放模式下在同列表切其他歌曲不会清空已播放列表的问题
+- 修复歌曲播放出错时的URL刷新问题
+
 ## [0.8.1](https://github.com/lyswhut/lx-music-mobile/compare/v0.8.0...v0.8.1) - 2021-09-16
 
 ### 优化

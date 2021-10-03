@@ -65,7 +65,7 @@ const handleSortList = (list, keyword) => {
 export const debounceSearchList = debounce((text, list, callback) => {
   const reslutList = []
   if (!text.length) return
-  let rxp = new RegExp(text.split('').join('.*') + '.*', 'i')
+  let rxp = new RegExp(text.split('').map(s => s.replace(/[.*+?^${}()|[\]\\]/, '\\$&')).join('.*') + '.*', 'i')
   for (const item of list) {
     if (rxp.test(`${item.name}${item.singer}${item.albumName ? item.albumName : ''}`)) reslutList.push(item)
   }

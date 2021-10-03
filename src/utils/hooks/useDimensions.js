@@ -13,9 +13,8 @@ export default () => {
       setDimensions({ window: getWindowSise(window), screen })
     }
 
-    const removeEvent = Dimensions.addEventListener('change', onChange)
-
-    return () => removeEvent()
+    const changeEvent = Dimensions.addEventListener('change', onChange)
+    return () => changeEvent.remove()
   }, [])
 
   return dimensions

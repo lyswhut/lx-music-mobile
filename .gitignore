@@ -29,6 +29,7 @@ build/
 local.properties
 keystore.properties
 *.iml
+*.hprof
 
 # node.js
 #

@@ -69,6 +69,6 @@ export const debounceSearchList = debounce((text, list, callback) => {
   for (const item of list) {
     if (rxp.test(`${item.name}${item.singer}${item.albumName ? item.albumName : ''}`)) reslutList.push(item)
   }
-  console.log(reslutList)
+  // console.log(reslutList)
   callback(handleSortList(reslutList, text))
 }, 200)

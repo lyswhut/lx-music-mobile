@@ -122,7 +122,7 @@ export const getDataMultiple = async keys => {
 
 export const setDataMultiple = async datas => {
   const allData = []
-  for (const [key, value] of datas) {
+  for (const { key, value } of datas) {
     buildData(key, value, allData)
   }
   try {

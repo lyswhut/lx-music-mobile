@@ -23,4 +23,5 @@ module.exports = {
   settings: {
     'html/html-extensions': ['.jsx'],
   },
+  ignorePatterns: ['vendors', '*.min.js'],
 }

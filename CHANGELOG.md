@@ -6,6 +6,17 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.8.3](https://github.com/lyswhut/lx-music-mobile/compare/v0.8.2...v0.8.3) - 2021-10-07
+
+### 修复
+
+- 修复我的列表搜索无法搜索小括号、中括号等字符，并会导致应用崩溃的问题
+- 修复使用同步功能同步完成后，列表没有被保存，导致下次再连接同步时被同步新增的歌曲被移除的问题（此问题由v0.8.2的存储切片改造引入的）
+
+### 其他
+
+- 更新React native到v0.66.0
+
 ## [0.8.2](https://github.com/lyswhut/lx-music-mobile/compare/v0.8.1...v0.8.2) - 2021-10-02
 
 ### 优化

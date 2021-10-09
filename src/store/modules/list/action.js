@@ -292,8 +292,13 @@ export const removeUserList = ({ id, isSync }) => async(dispatch, getState) => {
   dispatch(playerAction.checkPlayList([id]))
 }
 
+const getOtherSourcePromises = new Map()
+
 export const getOtherSource = ({ musicInfo, id }) => (dispatch, getState) => {
-  return (musicInfo.otherSource && musicInfo.otherSource.length ? Promise.resolve(musicInfo.otherSource) : findMusic(musicInfo)).then(otherSource => {
+  if (musicInfo.otherSource?.length) return Promise.resolve(musicInfo.otherSource)
+  let key = `${musicInfo.source}_${musicInfo.songmid}`
+  if (getOtherSourcePromises.has(key)) return getOtherSourcePromises.get(key)
+  const promise = findMusic(musicInfo).then(otherSource => {
     const targetList = global.allList[id]
     if (targetList) {
       const index = targetList.indexOf(musicInfo)
@@ -304,8 +309,11 @@ export const getOtherSource = ({ musicInfo, id }) => (dispatch, getState) => {
         })
       }
     }
+    if (getOtherSourcePromises.has(key)) getOtherSourcePromises.delete(key)
     return otherSource
   })
+  getOtherSourcePromises.set(key, promise)
+  return promise
 }
 
 export const setUserListName = ({ id, name, isSync }) => async(dispatch, getState) => {

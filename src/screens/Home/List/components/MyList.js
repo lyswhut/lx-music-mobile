@@ -10,7 +10,7 @@ import { BorderWidths } from '@/theme'
 import Menu from '@/components/common/Menu'
 import ConfirmAlert from '@/components/common/ConfirmAlert'
 import Input from '@/components/common/Input'
-import { getListScrollPosition, saveListScrollPosition } from '@/utils/tools'
+import { getListScrollPosition, saveListScrollPosition, toast } from '@/utils/tools'
 import { LIST_SCROLL_POSITION_KEY } from '@/config/constant'
 import musicSdk from '@/utils/music'
 
@@ -95,14 +95,18 @@ const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) =>
   }, [getBoardListAll, getListDetailAll])
   const handleSyncSourceList = useCallback(async index => {
     const targetListInfo = userList[index]
-    const list = await fetchList(targetListInfo.id, targetListInfo.source, targetListInfo.sourceListId)
+    const list = await fetchList(targetListInfo.id, targetListInfo.source, targetListInfo.sourceListId).catch(err => {
+      toast(t('list_update_error'))
+      return Promise.reject(err)
+    })
     // console.log(targetListInfo.list.length, list.length)
     handleCancelMultiSelect()
     setList({
       ...targetListInfo,
       list,
     })
-  }, [fetchList, handleCancelMultiSelect, setList, userList])
+    toast(t('list_update_success'))
+  }, [fetchList, handleCancelMultiSelect, setList, t, userList])
   const handleMenuPress = useCallback(({ action }) => {
     switch (action) {
       case 'rename':

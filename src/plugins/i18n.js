@@ -17,6 +17,9 @@ for (const { id, name, translation } of langs) {
   })
   supportedLngs.push(id)
 }
+
+global.i18n = i18n
+
 // console.log(resources)
 export const init = (lang = 'zh_cn') => {
   return i18n

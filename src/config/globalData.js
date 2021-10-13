@@ -1,6 +1,8 @@
 import { version } from '../../package.json'
 process.versions.app = version
 
+global.i18n = null
+
 global.playerStatus = {
   isInitialized: false,
   isRegisteredService: false,

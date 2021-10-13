@@ -28,7 +28,7 @@ export default {
     const { body, statusCode } = await _requestObj2.promise
     if (statusCode != 200 || body.result !== 'ok') throw new Error('获取热门评论失败')
     // console.log(body)
-    return { source: 'kw', comments: this.filterComment(body.rows) }
+    return { source: 'kw', comments: this.filterComment(body.rows), total: body.total, page, limit, maxPage: Math.ceil(body.total / limit) || 1 }
   },
   filterComment(rawList) {
     if (!rawList) return []
@@ -44,18 +44,20 @@ export default {
         likedCount: item.like_num,
         reply: [],
       }
-      return item.reply ? {
-        id: item.id,
-        rootId: item.reply.id,
-        text: item.reply.msg.split('\n'),
-        time: item.reply.time,
-        timeStr: dateFormat2(new Date(item.reply.time).getTime()),
-        userName: decodeURIComponent(item.reply.u_name),
-        avatar: item.reply.u_pic,
-        userId: item.reply.u_id,
-        likedCount: item.reply.like_num,
-        reply: [data],
-      } : data
+      return item.reply
+        ? {
+            id: item.id,
+            rootId: item.reply.id,
+            text: item.reply.msg.split('\n'),
+            time: item.reply.time,
+            timeStr: dateFormat2(new Date(item.reply.time).getTime()),
+            userName: decodeURIComponent(item.reply.u_name),
+            avatar: item.reply.u_pic,
+            userId: item.reply.u_id,
+            likedCount: item.reply.like_num,
+            reply: [data],
+          }
+        : data
     })
   },
 }

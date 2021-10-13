@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import PlayModeBtn from './PlayModeBtn'
 import MusicAddBtn from './MusicAddBtn'
 import TimeoutExit from './TimeoutExit'
+import CommentBtn from './CommentBtn'
 
 export default () => {
   return (
@@ -10,6 +11,7 @@ export default () => {
       <TimeoutExit />
       <PlayModeBtn />
       <MusicAddBtn />
+      <CommentBtn />
     </View>
   )
 }

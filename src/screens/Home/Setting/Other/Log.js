@@ -64,7 +64,7 @@ export default memo(() => {
     <>
       <SubTitle title={t('setting_other_log')}>
         <View style={{ paddingTop: 10, paddingBottom: 15, marginLeft: -25 }}>
-          <CheckBoxItem check={isEnableSyncErrorLog} label={t('setting_other_log_sync_error_log')} onChange={handleSetEnableSyncErrorLog} />
+          <CheckBoxItem check={isEnableSyncErrorLog} label={t('setting_other_log_sync_log')} onChange={handleSetEnableSyncErrorLog} />
         </View>
         <View style={styles.btn}>
           <Button onPress={openLogModal}>{t('setting_other_log_btn_show')}</Button>

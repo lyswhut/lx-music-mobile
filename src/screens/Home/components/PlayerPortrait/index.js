@@ -10,7 +10,7 @@ import PlayInfo from './components/PlayInfo'
 import ControlBtn from './components/ControlBtn'
 
 
-export default memo(({ playNextModes }) => {
+export default memo(() => {
   // const { onLayout, ...layout } = useLayout()
   const { keyboardShown } = useKeyboard()
   const theme = useGetter('common', 'theme')
@@ -28,10 +28,10 @@ export default memo(({ playNextModes }) => {
         {(componentIds.playDetail || componentIds.songlistDetail) ? null : <PlayInfo />}
       </View>
       <View style={styles.right}>
-        <ControlBtn playNextModes={playNextModes} />
+        <ControlBtn />
       </View>
     </View>
-  ), [theme, componentIds, playNextModes])
+  ), [theme, componentIds])
 
   // console.log(layout)
 

@@ -4,7 +4,7 @@ import { getSyncHost } from '@/utils/tools'
 import { action as commonAction } from '@/store/modules/common'
 import { getStore } from '@/store'
 import { SYNC_CODE } from './config'
-import { log } from '@/utils/log'
+import log from '../log'
 
 const handleConnect = async authCode => {
   const hostInfo = await getSyncHost()
@@ -41,7 +41,7 @@ const connect = authCode => {
       case SYNC_CODE.missingAuthCode:
         break
       default:
-        log.warn(err.message)
+        log.r_warn(err.message)
         break
     }
 
@@ -50,6 +50,7 @@ const connect = authCode => {
 }
 
 const disconnect = (isResetStatus = true) => handleDisconnect().then(() => {
+  log.info('disconnect...')
   if (isResetStatus) {
     const store = getStore()
     store.dispatch(commonAction.setSyncStatus({
@@ -59,6 +60,7 @@ const disconnect = (isResetStatus = true) => handleDisconnect().then(() => {
   }
 }).catch(err => {
   const store = getStore()
+  log.error('disconnect error: ' + err.message)
   store.dispatch(commonAction.setSyncStatus({
     message: err.message,
   }))

@@ -5,7 +5,7 @@ import { useGetter, useDispatch } from '@/store'
 import { STATUS } from '@/store/modules/player'
 
 
-export default ({ playNextModes }) => {
+export default () => {
   const playStatus = useGetter('player', 'status')
   const playNext = useDispatch('player', 'playNext')
   const playPrev = useDispatch('player', 'playPrev')

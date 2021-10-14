@@ -4,7 +4,7 @@ import * as modules from '../modules'
 import { action as commonAction } from '@/store/modules/common'
 import { getStore } from '@/store'
 import syncList from './syncList'
-import { log } from '@/utils/log'
+import log from '../log'
 
 const handleConnection = (socket) => {
   for (const module of Object.values(modules)) {
@@ -26,16 +26,23 @@ export const connect = (host, port, keyInfo) => {
 
   socket.on('connect', async() => {
     console.log('connect')
+    log.info('connect')
     const store = getStore()
     global.syncKeyInfo = keyInfo
     try {
       await syncList(socket)
     } catch (err) {
       console.log(err)
-      log.error(err.stack)
+      log.r_error(err.stack)
+      store.dispatch(commonAction.setSyncStatus({
+        status: false,
+        message: err.message,
+      }))
       return
     }
+    log.info('sync list success')
     handleConnection(socket)
+    log.info('register list sync service success')
     store.dispatch(commonAction.setSyncStatus({
       status: true,
       message: '',
@@ -43,7 +50,7 @@ export const connect = (host, port, keyInfo) => {
   })
   socket.on('connect_error', (err) => {
     console.log(err.message)
-    if (global.isEnableSyncLog) log.error(err.stack)
+    log.error('connect error: ', err.stack)
     const store = getStore()
     store.dispatch(commonAction.setSyncStatus({
       status: false,
@@ -56,6 +63,7 @@ export const connect = (host, port, keyInfo) => {
   })
   socket.on('disconnect', (reason) => {
     console.log('disconnect', reason)
+    log.warn('disconnect: ', reason)
     const store = getStore()
     store.dispatch(commonAction.setSyncStatus({
       status: false,
@@ -91,6 +99,7 @@ export const connect = (host, port, keyInfo) => {
 
 export const disconnect = async() => {
   if (!socket) return
+  log.info('disconnecting...')
   await socket.close()
   socket = null
 }

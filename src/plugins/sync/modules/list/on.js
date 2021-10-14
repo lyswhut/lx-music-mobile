@@ -1,5 +1,6 @@
 import { getStore } from '@/store'
 import { decryptMsg } from '../../client/utils'
+import log from '../../log'
 import {
   setList,
   listAdd,
@@ -27,6 +28,7 @@ const handleListAction = enMsg => {
   const { action, data } = JSON.parse(decryptMsg(enMsg))
   if (typeof data == 'object') data.isSync = true
   console.log(action)
+  log.info(action)
 
   switch (action) {
     // case 'init_list':

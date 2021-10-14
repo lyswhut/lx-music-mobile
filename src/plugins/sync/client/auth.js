@@ -2,12 +2,13 @@ import { getSyncAuthKey, setSyncAuthKey } from '@/utils/tools'
 import { request, aesEncrypt, aesDecrypt } from './utils'
 import { getDeviceName } from '@/utils/utils'
 import { SYNC_CODE } from './config'
-import { log } from '@/utils/log'
+import log from '../log'
 
 
 const hello = (host, port) => request(`http://${host}:${port}/hello`)
   .then(text => text == SYNC_CODE.helloMsg)
   .catch(err => {
+    log.error('[auth] hello', err.message)
     console.log(err)
     return false
   })
@@ -18,6 +19,7 @@ const getServerId = (host, port) => request(`http://${host}:${port}/id`)
     return text.replace(SYNC_CODE.idPrefix, '')
   })
   .catch(err => {
+    log.error('[auth] getServerId', err.message)
     console.log(err)
     return false
   })
@@ -33,6 +35,7 @@ const codeAuth = async(host, port, serverId, authCode) => {
     try {
       msg = aesDecrypt(text, key, iv)
     } catch (err) {
+      log.error('[auth] codeAuth decryptMsg error', err.message)
       throw new Error(SYNC_CODE.authFailed)
     }
     if (!msg) return Promise.reject(new Error(SYNC_CODE.authFailed))
@@ -49,6 +52,7 @@ const keyAuth = async(host, port, keyInfo) => {
     try {
       msg = aesDecrypt(text, keyInfo.key, keyInfo.iv)
     } catch (err) {
+      log.error('[auth] keyAuth decryptMsg error', err.message)
       throw new Error(SYNC_CODE.authFailed)
     }
     if (msg != SYNC_CODE.helloMsg) return Promise.reject(new Error(SYNC_CODE.authFailed))

@@ -8,6 +8,7 @@
   "change_position_music_multi_title": "将已选的 {{num}} 首歌曲的位置调整到",
   "change_position_music_title": "将 {{name}} 的位置调整到",
   "change_position_tip": "请输入新的位置",
+  "collect": "收藏",
   "collect_songlist": "收藏歌单",
   "collect_success": "收藏成功",
   "collect_toplist": "收藏排行榜",

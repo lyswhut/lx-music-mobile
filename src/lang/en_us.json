@@ -8,6 +8,7 @@
   "change_position_music_multi_title": "Adjust the position of the selected {{num}} song to",
   "change_position_music_title": "Adjust the position of {{name}} to",
   "change_position_tip": "Please enter a new position",
+  "collect": "Collect",
   "collect_songlist": "Collection Songlist",
   "collect_success": "Collection success",
   "collect_toplist": "Collection Toplist",

@@ -55,6 +55,12 @@ export default memo(({ componentId, animated }) => {
   const { t } = useTranslation()
   const theme = useGetter('common', 'theme')
   const [total, setTotal] = useState({ hot: 0, new: 0 })
+  const setComponentId = useDispatch('common', 'setComponentId')
+
+  useEffect(() => {
+    setComponentId({ name: 'comment', id: componentId })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const tabs = useMemo(() => {
     return [

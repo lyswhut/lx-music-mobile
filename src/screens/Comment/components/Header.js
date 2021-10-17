@@ -15,7 +15,7 @@ export default memo(({ musicInfo }) => {
   const { t } = useTranslation()
 
   const back = () => {
-    pop(componentIds.playDetail)
+    pop(componentIds.comment)
   }
 
   return (

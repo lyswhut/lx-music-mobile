@@ -1,10 +1,11 @@
 import React, { memo, useMemo, useCallback, useEffect, useRef } from 'react'
 import { View, Text, StyleSheet, FlatList } from 'react-native'
 import { useGetter, useDispatch } from '@/store'
-import { useLayout } from '@/utils/hooks'
+// import { useLayout } from '@/utils/hooks'
 import { useLrcPlay, useLrcSet } from '@/plugins/lyric'
-import { log } from '@/utils/log'
-import { toast } from '@/utils/tools'
+// import { log } from '@/utils/log'
+// import { toast } from '@/utils/tools'
+import { onNavigationComponentDidDisappearEvent } from '@/navigation'
 
 const LrcLine = memo(({ lrc, line, activeLine }) => {
   const theme = useGetter('common', 'theme')
@@ -36,6 +37,7 @@ export default memo(() => {
   const lineRef = useRef(0)
   const linesRef = useRef([])
   const isFirstSetLrc = useRef(true)
+  const componentIds = useGetter('common', 'componentIds')
   // const playMusicInfo = useGetter('player', 'playMusicInfo')
   // const [imgUrl, setImgUrl] = useState(null)
   // const theme = useGetter('common', 'theme')
@@ -91,6 +93,18 @@ export default memo(() => {
       }
     }
   }, [])
+
+  useEffect(() => {
+    let listener
+    if (componentIds.comment) {
+      listener = onNavigationComponentDidDisappearEvent(componentIds.comment, () => {
+
+      })
+    }
+    return () => {
+      if (listener) listener.remove()
+    }
+  }, [componentIds])
 
   useEffect(() => {
     linesRef.current = lyricLines

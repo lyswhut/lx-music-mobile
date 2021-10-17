@@ -10,6 +10,7 @@ import PagerView from 'react-native-pager-view'
 import Pic from './Pic'
 import Lyric from './Lyric'
 import { screenkeepAwake, screenUnkeepAwake } from '@/utils/utils'
+import { onNavigationComponentDidDisappearEvent } from '@/navigation'
 
 const LyricPage = ({ activeIndex }) => {
   const initedRef = useRef(false)
@@ -29,9 +30,25 @@ const LyricPage = ({ activeIndex }) => {
 export default memo(({ componentId, animated }) => {
   const theme = useGetter('common', 'theme')
   const [pageIndex, setPageIndex] = useState(0)
+  const componentIds = useGetter('common', 'componentIds')
+  const currentIndexRef = useRef(pageIndex)
+
+  useEffect(() => {
+    let listener
+    if (componentIds.comment) {
+      if (currentIndexRef.current == 1) screenUnkeepAwake()
+      listener = onNavigationComponentDidDisappearEvent(componentIds.comment, () => {
+        if (currentIndexRef.current == 1) screenkeepAwake()
+      })
+    }
+    return () => {
+      if (listener) listener.remove()
+    }
+  }, [componentIds])
 
   const onPageSelected = useCallback(({ nativeEvent }) => {
     setPageIndex(nativeEvent.position)
+    currentIndexRef.current = nativeEvent.position
     if (nativeEvent.position == 1) {
       screenkeepAwake()
     } else {

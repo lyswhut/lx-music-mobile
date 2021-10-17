@@ -1,10 +1,10 @@
 import React, { memo, useMemo, useCallback, useEffect, useRef } from 'react'
 import { View, Text, StyleSheet, FlatList } from 'react-native'
 import { useGetter, useDispatch } from '@/store'
-import { useLayout } from '@/utils/hooks'
+// import { useLayout } from '@/utils/hooks'
 import { useLrcPlay, useLrcSet } from '@/plugins/lyric'
-import { log } from '@/utils/log'
-import { toast } from '@/utils/tools'
+// import { log } from '@/utils/log'
+// import { toast } from '@/utils/tools'
 
 const LrcLine = memo(({ lrc, line, activeLine }) => {
   const theme = useGetter('common', 'theme')

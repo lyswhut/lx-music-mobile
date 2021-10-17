@@ -240,7 +240,7 @@ export default memo(({
   ), [isListRefreshing, onRefresh, theme])
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <FlatList
         ref={flatListRef}
         style={styles.list}
@@ -284,9 +284,12 @@ export default memo(({
 
 
 const styles = StyleSheet.create({
-  list: {
+  container: {
     flex: 1,
     overflow: 'hidden',
+  },
+  list: {
+    flex: 1,
   },
   exitMultipleModeBtn: {
     height: 40,

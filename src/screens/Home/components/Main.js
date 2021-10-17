@@ -201,7 +201,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     backgroundColor: '#fff',
-    overflow: 'hidden',
   },
   pagerView: {
     flex: 1,

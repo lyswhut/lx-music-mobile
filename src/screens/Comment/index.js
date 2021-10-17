@@ -161,4 +161,7 @@ const styles = StyleSheet.create({
   pagerView: {
     flex: 1,
   },
+  pageStyle: {
+    overflow: 'hidden',
+  },
 })

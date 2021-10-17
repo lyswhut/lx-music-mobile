@@ -286,6 +286,7 @@ export default memo(({
 const styles = StyleSheet.create({
   list: {
     flex: 1,
+    overflow: 'hidden',
   },
   exitMultipleModeBtn: {
     height: 40,

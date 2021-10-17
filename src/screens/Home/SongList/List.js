@@ -126,6 +126,7 @@ export default ({ width }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    overflow: 'hidden',
   },
   list: {
     flex: 1,

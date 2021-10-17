@@ -25,6 +25,7 @@ export const init = (lang = 'zh_cn') => {
   return i18n
     .use(initReactI18next) // passes i18n down to react-i18next
     .init({
+      compatibilityJSON: 'v3', // https://www.i18next.com/misc/json-format
       // debug: true,
       resources,
       lng: lang,

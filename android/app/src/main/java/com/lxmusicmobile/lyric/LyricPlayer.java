@@ -85,7 +85,7 @@ public class LyricPlayer {
   }
 
   private void initLines() {
-    String[] linesStr = lyric.split("\n");
+    String[] linesStr = lyric.split("\r\n|\n|\r");
     lines = new ArrayList<HashMap>();
 
     HashMap linesMap = new HashMap<String, HashMap>();
@@ -137,7 +137,7 @@ public class LyricPlayer {
       }
     }
 
-    String[] translationLines = translationLyric.split("\n");
+    String[] translationLines = translationLyric.split("\r\n|\n|\r");
     for (String translationLine : translationLines) {
       String line = translationLine.trim();
       Matcher result = timePattern.matcher(line);

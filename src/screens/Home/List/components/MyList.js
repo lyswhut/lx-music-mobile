@@ -1,5 +1,5 @@
 import React, { memo, useMemo, useEffect, useCallback, useState, useRef } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, InteractionManager } from 'react-native'
 
 import { useGetter, useDispatch } from '@/store'
 import { useTranslation } from '@/plugins/i18n'
@@ -10,9 +10,39 @@ import { BorderWidths } from '@/theme'
 import Menu from '@/components/common/Menu'
 import ConfirmAlert from '@/components/common/ConfirmAlert'
 import Input from '@/components/common/Input'
-import { getListScrollPosition, saveListScrollPosition, toast } from '@/utils/tools'
-import { LIST_SCROLL_POSITION_KEY } from '@/config/constant'
+import { filterFileName } from '@/utils'
+import { getListScrollPosition, saveListScrollPosition, toast, handleSaveFile, handleReadFile, confirmDialog } from '@/utils/tools'
+import { LIST_SCROLL_POSITION_KEY, LXM_FILE_EXT_RXP } from '@/config/constant'
 import musicSdk from '@/utils/music'
+import ChoosePath from '@/components/common/ChoosePath'
+import { log } from '@/utils/log'
+
+const exportList = async(list, path) => {
+  const data = JSON.parse(JSON.stringify({
+    type: 'playListPart',
+    data: list,
+  }))
+  for (const item of data.data.list) {
+    if (item.otherSource) delete item.otherSource
+    if (item.lrc) delete item.lrc
+  }
+  try {
+    await handleSaveFile(path + `/lx_list_part_${filterFileName(list.name)}.lxmc`, data)
+  } catch (error) {
+    log.error(error.stack)
+  }
+}
+const importList = async path => {
+  let listData
+  try {
+    listData = await handleReadFile(path)
+  } catch (error) {
+    log.error(error.stack)
+    return
+  }
+  console.log(listData.type)
+  return listData
+}
 
 const ListItem = ({ onPress, name, id, showMenu, activeId, loading, index }) => {
   const theme = useGetter('common', 'theme')
@@ -35,6 +65,89 @@ const ListItem = ({ onPress, name, id, showMenu, activeId, loading, index }) => 
         <Icon name="dots-vertical" style={{ color: theme.normal35 }} size={16} />
       </TouchableOpacity>
     </View>
+  )
+}
+
+const ImportExport = ({ actionType, visible, hide, selectedListRef }) => {
+  const [title, setTitle] = useState('')
+  const [dirOnly, setDirOnly] = useState(false)
+  const setList = useDispatch('list', 'setList')
+  const createUserList = useDispatch('list', 'createUserList')
+  const { t } = useTranslation()
+  useEffect(() => {
+    switch (actionType) {
+      case 'import':
+        setTitle(t('list_import_part_desc'))
+        setDirOnly(false)
+        break
+      case 'export':
+      default:
+        setTitle(t('list_export_part_desc'))
+        setDirOnly(true)
+        break
+    }
+  }, [actionType, t])
+
+  const onConfirmPath = useCallback(path => {
+    hide()
+    switch (actionType) {
+      case 'import':
+        toast(t('setting_backup_part_import_list_tip_unzip'))
+        importList(path).then(async listData => {
+          if (listData.type != 'playListPart') return toast(t('list_import_part_tip_failed'))
+          const targetList = global.allList[listData.data.id]
+          if (targetList) {
+            const confirm = await confirmDialog({
+              message: t('list_import_part_confirm', { importName: listData.data.name, localName: targetList.name }),
+              cancelButtonText: t('list_import_part_button_cancel'),
+              confirmButtonText: t('list_import_part_button_confirm'),
+              bgClose: false,
+            })
+            if (confirm) {
+              listData.data.name = targetList.name
+              setList({
+                name: listData.data.name,
+                id: listData.data.id,
+                list: listData.data.list,
+                source: listData.data.source,
+                sourceListId: listData.data.sourceListId,
+              })
+              return
+            }
+            listData.data.id += `__${Date.now()}`
+          }
+          createUserList({
+            name: listData.data.name,
+            id: listData.data.id,
+            list: listData.data.list,
+            source: listData.data.source,
+            sourceListId: listData.data.sourceListId,
+            position: Math.max(selectedListRef.current.index, -1),
+          })
+        })
+        break
+      case 'export':
+        InteractionManager.runAfterInteractions(() => {
+          toast(t('setting_backup_part_export_list_tip_zip'))
+          exportList(selectedListRef.current.listInfo, path).then(() => {
+            toast(t('setting_backup_part_export_list_tip_success'))
+          }).catch(err => {
+            log.error(err.message)
+            toast(t('setting_backup_part_export_list_tip_failed') + ': ' + err.message)
+          })
+        })
+        break
+    }
+  }, [actionType, createUserList, hide, setList, t])
+
+  return (
+    <ChoosePath
+      visible={visible}
+      hide={hide}
+      title={title}
+      dirOnly={dirOnly}
+      filter={LXM_FILE_EXT_RXP}
+      onConfirm={onConfirmPath} />
   )
 }
 
@@ -61,6 +174,8 @@ const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) =>
   const getBoardListAll = useDispatch('top', 'getListAll')
   const getListDetailAll = useDispatch('songList', 'getListDetailAll')
   const [fetchingListStatus, setFetchingListStatus] = useState({})
+  const [isShowChoosePath, setShowChoosePath] = useState(false)
+  const [actionType, setActionType] = useState('')
 
   useEffect(() => {
     userListRef.current = userList
@@ -75,6 +190,29 @@ const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) =>
     removeUserList({ id })
   }, [removeUserList])
 
+  const getTargetListInfo = useCallback(index => {
+    let list
+    switch (index) {
+      case -2:
+        list = defaultList
+        break
+      case -1:
+        list = loveList
+        break
+      default:
+        list = userListRef.current[index]
+        break
+    }
+    return list
+  }, [defaultList, loveList])
+
+  const handleImportAndExportList = useCallback((type, index) => {
+    const list = getTargetListInfo(index)
+    if (!list) return
+    selectedListRef.current.listInfo = list
+    setActionType(type)
+    setShowChoosePath(true)
+  }, [getTargetListInfo])
 
   const hideMenu = useCallback(() => {
     setVisibleMenu(false)
@@ -113,6 +251,12 @@ const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) =>
         setListNameText(selectedListRef.current.name)
         setVisibleRename(true)
         break
+      case 'import':
+        handleImportAndExportList('import', selectedListRef.current.index)
+        break
+      case 'export':
+        handleImportAndExportList('export', selectedListRef.current.index)
+        break
       case 'sync':
         handleSyncSourceList(selectedListRef.current.index)
         break
@@ -120,26 +264,50 @@ const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) =>
 
       //   break
       case 'remove':
-        handleRemoveList(selectedListRef.current.id)
+        confirmDialog({
+          message: t('list_remove_tip', { name: selectedListRef.current.name }),
+          confirmButtonText: t('list_remove_tip_button'),
+        }).then(isRemove => {
+          if (!isRemove) return
+          handleRemoveList(selectedListRef.current.id)
+        })
         break
 
       default:
         break
     }
-  }, [handleRemoveList, handleSyncSourceList])
+  }, [handleImportAndExportList, handleRemoveList, handleSyncSourceList, t])
 
   const menus = useMemo(() => {
-    const list = userList[selectedListIndex]
+    let list
+    let rename = false
+    let sync = false
+    let remove = false
+    switch (selectedListIndex) {
+      case -2:
+        list = defaultList
+        break
+      case -1:
+        list = loveList
+        break
+      default:
+        list = userList[selectedListIndex]
+        rename = true
+        remove = true
+        sync = list.source && !!musicSdk[list.source].songList
+        break
+    }
     if (!list) return []
-    const source = list.source
 
     return [
-      { action: 'rename', label: t('list_rename') },
-      { action: 'sync', label: t('list_sync'), disabled: !source || !musicSdk[source].songList },
+      { action: 'rename', disabled: !rename, label: t('list_rename') },
+      { action: 'sync', disabled: !sync, label: t('list_sync') },
+      { action: 'import', label: t('list_import') },
+      { action: 'export', label: t('list_export') },
       // { action: 'changePosition', label: t('change_position') },
-      { action: 'remove', label: t('list_remove') },
+      { action: 'remove', disabled: !remove, label: t('list_remove') },
     ]
-  }, [selectedListIndex, userList, t])
+  }, [selectedListIndex, t, defaultList, loveList, userList])
 
   const handleCancelRename = useCallback(() => {
     setVisibleRename(false)
@@ -149,13 +317,6 @@ const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) =>
     setUserListName({ id: selectedListRef.current.id, name: listNameText })
     setVisibleRename(false)
   }, [listNameText, setUserListName])
-
-  const handleToggleDefaultList = () => {
-    handleToggleList(defaultList)
-  }
-  const handleToggleLoveList = () => {
-    handleToggleList(loveList)
-  }
 
   const handleScroll = useCallback(({ nativeEvent }) => {
     saveListScrollPosition(LIST_SCROLL_POSITION_KEY, nativeEvent.contentOffset.y)
@@ -167,7 +328,7 @@ const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) =>
   })
   const showMenu = useCallback((id, name, index, position) => {
     // console.log(position)
-    if (id == 'default' || id == 'love') return
+    // if (id == 'default' || id == 'love') return
     setButtonPosition({ ...position })
     selectedListRef.current.id = id
     selectedListRef.current.name = name
@@ -179,16 +340,8 @@ const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) =>
     <View style={{ ...styles.container, borderBottomColor: theme.secondary10 }}>
       <ScrollView style={{ flexShrink: 1, flexGrow: 0 }} onScroll={handleScroll} ref={scrollViewRef} keyboardShouldPersistTaps={'always'}>
         <View style={{ ...styles.listContainer, backgroundColor: theme.primary }} onStartShouldSetResponder={() => true}>
-          <View style={{ ...styles.listItem, borderBottomColor: theme.secondary45 }}>
-            <TouchableOpacity style={styles.listName} onPress={handleToggleDefaultList}>
-              <Text numberOfLines={1} style={{ color: theme.normal }}>{defaultList.name}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ ...styles.listItem, borderBottomColor: theme.secondary45 }}>
-            <TouchableOpacity style={styles.listName} onPress={handleToggleLoveList}>
-              <Text numberOfLines={1} style={{ color: theme.normal }}>{loveList.name}</Text>
-            </TouchableOpacity>
-          </View>
+          <ListItem name={defaultList.name} id={defaultList.id} index={-2} loading={false} onPress={() => handleToggleList(defaultList)} activeId={currentList.id} showMenu={showMenu} />
+          <ListItem name={loveList.name} id={loveList.id} index={-1} loading={false} onPress={() => handleToggleList(loveList)} activeId={currentList.id} showMenu={showMenu} />
           {userList.map(({ id, name }, index) => <ListItem key={id} name={name} id={id} index={index} loading={fetchingListStatus[id]} onPress={() => handleToggleList({ id, name })} activeId={currentList.id} showMenu={showMenu} />)}
         </View>
       </ScrollView>
@@ -208,6 +361,7 @@ const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) =>
           />
         </View>
       </ConfirmAlert>
+      <ImportExport actionType={actionType} visible={isShowChoosePath} hide={() => setShowChoosePath(false)} selectedListRef={selectedListRef} />
     </View>
   )
 })

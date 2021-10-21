@@ -241,7 +241,7 @@ const mutations = {
     return updateStateList({ ...state }, [listId])
   },
 
-  [TYPES.createUserList](state, { name, id, source, sourceListId }) {
+  [TYPES.createUserList](state, { name, id, source, sourceListId, position }) {
     let newList = state.userList.find(item => item.id === id)
     if (newList) return state
     const newState = { ...state }
@@ -252,7 +252,13 @@ const mutations = {
       source,
       sourceListId,
     }
-    newState.userList = [...state.userList, newList]
+    const userList = [...state.userList]
+    if (position == null) {
+      userList.push(newList)
+    } else {
+      userList.splice(position + 1, 0, newList)
+    }
+    newState.userList = userList
     allListUpdate(newList)
     return newState
   },

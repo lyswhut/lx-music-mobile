@@ -1,8 +1,10 @@
-import { Platform, NativeModules, ToastAndroid, BackHandler, Linking, Dimensions } from 'react-native'
+import { Platform, NativeModules, ToastAndroid, BackHandler, Linking, Dimensions, Alert } from 'react-native'
 import ExtraDimensions from 'react-native-extra-dimensions-android'
 import { getData, setData, getAllKeys, removeData, removeDataMultiple, setDataMultiple, getDataMultiple } from '@/plugins/storage'
 import { storageDataPrefix } from '@/config'
 import { throttle } from './index'
+import { gzip, ungzip } from '@/utils/gzip'
+import { readFile, writeFile, temporaryDirectoryPath, unlink } from '@/utils/fs'
 
 const playInfoStorageKey = storageDataPrefix.playInfo
 const listPositionPrefix = storageDataPrefix.listPosition
@@ -241,6 +243,57 @@ export const setSyncHost = async({ host, port }) => {
 }
 
 export const exitApp = BackHandler.exitApp
+
+export const handleSaveFile = async(path, data) => {
+  // if (!path.endsWith('.json')) path += '.json'
+  // const buffer = gzip(data)
+  const tempFilePath = `${temporaryDirectoryPath}/tempFile.json`
+  await writeFile(tempFilePath, JSON.stringify(data), 'utf8')
+  await gzip(tempFilePath, path)
+  await unlink(tempFilePath)
+}
+export const handleReadFile = async(path) => {
+  let isJSON = path.endsWith('.json')
+  let data
+  if (isJSON) {
+    data = await readFile(path, 'utf8')
+  } else {
+    const tempFilePath = `${temporaryDirectoryPath}/tempFile.json`
+    await ungzip(path, tempFilePath)
+    data = await readFile(tempFilePath, 'utf8')
+    await unlink(tempFilePath)
+  }
+  return JSON.parse(data)
+}
+
+export const confirmDialog = ({
+  message = '',
+  cancelButtonText = global.i18n.t('dialog_cancel'),
+  confirmButtonText = global.i18n.t('dialog_confirm'),
+  bgClose = true,
+}) => {
+  return new Promise(resolve => {
+    Alert.alert(null, message, [
+      {
+        text: cancelButtonText,
+        onPress() {
+          resolve(false)
+        },
+      },
+      {
+        text: confirmButtonText,
+        onPress() {
+          resolve(true)
+        },
+      },
+    ], {
+      cancelable: bgClose,
+      onDismiss() {
+        resolve(false)
+      },
+    })
+  })
+}
 
 export {
   deviceLanguage,

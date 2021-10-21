@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useState, useRef } from 'react'
-import { StyleSheet, View, Text, InteractionManager } from 'react-native'
-import { readFile, writeFile, temporaryDirectoryPath, unlink } from '@/utils/fs'
+import { StyleSheet, View, InteractionManager } from 'react-native'
 import { log } from '@/utils/log'
+import { LXM_FILE_EXT_RXP } from '@/config/constant'
 
 import { useGetter, useDispatch } from '@/store'
 // import { gzip, ungzip } from 'pako'
@@ -10,33 +10,9 @@ import SubTitle from '../components/SubTitle'
 import Button from '../components/Button'
 import ChoosePath from '@/components/common/ChoosePath'
 import { useTranslation } from '@/plugins/i18n'
-import { toast } from '@/utils/tools'
-import { gzip, ungzip } from '@/utils/gzip'
+import { toast, handleSaveFile, handleReadFile } from '@/utils/tools'
 
-const lxmFileExt = /\.(json|lxmc)$/
-
-const handleSaveFile = async(path, data) => {
-  // if (!path.endsWith('.json')) path += '.json'
-  // const buffer = gzip(data)
-  const tempFilePath = `${temporaryDirectoryPath}/tempFile.json`
-  await writeFile(tempFilePath, data, 'utf8')
-  await gzip(tempFilePath, path)
-  await unlink(tempFilePath)
-}
-const handleReadFile = async(path) => {
-  let isJSON = path.endsWith('.json')
-  let data
-  if (isJSON) {
-    data = await readFile(path, 'utf8')
-  } else {
-    const tempFilePath = `${temporaryDirectoryPath}/tempFile.json`
-    await ungzip(path, tempFilePath)
-    data = await readFile(tempFilePath, 'utf8')
-    await unlink(tempFilePath)
-  }
-  return data
-}
-const exportList = async(allList, path) => {
+const exportAllList = async(allList, path) => {
   const data = JSON.parse(JSON.stringify({
     type: 'playList',
     data: allList,
@@ -46,12 +22,16 @@ const exportList = async(allList, path) => {
       if (item.otherSource) delete item.otherSource
     }
   }
-  await handleSaveFile(path + '/lx_list.lxmc', JSON.stringify(data))
+  try {
+    await handleSaveFile(path + '/lx_list.lxmc', data)
+  } catch (error) {
+    log.error(error.stack)
+  }
 }
-const importList = async path => {
+const importAllList = async path => {
   let listData
   try {
-    listData = JSON.parse(await handleReadFile(path))
+    listData = await handleReadFile(path)
   } catch (error) {
     log.error(error.stack)
     return
@@ -116,7 +96,7 @@ export default memo(() => {
       case 'import_list':
         InteractionManager.runAfterInteractions(() => {
           toast(t('setting_backup_part_import_list_tip_unzip'))
-          importList(path).then(listData => {
+          importAllList(path).then(listData => {
             // 兼容0.6.2及以前版本的列表数据
             if (listData.type === 'defautlList') {
               handleSetList(setList, [
@@ -164,7 +144,7 @@ export default memo(() => {
       case 'export_list':
         InteractionManager.runAfterInteractions(() => {
           toast(t('setting_backup_part_export_list_tip_zip'))
-          exportList(allList, path).then(() => {
+          exportAllList(allList, path).then(() => {
             toast(t('setting_backup_part_export_list_tip_success'))
           }).catch(err => {
             log.error(err.message)
@@ -206,7 +186,7 @@ export default memo(() => {
         hide={() => setShowChoosePath(false)}
         title={title}
         dirOnly={dirOnly}
-        filter={lxmFileExt}
+        filter={LXM_FILE_EXT_RXP}
         onConfirm={onConfirmPath} />
     </>
   )

@@ -156,3 +156,6 @@ export const debounce = (fn, delay = 100) => {
     }, delay)
   }
 }
+
+const fileNameRxp = /[\\/:*?#"<>|]/g
+export const filterFileName = name => name.replace(fileNameRxp, '')

@@ -256,14 +256,14 @@ export const updateMusicInfo = ({ listId, id, data, isSync }) => (dispatch, getS
   saveList(global.allList[listId])
 }
 
-export const createUserList = ({ name, id = `userlist_${Date.now()}`, list = [], source, sourceListId, isSync }) => async(dispatch, getState) => {
+export const createUserList = ({ name, id = `userlist_${Date.now()}`, list = [], source, sourceListId, position, isSync }) => async(dispatch, getState) => {
   if (!isSync) {
-    listSync.sendListAction('create_user_list', { name, id, list, source, sourceListId })
+    listSync.sendListAction('create_user_list', { name, id, list, source, sourceListId, position })
   }
 
   dispatch({
     type: TYPES.createUserList,
-    payload: { name, id, source, sourceListId },
+    payload: { name, id, source, sourceListId, position },
   })
   dispatch(listAddMultiple({ id, list, isSync: true }))
   await saveList(global.allList[id])

@@ -24,4 +24,4 @@ export const NAV_VIEW_NAMES = {
   setting: 4,
 }
 
-const LXM_FILE_EXT_RXP = /\.(json|lxmc)$/
+export const LXM_FILE_EXT_RXP = /\.(json|lxmc)$/

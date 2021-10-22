@@ -6,6 +6,29 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.9.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.8.3...v0.9.0) - 2021-10-22
+
+### 新增
+
+- 新增歌曲评论显示，可在播放详情页进入。（与PC端一样，目前仅支持显示部分评论）
+- 新增播放、收藏整个排行榜功能，可长按排行榜名字后在弹出的菜单中操作
+- 新增单个列表导入/导出功能，可以方便分享歌曲列表，可在点击“我的列表”里的列表名右侧的按钮后弹出的菜单中使用
+- 新增删除列表前的确认弹窗，防止误删列表
+
+### 优化
+
+- 添加更多同步功能的日志记录
+
+### 修复
+
+- 修复kg源的歌单链接无法打开的问题
+- 修复同一首歌的URL、歌词等同时需要换源时的处理问题
+- 修复在排行榜页面无法时无法通过点击我的列表图标切换到我的列表的问题
+
+### 其他
+
+- 更新react-native到v0.66.1
+
 ## [0.8.3](https://github.com/lyswhut/lx-music-mobile/compare/v0.8.2...v0.8.3) - 2021-10-07
 
 ### 修复

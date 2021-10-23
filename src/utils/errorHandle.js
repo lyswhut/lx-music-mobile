@@ -28,7 +28,7 @@ if (process.env.NODE_ENV !== 'development') {
   setJSExceptionHandler(errorHandler)
 
   setNativeExceptionHandler((errorString) => {
-    log.err(errorString)
+    log.error(errorString)
     // console.error('+++++', errorString, '+++++')
   })
 }

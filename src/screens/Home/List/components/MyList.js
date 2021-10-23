@@ -292,12 +292,12 @@ const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) =>
         break
       default:
         list = userList[selectedListIndex]
+        if (!list) return []
         rename = true
         remove = true
         sync = list.source && !!musicSdk[list.source].songList
         break
     }
-    if (!list) return []
 
     return [
       { action: 'rename', disabled: !rename, label: t('list_rename') },

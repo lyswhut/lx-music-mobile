@@ -130,6 +130,8 @@ initNavigation(() => {
         store.dispatch(commonAction.checkVersion())
       }
     }
+  }).catch(err => {
+    toast(err.stack, 'long')
   })
 })
 

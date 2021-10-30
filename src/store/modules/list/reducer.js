@@ -24,19 +24,16 @@ const initialState = {
     id: 'default',
     name: '试听列表',
     list: [],
-    location: 0,
   },
   loveList: {
     id: 'love',
     name: '我的收藏',
     list: [],
-    location: 0,
   },
   tempList: {
     id: 'temp',
     name: '临时列表',
     list: [],
-    location: 0,
   },
   userList: [],
   listPosition: {},
@@ -73,11 +70,11 @@ const mutations = {
     const newState = { ...state }
     const ids = []
     if (defaultList != null) {
-      newState.defaultList = { ...state.defaultList, list: defaultList.list, location: defaultList.location }
+      newState.defaultList = { ...state.defaultList, list: defaultList.list }
       ids.push(defaultList.id)
     }
     if (loveList != null) {
-      newState.loveList = { ...state.loveList, list: loveList.list, location: loveList.location }
+      newState.loveList = { ...state.loveList, list: loveList.list }
       ids.push(loveList.id)
     }
     if (userList != null) {
@@ -102,8 +99,8 @@ const mutations = {
   },
   /* [TYPES.initList](state, { defaultList, loveList, userList }) {
     const newState = { ...state }
-    if (defaultList != null) newState.defaultList = { ...state.defaultList, list: defaultList.list, location: defaultList.location }
-    if (loveList != null) newState.loveList = { ...state.loveList, list: loveList.list, location: loveList.location }
+    if (defaultList != null) newState.defaultList = { ...state.defaultList, list: defaultList.list }
+    if (loveList != null) newState.loveList = { ...state.loveList, list: loveList.list }
     if (userList != null) newState.userList = userList
     allListInit(state.defaultList, state.loveList, state.userList)
     state.isInitedList = true

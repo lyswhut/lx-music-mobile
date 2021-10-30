@@ -121,11 +121,11 @@ export const setSyncList = ({ defaultList, loveList, userList }) => async(dispat
   saveList([defaultList, loveList, ...userList])
 }
 
-export const setList = ({ id, list, name, location, source, sourceListId, isSync }) => async(dispatch, getState) => {
+export const setList = ({ id, list, name, source, sourceListId, isSync }) => async(dispatch, getState) => {
   const targetList = global.allList[id]
   if (targetList) {
     if (name && targetList.name === name) {
-      if (!isSync) listSync.sendListAction('set_list', { id, list, name, location, source, sourceListId })
+      if (!isSync) listSync.sendListAction('set_list', { id, list, name, source, sourceListId })
       dispatch({
         type: TYPES.listClear,
         payload: id,
@@ -136,9 +136,9 @@ export const setList = ({ id, list, name, location, source, sourceListId, isSync
 
     id += '_' + Math.random()
   }
-  if (!isSync) listSync.sendListAction('set_list', { id, list, name, location, source, sourceListId })
+  if (!isSync) listSync.sendListAction('set_list', { id, list, name, source, sourceListId })
 
-  await dispatch(createUserList({ id, list, name, location, source, sourceListId, isSync: true }))
+  await dispatch(createUserList({ id, list, name, source, sourceListId, isSync: true }))
 }
 
 export const listAdd = ({ musicInfo, id, addMusicLocationType, isSync }) => (dispatch, getState) => {

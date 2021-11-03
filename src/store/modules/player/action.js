@@ -388,10 +388,8 @@ const handleGetLyric = function(dispatch, listId, musicInfo, retryedSource = [],
 
 export const getUrl = ({ musicInfo, type, isRefresh }) => async(dispatch, getState) => {
   const cachedUrl = await getMusicUrl(musicInfo, type)
-  if (cachedUrl && !isRefresh) {
-    if (getState().player.isGettingUrl) dispatch(setGetingUrlState(false))
-    return cachedUrl
-  }
+  if (cachedUrl && !isRefresh) return cachedUrl
+
   dispatch(setStatus({
     status: STATUS.gettingUrl,
     text: isRefresh ? 'URL刷新中...' : 'URL获取中...',

@@ -66,8 +66,8 @@ let playMusicId = null
 
 const getPlayType = (state, songInfo) => {
   let type = '128k'
-  const list = state.common.qualityList[songInfo.source]
-  if (state.common.setting.player.isHighQuality && songInfo._types['320k'] && list && list.includes('320k')) type = '320k'
+  const list = global.globalObj.qualityList[songInfo.source]
+  if (state.common.setting.player.highQuality && songInfo._types['320k'] && list && list.includes('320k')) type = '320k'
   return type
 }
 

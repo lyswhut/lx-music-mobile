@@ -8,5 +8,5 @@
 
 ### 其他
 
-- 更新react-native到v0.66.2
+- 更新react-native到v0.66.3
 - 更新Exoplayer到v2.16.0

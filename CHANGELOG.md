@@ -6,6 +6,22 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.9.2](https://github.com/lyswhut/lx-music-mobile/compare/v0.9.1...v0.9.2) - 2021-11-28
+
+### 优化
+
+- 添加应用初始化出错时的错误捕获输出
+- 优化歌词自动换源机制
+
+### 修复
+
+- 修复因kw源歌词接口停用导致该源歌词获取失败的问题
+
+### 其他
+
+- 更新react-native到v0.66.3
+- 更新Exoplayer到v2.16.0
+
 ## [0.9.1](https://github.com/lyswhut/lx-music-mobile/compare/v0.9.0...v0.9.1) - 2021-10-23
 
 ### 修复

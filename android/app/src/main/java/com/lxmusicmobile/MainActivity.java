@@ -8,7 +8,7 @@ import org.devio.rn.splashscreen.SplashScreen; // here
 public class MainActivity extends NavigationActivity {
   @Override
     protected void onCreate(Bundle savedInstanceState) {
-      SplashScreen.show(this, R.style.SplashScreenTheme);  // here
+      SplashScreen.show(this, R.style.SplashScreenTheme, true);  // here
       super.onCreate(savedInstanceState);
     }
 }

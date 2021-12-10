@@ -120,16 +120,17 @@ const init = () => {
 
 initNavigation(() => {
   init().then(() => {
-    navigations.pushHomeScreen()
-    SplashScreen.hide()
-    if (!store.getState().common.setting.isAgreePact) {
-      showPactModal()
-    } else {
-      if (isFirstRun) {
-        isFirstRun = false
-        store.dispatch(commonAction.checkVersion())
+    return navigations.pushHomeScreen().then(() => {
+      SplashScreen.hide()
+      if (!store.getState().common.setting.isAgreePact) {
+        showPactModal()
+      } else {
+        if (isFirstRun) {
+          isFirstRun = false
+          store.dispatch(commonAction.checkVersion())
+        }
       }
-    }
+    })
   }).catch(err => {
     toast(err.stack, 'long')
   })

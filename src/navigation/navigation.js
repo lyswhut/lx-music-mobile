@@ -44,7 +44,7 @@ export function pushHomeScreen() {
     })
   */
 
-  Navigation.setRoot({
+  return Navigation.setRoot({
     root: {
       stack: {
         children: [{
@@ -310,44 +310,45 @@ export function pushCommentScreen(componentId) {
       },
     })
   */
-
-  Navigation.push(componentId, {
-    component: {
-      name: COMMENT_SCREEN,
-      options: {
-        topBar: {
-          visible: false,
-          height: 0,
-          drawBehind: false,
-        },
-        statusBar: {
-          drawBehind: true,
-          visible: true,
-          style: 'dark',
-          backgroundColor: 'transparent',
-        },
-        animations: {
-          push: {
-            content: {
-              translationX: {
-                from: Dimensions.get('window').width,
-                to: 0,
-                duration: 300,
+  InteractionManager.runAfterInteractions(() => {
+    Navigation.push(componentId, {
+      component: {
+        name: COMMENT_SCREEN,
+        options: {
+          topBar: {
+            visible: false,
+            height: 0,
+            drawBehind: false,
+          },
+          statusBar: {
+            drawBehind: true,
+            visible: true,
+            style: 'dark',
+            backgroundColor: 'transparent',
+          },
+          animations: {
+            push: {
+              content: {
+                translationX: {
+                  from: Dimensions.get('window').width,
+                  to: 0,
+                  duration: 300,
+                },
               },
             },
-          },
-          pop: {
-            content: {
-              translationX: {
-                from: 0,
-                to: Dimensions.get('window').width,
-                duration: 300,
+            pop: {
+              content: {
+                translationX: {
+                  from: 0,
+                  to: Dimensions.get('window').width,
+                  duration: 300,
+                },
               },
             },
           },
         },
       },
-    },
+    })
   })
 }
 

@@ -16,7 +16,7 @@ const logTools = {
       if (this.tempLog.length) this.writeLog(this.tempLog.map(m => `${m.time} ${m.type} ${m.text}`).join('\n----lx log----\n'))
       this.tempLog = null
     } catch (err) {
-      console.error(err)
+      console.log(err)
     }
   },
 }

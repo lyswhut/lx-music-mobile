@@ -328,7 +328,11 @@ export const setUserListName = ({ id, name, isSync }) => async(dispatch, getStat
   const targetList = global.allList[id]
   await saveList(targetList)
 }
-export const setUserListPosition = ({ id, position }) => async(dispatch, getState) => {
+export const setUserListPosition = ({ id, position, isSync }) => async(dispatch, getState) => {
+  if (!isSync) {
+    listSync.sendListAction('set_user_list_position', { id, position })
+  }
+
   dispatch({
     type: TYPES.setUserListPosition,
     payload: { id, position },

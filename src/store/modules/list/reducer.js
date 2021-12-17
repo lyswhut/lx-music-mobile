@@ -253,6 +253,7 @@ const mutations = {
     if (position == null) {
       userList.push(newList)
     } else {
+      newList.locationUpdateTime = Date.now()
       userList.splice(position + 1, 0, newList)
     }
     newState.userList = userList
@@ -279,7 +280,7 @@ const mutations = {
     const index = state.userList.findIndex(targetList)
     if (index < 0) return state
     state.userList.splice(index, 1)
-    state.userList.splice(index, position, targetList)
+    state.userList.splice(Math.max(Math.min(position, state.userList.length - 1), 0), 0, targetList)
     return updateStateList({ ...state }, [id])
   },
   [TYPES.setMusicPosition](state, { id, position, list }) {

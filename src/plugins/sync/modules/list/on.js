@@ -15,9 +15,7 @@ import {
   removeUserList,
   setUserListName,
   setMusicPosition,
-  // moveupUserList,
-  // movedownUserList,
-  // setUserListPosition,
+  setUserListPosition,
 } from '@/store/modules/list/action'
 
 const store = getStore()
@@ -69,6 +67,9 @@ const handleListAction = enMsg => {
       break
     case 'set_user_list_name':
       store.dispatch(setUserListName(data))
+      break
+    case 'set_user_list_position':
+      store.dispatch(setUserListPosition(data))
       break
     case 'set_music_position':
       store.dispatch(setMusicPosition(data))

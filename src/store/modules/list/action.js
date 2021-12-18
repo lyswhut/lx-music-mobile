@@ -96,6 +96,16 @@ export const initList = listData => async(dispatch, getState) => {
   // }
 }
 
+const handleSaveListAllSort = async(userList) => {
+  const listPosition = {}
+  userList.forEach((list, index) => {
+    listPosition[list.id] = index
+    delete list.location
+  })
+  global.listScrollPosition = listPosition
+  await saveListAllSort(listPosition)
+}
+
 export const setSyncList = ({ defaultList, loveList, userList }) => async(dispatch, getState) => {
   const state = getState()
   const userListIds = userList.map(l => l.id)
@@ -109,13 +119,7 @@ export const setSyncList = ({ defaultList, loveList, userList }) => async(dispat
   })
   await removeList(removeUserListIds)
 
-  const listPosition = {}
-  userList.forEach((list, index) => {
-    listPosition[list.id] = index
-    delete list.location
-  })
-  global.listScrollPosition = listPosition
-  await saveListAllSort(listPosition)
+  await handleSaveListAllSort(userList)
 
   dispatch(playerAction.checkPlayList([...Object.keys(global.allList), ...removeUserListIds]))
   saveList([defaultList, loveList, ...userList])
@@ -337,6 +341,9 @@ export const setUserListPosition = ({ id, position, isSync }) => async(dispatch,
     type: TYPES.setUserListPosition,
     payload: { id, position },
   })
+
+  await handleSaveListAllSort(getState().list.userList)
+
   await saveList(global.allList[id])
 }
 export const setMusicPosition = ({ id, position, list, isSync }) => async(dispatch, getState) => {

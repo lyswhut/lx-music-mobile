@@ -277,11 +277,12 @@ const mutations = {
   [TYPES.setUserListPosition](state, { id, position }) {
     const targetList = allList[id]
     if (!targetList) return state
-    const index = state.userList.findIndex(targetList)
+    const index = state.userList.findIndex(l => l.id == targetList.id)
     if (index < 0) return state
-    state.userList.splice(index, 1)
-    state.userList.splice(Math.max(Math.min(position, state.userList.length - 1), 0), 0, targetList)
-    return updateStateList({ ...state }, [id])
+    const newState = { ...state, userList: [...state.userList] }
+    newState.userList.splice(index, 1)
+    newState.userList.splice(Math.max(Math.min(position, newState.userList.length), 0), 0, targetList)
+    return newState
   },
   [TYPES.setMusicPosition](state, { id, position, list }) {
     const targetList = allList[id]

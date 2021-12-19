@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useCallback, useMemo } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, StatusBar } from 'react-native'
 import { useGetter, useDispatch } from '@/store'
 import { screenkeepAwake, screenUnkeepAwake } from '@/utils/utils'
 import { onNavigationComponentDidDisappearEvent } from '@/navigation'
@@ -37,9 +37,10 @@ export default memo(({ componentId, animated }) => {
   const component = useMemo(() => {
     return (
       <>
-        <Header />
+        <StatusBar backgroundColor="rgba(0,0,0,0)" barStyle="dark-content" translucent={true} />
         <View style={{ ...styles.container, backgroundColor: theme.primary }}>
           <View style={styles.left}>
+            <Header />
             <Pic componentId={componentId} animated={animated} />
             <View style={styles.controlBtn} nativeID="pageIndicator">
               <MoreBtn />
@@ -59,6 +60,7 @@ export default memo(({ componentId, animated }) => {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: StatusBar.currentHeight,
     flex: 1,
     flexDirection: 'row',
   },

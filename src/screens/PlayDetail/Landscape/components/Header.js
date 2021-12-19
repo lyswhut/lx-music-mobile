@@ -85,7 +85,6 @@ export default memo(() => {
 
   return (
     <View style={{ ...styles.header, backgroundColor: theme.primary }} nativeID="header">
-      <StatusBar backgroundColor="rgba(0,0,0,0)" barStyle="dark-content" translucent={true} />
       <View style={{ ...styles.container }}>
         <TouchableOpacity onPress={back} style={styles.button}>
           <Icon name="chevron-left" style={{ color: theme.normal }} size={24} />
@@ -106,8 +105,7 @@ export default memo(() => {
 
 const styles = StyleSheet.create({
   header: {
-    height: 40 + StatusBar.currentHeight,
-    paddingTop: StatusBar.currentHeight,
+    height: 40,
   },
   container: {
     flexDirection: 'row',
@@ -126,7 +124,7 @@ const styles = StyleSheet.create({
   title: {
     flex: 1,
     // textAlign: 'center',
-    fontSize: 15,
+    fontSize: 14,
   },
   icon: {
     paddingLeft: 4,

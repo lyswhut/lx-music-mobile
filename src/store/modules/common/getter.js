@@ -66,3 +66,6 @@ const apiSourceListFormated = apiSourceInfo.map(api => ({
 export const apiSourceList = state => apiSourceListFormated
 
 export const supportQualitys = state => apiSourceInfo.find(s => s.id == state.common.setting.apiSource).supportQualitys
+
+export const playerPortraitStyle = state => state.common.setting.player.portrait.style
+export const playerLandscapeStyle = state => state.common.setting.player.landscape.style

@@ -43,6 +43,8 @@ export const TYPES = {
   setDesktopLyricPosition: null,
   setDesktopLyricTextPosition: null,
   setDesktopLyricStyle: null,
+  setPlayerPortraitStyle: null,
+  setPlayerLandscapeStyle: null,
 }
 for (const key of Object.keys(TYPES)) {
   TYPES[key] = `common__${key}`
@@ -368,4 +370,22 @@ export const setSyncStatus = statusInfo => async(dispatch, getState) => {
     type: TYPES.setSyncStatus,
     payload: statusInfo,
   })
+}
+
+export const setPlayerPortraitStyle = style => async(dispatch, getState) => {
+  dispatch({
+    type: TYPES.setPlayerPortraitStyle,
+    payload: style,
+  })
+  const { common } = getState()
+  await setData(settingKey, common.setting)
+}
+
+export const setPlayerLandscapeStyle = style => async(dispatch, getState) => {
+  dispatch({
+    type: TYPES.setPlayerLandscapeStyle,
+    payload: style,
+  })
+  const { common } = getState()
+  await setData(settingKey, common.setting)
 }

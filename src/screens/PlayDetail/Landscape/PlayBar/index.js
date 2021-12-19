@@ -21,7 +21,7 @@ export default () => {
   const { curTimeStr, maxTimeStr, progress, bufferedProgress, duration } = usePlayTime()
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} nativeID="player">
       <View style={styles.progress}><Progress progress={progress} bufferedProgress={bufferedProgress} duration={duration} /></View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <View style={{ flexGrow: 1, flexShrink: 1, paddingRight: 5 }} >
@@ -40,9 +40,9 @@ export default () => {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flexGrow: 0,
     paddingLeft: 15,
-    paddingRight: 15,
+    // paddingRight: 15,
   },
   progress: {
     flexGrow: 1,

@@ -413,6 +413,36 @@ const mutations = {
     if (message != null) newState.syncStatus.message = message
     return newState
   },
+  [TYPES.setPlayerPortraitStyle](state, style) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        player: {
+          ...state.setting.player,
+          portrait: {
+            ...state.setting.player.portrait,
+            style,
+          },
+        },
+      },
+    }
+  },
+  [TYPES.setPlayerLandscapeStyle](state, style) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        player: {
+          ...state.setting.player,
+          landscape: {
+            ...state.setting.player.landscape,
+            style,
+          },
+        },
+      },
+    }
+  },
 }
 
 export default (state = initialState, action) =>

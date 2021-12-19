@@ -8,13 +8,24 @@ import { useLrcPlay, useLrcSet } from '@/plugins/lyric'
 
 const LrcLine = memo(({ lrc, line, activeLine }) => {
   const theme = useGetter('common', 'theme')
+  const playerPortraitStyle = useGetter('common', 'playerPortraitStyle')
 
   return (
     <View style={styles.line}>
-      <Text style={{ ...styles.lineText, color: activeLine == line ? theme.secondary : theme.normal30 }}>{lrc.text}</Text>
+      <Text style={{
+        ...styles.lineText,
+        fontSize: playerPortraitStyle.lrcFontSize / 10,
+        lineHeight: playerPortraitStyle.lrcFontSize / 10 * 1.25,
+        color: activeLine == line ? theme.secondary : theme.normal30,
+      }}>{lrc.text}</Text>
       {
         lrc.translation
-          ? <Text style={{ ...styles.lineTranslationText, color: activeLine == line ? theme.secondary : theme.normal30 }}>{lrc.translation}</Text>
+          ? <Text style={{
+            ...styles.lineTranslationText,
+            fontSize: playerPortraitStyle.lrcFontSize / 10 * 0.8,
+            lineHeight: playerPortraitStyle.lrcFontSize / 10 * 0.8 * 1.25,
+            color: activeLine == line ? theme.secondary : theme.normal30,
+          }}>{lrc.translation}</Text>
           : null
       }
     </View>
@@ -36,7 +47,6 @@ export default memo(() => {
   const lineRef = useRef(0)
   const linesRef = useRef([])
   const isFirstSetLrc = useRef(true)
-  // const playMusicInfo = useGetter('player', 'playMusicInfo')
   // const [imgUrl, setImgUrl] = useState(null)
   // const theme = useGetter('common', 'theme')
   // const { onLayout, ...layout } = useLayout()
@@ -162,16 +172,16 @@ const styles = StyleSheet.create({
   },
   lineText: {
     textAlign: 'center',
-    fontSize: 16,
-    lineHeight: 20,
+    // fontSize: 16,
+    // lineHeight: 20,
     // paddingTop: 5,
     // paddingBottom: 5,
     // opacity: 0,
   },
   lineTranslationText: {
     textAlign: 'center',
-    fontSize: 13,
-    lineHeight: 17,
+    // fontSize: 13,
+    // lineHeight: 17,
     paddingTop: 5,
     // paddingBottom: 5,
   },

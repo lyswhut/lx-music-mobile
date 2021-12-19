@@ -4,7 +4,7 @@ import { useLayout, useKeyboard } from '@/utils/hooks'
 import { useGetter, useDispatch } from '@/store'
 import { BorderWidths } from '@/theme'
 
-import Title from './components/Title'
+// import Title from './components/Title'
 import MoreBtn from './components/MoreBtn'
 import PlayInfo from './components/PlayInfo'
 import ControlBtn from './components/ControlBtn'
@@ -17,7 +17,7 @@ export default memo(({ playNextModes }) => {
   return (
     <View style={{ ...styles.container, backgroundColor: theme.primary }}>
       <View style={{ ...styles.info }} >
-        <Title />
+        {/* <Title /> */}
         <MoreBtn />
       </View>
       <View style={styles.status}>
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   info: {
     flexDirection: 'row',
     paddingBottom: 10,
+    justifyContent: 'flex-end',
   },
   status: {
     flexDirection: 'column',

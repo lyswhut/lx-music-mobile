@@ -74,7 +74,7 @@ export default memo(() => {
 
 const styles = StyleSheet.create({
   cotrolBtn: {
-    marginLeft: 5,
+    marginRight: 5,
     width: 28,
     height: 28,
     justifyContent: 'center',

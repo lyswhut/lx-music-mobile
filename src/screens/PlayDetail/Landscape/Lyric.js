@@ -9,13 +9,24 @@ import { onNavigationComponentDidDisappearEvent } from '@/navigation'
 
 const LrcLine = memo(({ lrc, line, activeLine }) => {
   const theme = useGetter('common', 'theme')
+  const playerLandscapeStyle = useGetter('common', 'playerLandscapeStyle')
 
   return (
     <View style={styles.line}>
-      <Text style={{ ...styles.lineText, color: activeLine == line ? theme.secondary : theme.normal30 }}>{lrc.text}</Text>
+      <Text style={{
+        ...styles.lineText,
+        fontSize: playerLandscapeStyle.lrcFontSize / 10,
+        lineHeight: playerLandscapeStyle.lrcFontSize / 10 * 1.25,
+        color: activeLine == line ? theme.secondary : theme.normal30,
+      }}>{lrc.text}</Text>
       {
         lrc.translation
-          ? <Text style={{ ...styles.lineTranslationText, color: activeLine == line ? theme.secondary : theme.normal30 }}>{lrc.translation}</Text>
+          ? <Text style={{
+            ...styles.lineTranslationText,
+            fontSize: playerLandscapeStyle.lrcFontSize / 10 * 0.8,
+            lineHeight: playerLandscapeStyle.lrcFontSize / 10 * 0.8 * 1.25,
+            color: activeLine == line ? theme.secondary : theme.normal30,
+          }}>{lrc.translation}</Text>
           : null
       }
     </View>

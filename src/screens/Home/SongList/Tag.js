@@ -1,11 +1,11 @@
 import React, { memo, useMemo, useEffect, useCallback, useState } from 'react'
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native'
 
 import { useGetter, useDispatch } from '@/store'
-// import { useTranslation } from '@/plugins/i18n'
-import DorpDownPanel from '@/components/common/DorpDownPanel'
+import { useTranslation } from '@/plugins/i18n'
+import Popup from '@/components/common/Popup'
 import Button from '@/components/common/Button'
-import { BorderWidths } from '@/theme'
+// import { BorderWidths } from '@/theme'
 
 const TagType = ({ name, list, setTagInfo, activeId }) => {
   const theme = useGetter('common', 'theme')
@@ -39,18 +39,16 @@ const Tags = memo(({ setVisiblePanel }) => {
     setSongList({ tagInfo: { name, id } })
   }, [setSongList, setVisiblePanel])
   return (
-    <View style={{ ...styles.container, borderBottomColor: theme.secondary10 }}>
-      <ScrollView style={{ flexShrink: 1, flexGrow: 0 }} keyboardShouldPersistTaps={'always'}>
-        <View style={{ ...styles.tagContainer, backgroundColor: theme.primary }} onStartShouldSetResponder={() => true}>
-          <View style={{ ...styles.tagTypeList, marginTop: 10 }}>
-            <Button style={{ ...styles.tagButton, backgroundColor: theme.secondary45 }} onPress={() => setTagInfo('默认', null)}>
-              <Text style={{ ...styles.tagButtonText, color: songListTagInfo.id == null ? theme.secondary : theme.normal10 }}>默认</Text>
-            </Button>
-          </View>
-          {tagsList.map((type, index) => <TagType key={index} name={type.name} list={type.list} activeId={songListTagInfo.id} setTagInfo={setTagInfo} />)}
+    <ScrollView style={{ flexShrink: 1, flexGrow: 0 }} keyboardShouldPersistTaps={'always'}>
+      <View style={{ ...styles.tagContainer, backgroundColor: theme.primary }} onStartShouldSetResponder={() => true}>
+        <View style={{ ...styles.tagTypeList, marginTop: 10 }}>
+          <Button style={{ ...styles.tagButton, backgroundColor: theme.secondary45 }} onPress={() => setTagInfo('默认', null)}>
+            <Text style={{ ...styles.tagButtonText, color: songListTagInfo.id == null ? theme.secondary : theme.normal10 }}>默认</Text>
+          </Button>
         </View>
-      </ScrollView>
-    </View>
+        {tagsList.map((type, index) => <TagType key={index} name={type.name} list={type.list} activeId={songListTagInfo.id} setTagInfo={setTagInfo} />)}
+      </View>
+    </ScrollView>
   )
 })
 
@@ -62,6 +60,7 @@ export default memo(() => {
   const theme = useGetter('common', 'theme')
   const getTags = useDispatch('songList', 'getTags')
   const [visiblePanel, setVisiblePanel] = useState(false)
+  const { t } = useTranslation()
 
   // useEffect(() => {
   //   getTags()
@@ -75,13 +74,18 @@ export default memo(() => {
   // console.log('render tags')
 
   return (
-    <DorpDownPanel
-      visible={visiblePanel}
-      setVisible={setVisiblePanel}
-      PanelContent={<Tags setVisiblePanel={setVisiblePanel} />}
-    >
-      <Text style={{ ...styles.sourceMenu, color: theme.normal }}>{songListTagInfo.name}</Text>
-    </DorpDownPanel>
+    <>
+      <TouchableOpacity style={styles.listName} onPress={() => setVisiblePanel(true)}>
+        <Text style={{ ...styles.sourceMenu, color: theme.normal }}>{songListTagInfo.name}</Text>
+      </TouchableOpacity>
+      <Popup
+        visible={visiblePanel}
+        hide={() => setVisiblePanel(false)}
+        title={t('songlist__tags')}
+      >
+        <Tags setVisiblePanel={setVisiblePanel} />
+      </Popup>
+    </>
   )
 })
 
@@ -98,9 +102,6 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
 
-  container: {
-    borderBottomWidth: BorderWidths.normal2,
-  },
   tagContainer: {
     paddingLeft: 15,
     paddingBottom: 15,

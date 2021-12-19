@@ -7,6 +7,7 @@ import { useGetter, useDispatch } from '@/store'
 import { pop } from '@/navigation'
 import Popup from '@/components/common/Popup'
 import Slider from '@/components/common/Slider'
+import { useTranslation } from '@/plugins/i18n'
 // import { AppColors } from '@/theme'
 
 const LrcFontSizeStyles = StyleSheet.create({
@@ -56,14 +57,15 @@ const LrcFontSize = () => {
 }
 
 const Setting = ({ visible, hide }) => {
+  const { t } = useTranslation()
   return (
     <Popup
-        visible={visible}
-        hideDialog={hide}
-        title=''
-      >
-        <LrcFontSize />
-      </Popup>
+      visible={visible}
+      hide={hide}
+      title={t('player__setting_lrc_font_size')}
+    >
+      <LrcFontSize />
+    </Popup>
   )
 }
 

@@ -14,19 +14,22 @@ const styles = StyleSheet.create({
   },
   modalView: {
     elevation: 3,
+    flexGrow: 0,
+    flexShrink: 1,
   },
   header: {
-    flexGrow: 0,
-    flexShrink: 0,
+    flex: 0,
     flexDirection: 'row',
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
   },
   title: {
     fontSize: 13,
-    paddingLeft: 5,
+    paddingLeft: 10,
     paddingRight: 25,
-    lineHeight: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    // lineHeight: 20,
   },
   closeBtn: {
     position: 'absolute',
@@ -45,7 +48,7 @@ const styles = StyleSheet.create({
 
 export default ({
   visible = false,
-  hideDialog = () => {},
+  hide = () => {},
   keyHide = true,
   bgHide = true,
   closeBtn = true,
@@ -56,7 +59,7 @@ export default ({
   const theme = useGetter('common', 'theme')
   const { keyboardShown, keyboardHeight } = useKeyboard()
 
-  const closeBtnComponent = useMemo(() => closeBtn ? <TouchableOpacity style={styles.closeBtn} onPress={hideDialog}><Icon name="close" style={{ color: theme.normal50, fontSize: 12 }} /></TouchableOpacity> : null, [closeBtn, hideDialog, theme])
+  const closeBtnComponent = useMemo(() => closeBtn ? <TouchableOpacity style={styles.closeBtn} onPress={hide}><Icon name="close" style={{ color: theme.normal50, fontSize: 12 }} /></TouchableOpacity> : null, [closeBtn, hide, theme])
 
   const [centeredViewStyle, modalViewStyle] = useMemo(() => {
     switch (position) {
@@ -110,12 +113,12 @@ export default ({
   }, [position])
 
   return (
-    <Modal visible={visible} hideModal={hideDialog} keyHide={keyHide} bgHide={bgHide} bgColor="rgba(0,0,0,0.2)">
+    <Modal visible={visible} hideModal={hide} keyHide={keyHide} bgHide={bgHide} bgColor="rgba(0,0,0,0.2)">
       <StatusBar backgroundColor="rgba(0,0,0,0)" barStyle="dark-content" translucent={true} />
       <View style={{ ...styles.centeredView, ...centeredViewStyle, paddingBottom: keyboardShown ? keyboardHeight : 0 }}>
         <View style={{ ...styles.modalView, ...modalViewStyle, backgroundColor: theme.primary }} onStartShouldSetResponder={() => true}>
           <View style={styles.header}>
-            <Text style={{ ...styles.title, color: theme.normal }} numberOfLines={1}>{title}</Text>
+            <Text style={{ ...styles.title, color: theme.normal40 }} numberOfLines={1}>{title}</Text>
             {closeBtnComponent}
           </View>
           {children}

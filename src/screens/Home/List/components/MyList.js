@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, InteractionManage
 
 import { useGetter, useDispatch } from '@/store'
 import { useTranslation } from '@/plugins/i18n'
-import DorpDownPanel from '@/components/common/DorpDownPanel'
+// import DorpDownPanel from '@/components/common/DorpDownPanel'
 import Icon from '@/components/common/Icon'
 // import Button from '@/components/common/Button'
 import { BorderWidths } from '@/theme'
@@ -16,6 +16,7 @@ import { LIST_SCROLL_POSITION_KEY, LXM_FILE_EXT_RXP } from '@/config/constant'
 import musicSdk from '@/utils/music'
 import ChoosePath from '@/components/common/ChoosePath'
 import { log } from '@/utils/log'
+import Popup from '@/components/common/Popup'
 
 const exportList = async(list, path) => {
   const data = JSON.parse(JSON.stringify({
@@ -337,7 +338,7 @@ const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) =>
     setVisibleMenu(true)
   }, [])
   return (
-    <View style={{ ...styles.container, borderBottomColor: theme.secondary10 }}>
+    <>
       <ScrollView style={{ flexShrink: 1, flexGrow: 0 }} onScroll={handleScroll} ref={scrollViewRef} keyboardShouldPersistTaps={'always'}>
         <View style={{ ...styles.listContainer, backgroundColor: theme.primary }} onStartShouldSetResponder={() => true}>
           <ListItem name={defaultList.name} id={defaultList.id} index={-2} loading={false} onPress={() => handleToggleList(defaultList)} activeId={currentList.id} showMenu={showMenu} />
@@ -362,7 +363,7 @@ const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) =>
         </View>
       </ConfirmAlert>
       <ImportExport actionType={actionType} visible={isShowChoosePath} hide={() => setShowChoosePath(false)} selectedListRef={selectedListRef} />
-    </View>
+    </>
   )
 })
 
@@ -370,20 +371,26 @@ const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) =>
 export default memo(({ currentList, handleCancelMultiSelect, showListSearchBar }) => {
   const theme = useGetter('common', 'theme')
   const [visiblePanel, setVisiblePanel] = useState(false)
+  const { t } = useTranslation()
+  const showPopup = () => {
+    setVisiblePanel(true)
+  }
+  const hidePopup = () => {
+    setVisiblePanel(false)
+  }
 
   return (
-    <DorpDownPanel
-      visible={visiblePanel}
-      setVisible={setVisiblePanel}
-      PanelContent={<List setVisiblePanel={setVisiblePanel} currentList={currentList} handleCancelMultiSelect={handleCancelMultiSelect} />}
-    >
-      <View style={{ ...styles.currentList, borderBottomWidth: BorderWidths.normal, borderBottomColor: theme.borderColor }}>
+    <View>
+      <TouchableOpacity onPress={showPopup} style={{ ...styles.currentList, borderBottomWidth: BorderWidths.normal, borderBottomColor: theme.borderColor }}>
         <Text numberOfLines={1} style={{ ...styles.sourceMenu, color: theme.secondary, flex: 1 }}>{currentList.name}</Text>
         <TouchableOpacity style={styles.btns} onPress={showListSearchBar}>
           <Icon style={{ color: theme.secondary30, fontSize: 16 }} name="search-2" />
         </TouchableOpacity>
-      </View>
-    </DorpDownPanel>
+      </TouchableOpacity>
+      <Popup visible={visiblePanel} hide={hidePopup} title={t('nav__my_list')}>
+        <List setVisiblePanel={setVisiblePanel} currentList={currentList} handleCancelMultiSelect={handleCancelMultiSelect} />
+      </Popup>
+    </View>
   )
 })
 
@@ -397,9 +404,9 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
 
-  container: {
-    borderBottomWidth: BorderWidths.normal2,
-  },
+  // container: {
+  //   borderBottomWidth: BorderWidths.normal2,
+  // },
   listContainer: {
     // borderBottomWidth: BorderWidths.normal2,
   },

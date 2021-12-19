@@ -204,6 +204,7 @@ const styles = StyleSheet.create({
   },
   pagerView: {
     flex: 1,
+    overflow: 'hidden',
   },
   pageStyle: {
     // alignItems: 'center',

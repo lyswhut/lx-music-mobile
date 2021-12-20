@@ -387,7 +387,7 @@ export default memo(({ currentList, handleCancelMultiSelect, showListSearchBar }
           <Icon style={{ color: theme.secondary30, fontSize: 16 }} name="search-2" />
         </TouchableOpacity>
       </TouchableOpacity>
-      <Popup visible={visiblePanel} hide={hidePopup} title={t('nav__my_list')}>
+      <Popup visible={visiblePanel} hide={hidePopup} title={t('nav_my_list')}>
         <List setVisiblePanel={setVisiblePanel} currentList={currentList} handleCancelMultiSelect={handleCancelMultiSelect} />
       </Popup>
     </View>

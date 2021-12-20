@@ -19,6 +19,7 @@ export const storageDataPrefix = {
   playInfo: '@play_info',
   syncAuthKey: '@sync_auth_key',
   syncHost: '@sync_host',
+  syncHostHistory: '@sync_host_history',
 }
 
 export const ITEM_HEIGHT = 60

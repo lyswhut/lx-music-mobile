@@ -62,7 +62,7 @@ const Setting = ({ visible, hide }) => {
     <Popup
       visible={visible}
       hide={hide}
-      title={t('player__setting_lrc_font_size')}
+      title={t('player_setting_lrc_font_size')}
     >
       <LrcFontSize />
     </Popup>

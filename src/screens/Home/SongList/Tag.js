@@ -81,7 +81,7 @@ export default memo(() => {
       <Popup
         visible={visiblePanel}
         hide={() => setVisiblePanel(false)}
-        title={t('songlist__tags')}
+        title={t('songlist_tags')}
       >
         <Tags setVisiblePanel={setVisiblePanel} />
       </Popup>

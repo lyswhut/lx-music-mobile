@@ -8,7 +8,7 @@ import ConfirmAlert from '@/components/common/ConfirmAlert'
 import Input from '@/components/common/Input'
 import { useTranslation } from '@/plugins/i18n'
 import { connect, disconnect, SYNC_CODE } from '@/plugins/sync'
-import { getSyncHost, setSyncHost, toast } from '@/utils/tools'
+import { getSyncHost, setSyncHost, toast, addSyncHostHistory } from '@/utils/tools'
 import InputItem from '../components/InputItem'
 import { getWIFIIPV4Address } from '@/utils/utils'
 
@@ -66,13 +66,11 @@ const PortInput = memo(({ setPort, port, disabled }) => {
 })
 
 
-export default memo(() => {
+export default memo(({ hostInfo, setHostInfo, isWaiting, setIsWaiting }) => {
   const { t } = useTranslation()
   const setIsEnableSync = useDispatch('common', 'setIsEnableSync')
   const syncStatus = useGetter('common', 'syncStatus')
   const isEnableSync = useGetter('common', 'isEnableSync')
-  const [isWaiting, setIsWaiting] = useState(global.isSyncEnableing)
-  const [hostInfo, setHostInfo] = useState({ host: '', port: '' })
   const isUnmountedRef = useRef(true)
   const theme = useGetter('common', 'theme')
   const [address, setAddress] = useState('')
@@ -110,13 +108,15 @@ export default memo(() => {
   const handleSetEnableSync = useCallback(flag => {
     setIsEnableSync(flag)
 
+    if (flag) addSyncHostHistory(hostInfo.host, hostInfo.port)
+
     global.isSyncEnableing = true
     setIsWaiting(true)
     ;(flag ? connect() : disconnect()).finally(() => {
       global.isSyncEnableing = false
       setIsWaiting(false)
     })
-  }, [setIsEnableSync])
+  }, [hostInfo, setIsEnableSync, setIsWaiting])
 
 
   const setHost = useCallback(host => {

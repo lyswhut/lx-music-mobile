@@ -9,6 +9,7 @@ import Popup from '@/components/common/Popup'
 import Slider from '@/components/common/Slider'
 import { useTranslation } from '@/plugins/i18n'
 // import { AppColors } from '@/theme'
+import CommentBtn from './CommentBtn'
 
 const LrcFontSizeStyles = StyleSheet.create({
   content: {
@@ -95,6 +96,7 @@ export default memo(() => {
           <Text numberOfLines={1} style={{ ...styles.title, color: theme.normal10 }}>{playMusicInfo.musicInfo?.name}</Text>
           <Text numberOfLines={1} style={{ ...styles.title, color: theme.normal20, fontSize: 12 }}>{playMusicInfo.musicInfo?.singer}</Text>
         </View>
+        <CommentBtn />
         <TouchableOpacity onPress={showSetting} style={styles.button}>
           <Icon name="font-size" style={{ color: theme.normal30 }} size={24} />
         </TouchableOpacity>

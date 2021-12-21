@@ -23,7 +23,7 @@ const Landscape = (props) => {
       <StatusBar backgroundColor="rgba(0,0,0,0)" barStyle="dark-content" translucent={true} />
       <View style={{ ...styles.container, backgroundColor: props.theme.primary }}>
         <HeaderLandscape componentId={props.componentId} />
-        <View style={{ flex: 1, flexDirection: 'column', height: '100%' }}>
+        <View style={{ flex: 1, flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
           {/* <Aside /> */}
           <Main />
           <FooterPlayer />

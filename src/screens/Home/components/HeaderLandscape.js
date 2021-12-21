@@ -34,7 +34,7 @@ const Header = ({ componentId }) => {
   const theme = useGetter('common', 'theme')
 
   return (
-    <View style={{ ...styles.container, borderRightColor: theme.borderColor }}>
+    <View style={{ ...styles.container, borderRightColor: theme.borderColor, backgroundColor: theme.primary }}>
       {/* <View style={styles.left}> */}
         {menus.map((item, index) => <HeaderItem info={item} index={index} key={item.id} onPress={setNavActiveIndex} />)}
       {/* </View>

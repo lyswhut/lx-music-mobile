@@ -18,7 +18,7 @@ export default memo(() => {
 
 
   const playerComponent = useMemo(() => (
-    <View style={{ ...styles.container, backgroundColor: theme.primary, borderTopColor: theme.secondary10 }}>
+    <View style={{ ...styles.container, backgroundColor: theme.primary }}>
       <View style={styles.left} elevation={1}><Pic /></View>
       <View style={styles.center}>
         <View style={{ ...styles.row, justifyContent: 'space-between', fontSize: 12 }}>
@@ -45,14 +45,17 @@ const styles = StyleSheet.create({
     // paddingTop: progressContentPadding,
     // marginTop: -progressContentPadding,
     // backgroundColor: 'rgba(0, 0, 0, .1)',
-    borderTopWidth: BorderWidths.normal2,
+    // borderTopWidth: BorderWidths.normal2,
     paddingTop: 5,
     paddingBottom: 5,
     paddingLeft: 5,
     // backgroundColor: AppColors.primary,
     // backgroundColor: 'red',
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
     flexDirection: 'row',
     alignItems: 'center',
+    elevation: 10,
   },
   left: {
     borderRadius: 3,

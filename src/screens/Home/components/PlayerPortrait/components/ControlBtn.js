@@ -8,7 +8,7 @@ import { STATUS } from '@/store/modules/player'
 export default () => {
   const playStatus = useGetter('player', 'status')
   const playNext = useDispatch('player', 'playNext')
-  const playPrev = useDispatch('player', 'playPrev')
+  // const playPrev = useDispatch('player', 'playPrev')
   // const playMusicInfo = useGetter('player', 'playMusicInfo')
   const pauseMusic = useDispatch('player', 'pauseMusic')
   const playMusic = useDispatch('player', 'playMusic')
@@ -22,11 +22,11 @@ export default () => {
   //   setPlayNextMode(playNextModes[index] || '')
   // }, [setPlayNextMode, togglePlayMethod, playNextModes])
 
-  const btnPrev = useMemo(() => (
-    <TouchableOpacity style={{ ...styles.cotrolBtn }} activeOpacity={0.5} onPress={playPrev}>
-      <Icon name='prevMusic' style={{ color: theme.secondary10 }} size={20} />
-    </TouchableOpacity>
-  ), [playPrev, theme])
+  // const btnPrev = useMemo(() => (
+  //   <TouchableOpacity style={{ ...styles.cotrolBtn }} activeOpacity={0.5} onPress={playPrev}>
+  //     <Icon name='prevMusic' style={{ color: theme.secondary10 }} size={20} />
+  //   </TouchableOpacity>
+  // ), [playPrev, theme])
 
   const togglePlay = useCallback(playStatus => {
     switch (playStatus) {
@@ -45,12 +45,12 @@ export default () => {
   }, [])
   const btnPlay = useMemo(() => (
     <TouchableOpacity style={{ ...styles.cotrolBtn }} activeOpacity={0.5} onPress={() => togglePlay(playStatus)}>
-      <Icon name={playStatus == STATUS.playing ? 'pause' : 'play'} style={{ color: theme.secondary10 }} size={20} />
+      <Icon name={playStatus == STATUS.playing ? 'pause' : 'play'} style={{ color: theme.secondary10 }} size={24} />
     </TouchableOpacity>
   ), [playStatus, theme, togglePlay])
   const btnNext = useMemo(() => (
     <TouchableOpacity style={{ ...styles.cotrolBtn }} activeOpacity={0.5} onPress={playNext}>
-      <Icon name='nextMusic' style={{ color: theme.secondary10 }} size={20} />
+      <Icon name='nextMusic' style={{ color: theme.secondary10 }} size={24} />
     </TouchableOpacity>
   ), [playNext, theme])
 
@@ -62,7 +62,7 @@ export default () => {
         </Text>
       </TouchableOpacity>
     */}
-      {btnPrev}
+      {/* {btnPrev} */}
       {btnPlay}
       {btnNext}
     </>
@@ -72,8 +72,8 @@ export default () => {
 
 const styles = StyleSheet.create({
   cotrolBtn: {
-    width: 32,
-    height: 32,
+    width: 50,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
 

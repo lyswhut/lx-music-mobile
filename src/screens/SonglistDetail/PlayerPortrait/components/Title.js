@@ -1,18 +1,39 @@
 import React, { useCallback, memo, useMemo, useEffect } from 'react'
-import { Text, StyleSheet } from 'react-native'
+import { Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { useGetter, useDispatch } from '@/store'
+import { navigations } from '@/navigation'
 
 
 export default () => {
-  const theme = useGetter('common', 'theme')
-  const downloadFileName = useGetter('common', 'downloadFileName')
   const playMusicInfo = useGetter('player', 'playMusicInfo')
-  let title = '^-^'
-  if (playMusicInfo && playMusicInfo.musicInfo) {
-    title = downloadFileName.replace('歌手', playMusicInfo.musicInfo.singer).replace('歌名', playMusicInfo.musicInfo.name)
-  }
+  const theme = useGetter('common', 'theme')
+  // const { t } = useTranslation()
+  const componentIds = useGetter('common', 'componentIds')
+  const musicInfo = useMemo(() => {
+    return (playMusicInfo && playMusicInfo.musicInfo) || {}
+  }, [playMusicInfo])
+  const handlePress = useCallback(() => {
+    // console.log('')
+    // console.log(playMusicInfo)
+    if (!playMusicInfo) return
+    navigations.pushPlayDetailScreen(componentIds.home, musicInfo.songmid)
+    // toast(t('play_detail_todo_tip'), 'long')
+  }, [componentIds.home, musicInfo, playMusicInfo])
+
+  const downloadFileName = useGetter('common', 'downloadFileName')
+  const title = useMemo(() => {
+    let title = '^-^'
+    if (playMusicInfo && playMusicInfo.musicInfo) {
+      title = downloadFileName.replace('歌手', playMusicInfo.musicInfo.singer).replace('歌名', playMusicInfo.musicInfo.name)
+    }
+    return title
+  }, [downloadFileName, playMusicInfo])
   // console.log(playMusicInfo)
-  return <Text style={{ width: '100%', fontSize: 14, color: theme.normal }} numberOfLines={1}>{title}</Text>
+  return (
+    <TouchableOpacity onPress={handlePress} activeOpacity={0.7} >
+      <Text style={{ width: '100%', fontSize: 14, color: theme.normal }} numberOfLines={1}>{title}</Text>
+    </TouchableOpacity>
+  )
 }
 // const Singer = () => {
 //   const playMusicInfo = useGetter('player', 'playMusicInfo')

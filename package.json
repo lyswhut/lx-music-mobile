@@ -39,6 +39,7 @@
   "homepage": "https://github.com/lyswhut/lx-music-mobile#readme",
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.14",
+    "@react-native-clipboard/clipboard": "^1.9.0",
     "@react-native-community/checkbox": "^0.5.9",
     "@react-native-community/slider": "^4.1.12",
     "buffer": "^6.0.3",

@@ -1,5 +1,6 @@
 import { Platform, NativeModules, ToastAndroid, BackHandler, Linking, Dimensions, Alert } from 'react-native'
 import ExtraDimensions from 'react-native-extra-dimensions-android'
+import Clipboard from '@react-native-clipboard/clipboard'
 import { getData, setData, getAllKeys, removeData, removeDataMultiple, setDataMultiple, getDataMultiple } from '@/plugins/storage'
 import { storageDataPrefix } from '@/config'
 import { throttle } from './index'
@@ -311,6 +312,10 @@ export const confirmDialog = ({
       },
     })
   })
+}
+
+export const clipboardWriteText = str => {
+  Clipboard.setString(str)
 }
 
 export {

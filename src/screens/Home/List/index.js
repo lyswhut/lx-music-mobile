@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, memo, useRef, useState, useEffect } from 'react'
+import React, { useMemo, useCallback, useRef, useState, useEffect } from 'react'
 import { View, Text, StyleSheet, FlatList } from 'react-native'
 
 import { useGetter, useDispatch } from '@/store'
@@ -10,7 +10,7 @@ import Button from '@/components/common/Button'
 import ExitMultipleModeBar from './components/ExitMultipleModeBar'
 import MyList from './components/MyList'
 import ListItem from './components/ListItem'
-import { getListScrollPosition, saveListScrollPosition, toast } from '@/utils/tools'
+import { getListScrollPosition, saveListScrollPosition, clipboardWriteText, toast } from '@/utils/tools'
 import { useTranslation } from '@/plugins/i18n'
 import { LIST_ITEM_HEIGHT } from '@/config/constant'
 import MusicPositionModal from './components/MusicPositionModal'
@@ -34,6 +34,7 @@ const List = () => {
   const playListInfoRef = useRef(playListInfo)
   const activeListId = useGetter('common', 'prevSelectListId')
   const activeListIdRef = useRef(activeListId)
+  const downloadFileName = useGetter('common', 'downloadFileName')
   const [buttonPosition, setButtonPosition] = useState({ w: 0, h: 0, x: 0, y: 0 })
   const selectedDataRef = useRef({ data: null, index: -1 })
   const flatListRef = useRef()
@@ -166,15 +167,11 @@ const List = () => {
     return [
       { action: 'play', label: t('play') },
       { action: 'playLater', label: t('play_later') },
-      // { action: 'copyName', label: t('copy_name') },
-      // { action: 'download', label: '下载' },
-      // { action: 'add', label: t('add_to') },
-      // { action: 'move', label: '移动到...' },
       // { action: 'download', label: '下载' },
       { action: 'add', label: t('add_to') },
       { action: 'move', label: t('move_to') },
+      { action: 'copyName', label: t('copy_name') },
       { action: 'changePosition', label: t('change_position') },
-      // { action: 'move', label: '移动到...' },
       { action: 'remove', label: t('delete') },
     ]
   }, [t])
@@ -204,8 +201,6 @@ const List = () => {
           setTempPlayList([{ listId: activeListIdRef.current, musicInfo: selectedDataRef.current.data }])
         }
         break
-      // case 'copyName':
-      //   break
       case 'add':
         isMoveRef.current = false
         selectedListRef.current.length
@@ -217,6 +212,11 @@ const List = () => {
         selectedListRef.current.length
           ? setVisibleMusicMultiAddModal(true)
           : setVisibleMusicAddModal(true)
+        break
+      case 'copyName':
+        clipboardWriteText(downloadFileName.replace('歌名', selectedDataRef.current.data.name)
+          .replace('歌手', selectedDataRef.current.data.singer))
+        toast(t('copy_name_tip'))
         break
       case 'changePosition':
         setVIsibleMusicPosition(true)
@@ -232,7 +232,7 @@ const List = () => {
       default:
         break
     }
-  }, [handleCancelMultiSelect, handlePlay, removeListItem, removeListMultiItem, setTempPlayList])
+  }, [downloadFileName, handleCancelMultiSelect, handlePlay, removeListItem, removeListMultiItem, setTempPlayList])
 
   const handleScroll = useCallback(({ nativeEvent }) => {
     saveListScrollPosition(currentListRef.current.id, nativeEvent.contentOffset.y)

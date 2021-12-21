@@ -18,6 +18,7 @@
   "comment_title": "{{name}}-{{singer}}'s comment",
   "confirm": "Confirm",
   "copy_name": "Copy name",
+  "copy_name_tip": "Copied",
   "create_new_folder": "Create new folder",
   "create_new_folder_error_tip": "The name entered is invalid",
   "create_new_folder_tip": "Please enter a new folder name",

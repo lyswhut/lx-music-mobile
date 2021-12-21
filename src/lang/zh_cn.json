@@ -18,6 +18,7 @@
   "comment_title": "{{name}} - {{singer}} 的评论",
   "confirm": "确认",
   "copy_name": "复制歌曲名",
+  "copy_name_tip": "已复制",
   "create_new_folder": "新建文件夹",
   "create_new_folder_error_tip": "输入的名称不合法",
   "create_new_folder_tip": "请输入新文件夹名",

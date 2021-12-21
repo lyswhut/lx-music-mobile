@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
   },
   modalView: {
-    elevation: 3,
+    elevation: 6,
     flexGrow: 0,
     flexShrink: 1,
   },

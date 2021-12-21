@@ -20,11 +20,11 @@ const styles = StyleSheet.create({
   },
   menu: {
     position: 'absolute',
-    borderWidth: StyleSheet.hairlineWidth,
+    // borderWidth: StyleSheet.hairlineWidth,
     borderColor: 'lightgray',
     borderRadius: 2,
     backgroundColor: 'white',
-    elevation: 1,
+    elevation: 3,
   },
   menuItem: {
     paddingLeft: 10,
@@ -92,7 +92,7 @@ const Menu = ({
 
   // console.log(menuStyle)
   return (
-    <View style={{ ...styles.menu, ...menuStyle, backgroundColor: theme.primary }} onStartShouldSetResponder={() => true}>
+    <View style={{ ...styles.menu, ...menuStyle }} onStartShouldSetResponder={() => true}>
       <Animated.ScrollView keyboardShouldPersistTaps={'always'}>
         {
           menus.map((menu, index) => (

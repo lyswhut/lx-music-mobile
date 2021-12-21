@@ -41,11 +41,12 @@ export default () => {
 
 const styles = StyleSheet.create({
   progress: {
-    height: 12,
+    height: 14,
     flexGrow: 1,
     flexShrink: 0,
     flexDirection: 'column',
     justifyContent: 'center',
+    marginBottom: -2,
     // height:
     // position: 'absolute',
     // width: '100%',

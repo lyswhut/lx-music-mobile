@@ -33,8 +33,8 @@ export default () => {
       <Image source={{ uri: musicInfo.img }} nativeID={`pic${musicInfo.songmid}`} progressiveRenderingEnabled={true} borderRadius={2} style={{
         // ...styles.playInfoImg,
         backgroundColor: theme.primary,
-        width: 48,
-        height: 48,
+        width: 50,
+        height: 50,
       }} />
     </TouchableOpacity>
   ), [handlePress, musicInfo, theme])

@@ -1,24 +1,26 @@
 import React, { useCallback, memo, useMemo, useEffect } from 'react'
 import { Text, StyleSheet, View } from 'react-native'
-import { usePlayTime } from '@/utils/hooks'
+import { usePlayTime, useDimensions } from '@/utils/hooks'
 import { useGetter } from '@/store'
 
 import Progress from './Progress'
 import Status from './Status'
 
-const PlayTimeCurrent = ({ timeStr }) => {
+const PlayTimeCurrent = ({ timeStr, size }) => {
   const theme = useGetter('common', 'theme')
   // console.log(timeStr)
-  return <Text style={{ fontSize: 14, color: theme.normal10 }}>{timeStr}</Text>
+  return <Text style={{ fontSize: size, color: theme.normal10 }}>{timeStr}</Text>
 }
 
-const PlayTimeMax = memo(({ timeStr }) => {
+const PlayTimeMax = memo(({ timeStr, size }) => {
   const theme = useGetter('common', 'theme')
-  return <Text style={{ fontSize: 14, color: theme.normal10 }}>{timeStr}</Text>
+  return <Text style={{ fontSize: size, color: theme.normal10 }}>{timeStr}</Text>
 })
 
 export default () => {
   const { curTimeStr, maxTimeStr, progress, bufferedProgress, duration } = usePlayTime()
+  const { window } = useDimensions()
+  const size = useMemo(() => window.width * 0.4 * 0.4 * 0.14, [window.width])
 
   return (
     <View style={styles.container} nativeID="player">
@@ -28,9 +30,9 @@ export default () => {
           <Status />
         </View>
         <View style={{ flexGrow: 0, flexShrink: 0, flexDirection: 'row' }} >
-          <PlayTimeCurrent timeStr={curTimeStr} />
-          <Text style={{ fontSize: 14 }}> / </Text>
-          <PlayTimeMax timeStr={maxTimeStr} />
+          <PlayTimeCurrent size={size} timeStr={curTimeStr} />
+          <Text style={{ fontSize: size }}> / </Text>
+          <PlayTimeMax size={size} timeStr={maxTimeStr} />
         </View>
       </View>
     </View>

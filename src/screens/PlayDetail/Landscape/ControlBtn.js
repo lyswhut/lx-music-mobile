@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import Icon from '@/components/common/Icon'
 import { useGetter, useDispatch } from '@/store'
 import { STATUS } from '@/store/modules/player'
+import { useDimensions } from '@/utils/hooks'
 
 
 export default ({ playNextModes }) => {
@@ -22,11 +23,14 @@ export default ({ playNextModes }) => {
   //   setPlayNextMode(playNextModes[index] || '')
   // }, [setPlayNextMode, togglePlayMethod, playNextModes])
 
+  const { window } = useDimensions()
+  const width = useMemo(() => window.width * 0.4 * 0.56 * 0.33 * 0.56, [window.width])
+
   const btnPrev = useMemo(() => (
     <TouchableOpacity style={{ ...styles.cotrolBtn }} activeOpacity={0.5} onPress={playPrev}>
-      <Icon name='prevMusic' style={{ color: theme.secondary10 }} size={26} />
+      <Icon name='prevMusic' style={{ color: theme.secondary10 }} size={width} />
     </TouchableOpacity>
-  ), [playPrev, theme])
+  ), [playPrev, theme, width])
 
   const togglePlay = useCallback(playStatus => {
     switch (playStatus) {
@@ -45,14 +49,14 @@ export default ({ playNextModes }) => {
   }, [])
   const btnPlay = useMemo(() => (
     <TouchableOpacity style={{ ...styles.cotrolBtn }} activeOpacity={0.5} onPress={() => togglePlay(playStatus)}>
-      <Icon name={playStatus == STATUS.playing ? 'pause' : 'play'} style={{ color: theme.secondary10 }} size={26} />
+      <Icon name={playStatus == STATUS.playing ? 'pause' : 'play'} style={{ color: theme.secondary10 }} size={width} />
     </TouchableOpacity>
-  ), [playStatus, theme, togglePlay])
+  ), [playStatus, theme, togglePlay, width])
   const btnNext = useMemo(() => (
     <TouchableOpacity style={{ ...styles.cotrolBtn }} activeOpacity={0.5} onPress={playNext}>
-      <Icon name='nextMusic' style={{ color: theme.secondary10 }} size={26} />
+      <Icon name='nextMusic' style={{ color: theme.secondary10 }} size={width} />
     </TouchableOpacity>
-  ), [playNext, theme])
+  ), [playNext, theme, width])
 
   return (
     <View style={styles.container}>
@@ -72,14 +76,15 @@ export default ({ playNextModes }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 0,
+    flex: 0,
     flexDirection: 'row',
     paddingLeft: 15,
     // paddingRight: 15,
+    width: '56%',
   },
   cotrolBtn: {
-    width: 52,
-    height: 52,
+    width: '33.33%',
+    aspectRatio: 1,
     justifyContent: 'center',
     alignItems: 'center',
 

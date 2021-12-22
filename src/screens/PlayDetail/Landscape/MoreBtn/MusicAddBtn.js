@@ -5,7 +5,7 @@ import { useGetter, useDispatch } from '@/store'
 import MusicAddModal from '@/components/MusicAddModal'
 
 
-export default memo(() => {
+export default memo(({ width }) => {
   const theme = useGetter('common', 'theme')
   const [visibleMusicAddModal, setVisibleMusicAddModal] = useState(false)
   const playMusicInfo = useGetter('player', 'playMusicInfo')
@@ -22,7 +22,7 @@ export default memo(() => {
   return (
     <>
       <TouchableOpacity style={{ ...styles.cotrolBtn }} activeOpacity={0.5} onPress={handleShowMusicAddModal}>
-        <Icon name="add-music" style={{ color: theme.normal30 }} size={22} />
+        <Icon name="add-music" style={{ color: theme.normal30 }} size={width} />
       </TouchableOpacity>
       <MusicAddModal
         visible={visibleMusicAddModal}
@@ -34,9 +34,9 @@ export default memo(() => {
 
 const styles = StyleSheet.create({
   cotrolBtn: {
-    marginRight: 5,
-    width: 28,
-    height: 28,
+    marginRight: '1%',
+    width: '25%',
+    aspectRatio: 1,
     justifyContent: 'center',
     alignItems: 'center',
 

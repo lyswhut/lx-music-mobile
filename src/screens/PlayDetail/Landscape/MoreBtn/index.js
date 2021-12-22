@@ -3,13 +3,17 @@ import { View, StyleSheet } from 'react-native'
 import PlayModeBtn from './PlayModeBtn'
 import MusicAddBtn from './MusicAddBtn'
 import TimeoutExit from './TimeoutExit'
+import { useDimensions } from '@/utils/hooks'
 
 export default () => {
+  const { window } = useDimensions()
+  const width = useMemo(() => window.width * 0.4 * 0.4 * 0.3 * 0.6, [window.width])
+
   return (
     <View style={styles.container}>
-      <TimeoutExit />
-      <PlayModeBtn />
-      <MusicAddBtn />
+      <TimeoutExit width={width} />
+      <PlayModeBtn width={width} />
+      <MusicAddBtn width={width} />
     </View>
   )
 }
@@ -17,6 +21,7 @@ export default () => {
 
 const styles = StyleSheet.create({
   container: {
+    width: '40%',
     flexShrink: 0,
     flexGrow: 0,
     flexDirection: 'row',

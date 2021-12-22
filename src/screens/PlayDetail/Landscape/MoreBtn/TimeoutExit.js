@@ -40,7 +40,7 @@ const Status = ({ exitTime }) => {
   )
 }
 
-export default memo(() => {
+export default memo(({ width }) => {
   const theme = useGetter('common', 'theme')
   const [visibleAlert, setVisibleAlert] = useState(false)
   const { t } = useTranslation()
@@ -112,7 +112,7 @@ export default memo(() => {
   return (
     <>
       <TouchableOpacity style={{ ...styles.cotrolBtn }} activeOpacity={0.5} onPress={handleShowTimeoutAlert}>
-        <Icon name="alarm-snooze" style={{ color: timeInfo.active ? theme.secondary20 : theme.normal30 }} size={22} />
+        <Icon name="alarm-snooze" style={{ color: timeInfo.active ? theme.secondary20 : theme.normal30 }} size={width} />
       </TouchableOpacity>
       <ConfirmAlert
         visible={visibleAlert}
@@ -143,9 +143,9 @@ export default memo(() => {
 
 const styles = StyleSheet.create({
   cotrolBtn: {
-    marginRight: 5,
-    width: 28,
-    height: 28,
+    marginRight: '1%',
+    width: '25%',
+    aspectRatio: 1,
     justifyContent: 'center',
     alignItems: 'center',
 

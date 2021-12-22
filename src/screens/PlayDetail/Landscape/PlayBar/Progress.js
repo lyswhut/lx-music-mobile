@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Pressable } from 'react-native'
 import { useLayout } from '@/utils/hooks'
 import { useGetter, useDispatch } from '@/store'
 // import { AppColors } from '@/theme'
+import { getWindowSise } from '@/utils/tools'
 
 
 const DefaultBar = memo(() => {
@@ -49,9 +50,10 @@ const Progress = ({ progress, bufferedProgress, duration }) => {
 }
 
 
-const progressContentPadding = 10
-const progressHeight = 3
-const progressDotSize = 10
+const { width } = getWindowSise()
+const progressContentPadding = width * 0.0140625
+const progressHeight = width * 0.0046875
+const progressDotSize = progressHeight * 4
 const styles = StyleSheet.create({
   progress: {
     width: '100%',

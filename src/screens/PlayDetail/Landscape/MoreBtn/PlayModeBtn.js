@@ -11,7 +11,7 @@ const playNextModes = [
   'singleLoop',
 ]
 
-export default memo(() => {
+export default memo(({ width }) => {
   const togglePlayMethod = useGetter('common', 'togglePlayMethod')
   const theme = useGetter('common', 'theme')
   const setPlayNextMode = useDispatch('common', 'setPlayNextMode')
@@ -67,16 +67,16 @@ export default memo(() => {
 
   return (
     <TouchableOpacity style={{ ...styles.cotrolBtn }} activeOpacity={0.5} onPress={toggleNextPlayMode}>
-      <Icon name={playModeIcon} style={{ color: theme.normal30 }} size={22} />
+      <Icon name={playModeIcon} style={{ color: theme.normal30 }} size={width} />
     </TouchableOpacity>
   )
 })
 
 const styles = StyleSheet.create({
   cotrolBtn: {
-    marginRight: 5,
-    width: 28,
-    height: 28,
+    marginRight: '1%',
+    width: '25%',
+    aspectRatio: 1,
     justifyContent: 'center',
     alignItems: 'center',
 

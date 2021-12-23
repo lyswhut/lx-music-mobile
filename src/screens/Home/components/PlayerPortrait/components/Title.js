@@ -43,8 +43,8 @@ export default () => {
   }, [downloadFileName, playMusicInfo])
   // console.log(playMusicInfo)
   return (
-    <TouchableOpacity onLongPress={handleLongPress} onPress={handlePress} activeOpacity={0.7} >
-      <Text style={{ width: '100%', fontSize: 14, color: theme.normal }} numberOfLines={1}>{title}</Text>
+    <TouchableOpacity style={{ width: '100%' }} onLongPress={handleLongPress} onPress={handlePress} activeOpacity={0.7} >
+      <Text style={{ fontSize: 14, color: theme.normal }} numberOfLines={1}>{title}</Text>
     </TouchableOpacity>
   )
 }

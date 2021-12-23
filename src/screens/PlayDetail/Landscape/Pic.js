@@ -12,7 +12,8 @@ export default memo(({ componentId, animated }) => {
     return (playMusicInfo && playMusicInfo.musicInfo) || {}
   }, [playMusicInfo])
 
-  const imgWidth = getWindowSise().width * 0.5 * 0.42
+  const { width: winWidth, height: winHeight } = getWindowSise()
+  const imgWidth = Math.min(winWidth * 0.6 * 0.45, winHeight * 0.5)
 
   return (
     <View style={styles.container}>

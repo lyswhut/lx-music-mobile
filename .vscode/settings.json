@@ -1,13 +1,4 @@
 {
-  "path-intellisense.mappings": {
-    // "@config": "${workspaceFolder}/src/config",
-    // "@store": "${workspaceFolder}/src/store",
-    // "@components": "${workspaceFolder}/src/components",
-    // "@navigation": "${workspaceFolder}/src/navigation",
-    // "@screens": "${workspaceFolder}/src/screens",
-    // "@theme": "${workspaceFolder}/src/theme",
-    "@/*": "${workspaceFolder}/src/*"
-  },
   "i18n-ally.localesPaths": [
     "src/lang"
   ],

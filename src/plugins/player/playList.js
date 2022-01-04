@@ -131,7 +131,7 @@ export const updateMetaInfo = async track => {
     title: track.title || 'Unknow',
     artist: track.artist || 'Unknow',
     album: track.album || null,
-    artwork: global.playInfo?.currentPlayMusicInfo?.img || null,
+    artwork: global.playInfo?.currentPlayMusicInfo?.img ?? null,
     duration: global.playInfo?.duration || 0,
   }, global.playInfo.isPlaying)
 }
@@ -164,14 +164,14 @@ const debounceUpdateMetaInfoTools = {
           _track = null
           // isDelayRun = false
           fn(track)
-        }, 1000)
+        }, 1500)
       } else {
         isDelayRun = true
         fn(track)
         BackgroundTimer.setTimeout(() => {
           // delayTimer = null
           isDelayRun = false
-        }, 1000)
+        }, 1500)
       }
     }
   },

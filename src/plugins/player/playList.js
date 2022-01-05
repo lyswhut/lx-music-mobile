@@ -164,14 +164,14 @@ const debounceUpdateMetaInfoTools = {
           _track = null
           // isDelayRun = false
           fn(track)
-        }, 1500)
+        }, 1200)
       } else {
         isDelayRun = true
         fn(track)
         BackgroundTimer.setTimeout(() => {
           // delayTimer = null
           isDelayRun = false
-        }, 1500)
+        }, 1200)
       }
     }
   },

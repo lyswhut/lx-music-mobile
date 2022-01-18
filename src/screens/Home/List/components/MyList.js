@@ -224,9 +224,9 @@ const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) =>
     let promise
     if (/board__/.test(sourceListId)) {
       const id = sourceListId.replace(/board__/, '')
-      promise = getBoardListAll(id)
+      promise = getBoardListAll({ id, isRefresh: true })
     } else {
-      promise = getListDetailAll({ source, id: sourceListId })
+      promise = getListDetailAll({ source, id: sourceListId, isRefresh: true })
     }
     return promise.finally(() => {
       setFetchingListStatus(fetchingListStatus => ({ ...fetchingListStatus, [id]: false }))

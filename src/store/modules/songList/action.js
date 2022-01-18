@@ -138,8 +138,9 @@ export const getListDetail = ({ id, page, isRefresh = false }) => (dispatch, get
   })
 }
 
-export const getListDetailAll = ({ source, id }) => (dispatch, getState) => {
+export const getListDetailAll = ({ source, id, isRefresh = false }) => (dispatch, getState) => {
   let listKey = `sdetail__${source}__${id}`
+  if (isRefresh && cache.has(listKey)) cache.delete(listKey)
   if (!cache.has(listKey)) cache.set(listKey, new Map())
   const listCache = cache.get(listKey)
   const loadData = (id, page) => {

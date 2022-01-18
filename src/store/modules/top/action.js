@@ -102,10 +102,11 @@ export const getList = ({ page, isRefresh = false }) => (dispatch, getState) => 
   })
 }
 
-export const getListAll = tabId => (dispatch, getState) => {
+export const getListAll = ({ id: tabId, isRefresh = false }) => (dispatch, getState) => {
   // console.log(tabId)
   const [source, bangId] = tabId.split('__')
   const listKey = `${source}__${tabId}`
+  if (isRefresh && cache.has(listKey)) cache.delete(listKey)
   if (!cache.has(listKey)) cache.set(listKey, new Map())
   const listCache = cache.get(listKey)
   const loadData = (bangId, page) => {

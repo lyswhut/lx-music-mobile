@@ -51,7 +51,7 @@ const BoardMenu = ({ visible, buttonPosition, index, hideMenu }) => {
     hideMenu()
     if (action) {
       const board = boards[sourceId][index]
-      getListAll(board.id).then(list => {
+      getListAll({ id: board.id }).then(list => {
         if (!list.length) return
 
         switch (action) {

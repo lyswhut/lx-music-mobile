@@ -62,6 +62,13 @@ export function pushHomeScreen() {
                 style: 'dark',
                 backgroundColor: 'transparent',
               },
+              navigationBar: {
+                // visible: false,
+                backgroundColor: 'white',
+              },
+              layout: {
+                componentBackgroundColor: '#fff',
+              },
             },
           },
         }],
@@ -117,6 +124,13 @@ export function pushPlayDetailScreen(componentId, id) {
             visible: true,
             style: 'dark',
             backgroundColor: 'transparent',
+          },
+          navigationBar: {
+            // visible: false,
+            backgroundColor: 'white',
+          },
+          layout: {
+            componentBackgroundColor: '#fff',
           },
           animations: {
             push: {
@@ -201,6 +215,13 @@ export function pushSonglistDetailScreen(componentId, id) {
             visible: true,
             style: 'dark',
             backgroundColor: 'transparent',
+          },
+          navigationBar: {
+            // visible: false,
+            backgroundColor: 'white',
+          },
+          layout: {
+            componentBackgroundColor: '#fff',
           },
           animations: {
             push: {
@@ -325,6 +346,13 @@ export function pushCommentScreen(componentId) {
             visible: true,
             style: 'dark',
             backgroundColor: 'transparent',
+          },
+          navigationBar: {
+            // visible: false,
+            backgroundColor: 'white',
+          },
+          layout: {
+            componentBackgroundColor: '#fff',
           },
           animations: {
             push: {

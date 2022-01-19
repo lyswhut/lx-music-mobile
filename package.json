@@ -59,7 +59,7 @@
     "react-native-exception-handler": "^2.10.10",
     "react-native-extra-dimensions-android": "^1.2.5",
     "react-native-fs": "^2.18.0",
-    "react-native-navigation": "^7.25.0",
+    "react-native-navigation": "^7.25.1",
     "react-native-pager-view": "^5.4.9",
     "react-native-randombytes": "^3.6.1",
     "react-native-splash-screen": "^3.3.0",

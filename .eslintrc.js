@@ -4,7 +4,7 @@ module.exports = {
     'plugin:react-hooks/recommended',
   ],
   plugins: ['html', 'react'],
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   rules: {
     'no-new': 'off',
     camelcase: 'off',

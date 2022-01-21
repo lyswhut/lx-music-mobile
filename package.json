@@ -53,7 +53,7 @@
     "prop-types": "^15.8.1",
     "react": "17.0.2",
     "react-i18next": "^11.15.3",
-    "react-native": "0.67.0",
+    "react-native": "0.67.1",
     "react-native-background-timer": "^2.4.1",
     "react-native-crypto": "^2.2.0",
     "react-native-exception-handler": "^2.10.10",

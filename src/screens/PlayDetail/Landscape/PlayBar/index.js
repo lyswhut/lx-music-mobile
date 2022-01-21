@@ -20,7 +20,7 @@ const PlayTimeMax = memo(({ timeStr, size }) => {
 export default () => {
   const { curTimeStr, maxTimeStr, progress, bufferedProgress, duration } = usePlayTime()
   const { window } = useDimensions()
-  const size = useMemo(() => window.width * 0.4 * 0.4 * 0.14, [window.width])
+  const size = useMemo(() => window.width * 0.4 * 0.4 * 0.125, [window.width])
 
   return (
     <View style={styles.container} nativeID="player">

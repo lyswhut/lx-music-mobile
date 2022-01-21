@@ -52,8 +52,8 @@ const Progress = ({ progress, bufferedProgress, duration }) => {
 
 const { width } = getWindowSise()
 const progressContentPadding = width * 0.0140625
-const progressHeight = width * 0.0046875
-const progressDotSize = progressHeight * 4
+const progressHeight = width * 0.005
+const progressDotSize = progressHeight * 3.8
 const styles = StyleSheet.create({
   progress: {
     width: '100%',

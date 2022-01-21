@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
     flexShrink: 0,
     paddingLeft: '15%',
     paddingRight: '15%',
-    paddingTop: '10%',
-    paddingBottom: '8%',
+    paddingTop: '9.5%',
+    paddingBottom: '8.5%',
   },
   row: {
     flexDirection: 'row',

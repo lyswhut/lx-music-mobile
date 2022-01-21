@@ -50,8 +50,8 @@ const Progress = ({ progress, bufferedProgress, duration }) => {
 
 
 const progressContentPadding = 10
-const progressHeight = 3
-const progressDotSize = 10
+const progressHeight = 3.6
+const progressDotSize = 12
 const styles = StyleSheet.create({
   progress: {
     width: '100%',

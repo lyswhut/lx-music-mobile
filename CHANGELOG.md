@@ -6,6 +6,16 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.10.2](https://github.com/lyswhut/lx-music-mobile/compare/v0.10.1...v0.10.2) - 2022-01-22
+
+### 修复
+
+- 修复某些系统下的虚拟导航栏会导致播放栏隐藏的问题（react-native v0.67.x导致的）
+
+### 其他
+
+- 降级react-native到 v0.66.4
+
 ## [0.10.1](https://github.com/lyswhut/lx-music-mobile/compare/v0.10.0...v0.10.1) - 2022-01-22
 
 ### 优化

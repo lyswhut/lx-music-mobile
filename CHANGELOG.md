@@ -6,6 +6,22 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.10.1](https://github.com/lyswhut/lx-music-mobile/compare/v0.10.0...v0.10.1) - 2022-01-22
+
+### 优化
+
+- 优化通知栏的更新机制，尝试修复魅族的通知栏图片不显示的问题
+- 我的列表-列表名的右击菜单更新已收藏的在线列表时，将始终重新加载，不再使用缓存，解决在原平台更新歌单后，在LX点击更新可能看到的还是在原平台更新前的歌单的问题
+
+### 修复
+
+- 修复tx源无搜索结果的问题
+- 修复小米等设备下面的手势提示线背景颜色为黑色的问题
+
+### 其他
+
+- 升级React native到v0.67.1
+
 ## [0.10.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.9.2...v0.10.0) - 2021-12-30
 
 ### 新增

@@ -6,10 +6,10 @@ import com.facebook.react.PackageList;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
-import com.lxmusicmobile.cache.CachePackage;
-import com.lxmusicmobile.gzip.GzipPackage;
-import com.lxmusicmobile.lyric.LyricPackage;
-import com.lxmusicmobile.utils.UtilsPackage;
+import cn.toside.music.mobile.cache.CachePackage;
+import cn.toside.music.mobile.gzip.GzipPackage;
+import cn.toside.music.mobile.lyric.LyricPackage;
+import cn.toside.music.mobile.utils.UtilsPackage;
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
 

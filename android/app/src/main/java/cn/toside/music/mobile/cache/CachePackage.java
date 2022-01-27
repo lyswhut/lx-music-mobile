@@ -1,4 +1,4 @@
-package com.lxmusicmobile.gzip;
+package cn.toside.music.mobile.cache;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class GzipPackage implements ReactPackage {
+public class CachePackage implements ReactPackage {
 
   @Override
   public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
@@ -18,7 +18,7 @@ public class GzipPackage implements ReactPackage {
 
   @Override
   public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-    return Arrays.<NativeModule>asList(new GzipModule(reactContext));
+    return Arrays.<NativeModule>asList(new CacheModule(reactContext));
   }
 
 }

@@ -1,4 +1,4 @@
-package com.lxmusicmobile.gzip;
+package cn.toside.music.mobile.gzip;
 
 import org.apache.commons.io.FileUtils;
 

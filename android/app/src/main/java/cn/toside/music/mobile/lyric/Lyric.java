@@ -1,4 +1,4 @@
-package com.lxmusicmobile.lyric;
+package cn.toside.music.mobile.lyric;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

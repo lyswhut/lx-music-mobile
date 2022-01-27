@@ -1,4 +1,4 @@
-package com.lxmusicmobile.cache;
+package cn.toside.music.mobile.cache;
 
 import android.os.AsyncTask;
 

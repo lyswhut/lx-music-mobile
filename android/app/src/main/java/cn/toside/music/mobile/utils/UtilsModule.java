@@ -1,4 +1,4 @@
-package com.lxmusicmobile.utils;
+package cn.toside.music.mobile.utils;
 
 import android.app.Activity;
 import android.content.Context;

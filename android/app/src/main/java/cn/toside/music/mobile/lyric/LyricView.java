@@ -1,4 +1,4 @@
-package com.lxmusicmobile.lyric;
+package cn.toside.music.mobile.lyric;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 

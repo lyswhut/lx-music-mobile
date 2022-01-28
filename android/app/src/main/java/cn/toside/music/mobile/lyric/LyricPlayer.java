@@ -25,7 +25,8 @@ public class LyricPlayer {
   int maxLine = 0;
   int offset = 150;
   boolean isOffered = false;
-  long performanceTime = 0;
+  int performanceTime = 0;
+  int startPlayTime = 0;
   int delay = 0;
   Object tid = null;
   boolean tempPause = false;
@@ -76,12 +77,12 @@ public class LyricPlayer {
     tid = null;
   }
 
-  private long getNow() {
-    return System.nanoTime() / 1000000;
+  private int getNow() {
+    return (int)(System.nanoTime() / 1000000);
   }
 
   private int getCurrentTime() {
-    return (int)(getNow() - this.performanceTime);
+    return getNow() - this.performanceTime + startPlayTime;
   }
 
   private void initLines() {
@@ -195,19 +196,25 @@ public class LyricPlayer {
     pause();
     isPlay = true;
 
-    performanceTime = getNow() - (long)curTime;
+    performanceTime = getNow();
+    startPlayTime = curTime;
 
     curLineNum = findCurLineNum(curTime) - 1;
 
     refresh();
   }
 
-  private int findCurLineNum(int curTime) {
+  private int findCurLineNum(int curTime, int startIndex) {
+    // Log.d("Lyric", "findCurLineNum: " + startIndex);
     int length = lines.size();
-    for (int index = 0; index < length; index++) {
-      if (curTime <= (int) ((HashMap)lines.get(index)).get("time")) return index == 0 ? 0 : index - 1;
+    for (int index = startIndex; index < length; index++) {
+      if (curTime < (int) ((HashMap)lines.get(index)).get("time")) return index == 0 ? 0 : index - 1;
     }
     return length - 1;
+  }
+
+  private int findCurLineNum(int curTime) {
+    return findCurLineNum(curTime, 0);
   }
 
   private void handleMaxLine() {
@@ -217,9 +224,10 @@ public class LyricPlayer {
 
   private void refresh() {
     if (tempPaused) tempPaused = false;
-    // Log.d("Lyric", "refresh: " + curLineNum);
 
     curLineNum++;
+    // Log.d("Lyric", "refresh: " + curLineNum);
+
     if (curLineNum >= maxLine) {
       handleMaxLine();
       return;
@@ -227,8 +235,8 @@ public class LyricPlayer {
     HashMap curLine = lines.get(curLineNum);
 
     int currentTime = getCurrentTime();
-    int driftTime = currentTime - (int) curLine.get("time");
-    // Log.d("Lyric", "driftTime: " + driftTime);
+    int driftTime = currentTime - (int)curLine.get("time");
+    // Log.d("Lyric", "driftTime: " + driftTime + "  time: " + curLine.get("time") + "  currentTime: " + currentTime);
 
     if (driftTime >= 0 || curLineNum == 0) {
       HashMap nextLine = lines.get(curLineNum + 1);
@@ -250,10 +258,16 @@ public class LyricPlayer {
         }
         onPlay(curLineNum);
         return;
+      } else {
+        int newCurLineNum = this.findCurLineNum(currentTime, curLineNum + 1);
+        if (newCurLineNum > curLineNum) curLineNum = newCurLineNum - 1;
+        // Log.d("Lyric", "refresh--: " + curLineNum + "  newCurLineNum: " + newCurLineNum);
+        refresh();
+        return;
       }
     }
 
-    curLineNum = this.findCurLineNum(currentTime) - 1;
+    curLineNum = this.findCurLineNum(currentTime, curLineNum) - 1;
     refresh();
   }
 

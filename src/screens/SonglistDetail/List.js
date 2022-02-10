@@ -4,6 +4,7 @@ import ListDetailHeader from './Header'
 import Failed from './Failed'
 import { useGetter, useDispatch } from '@/store'
 import OnlineList from '@/components/OnlineList'
+import { LIST_ID_PLAY_TEMP } from '@/config/constant'
 
 
 export default ({ animatePlayed }) => {
@@ -14,6 +15,9 @@ export default ({ animatePlayed }) => {
   const selectListInfoRef = useRef(selectListInfo)
   const listDetailData = useGetter('songList', 'listDetailData')
   const getListDetail = useDispatch('songList', 'getListDetail')
+  const getListDetailAll = useDispatch('songList', 'getListDetailAll')
+  const songListSource = useGetter('songList', 'songListSource')
+  const setPlayList = useDispatch('player', 'setList')
 
   const handleListLoadMore = useCallback(() => {
     if (listDetailData.isLoading || listDetailData.isEnd) return
@@ -27,6 +31,19 @@ export default ({ animatePlayed }) => {
     })
   }, [getListDetail])
 
+  const handlePlayList = useCallback(async index => {
+    if (!listDetailData.info.name) return
+    const list = await getListDetailAll({ id: selectListInfo.id, source: songListSource })
+    // if (!list.length) return
+    setPlayList({
+      list: {
+        list,
+        id: LIST_ID_PLAY_TEMP,
+      },
+      index,
+    })
+  }, [getListDetailAll, listDetailData.info.name, selectListInfo.id, setPlayList, songListSource])
+
   return (
     <>
       <OnlineList
@@ -36,6 +53,7 @@ export default ({ animatePlayed }) => {
         isListRefreshing={isListRefreshing}
         onRefresh={handleListRefresh}
         onLoadMore={handleListLoadMore}
+        onPlayList={handlePlayList}
         isLoading={listDetailData.isLoading}
         ListHeaderComponent={<ListDetailHeader animatePlayed={animatePlayed} />}
       />

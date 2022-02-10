@@ -42,6 +42,8 @@ export const downloadFileName = state => state.common.setting.download.fileName
 
 export const sourceNameType = state => state.common.setting.sourceNameType
 
+export const isClickPlayList = state => state.common.setting.list.isClickPlayList
+
 export const isEnableDesktopLyric = state => state.common.setting.desktopLyric.enable
 export const isLockDesktopLyric = state => state.common.setting.desktopLyric.isLock
 export const themeDesktopLyric = state => state.common.setting.desktopLyric.theme

@@ -2,6 +2,7 @@ import React, { useState, useCallback, memo, useEffect, useMemo } from 'react'
 import { InteractionManager } from 'react-native'
 import { useGetter, useDispatch } from '@/store'
 import OnlineList from '@/components/OnlineList'
+import { LIST_ID_PLAY_TEMP } from '@/config/constant'
 
 export default memo(() => {
   const [isListRefreshing, setIsListRefreshing] = useState(false)
@@ -12,6 +13,8 @@ export default memo(() => {
   const getList = useDispatch('top', 'getList')
   const tabId = useGetter('top', 'tabId')
   const [page, setPage] = useState(0)
+  const getListAll = useDispatch('top', 'getListAll')
+  const setPlayList = useDispatch('player', 'setList')
   // const getListAll = useDispatch('top', 'getListAll')
   // console.log(isLoading)
 
@@ -53,6 +56,19 @@ export default memo(() => {
 
   const visible = useMemo(() => isLoading && visibleLoadingMask, [isLoading, visibleLoadingMask])
 
+  const handlePlayList = useCallback(index => {
+    getListAll({ id: tabId }).then(list => {
+      if (!list.length) return
+      setPlayList({
+        list: {
+          list,
+          id: LIST_ID_PLAY_TEMP,
+        },
+        index,
+      })
+    })
+  }, [getListAll, setPlayList, tabId])
+
   const listComponent = useMemo(() => {
     return (
       <OnlineList
@@ -62,12 +78,13 @@ export default memo(() => {
         isListRefreshing={isListRefreshing}
         onRefresh={handleRefresh}
         onLoadMore={handleLoadMore}
+        onPlayList={handlePlayList}
         // progressViewOffset={20}
         visibleLoadingMask={visible}
         isLoading={isLoading}
         />
     )
-  }, [handleLoadMore, handleRefresh, isEnd, isListRefreshing, isLoading, listInfo.list, page, visible])
+  }, [handleLoadMore, handlePlayList, handleRefresh, isEnd, isListRefreshing, isLoading, listInfo.list, page, visible])
 
   return listComponent
 })

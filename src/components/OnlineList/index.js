@@ -19,6 +19,7 @@ export default memo(({
   // visibleLoadingMask,
   onRefresh,
   onLoadMore,
+  onPlayList,
   isLoading,
   progressViewOffset,
   ListHeaderComponent,
@@ -28,6 +29,7 @@ export default memo(({
   const addMusicToList = useDispatch('list', 'listAdd')
   const setPlayList = useDispatch('player', 'setList')
   const setTempPlayList = useDispatch('player', 'setTempPlayList')
+  const isClickPlayList = useGetter('common', 'isClickPlayList')
   const [buttonPosition, setButtonPosition] = useState({ w: 0, h: 0, x: 0, y: 0 })
   const selectedData = useRef({ data: null, index: -1 })
   const [visibleMenu, setVisibleMenu] = useState(false)
@@ -126,9 +128,13 @@ export default memo(({
     if (isMultiSelectModeRef.current) {
       handleSelect(item, index)
     } else {
-      handlePlay(item, index)
+      if (isClickPlayList) {
+        onPlayList(index)
+      } else {
+        handlePlay(item, index)
+      }
     }
-  }, [handlePlay, handleSelect])
+  }, [handlePlay, handleSelect, isClickPlayList, onPlayList])
 
   const handleLongPress = useCallback((item, index) => {
     setIsMultiSelectMode(true)

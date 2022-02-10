@@ -326,6 +326,18 @@ const mutations = {
       },
     }
   },
+  [TYPES.setIsClickPlayList](state, enable) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        list: {
+          ...state.setting.list,
+          isClickPlayList: enable,
+        },
+      },
+    }
+  },
   [TYPES.setDesktopLyricStyle](state, style) {
     return {
       ...state,

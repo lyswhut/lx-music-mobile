@@ -37,6 +37,7 @@ export const TYPES = {
   setIsShowLyricTranslation: null,
   setIsEnableSync: null,
   setSyncStatus: null,
+  setIsClickPlayList: null,
   setIsShowDesktopLyric: null,
   setIsLockDesktopLyric: null,
   setThemeDesktopLyric: null,
@@ -324,6 +325,14 @@ export const setThemeDesktopLyric = theme => async(dispatch, getState) => {
   dispatch({
     type: TYPES.setThemeDesktopLyric,
     payload: theme,
+  })
+  const { common } = getState()
+  await setData(settingKey, common.setting)
+}
+export const setIsClickPlayList = flag => async(dispatch, getState) => {
+  dispatch({
+    type: TYPES.setIsClickPlayList,
+    payload: flag,
   })
   const { common } = getState()
   await setData(settingKey, common.setting)

@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, InteractionManage
 import { useGetter, useDispatch } from '@/store'
 import { useTranslation } from '@/plugins/i18n'
 // import DorpDownPanel from '@/components/common/DorpDownPanel'
-import Icon from '@/components/common/Icon'
+import { Icon } from '@/components/common/Icon'
 // import Button from '@/components/common/Button'
 import { BorderWidths } from '@/theme'
 import Menu from '@/components/common/Menu'

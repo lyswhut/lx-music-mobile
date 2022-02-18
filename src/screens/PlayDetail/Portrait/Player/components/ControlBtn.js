@@ -1,6 +1,6 @@
 import React, { useCallback, memo, useMemo, useEffect } from 'react'
 import { Text, StyleSheet, TouchableOpacity } from 'react-native'
-import Icon from '@/components/common/Icon'
+import { Icon } from '@/components/common/Icon'
 import { useGetter, useDispatch } from '@/store'
 import { STATUS } from '@/store/modules/player'
 

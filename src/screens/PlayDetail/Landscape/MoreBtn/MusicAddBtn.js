@@ -1,6 +1,6 @@
 import React, { useCallback, memo, useMemo, useEffect, useState, useRef } from 'react'
 import { Text, StyleSheet, TouchableOpacity } from 'react-native'
-import Icon from '@/components/common/Icon'
+import { Icon } from '@/components/common/Icon'
 import { useGetter, useDispatch } from '@/store'
 import MusicAddModal from '@/components/MusicAddModal'
 

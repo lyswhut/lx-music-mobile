@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { View, Text, StyleSheet, StatusBar, TouchableOpacity } from 'react-native'
 // import Button from '@/components/common/Button'
-import Icon from '@/components/common/Icon'
+import { Icon } from '@/components/common/Icon'
 import { useGetter, useDispatch } from '@/store'
 // import { navigations } from '@/navigation'
 

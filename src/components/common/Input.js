@@ -1,6 +1,6 @@
 import React, { useRef, useImperativeHandle, forwardRef, useCallback } from 'react'
 import { TextInput, StyleSheet, View, TouchableOpacity } from 'react-native'
-import Icon from './Icon'
+import { Icon } from '@/components/common/Icon'
 import { useGetter } from '@/store'
 
 const Input = ({ onChangeText, onClearText, clearBtn, ...props }, ref) => {

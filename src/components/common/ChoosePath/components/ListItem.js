@@ -2,7 +2,7 @@ import React, { useCallback, memo, useRef } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import { useGetter } from '@/store'
 import { BorderWidths } from '@/theme'
-import Icon from '@/components/common/Icon'
+import { Icon } from '@/components/common/Icon'
 
 
 export default memo(({ item, onPress }) => {

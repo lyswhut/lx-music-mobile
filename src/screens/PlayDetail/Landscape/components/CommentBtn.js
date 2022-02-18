@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
-import Icon from '@/components/common/Icon'
+import { Icon } from '@/components/common/Icon'
 import { useGetter, useDispatch } from '@/store'
 import { navigations } from '@/navigation'
 

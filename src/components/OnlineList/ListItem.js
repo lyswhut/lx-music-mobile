@@ -5,7 +5,7 @@ import Button from '@/components/common/Button'
 import Badge from '@/components/common/Badge'
 import { BorderWidths } from '@/theme'
 import { useTranslation } from '@/plugins/i18n'
-import Icon from '@/components/common/Icon'
+import { Icon } from '@/components/common/Icon'
 
 const useQualityTag = musicInfo => {
   const { t } = useTranslation()

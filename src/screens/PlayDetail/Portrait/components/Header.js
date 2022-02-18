@@ -2,7 +2,7 @@ import React, { memo, useState, useCallback } from 'react'
 
 import { View, StyleSheet, StatusBar, TouchableOpacity, Text } from 'react-native'
 
-import Icon from '@/components/common/Icon'
+import { Icon } from '@/components/common/Icon'
 import { useGetter, useDispatch } from '@/store'
 import { pop } from '@/navigation'
 import Popup from '@/components/common/Popup'

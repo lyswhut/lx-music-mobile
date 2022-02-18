@@ -1,6 +1,6 @@
 import React, { useCallback, memo, useMemo, useEffect, useState, useRef } from 'react'
 import { Text, StyleSheet, TouchableOpacity, View } from 'react-native'
-import Icon from '@/components/common/Icon'
+import { Icon } from '@/components/common/Icon'
 import { useGetter, useDispatch } from '@/store'
 import ConfirmAlert from '@/components/common/ConfirmAlert'
 import { useTranslation } from '@/plugins/i18n'

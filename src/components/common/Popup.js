@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, StatusBar } from 'react-native'
 
 import Modal from './Modal'
-import Icon from './Icon'
+import { Icon } from '@/components/common/Icon'
 import { useGetter } from '@/store'
 import { useKeyboard } from '@/utils/hooks'
 

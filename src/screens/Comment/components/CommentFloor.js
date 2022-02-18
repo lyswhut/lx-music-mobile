@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image } from 'react-native'
 import { useGetter, useDispatch } from '@/store'
 import { BorderWidths } from '@/theme'
 import defaultUser from '@/resources/images/defaultUser.jpg'
-import Icon from '@/components/common/Icon'
+import { Icon } from '@/components/common/Icon'
 
 const GAP = 12
 

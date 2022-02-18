@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, ScrollView, Dimensions } from 'react-native'
-import Icon from '@/components/common/Icon'
+import { Icon } from '@/components/common/Icon'
 import Button from '@/components/common/Button'
 
 import { STATUS } from '@/store/modules/player'

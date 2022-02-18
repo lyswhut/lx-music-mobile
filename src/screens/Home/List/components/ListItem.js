@@ -5,7 +5,7 @@ import { BorderWidths } from '@/theme'
 import { useAssertApiSupport } from '@/utils/hooks'
 import { useGetter, useDispatch } from '@/store'
 import Button from '@/components/common/Button'
-import Icon from '@/components/common/Icon'
+import { Icon } from '@/components/common/Icon'
 
 export default memo(({ item, index, activeIndex, onPress, showMenu, handleLongPress, selectedList }) => {
   const theme = useGetter('common', 'theme')

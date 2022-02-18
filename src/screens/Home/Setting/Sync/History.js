@@ -2,7 +2,7 @@ import React, { memo, useRef, useState, useEffect, useCallback } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native'
 import { useGetter } from '@/store'
 // import { gzip, ungzip } from 'pako'
-import Icon from '@/components/common/Icon'
+import { Icon } from '@/components/common/Icon'
 
 import Button from '../components/Button'
 import { useTranslation } from '@/plugins/i18n'

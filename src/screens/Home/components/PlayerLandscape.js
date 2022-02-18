@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, ScrollView, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import Button from '@/components/common/Button'
-import Icon from '@/components/common/Icon'
+import { Icon } from '@/components/common/Icon'
 import { AppColors } from '@/theme'
 
 export default ({

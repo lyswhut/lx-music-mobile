@@ -178,9 +178,18 @@ public class LyricView extends Activity implements View.OnTouchListener {
     if (isLock) {
       layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
       textView.setBackgroundColor(Color.TRANSPARENT);
+
+      // 修复 Android 12 的穿透点击问题
+      if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
+        layoutParams.alpha = 0.8f;
+      }
     } else {
       layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
       textView.setBackgroundResource(R.drawable.rounded_corner);
+
+      if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
+        layoutParams.alpha = 1.0f;
+      }
     }
 
     // TYPE_SYSTEM_ALERT  系统提示,它总是出现在应用程序窗口之上
@@ -280,6 +289,9 @@ public class LyricView extends Activity implements View.OnTouchListener {
     isLock = true;
     if (windowManager == null || textView == null) return;
     layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
+      layoutParams.alpha = 0.8f;
+    }
     textView.setBackgroundColor(Color.TRANSPARENT);
     windowManager.updateViewLayout(textView, layoutParams);
   }
@@ -288,6 +300,9 @@ public class LyricView extends Activity implements View.OnTouchListener {
     isLock = false;
     if (windowManager == null || textView == null) return;
     layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
+      layoutParams.alpha = 1.0f;
+    }
     textView.setBackgroundResource(R.drawable.rounded_corner);
     windowManager.updateViewLayout(textView, layoutParams);
   }

@@ -128,8 +128,8 @@ export default memo(({
     if (isMultiSelectModeRef.current) {
       handleSelect(item, index)
     } else {
-      if (isClickPlayList) {
-        onPlayList(index)
+      if (isClickPlayList && typeof onPlayList == 'function') {
+        onPlayList(index, item)
       } else {
         handlePlay(item, index)
       }

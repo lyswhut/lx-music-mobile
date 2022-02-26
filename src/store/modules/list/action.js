@@ -81,6 +81,33 @@ export const initList = listData => async(dispatch, getState) => {
   })
   if (isNeedSaveSortInfo) await saveListAllSort(listSort)
 
+  let needSaveLists = []
+  const allList = [...(userList ?? [])]
+  if (loveList) allList.unshift(loveList)
+  if (defaultList) allList.unshift(defaultList)
+  allList.forEach(list => {
+    let isNeedSaveList = false
+    const newList = list.list.filter(musicInfo => {
+      // PC v1.8.2以前的Lyric
+      if (musicInfo.lxlrc) {
+        delete musicInfo.lxlrc
+        isNeedSaveList = true
+      }
+      if (musicInfo.lrc) {
+        delete musicInfo.lrc
+        isNeedSaveList = true
+      }
+      if (musicInfo.tlrc) {
+        delete musicInfo.tlrc
+        isNeedSaveList = true
+      }
+
+      return !!musicInfo.songmid
+    })
+    if (isNeedSaveList || newList.length != list.length) needSaveLists.push(list)
+  })
+  if (needSaveLists.length) saveList(needSaveLists)
+
   // console.log(userList.map(l => `${listSort[l.id]} - ${l.name}`))
   dispatch({
     type: TYPES.initList,

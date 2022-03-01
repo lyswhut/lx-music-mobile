@@ -10,7 +10,7 @@ import SubTitle from '../components/SubTitle'
 import Button from '../components/Button'
 import ChoosePath from '@/components/common/ChoosePath'
 import { useTranslation } from '@/plugins/i18n'
-import { toast, handleSaveFile, handleReadFile } from '@/utils/tools'
+import { toast, handleSaveFile, handleReadFile, confirmDialog } from '@/utils/tools'
 
 const exportAllList = async(allList, path) => {
   const data = JSON.parse(JSON.stringify({
@@ -71,6 +71,7 @@ export default memo(() => {
   // const setting = useGetter('common', 'setting')
   const allList = useGetter('list', 'allList')
   const setList = useDispatch('list', 'setList')
+  const createUserList = useDispatch('list', 'createUserList')
 
   const importAndExportData = useCallback(async(action, type) => {
     setDirOnly(action == 'export')
@@ -89,6 +90,40 @@ export default memo(() => {
 
     setShowChoosePath(true)
   }, [t])
+
+  const handleImportPartList = useCallback(async(listData) => {
+    const targetList = global.allList[listData.data.id]
+    if (targetList) {
+      const confirm = await confirmDialog({
+        message: t('list_import_part_confirm', { importName: listData.data.name, localName: targetList.name }),
+        cancelButtonText: t('list_import_part_button_cancel'),
+        confirmButtonText: t('list_import_part_button_confirm'),
+        bgClose: false,
+      })
+      if (confirm) {
+        listData.data.name = targetList.name
+        setList({
+          name: listData.data.name,
+          id: listData.data.id,
+          list: listData.data.list,
+          source: listData.data.source,
+          sourceListId: listData.data.sourceListId,
+        })
+        toast(t('setting_backup_part_import_list_tip_success'))
+        return
+      }
+      listData.data.id += `__${Date.now()}`
+    }
+    createUserList({
+      name: listData.data.name,
+      id: listData.data.id,
+      list: listData.data.list,
+      source: listData.data.source,
+      sourceListId: listData.data.sourceListId,
+      // position: Math.max(selectedListRef.current.index, -1),
+    })
+    toast(t('setting_backup_part_import_list_tip_success'))
+  }, [createUserList, setList, t])
 
   const onConfirmPath = useCallback(path => {
     setShowChoosePath(false)
@@ -130,6 +165,10 @@ export default memo(() => {
                 toast(t('setting_backup_part_import_list_tip_success'))
                 break
 
+              case 'playListPart':
+                handleImportPartList(listData)
+                break
+
               default: return toast(t('setting_backup_part_import_list_tip_failed'))
             }
           })
@@ -162,7 +201,7 @@ export default memo(() => {
       //   setTitle(t('setting_backup_all_import_desc'))
       //   break
     }
-  }, [allList, setList, t])
+  }, [allList, handleImportPartList, setList, t])
 
 
   return (

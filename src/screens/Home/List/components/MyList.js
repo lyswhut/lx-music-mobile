@@ -113,6 +113,7 @@ const ImportExport = ({ actionType, visible, hide, selectedListRef }) => {
                 source: listData.data.source,
                 sourceListId: listData.data.sourceListId,
               })
+              toast(t('setting_backup_part_import_list_tip_success'))
               return
             }
             listData.data.id += `__${Date.now()}`
@@ -125,6 +126,7 @@ const ImportExport = ({ actionType, visible, hide, selectedListRef }) => {
             sourceListId: listData.data.sourceListId,
             position: Math.max(selectedListRef.current.index, -1),
           })
+          toast(t('setting_backup_part_import_list_tip_success'))
         })
         break
       case 'export':

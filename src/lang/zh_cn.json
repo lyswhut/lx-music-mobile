@@ -75,7 +75,7 @@
   "name": "歌曲名：{{name}}",
   "nav_my_list": "我的列表",
   "never_show": "不再提醒",
-  "notifications_check_tip": "你没有允许LX Music显示通知，这将无法使用通知栏进行暂停、切歌等操作，是否去开启？",
+  "notifications_check_tip": "你没有允许LX Music显示通知，或LX Music通知设置里的Music Service通知被禁用，这将无法使用通知栏进行暂停、切歌等操作，是否去开启？",
   "notifications_check_title": "通知权限提醒",
   "parent_dir_name": "父级目录",
   "pause": "暂停",

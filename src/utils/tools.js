@@ -331,15 +331,15 @@ export const checkNotificationPermission = async() => {
     i18n.t('notifications_check_tip'),
     [
       {
-        text: i18n.t('disagree'),
+        text: i18n.t('never_show'),
         onPress: () => {
+          setData(notificationTipEnableKey, '1')
           toast(i18n.t('disagree_tip'))
         },
       },
       {
-        text: i18n.t('never_show'),
+        text: i18n.t('disagree'),
         onPress: () => {
-          setData(notificationTipEnableKey, '1')
           toast(i18n.t('disagree_tip'))
         },
       },

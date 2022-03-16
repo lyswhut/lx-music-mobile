@@ -74,7 +74,7 @@
   "name": "Name: {{name}}",
   "nav_my_list": "My list",
   "never_show": "Never show again",
-  "notifications_check_tip": "You have not allowed LX Music to display notifications, which will prevent you from using the notification bar to pause, switch songs, etc. Do you want to enable it?",
+  "notifications_check_tip": "You have not allowed LX Music to display notifications, or the Music Service in the LX Music notification settings has been disabled, which will prevent you from using the notification bar to pause, switch songs, etc. Do you want to enable it?",
   "notifications_check_title": "Notification permission reminder",
   "parent_dir_name": "Parent directory",
   "pause": "Pause",

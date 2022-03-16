@@ -225,12 +225,11 @@ public class UtilsModule extends ReactContextBaseJavaModule {
   public void openNotificationPermissionActivity() {
     Intent intent = new Intent();
     String packageName = reactContext.getApplicationContext().getPackageName();
-    //直接跳转到应用通知设置的代码：
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {//8.0及以上
-      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-      intent.setData(Uri.fromParts("package", packageName, null));
-    } else {//5.0以上到8.0以下
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // 8.0及以上
+      intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+      intent.putExtra("android.provider.extra.APP_PACKAGE", packageName);
+    } else { // android 5.0-7.0
       intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
       intent.putExtra("app_package", packageName);
       intent.putExtra("app_uid", reactContext.getApplicationContext().getApplicationInfo().uid);

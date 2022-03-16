@@ -122,13 +122,14 @@ initNavigation(() => {
   init().then(() => {
     return navigations.pushHomeScreen().then(() => {
       SplashScreen.hide()
-      if (!store.getState().common.setting.isAgreePact) {
-        showPactModal()
-      } else {
+      if (store.getState().common.setting.isAgreePact) {
         if (isFirstRun) {
           isFirstRun = false
           store.dispatch(commonAction.checkVersion())
         }
+      } else {
+        if (isFirstRun) isFirstRun = false
+        showPactModal()
       }
     })
   }).catch(err => {

@@ -48,7 +48,7 @@ export default memo(() => {
         bgHide={false}
         closeBtn={false}
         cancelText={t('disagree')}
-        confirmText={t('agree')}
+        confirmText={t('agree_go')}
         text={t('setting_lyric_dektop_permission_tip')} />
     </View>
   )

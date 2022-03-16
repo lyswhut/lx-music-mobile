@@ -20,6 +20,7 @@ export const storageDataPrefix = {
   syncAuthKey: '@sync_auth_key',
   syncHost: '@sync_host',
   syncHostHistory: '@sync_host_history',
+  notificationTipEnable: '@notification_tip_enable',
 }
 
 export const ITEM_HEIGHT = 60

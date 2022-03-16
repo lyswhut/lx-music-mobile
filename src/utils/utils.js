@@ -26,3 +26,7 @@ export const getWIFIIPV4Address = UtilsModule.getWIFIIPV4Address
 export const getDeviceName = () => {
   return UtilsModule.getDeviceName().then(deviceName => deviceName || 'Unknown')
 }
+
+export const isNotificationsEnabled = UtilsModule.isNotificationsEnabled
+
+export const openNotificationPermissionActivity = UtilsModule.openNotificationPermissionActivity

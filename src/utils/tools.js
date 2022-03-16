@@ -6,6 +6,8 @@ import { storageDataPrefix } from '@/config'
 import { throttle } from './index'
 import { gzip, ungzip } from '@/utils/gzip'
 import { readFile, writeFile, temporaryDirectoryPath, unlink } from '@/utils/fs'
+import { isNotificationsEnabled, openNotificationPermissionActivity } from '@/utils/utils'
+import { i18n } from '@/plugins/i18n'
 
 const playInfoStorageKey = storageDataPrefix.playInfo
 const listPositionPrefix = storageDataPrefix.listPosition
@@ -16,6 +18,7 @@ const listPrefix = storageDataPrefix.list
 const listSortPrefix = storageDataPrefix.listSort
 const defaultListKey = listPrefix + 'default'
 const loveListKey = listPrefix + 'love'
+const notificationTipEnableKey = storageDataPrefix.notificationTipEnable
 
 
 // https://stackoverflow.com/a/47349998
@@ -316,6 +319,41 @@ export const confirmDialog = ({
 
 export const clipboardWriteText = str => {
   Clipboard.setString(str)
+}
+
+export const checkNotificationPermission = async() => {
+  const isHide = await getData(notificationTipEnableKey)
+  if (isHide != null) return
+  const enabled = await isNotificationsEnabled()
+  if (enabled) return
+  Alert.alert(
+    i18n.t('notifications_check_title'),
+    i18n.t('notifications_check_tip'),
+    [
+      {
+        text: i18n.t('disagree'),
+        onPress: () => {
+          toast(i18n.t('disagree_tip'))
+        },
+      },
+      {
+        text: i18n.t('never_show'),
+        onPress: () => {
+          setData(notificationTipEnableKey, '1')
+          toast(i18n.t('disagree_tip'))
+        },
+      },
+      {
+        text: i18n.t('agree_go'),
+        onPress: () => {
+          openNotificationPermissionActivity()
+        },
+      },
+    ],
+  )
+}
+export const resetNotificationPermissionCheck = () => {
+  return removeData(notificationTipEnableKey)
 }
 
 export {

@@ -1,6 +1,8 @@
 package cn.toside.music.mobile.utils;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +12,7 @@ import android.os.Build;
 import android.util.Log;
 import android.view.WindowManager;
 
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
 
 import com.facebook.react.bridge.Promise;
@@ -20,6 +23,7 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableNativeArray;
 
 import java.io.File;
+import java.util.List;
 
 public class UtilsModule extends ReactContextBaseJavaModule {
   private final ReactApplicationContext reactContext;
@@ -173,7 +177,7 @@ public class UtilsModule extends ReactContextBaseJavaModule {
 
   // https://stackoverflow.com/a/26117646
   @ReactMethod
-  public void getDeviceName(final  Promise promise) {
+  public void getDeviceName(final Promise promise) {
     String manufacturer = Build.MANUFACTURER;
     String model = Build.MODEL;
     if (model.startsWith(manufacturer)) {
@@ -192,6 +196,47 @@ public class UtilsModule extends ReactContextBaseJavaModule {
     } else {
       return Character.toUpperCase(first) + s.substring(1);
     }
+  }
+
+  // https://stackoverflow.com/a/57769424
+  @ReactMethod
+  public void isNotificationsEnabled(final Promise promise) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      NotificationManager manager = (NotificationManager) reactContext.getSystemService(Context.NOTIFICATION_SERVICE);
+      if (!manager.areNotificationsEnabled()) {
+        promise.resolve(false);
+        return;
+      }
+      List<NotificationChannel> channels = manager.getNotificationChannels();
+      for (NotificationChannel channel : channels) {
+        if (channel.getImportance() == NotificationManager.IMPORTANCE_NONE) {
+          promise.resolve(false);
+          return;
+        }
+      }
+      promise.resolve(true);
+    } else {
+      promise.resolve(NotificationManagerCompat.from(reactContext).areNotificationsEnabled());
+    }
+  }
+
+  // https://blog.51cto.com/u_15298568/3121162
+  @ReactMethod
+  public void openNotificationPermissionActivity() {
+    Intent intent = new Intent();
+    String packageName = reactContext.getApplicationContext().getPackageName();
+    //直接跳转到应用通知设置的代码：
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {//8.0及以上
+      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+      intent.setData(Uri.fromParts("package", packageName, null));
+    } else {//5.0以上到8.0以下
+      intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+      intent.putExtra("app_package", packageName);
+      intent.putExtra("app_uid", reactContext.getApplicationContext().getApplicationInfo().uid);
+    }
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    reactContext.startActivity(intent);
   }
 }
 

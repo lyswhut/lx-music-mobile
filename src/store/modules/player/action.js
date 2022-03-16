@@ -17,7 +17,7 @@ import {
   delayUpdateMusicInfo,
 } from '@/plugins/player/playList'
 import { getRandom } from '@/utils'
-import { getMusicUrl, saveMusicUrl, getLyric, saveLyric, assertApiSupport, savePlayInfo, saveList } from '@/utils/tools'
+import { getMusicUrl, saveMusicUrl, getLyric, saveLyric, assertApiSupport, savePlayInfo, saveList, checkNotificationPermission } from '@/utils/tools'
 import { playInfo as playInfoGetter } from './getter'
 import { play as lrcPlay, setLyric, pause as lrcPause, toggleTranslation as lrcToggleTranslation } from '@/utils/lyric'
 import { showLyric, hideLyric, setLyric as lrcdSetLyric, toggleLock, setTheme, setLyricTextPosition, setAlpha, setTextSize } from '@/utils/lyricDesktop'
@@ -430,6 +430,7 @@ export const playMusic = playMusicInfo => async(dispatch, getState) => {
   const { player, common } = getState()
 
   if (!isInitialized()) {
+    await checkNotificationPermission()
     await msInitial({
       cacheSize: common.setting.player.cacheSize,
       isHandleAudioFocus: common.setting.player.isHandleAudioFocus,

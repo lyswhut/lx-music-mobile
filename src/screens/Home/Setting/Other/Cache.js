@@ -7,7 +7,7 @@ import { useGetter, useDispatch } from '@/store'
 import SubTitle from '../components/SubTitle'
 import Button from '../components/Button'
 import { useTranslation } from '@/plugins/i18n'
-import { toast } from '@/utils/tools'
+import { toast, resetNotificationPermissionCheck, confirmDialog } from '@/utils/tools'
 import { getAppCacheSize, clearAppCache } from '@/utils/cache'
 import { sizeFormate } from '@/utils'
 
@@ -27,16 +27,23 @@ export default memo(() => {
 
   const handleCleanCache = useCallback(() => {
     if (cacheSize == null) return
-    setCleaning(true)
-    InteractionManager.runAfterInteractions(() => {
-      Promise.all([
-        clearAppCache(),
-        clearCache(),
-      ]).then(() => {
-        toast(t('setting_other_cache_clear_success_tip'))
-      }).finally(() => {
-        handleGetAppCacheSize()
-        setCleaning(false)
+    confirmDialog({
+      message: t('confirm_tip'),
+      confirmButtonText: t('list_remove_tip_button'),
+    }).then(confirm => {
+      if (!confirm) return
+      setCleaning(true)
+      InteractionManager.runAfterInteractions(() => {
+        Promise.all([
+          clearAppCache(),
+          clearCache(),
+          resetNotificationPermissionCheck(),
+        ]).then(() => {
+          toast(t('setting_other_cache_clear_success_tip'))
+        }).finally(() => {
+          handleGetAppCacheSize()
+          setCleaning(false)
+        })
       })
     })
   }, [cacheSize, clearCache, handleGetAppCacheSize, t])

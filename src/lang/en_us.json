@@ -120,6 +120,7 @@
   "setting_basic_lang": "Language",
   "setting_basic_show_animation": "Show switching animation",
   "setting_basic_source": "Music source",
+  "setting_basic_source_direct": "Direct API",
   "setting_basic_source_temp": "Temporary API (some features not available; workaround if Test API unavailable)",
   "setting_basic_source_test": "Test API (Available for most software features)",
   "setting_basic_source_title": "Choose a music source",

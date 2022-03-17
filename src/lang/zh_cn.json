@@ -121,6 +121,7 @@
   "setting_basic_lang": "语言",
   "setting_basic_show_animation": "显示切换动画",
   "setting_basic_source": "音乐来源",
+  "setting_basic_source_direct": "直连接口（最后的选择...）",
   "setting_basic_source_temp": "临时接口（软件的某些功能不可用，建议测试接口不可用再使用本接口）",
   "setting_basic_source_test": "测试接口（几乎软件的所有功能都可用）",
   "setting_basic_source_title": "选择音乐来源",

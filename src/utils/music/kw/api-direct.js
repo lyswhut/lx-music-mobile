@@ -1,7 +1,7 @@
 import { httpFetch } from '../../request'
 import { timeout } from '../options'
 
-const api_test = {
+export default {
   getMusicUrl(songInfo, type) {
     const target_url = `http://www.kuwo.cn/api/v1/www/music/playUrl?mid=${songInfo.songmid}&type=music&httpsStatus=1`
     const requestObj = httpFetch(target_url, {
@@ -21,5 +21,3 @@ const api_test = {
     return requestObj
   },
 }
-
-export default api_test

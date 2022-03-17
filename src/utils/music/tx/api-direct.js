@@ -1,6 +1,8 @@
 import { httpFetch } from '../../request'
 import { timeout } from '../options'
 
+// https://github.com/listen1/listen1_chrome_extension/blob/master/js/provider/qq.js
+
 const fileConfig = {
   '128k': {
     s: 'M500',
@@ -19,7 +21,7 @@ const fileConfig = {
   },
 }
 
-const api_test = {
+export default {
   getMusicUrl(songInfo, type) {
     const target_url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
     // thanks to https://github.com/Rain120/qq-music-api/blob/2b9cb811934888a532545fbd0bf4e4ab2aea5dbe/routers/context/getMusicPlay.js
@@ -73,5 +75,3 @@ const api_test = {
     return requestObj
   },
 }
-
-export default api_test

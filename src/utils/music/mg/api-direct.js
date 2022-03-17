@@ -1,6 +1,8 @@
 import { httpFetch } from '../../request'
 import { timeout } from '../options'
 
+// https://github.com/listen1/listen1_chrome_extension/blob/master/js/provider/migu.js
+
 const qualitys = {
   '128k': 'PQ',
   '320k': 'HQ',
@@ -8,7 +10,7 @@ const qualitys = {
   flac32bit: 'ZQ',
 }
 
-const api_test = {
+export default {
   getMusicUrl(songInfo, type) {
     const quality = qualitys[type]
     const target_url = `https://app.c.nf.migu.cn/MIGUM2.0/strategy/listen-url/v2.2?netType=01&resourceType=E&songId=${songInfo.songmid}&toneFlag=${quality}`
@@ -33,5 +35,3 @@ const api_test = {
     return requestObj
   },
 }
-
-export default api_test

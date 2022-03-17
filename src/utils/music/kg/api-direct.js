@@ -1,7 +1,8 @@
 import { httpFetch } from '../../request'
 import { timeout } from '../options'
 
-const api_test = {
+// https://github.com/listen1/listen1_chrome_extension/blob/master/js/provider/kugou.js
+export default {
   getMusicUrl(songInfo, type) {
     const target_url = `https://wwwapi.kugou.com/yy/index.php?r=play/getdata&hash=${songInfo.hash}&platid=4&album_id=${songInfo.albumId}&mid=00000000000000000000000000000000`
     const requestObj = httpFetch(target_url, {
@@ -19,5 +20,3 @@ const api_test = {
     return requestObj
   },
 }
-
-export default api_test

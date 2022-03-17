@@ -2,6 +2,8 @@ import { httpFetch } from '../../request'
 import { timeout } from '../options'
 import { eapi } from './utils/crypto'
 
+// https://github.com/listen1/listen1_chrome_extension/blob/master/js/provider/netease.js
+
 const qualitys = {
   '128k': 128000,
   '320k': 320000,
@@ -10,7 +12,7 @@ const qualitys = {
 
 let cookie = 'os=pc'
 
-const api_test = {
+export default {
   getMusicUrl(songInfo, type) {
     const quality = qualitys[type]
     const target_url = 'https://interface3.music.163.com/eapi/song/enhance/player/url'
@@ -42,5 +44,3 @@ const api_test = {
     return requestObj
   },
 }
-
-export default api_test

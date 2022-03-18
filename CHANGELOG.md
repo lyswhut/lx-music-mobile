@@ -1,4 +1,4 @@
-# lx-music-desktop change log
+# lx-music-mobile change log
 
 All notable changes to this project will be documented in this file.
 

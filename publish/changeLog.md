@@ -15,4 +15,4 @@
 
 ### 其他
 
-- 升级React native到v0.67.3
+- 升级React native到v0.67.4

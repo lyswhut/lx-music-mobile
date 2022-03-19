@@ -252,7 +252,7 @@
   "version_label_latest_ver": "最新版本：",
   "version_tip_checking": "检查更新中...⏳",
   "version_tip_downloaded": "安装包已经下载完毕。",
-  "version_tip_failed": "安装包下载失败，你可以重试或者去项目地址手动下载新版更新。",
+  "version_tip_failed": "安装包下载失败，你可以重试或者去项目地址手动下载新版更新。\n💡提示：一般多点几次重试即可正常更新！",
   "version_tip_latest": "软件已是最新，尽情地体验吧~🥂",
   "version_tip_min": "已切换到后台下载，你可以去 设置-软件更新 重新打开本弹窗哦",
   "version_tip_unknown": "获取最新版本信息失败，建议手动去项目地址检查是否有新版本",

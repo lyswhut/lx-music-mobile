@@ -62,6 +62,12 @@ jobs:
           git_commit_sha: ${{ github.sha }}
           git_tag_prefix: "v"
 
+      - name: Generate file MD5
+        run: |
+          echo -e '\n### MD5\n' >> ./publish/changeLog.md
+          cd android/app/build/outputs/apk/release
+          md5sum *.apk >> ../../../../../../publish/changeLog.md
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:

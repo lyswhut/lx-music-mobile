@@ -53,6 +53,11 @@ jobs:
       - name: Get package version
         run: node -p -e '`PACKAGE_VERSION=${require("./package.json").version}`' >> $GITHUB_ENV
 
+      - name: Generate file MD5
+        run: |
+          cd android/app/build/outputs/apk/release
+          md5sum *.apk
+
       - name: Upload Artifact arm64-v8a
         uses: actions/upload-artifact@v2
         with:

@@ -47,7 +47,7 @@ export const getList = ({ page = 1, isRefresh = false }) => (dispatch, getState)
 
   dispatch(setListEnd(false))
   dispatch(setListLoading(true))
-  return music[source].songList.getList(sortId, tabId, page).then(result => {
+  return music[source]?.songList.getList(sortId, tabId, page).then(result => {
     dispatch(setList({ result, pageKey, listKey, page }))
     listCache.set(pageKey, result)
   }).finally(() => {
@@ -67,7 +67,7 @@ const getListDetailLimit = ({ source, id, page }) => {
   if (listCache.has(prevPageKey)) {
     sourcePage = listCache.get(prevPageKey).sourcePage
   }
-  return music[source].songList.getListDetail(id, sourcePage + 1).then(result => {
+  return music[source]?.songList.getListDetail(id, sourcePage + 1).then(result => {
     let p = page
     if (listCache.has(tempListKey)) {
       const list = listCache.get(tempListKey)

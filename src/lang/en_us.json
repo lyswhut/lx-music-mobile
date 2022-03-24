@@ -19,7 +19,7 @@
   "comment_title": "{{name}}-{{singer}}'s comment",
   "confirm": "Confirm",
   "confirm_tip": "Just to double check, do you really want to do this?",
-  "copy_name": "Copy name",
+  "copy_name": "Share song",
   "copy_name_tip": "Copied",
   "create_new_folder": "Create new folder",
   "create_new_folder_error_tip": "The name entered is invalid",

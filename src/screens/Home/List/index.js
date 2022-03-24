@@ -18,6 +18,7 @@ import MusicPositionModal from './components/MusicPositionModal'
 import ListSearchBar from './components/ListSearchBar'
 import { debounceSearchList } from './utils'
 import { useLayout } from '@/utils/hooks'
+import music from '@/utils/music'
 // const shadow = {
 //   shadowOffset: 2,
 //   shadowOpacity: 0.23,
@@ -214,8 +215,8 @@ const List = () => {
           : setVisibleMusicAddModal(true)
         break
       case 'copyName':
-        clipboardWriteText(downloadFileName.replace('歌名', selectedDataRef.current.data.name)
-          .replace('歌手', selectedDataRef.current.data.singer))
+        clipboardWriteText(`${downloadFileName.replace('歌名', selectedDataRef.current.data.name)
+        .replace('歌手', selectedDataRef.current.data.singer)} ${music[selectedDataRef.current.data.source].getMusicDetailPageUrl(selectedDataRef.current.data)}`)
         toast(t('copy_name_tip'))
         break
       case 'changePosition':

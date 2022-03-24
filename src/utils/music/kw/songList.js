@@ -309,6 +309,15 @@ export default {
   getTags() {
     return Promise.all([this.getTag(), this.getHotTag()]).then(([tags, hotTag]) => ({ tags, hotTag, source: 'kw' }))
   },
+
+  getDetailPageUrl(id) {
+    if ((/[?&:/]/.test(id))) id = id.replace(this.regExps.listDetailLink, '$1')
+    else if (/^digest-/.test(id)) {
+      let result = id.split('__')
+      id = result[1]
+    }
+    return `http://www.kuwo.cn/playlist_detail/${id}`
+  },
 }
 
 // getList

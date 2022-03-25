@@ -237,5 +237,14 @@ public class UtilsModule extends ReactContextBaseJavaModule {
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     reactContext.startActivity(intent);
   }
+
+  @ReactMethod
+  public void shareText(String shareTitle, String title, String text) {
+    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+    shareIntent.setType("text/plain");
+    shareIntent.putExtra(Intent.EXTRA_TEXT,text);
+    shareIntent.putExtra(Intent.EXTRA_SUBJECT, title);
+    reactContext.getCurrentActivity().startActivity(Intent.createChooser(shareIntent, shareTitle));
+  }
 }
 

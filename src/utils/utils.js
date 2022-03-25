@@ -30,3 +30,7 @@ export const getDeviceName = () => {
 export const isNotificationsEnabled = UtilsModule.isNotificationsEnabled
 
 export const openNotificationPermissionActivity = UtilsModule.openNotificationPermissionActivity
+
+export const shareText = (shareTitle, title, text) => {
+  UtilsModule.shareText(shareTitle, title, text)
+}

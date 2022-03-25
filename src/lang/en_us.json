@@ -187,6 +187,8 @@
   "setting_sync_status_enabled": "Connected",
   "setting_version": "Software Update",
   "setting_version_show_ver_modal": "Open the update window 🚀",
+  "share_card_title_music": "Share {{name}} to...",
+  "share_title_music": "Song sharing",
   "singer": "Artist: {{name}}",
   "songlist_hot": "Hot",
   "songlist_hot_collect": "Hot Collect",

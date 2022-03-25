@@ -16,7 +16,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
 
       - name: Cache Gradle Wrapper
         uses: actions/cache@v2
@@ -36,12 +36,12 @@ jobs:
         uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-caches-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-caches-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-caches-
 
       - name: Install dependencies
-        run: npm install
+        run: yarn install
 
       - name: Build Packages
         run: |

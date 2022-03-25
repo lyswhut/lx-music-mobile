@@ -10,7 +10,7 @@ import Button from '@/components/common/Button'
 import ExitMultipleModeBar from './components/ExitMultipleModeBar'
 import MyList from './components/MyList'
 import ListItem from './components/ListItem'
-import { getListScrollPosition, saveListScrollPosition } from '@/utils/tools'
+import { getListScrollPosition, saveListScrollPosition, clipboardWriteText, toast } from '@/utils/tools'
 import { shareText } from '@/utils/utils'
 import { useTranslation } from '@/plugins/i18n'
 import { LIST_ITEM_HEIGHT } from '@/config/constant'
@@ -37,6 +37,7 @@ const List = () => {
   const activeListId = useGetter('common', 'prevSelectListId')
   const activeListIdRef = useRef(activeListId)
   const downloadFileName = useGetter('common', 'downloadFileName')
+  const shareType = useGetter('common', 'shareType')
   const [buttonPosition, setButtonPosition] = useState({ w: 0, h: 0, x: 0, y: 0 })
   const selectedDataRef = useRef({ data: null, index: -1 })
   const flatListRef = useRef()
@@ -216,11 +217,17 @@ const List = () => {
           : setVisibleMusicAddModal(true)
         break
       case 'copyName':
-        shareText(t('share_card_title_music', { name: selectedDataRef.current.data.name }), t('share_title_music'), `${downloadFileName.replace('歌名', selectedDataRef.current.data.name)
-          .replace('歌手', selectedDataRef.current.data.singer).replace(/\s/g, '')} ${music[selectedDataRef.current.data.source].getMusicDetailPageUrl(selectedDataRef.current.data)}`)
-        // clipboardWriteText(`${downloadFileName.replace('歌名', selectedDataRef.current.data.name)
-        // .replace('歌手', selectedDataRef.current.data.singer)} ${music[selectedDataRef.current.data.source].getMusicDetailPageUrl(selectedDataRef.current.data)}`)
-        // toast(t('copy_name_tip'))
+        switch (shareType) {
+          case 'system':
+            shareText(t('share_card_title_music', { name: selectedDataRef.current.data.name }), t('share_title_music'), `${downloadFileName.replace('歌名', selectedDataRef.current.data.name)
+            .replace('歌手', selectedDataRef.current.data.singer).replace(/\s/g, '')}\n${music[selectedDataRef.current.data.source].getMusicDetailPageUrl(selectedDataRef.current.data)}`)
+            break
+          case 'clipboard':
+            clipboardWriteText(`${downloadFileName.replace('歌名', selectedDataRef.current.data.name)
+            .replace('歌手', selectedDataRef.current.data.singer)} ${music[selectedDataRef.current.data.source].getMusicDetailPageUrl(selectedDataRef.current.data)}`)
+            toast(t('copy_name_tip'))
+            break
+        }
         break
       case 'changePosition':
         setVIsibleMusicPosition(true)
@@ -236,7 +243,7 @@ const List = () => {
       default:
         break
     }
-  }, [downloadFileName, handleCancelMultiSelect, handlePlay, removeListItem, removeListMultiItem, setTempPlayList])
+  }, [handlePlay, shareType, setTempPlayList, handleCancelMultiSelect, t, downloadFileName, removeListMultiItem, removeListItem])
 
   const handleScroll = useCallback(({ nativeEvent }) => {
     saveListScrollPosition(currentListRef.current.id, nativeEvent.contentOffset.y)

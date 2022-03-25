@@ -26,7 +26,7 @@ export default memo(({ value, label, onChange, ...props }) => {
   }, [])
   useEffect(() => {
     const handleKeyboardDidHide = () => {
-      if (!inputRef.current.isFocused()) return
+      if (!inputRef.current?.isFocused()) return
       onChange && onChange(textRef.current, value => {
         if (!isMountRef.current) return
         const newValue = String(value)

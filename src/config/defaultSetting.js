@@ -3,7 +3,7 @@
 // const { isMac } = require('./utils')
 
 const defaultSetting = {
-  version: '1.16',
+  version: '1.17',
   player: {
     togglePlayMethod: 'listLoop',
     highQuality: false,
@@ -100,6 +100,7 @@ const defaultSetting = {
   sourceId: 'kw',
   apiSource: 'temp',
   sourceNameType: 'alias',
+  shareType: 'system',
   // randomAnimate: true,
   ignoreVersion: null,
   isAgreePact: false,

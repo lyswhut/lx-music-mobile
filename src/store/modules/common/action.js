@@ -31,6 +31,7 @@ export const TYPES = {
   setTop: null,
   setIgnoreVersion: null,
   setVersionInfo: null,
+  setShareType: null,
   setTimeoutExit: null,
   setIsHandleAudioFocus: null,
   setAddMusicLocationType: null,
@@ -394,6 +395,15 @@ export const setPlayerLandscapeStyle = style => async(dispatch, getState) => {
   dispatch({
     type: TYPES.setPlayerLandscapeStyle,
     payload: style,
+  })
+  const { common } = getState()
+  await setData(settingKey, common.setting)
+}
+
+export const setShareType = type => async(dispatch, getState) => {
+  dispatch({
+    type: TYPES.setShareType,
+    payload: type,
   })
   const { common } = getState()
   await setData(settingKey, common.setting)

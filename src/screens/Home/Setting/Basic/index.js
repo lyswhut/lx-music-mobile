@@ -5,6 +5,7 @@ import Theme from './Theme'
 import Source from './Source'
 import SourceName from './SourceName'
 import Language from './Language'
+import ShareType from './ShareType'
 import { useTranslation } from '@/plugins/i18n'
 
 export default memo(() => {
@@ -17,6 +18,7 @@ export default memo(() => {
       <Source />
       <Language />
       <SourceName />
+      <ShareType />
     </Section>
   )
 })

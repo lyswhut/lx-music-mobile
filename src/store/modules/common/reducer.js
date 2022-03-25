@@ -455,6 +455,15 @@ const mutations = {
       },
     }
   },
+  [TYPES.setShareType](state, shareType) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        shareType,
+      },
+    }
+  },
 }
 
 export default (state = initialState, action) =>

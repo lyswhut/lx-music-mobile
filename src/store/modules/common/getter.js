@@ -71,3 +71,5 @@ export const supportQualitys = state => apiSourceInfo.find(s => s.id == state.co
 
 export const playerPortraitStyle = state => state.common.setting.player.portrait.style
 export const playerLandscapeStyle = state => state.common.setting.player.landscape.style
+
+export const shareType = state => state.common.setting.shareType

@@ -1,5 +1,5 @@
 import { Platform, NativeModules, ToastAndroid, BackHandler, Linking, Dimensions, Alert } from 'react-native'
-import ExtraDimensions from 'react-native-extra-dimensions-android'
+// import ExtraDimensions from 'react-native-extra-dimensions-android'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { getData, setData, getAllKeys, removeData, removeDataMultiple, setDataMultiple, getDataMultiple } from '@/plugins/storage'
 import { storageDataPrefix } from '@/config'
@@ -37,23 +37,24 @@ const handleSaveListScrollPosition = throttle(data => {
 // fix https://github.com/facebook/react-native/issues/4934
 export const getWindowSise = windowDimensions => {
   if (!windowDimensions) windowDimensions = Dimensions.get('window')
-  if (Platform.OS === 'ios') return windowDimensions
-  const windowSize = {
-    width: ExtraDimensions.getRealWindowWidth(),
-    height: ExtraDimensions.getRealWindowHeight(),
-  }
-  if (
-    (windowDimensions.height > windowDimensions.width && windowSize.height < windowSize.width) ||
-    (windowDimensions.width > windowDimensions.height && windowSize.width < windowSize.height)
-  ) {
-    windowSize.height = windowSize.width
-  }
-  windowSize.width = windowDimensions.width
+  // if (Platform.OS === 'ios') return windowDimensions
+  return windowDimensions
+  // const windowSize = {
+  //   width: ExtraDimensions.getRealWindowWidth(),
+  //   height: ExtraDimensions.getRealWindowHeight(),
+  // }
+  // if (
+  //   (windowDimensions.height > windowDimensions.width && windowSize.height < windowSize.width) ||
+  //   (windowDimensions.width > windowDimensions.height && windowSize.width < windowSize.height)
+  // ) {
+  //   windowSize.height = windowSize.width
+  // }
+  // windowSize.width = windowDimensions.width
 
-  if (ExtraDimensions.isSoftMenuBarEnabled()) {
-    windowSize.height -= ExtraDimensions.getSoftMenuBarHeight()
-  }
-  return windowSize
+  // if (ExtraDimensions.isSoftMenuBarEnabled()) {
+  //   windowSize.height -= ExtraDimensions.getSoftMenuBarHeight()
+  // }
+  // return windowSize
 }
 
 

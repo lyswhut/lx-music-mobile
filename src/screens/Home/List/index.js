@@ -10,8 +10,7 @@ import Button from '@/components/common/Button'
 import ExitMultipleModeBar from './components/ExitMultipleModeBar'
 import MyList from './components/MyList'
 import ListItem from './components/ListItem'
-import { getListScrollPosition, saveListScrollPosition, clipboardWriteText, toast } from '@/utils/tools'
-import { shareText } from '@/utils/utils'
+import { getListScrollPosition, saveListScrollPosition, shareMusic } from '@/utils/tools'
 import { useTranslation } from '@/plugins/i18n'
 import { LIST_ITEM_HEIGHT } from '@/config/constant'
 import MusicPositionModal from './components/MusicPositionModal'
@@ -19,7 +18,6 @@ import MusicPositionModal from './components/MusicPositionModal'
 import ListSearchBar from './components/ListSearchBar'
 import { debounceSearchList } from './utils'
 import { useLayout } from '@/utils/hooks'
-import music from '@/utils/music'
 // const shadow = {
 //   shadowOffset: 2,
 //   shadowOpacity: 0.23,
@@ -217,17 +215,7 @@ const List = () => {
           : setVisibleMusicAddModal(true)
         break
       case 'copyName':
-        switch (shareType) {
-          case 'system':
-            shareText(t('share_card_title_music', { name: selectedDataRef.current.data.name }), t('share_title_music'), `${downloadFileName.replace('歌名', selectedDataRef.current.data.name)
-            .replace('歌手', selectedDataRef.current.data.singer).replace(/\s/g, '')}\n${music[selectedDataRef.current.data.source].getMusicDetailPageUrl(selectedDataRef.current.data)}`)
-            break
-          case 'clipboard':
-            clipboardWriteText(`${downloadFileName.replace('歌名', selectedDataRef.current.data.name)
-            .replace('歌手', selectedDataRef.current.data.singer)} ${music[selectedDataRef.current.data.source].getMusicDetailPageUrl(selectedDataRef.current.data)}`)
-            toast(t('copy_name_tip'))
-            break
-        }
+        shareMusic(shareType, downloadFileName, selectedDataRef.current.data)
         break
       case 'changePosition':
         setVIsibleMusicPosition(true)
@@ -243,7 +231,7 @@ const List = () => {
       default:
         break
     }
-  }, [handlePlay, shareType, setTempPlayList, handleCancelMultiSelect, t, downloadFileName, removeListMultiItem, removeListItem])
+  }, [handlePlay, shareType, setTempPlayList, handleCancelMultiSelect, downloadFileName, removeListMultiItem, removeListItem])
 
   const handleScroll = useCallback(({ nativeEvent }) => {
     saveListScrollPosition(currentListRef.current.id, nativeEvent.contentOffset.y)

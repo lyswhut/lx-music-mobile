@@ -10,6 +10,7 @@ import LoadingMask from '@/components/common/LoadingMask'
 import { useTranslation } from '@/plugins/i18n'
 import { Loading as FooterLoading, End as FooterEnd } from './Footer'
 import { LIST_ID_PLAY_LATER } from '@/config/constant'
+import { shareMusic } from '@/utils/tools'
 
 export default memo(({
   list,
@@ -30,6 +31,8 @@ export default memo(({
   const setPlayList = useDispatch('player', 'setList')
   const setTempPlayList = useDispatch('player', 'setTempPlayList')
   const isClickPlayList = useGetter('common', 'isClickPlayList')
+  const downloadFileName = useGetter('common', 'downloadFileName')
+  const shareType = useGetter('common', 'shareType')
   const [buttonPosition, setButtonPosition] = useState({ w: 0, h: 0, x: 0, y: 0 })
   const selectedData = useRef({ data: null, index: -1 })
   const [visibleMenu, setVisibleMenu] = useState(false)
@@ -146,7 +149,7 @@ export default memo(({
     return [
       { action: 'play', label: t('play') },
       { action: 'playLater', label: t('play_later') },
-      // { action: 'copyName', label: t('copy_name') },
+      { action: 'copyName', label: t('copy_name') },
       // { action: 'download', label: '下载' },
       // { action: 'add', label: '添加到...' },
       // { action: 'move', label: '移动到...' },
@@ -179,8 +182,9 @@ export default memo(({
           setTempPlayList([{ listId: LIST_ID_PLAY_LATER, musicInfo: selectedData.current.data }])
         }
         break
-        // case 'copyName':
-        //   break
+      case 'copyName':
+        shareMusic(shareType, downloadFileName, selectedData.current.data)
+        break
       case 'add':
         // console.log(selectedListRef.current.length)
         selectedListRef.current.length
@@ -190,7 +194,7 @@ export default memo(({
       default:
         break
     }
-  }, [addMultiMusicToList, handleCancelMultiSelect, handlePlay, setTempPlayList])
+  }, [addMultiMusicToList, downloadFileName, handleCancelMultiSelect, handlePlay, setTempPlayList, shareType])
 
   useEffect(() => {
     if (isLoading && page == 1) {

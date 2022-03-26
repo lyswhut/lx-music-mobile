@@ -6,8 +6,9 @@ import { storageDataPrefix } from '@/config'
 import { throttle } from './index'
 import { gzip, ungzip } from '@/utils/gzip'
 import { readFile, writeFile, temporaryDirectoryPath, unlink } from '@/utils/fs'
-import { isNotificationsEnabled, openNotificationPermissionActivity } from '@/utils/utils'
+import { isNotificationsEnabled, openNotificationPermissionActivity, shareText } from '@/utils/utils'
 import { i18n } from '@/plugins/i18n'
+import music from '@/utils/music'
 
 const playInfoStorageKey = storageDataPrefix.playInfo
 const listPositionPrefix = storageDataPrefix.listPosition
@@ -354,6 +355,22 @@ export const checkNotificationPermission = async() => {
 }
 export const resetNotificationPermissionCheck = () => {
   return removeData(notificationTipEnableKey)
+}
+
+export const shareMusic = (shareType, downloadFileName, musicInfo) => {
+  const name = musicInfo.name
+  const singer = musicInfo.singer
+  const detailUrl = music[musicInfo.source]?.getMusicDetailPageUrl(musicInfo) ?? ''
+  const musicTitle = downloadFileName.replace('歌名', name).replace('歌手', singer)
+  switch (shareType) {
+    case 'system':
+      shareText(i18n.t('share_card_title_music', { name }), i18n.t('share_title_music'), `${musicTitle.replace(/\s/g, '')} \n${detailUrl}`)
+      break
+    case 'clipboard':
+      clipboardWriteText(`${musicTitle} ${detailUrl}`)
+      toast(i18n.t('copy_name_tip'))
+      break
+  }
 }
 
 export {

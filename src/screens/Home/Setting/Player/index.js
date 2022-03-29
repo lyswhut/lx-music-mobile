@@ -1,12 +1,9 @@
-import React, { memo, useMemo } from 'react'
-import {
-  View,
-  Text,
-} from 'react-native'
+import React, { memo } from 'react'
 
 import Section from '../components/Section'
 import IsPlayHighQuality from './IsPlayHighQuality'
 import IsHandleAudioFocus from './IsHandleAudioFocus'
+import IsShowNotificationImage from './IsShowNotificationImage'
 import IsShowLyricTranslation from './IsShowLyricTranslation'
 import MaxCache from './MaxCache'
 import { useTranslation } from '@/plugins/i18n'
@@ -44,6 +41,7 @@ export default memo(() => {
     <Section title={t('setting_play')}>
       <IsPlayHighQuality />
       <IsHandleAudioFocus />
+      <IsShowNotificationImage />
       <IsShowLyricTranslation />
       <MaxCache />
       {/* <View style={{ marginLeft: 15, marginBottom: 15 }}>

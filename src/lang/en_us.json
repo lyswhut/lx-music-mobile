@@ -173,6 +173,7 @@
   "setting_play_lyric_transition": "Show lyrics translation",
   "setting_play_quality": "Play 320K quality songs first (if supported)",
   "setting_play_save_play_time": "Remember playback progress",
+  "setting_play_show_notification_image": "Show song picture in notification bar",
   "setting_play_show_translation": "Show lyrics translation",
   "setting_sync": "Synchronization [It is recommended to back up the playlist before using it for the first time]",
   "setting_sync_address": "Local IP address: {{address}}",

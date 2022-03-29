@@ -1,13 +1,17 @@
 import TrackPlayer, { State } from 'react-native-track-player'
 import BackgroundTimer from 'react-native-background-timer'
 import { defaultUrl } from '@/config'
+import { getStore } from '@/store'
 
+const store = getStore()
 const list = []
+
 const defaultUserAgent = 'Mozilla/5.0 (Linux; Android 10; Pixel 3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Mobile Safari/537.36'
 const httpRxp = /^(https?:\/\/.+|\/.+)/
 
 export const buildTracks = ({ musicInfo, type, url, duration }) => {
   const track = []
+  const isShowNotificationImage = store.getState().common.setting.player.isShowNotificationImage
   if (url) {
     track.push({
       id: `${musicInfo.source}__//${musicInfo.songmid}__//${type}__//${Math.random()}__//${url}`,
@@ -15,7 +19,7 @@ export const buildTracks = ({ musicInfo, type, url, duration }) => {
       title: musicInfo.name || 'Unknow',
       artist: musicInfo.singer || 'Unknow',
       album: musicInfo.albumName || null,
-      artwork: httpRxp.test(musicInfo.img) ? musicInfo.img : null,
+      artwork: isShowNotificationImage && httpRxp.test(musicInfo.img) ? musicInfo.img : null,
       userAgent: defaultUserAgent,
       musicId: `${musicInfo.source}__//${musicInfo.songmid}__//${type}`,
       original: { ...musicInfo },
@@ -29,7 +33,7 @@ export const buildTracks = ({ musicInfo, type, url, duration }) => {
     title: musicInfo.name || 'Unknow',
     artist: musicInfo.singer || 'Unknow',
     album: musicInfo.albumName || null,
-    artwork: httpRxp.test(musicInfo.img) ? musicInfo.img : null,
+    artwork: isShowNotificationImage && httpRxp.test(musicInfo.img) ? musicInfo.img : null,
     musicId: `${musicInfo.source}__//${musicInfo.songmid}__//${type}`,
     original: { ...musicInfo },
     duration: 0,
@@ -39,6 +43,7 @@ export const buildTracks = ({ musicInfo, type, url, duration }) => {
   // console.log('buildTrack', musicInfo.name, url)
 }
 export const buildTrack = ({ musicInfo, type, url, duration }) => {
+  const isShowNotificationImage = store.getState().common.setting.player.isShowNotificationImage
   return url
     ? {
         id: `${musicInfo.source}__//${musicInfo.songmid}__//${type}__//${Math.random()}__//${url}`,
@@ -46,7 +51,7 @@ export const buildTrack = ({ musicInfo, type, url, duration }) => {
         title: musicInfo.name || 'Unknow',
         artist: musicInfo.singer || 'Unknow',
         album: musicInfo.albumName || null,
-        artwork: httpRxp.test(musicInfo.img) ? musicInfo.img : null,
+        artwork: isShowNotificationImage && httpRxp.test(musicInfo.img) ? musicInfo.img : null,
         userAgent: defaultUserAgent,
         musicId: `${musicInfo.source}__//${musicInfo.songmid}__//${type}`,
         original: { ...musicInfo },
@@ -59,7 +64,7 @@ export const buildTrack = ({ musicInfo, type, url, duration }) => {
         title: musicInfo.name || 'Unknow',
         artist: musicInfo.singer || 'Unknow',
         album: musicInfo.albumName || null,
-        artwork: httpRxp.test(musicInfo.img) ? musicInfo.img : null,
+        artwork: isShowNotificationImage && httpRxp.test(musicInfo.img) ? musicInfo.img : null,
         musicId: `${musicInfo.source}__//${musicInfo.songmid}__//${type}`,
         original: { ...musicInfo },
         duration: 0,
@@ -115,6 +120,7 @@ export const playMusic = async(tracks, time) => {
 // let duration = 0
 // let artwork = null
 export const updateMetaInfo = async track => {
+  const isShowNotificationImage = store.getState().common.setting.player.isShowNotificationImage
   // console.log('+++++updateMusicPic+++++', track.artwork, track.duration)
 
   // if (track.musicId == musicId) {
@@ -131,7 +137,7 @@ export const updateMetaInfo = async track => {
     title: track.title || 'Unknow',
     artist: track.artist || 'Unknow',
     album: track.album || null,
-    artwork: global.playInfo?.currentPlayMusicInfo?.img ?? null,
+    artwork: isShowNotificationImage ? global.playInfo?.currentPlayMusicInfo?.img ?? null : null,
     duration: global.playInfo?.duration || 0,
   }, global.playInfo.isPlaying)
 }

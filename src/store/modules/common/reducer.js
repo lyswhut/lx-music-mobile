@@ -464,6 +464,18 @@ const mutations = {
       },
     }
   },
+  [TYPES.setIsShowNotificationImage](state, flag) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        player: {
+          ...state.setting.player,
+          isShowNotificationImage: flag,
+        },
+      },
+    }
+  },
 }
 
 export default (state = initialState, action) =>

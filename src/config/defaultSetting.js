@@ -3,7 +3,7 @@
 // const { isMac } = require('./utils')
 
 const defaultSetting = {
-  version: '1.17',
+  version: '1.18',
   player: {
     togglePlayMethod: 'listLoop',
     highQuality: false,
@@ -13,6 +13,7 @@ const defaultSetting = {
     timeoutExitPlayed: true,
     isHandleAudioFocus: true,
     isShowLyricTranslation: false,
+    isShowNotificationImage: true,
     portrait: {
       style: {
         lrcFontSize: 160,

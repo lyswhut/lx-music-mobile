@@ -73,3 +73,5 @@ export const playerPortraitStyle = state => state.common.setting.player.portrait
 export const playerLandscapeStyle = state => state.common.setting.player.landscape.style
 
 export const shareType = state => state.common.setting.shareType
+
+export const isShowNotificationImage = state => state.common.setting.player.isShowNotificationImage

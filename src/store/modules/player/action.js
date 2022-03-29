@@ -132,7 +132,7 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
       dispatch(getPic(musicInfo)).then(async() => {
         const musicUrl = await getMusicUrl(musicInfo, type)
         if (playMusicId != id) return
-        if (musicUrl) {
+        if (musicUrl && state.common.setting.player.isShowNotificationImage) {
         // console.log('+++updateMusicInfo+++')
         // setTimeout(() => {
           delayUpdateMusicInfo(buildTrack({ musicInfo, type, url: musicUrl }))
@@ -194,8 +194,8 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
 
   // console.log(musicInfo.img)
   if (!musicInfo.img) {
-    dispatch(getPic(musicInfo)).then(async() => {
-      if (playMusicId != id) return
+    dispatch(getPic(musicInfo)).then(() => {
+      if (playMusicId != id || !state.common.setting.player.isShowNotificationImage) return
       delayUpdateMusicInfo(buildTrack({ musicInfo, type }))
     })
   }

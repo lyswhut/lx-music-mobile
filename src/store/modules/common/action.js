@@ -47,6 +47,7 @@ export const TYPES = {
   setDesktopLyricStyle: null,
   setPlayerPortraitStyle: null,
   setPlayerLandscapeStyle: null,
+  setIsShowNotificationImage: null,
 }
 for (const key of Object.keys(TYPES)) {
   TYPES[key] = `common__${key}`
@@ -404,6 +405,15 @@ export const setShareType = type => async(dispatch, getState) => {
   dispatch({
     type: TYPES.setShareType,
     payload: type,
+  })
+  const { common } = getState()
+  await setData(settingKey, common.setting)
+}
+
+export const setIsShowNotificationImage = flag => async(dispatch, getState) => {
+  dispatch({
+    type: TYPES.setIsShowNotificationImage,
+    payload: flag,
   })
   const { common } = getState()
   await setData(settingKey, common.setting)

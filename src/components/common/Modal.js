@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from 'react'
 import { Modal, TouchableWithoutFeedback, StyleSheet, View } from 'react-native'
-import { useDimensions } from '@/utils/hooks'
+// import { useDimensions } from '@/utils/hooks'
 
 const styles = StyleSheet.create({
   mask: {
@@ -20,7 +20,7 @@ export default memo(({
   bgColor = 'rgba(0,0,0,0)',
   children,
 }) => {
-  const { window: windowSize } = useDimensions()
+  // const { window: windowSize } = useDimensions()
   const handleRequestClose = useCallback(() => {
     if (keyHide) hideModal(false)
   }, [hideModal, keyHide])
@@ -38,8 +38,8 @@ export default memo(({
       onRequestClose={handleRequestClose}
     >
       <>
-        <TouchableWithoutFeedback style={{ ...styles.mask, width: windowSize.width, height: windowSize.height }} onPress={handleBgClose}>
-          <View style={{ ...styles.mask, width: windowSize.width, height: windowSize.height, backgroundColor: bgColor }}></View>
+        <TouchableWithoutFeedback style={{ ...styles.mask }} onPress={handleBgClose}>
+          <View style={{ ...styles.mask, backgroundColor: bgColor }}></View>
         </TouchableWithoutFeedback>
         {children}
       </>

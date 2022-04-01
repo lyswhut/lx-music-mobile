@@ -3,7 +3,7 @@ import { aesEncrypt } from './utils'
 import * as modules from '../modules'
 import { action as commonAction } from '@/store/modules/common'
 import { getStore } from '@/store'
-import syncList from './syncList'
+import registerSyncListHandler from './syncList'
 import log from '../log'
 
 const handleConnection = (socket) => {
@@ -13,6 +13,7 @@ const handleConnection = (socket) => {
 }
 
 let socket
+let listSyncPromise
 export const connect = (host, port, keyInfo) => {
   socket = io(`ws://${host}:${port}`, {
     path: '/sync',
@@ -24,13 +25,19 @@ export const connect = (host, port, keyInfo) => {
     },
   })
 
+  listSyncPromise = registerSyncListHandler(socket)
+
   socket.on('connect', async() => {
     console.log('connect')
     log.info('connect')
     const store = getStore()
     global.syncKeyInfo = keyInfo
+    store.dispatch(commonAction.setSyncStatus({
+      status: false,
+      message: 'Wait syncing...',
+    }))
     try {
-      await syncList(socket)
+      await listSyncPromise
     } catch (err) {
       console.log(err)
       log.r_error(err.stack)

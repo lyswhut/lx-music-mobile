@@ -1,5 +1,5 @@
 import { getStore } from '@/store'
-import { action as commonAction } from '@/store/modules/common'
+// import { action as commonAction } from '@/store/modules/common'
 import { action as listAction } from '@/store/modules/list'
 import { toast } from '@/utils/tools'
 
@@ -76,15 +76,10 @@ const handleDisconnect = err => {
   syncAction = null
 }
 
-export default async _socket => {
+export default _socket => {
   socket = _socket
   socket.on('list:sync', handleListSync)
   socket.on('connect_error', handleDisconnect)
   socket.on('disconnect', handleDisconnect)
-  const store = getStore()
-  store.dispatch(commonAction.setSyncStatus({
-    status: false,
-    message: 'Syncing...',
-  }))
-  await wait()
+  return wait()
 }

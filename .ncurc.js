@@ -9,5 +9,8 @@ module.exports = {
     'util',
     'babel-jest',
     'jest',
+
+    'react',
+    'react-test-renderer',
   ]
 }

@@ -85,9 +85,13 @@ export const initList = listData => async(dispatch, getState) => {
   const allList = [...(userList ?? [])]
   if (loveList) allList.unshift(loveList)
   if (defaultList) allList.unshift(defaultList)
+
+  // 临时 - 过滤无效歌曲
   allList.forEach(list => {
     let isNeedSaveList = false
     const newList = list.list.filter(musicInfo => {
+      if (!musicInfo) return false
+
       // PC v1.8.2以前的Lyric
       if (musicInfo.lxlrc) {
         delete musicInfo.lxlrc
@@ -104,7 +108,11 @@ export const initList = listData => async(dispatch, getState) => {
 
       return !!musicInfo.songmid
     })
-    if (isNeedSaveList || newList.length != list.length) needSaveLists.push(list)
+    if (newList.length != list.list.length) {
+      list.list = newList
+      isNeedSaveList = true
+    }
+    if (isNeedSaveList) needSaveLists.push(list)
   })
   if (needSaveLists.length) saveList(needSaveLists)
 

@@ -348,8 +348,9 @@ export const getOtherSource = ({ musicInfo, id }) => (dispatch, getState) => {
         })
       }
     }
-    if (getOtherSourcePromises.has(key)) getOtherSourcePromises.delete(key)
     return otherSource
+  }).finally(() => {
+    if (getOtherSourcePromises.has(key)) getOtherSourcePromises.delete(key)
   })
   getOtherSourcePromises.set(key, promise)
   return promise

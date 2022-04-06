@@ -23,12 +23,17 @@ export const isPlayHighQuality = state => state.common.setting.player.highQualit
 export const isHandleAudioFocus = state => state.common.setting.player.isHandleAudioFocus
 export const playerCacheSize = state => state.common.setting.player.cacheSize
 
-export const themes = state => state.common.themes
+export const themeList = state => state.common.themes
 export const activeThemeId = state => state.common.setting.themeId
 export const theme = createSelector(
-  [themes, activeThemeId],
-  (themes, activeThemeId) => (themes[activeThemeId] || themes.green).colors)
-export const themeList = createSelector(themes, themes => Object.values(themes))
+  [themeList, activeThemeId],
+  (themeList, activeThemeId) => (themeList.find(theme => theme.id === activeThemeId) || themeList[0]).colors)
+export const isDarkTheme = createSelector(
+  [themeList, activeThemeId],
+  (themeList, activeThemeId) => (themeList.find(theme => theme.id === activeThemeId) || themeList[0]).isDark)
+export const statusBarStyle = createSelector(
+  isDarkTheme,
+  isDarkTheme => isDarkTheme ? 'light-content' : 'dark-content')
 
 export const versionInfo = state => state.common.versionInfo
 

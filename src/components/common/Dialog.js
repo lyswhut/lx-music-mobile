@@ -72,7 +72,7 @@ export default ({
   return (
     <Modal visible={visible} hideModal={hideDialog} keyHide={keyHide} bgHide={bgHide} bgColor="rgba(0,0,0,0.2)">
       <View style={{ ...styles.centeredView, paddingBottom: keyboardShown ? keyboardHeight : 0 }}>
-        <View style={styles.modalView} onStartShouldSetResponder={() => true}>
+        <View style={{ ...styles.modalView, backgroundColor: theme.primary }} onStartShouldSetResponder={() => true}>
           <View style={{ ...styles.header, backgroundColor: theme.secondary }}>
             <Text style={{ ...styles.title, color: theme.primary }} numberOfLines={1}>{title}</Text>
             {closeBtnComponent}

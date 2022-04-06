@@ -1,6 +1,11 @@
 import { Navigation } from 'react-native-navigation'
 import { VERSION_MODAL, PACT_MODAL } from './screenNames'
 
+import { getter, getStore } from '@/store'
+
+const store = getStore()
+const getStatusBarStyle = () => getter('common', 'isDarkTheme')(store.getState()) ? 'light' : getStatusBarStyle()
+
 export const dismissOverlay = compId => Navigation.dismissOverlay(compId)
 
 export const pop = compId => Navigation.pop(compId)
@@ -21,7 +26,7 @@ export const showPactModal = () => {
         statusBar: {
           drawBehind: true,
           visible: true,
-          style: 'dark',
+          style: getStatusBarStyle(),
           backgroundColor: 'transparent',
           animate: true,
         },
@@ -65,7 +70,7 @@ export const showVersionModal = () => {
         statusBar: {
           drawBehind: true,
           visible: true,
-          style: 'dark',
+          style: getStatusBarStyle(),
           backgroundColor: 'transparent',
           animate: true,
         },

@@ -222,6 +222,7 @@
   "storage_permission_tip_disagree_ask_again": "This feature cannot be used because you have permanently denied LX access to the phone storage.\nIf you want to continue, you need to go to System Permission Management Set Luo Xue’s storage permission to allow.",
   "storage_permission_tip_request": "To use this function, you need to allow LX to access the phone storage. Do you agree and continue?",
   "sync_status_disabled": "Not connected",
+  "theme_black": "Black",
   "theme_blue": "Blue",
   "theme_blue2": "Purple Blue",
   "theme_green": "Green",

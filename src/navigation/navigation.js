@@ -9,6 +9,11 @@ import {
   // SETTING_SCREEN,
 } from './screenNames'
 
+import { getter, getStore } from '@/store'
+
+const store = getStore()
+const getTheme = () => getter('common', 'theme')(store.getState())
+const getStatusBarStyle = () => getter('common', 'isDarkTheme')(store.getState()) ? 'light' : 'dark'
 
 export function pushHomeScreen() {
   /*
@@ -44,6 +49,7 @@ export function pushHomeScreen() {
     })
   */
 
+  const theme = getTheme()
   return Navigation.setRoot({
     root: {
       stack: {
@@ -59,15 +65,15 @@ export function pushHomeScreen() {
               statusBar: {
                 drawBehind: true,
                 visible: true,
-                style: 'dark',
+                style: getStatusBarStyle(),
                 backgroundColor: 'transparent',
               },
               navigationBar: {
                 // visible: false,
-                backgroundColor: 'white',
+                backgroundColor: theme.primary,
               },
               layout: {
-                componentBackgroundColor: '#fff',
+                componentBackgroundColor: theme.primary,
               },
             },
           },
@@ -110,6 +116,9 @@ export function pushPlayDetailScreen(componentId, id) {
     })
   */
   InteractionManager.runAfterInteractions(() => {
+    const theme = getTheme()
+    console.log(getStatusBarStyle((store.getState())))
+
     Navigation.push(componentId, {
       component: {
         name: PLAY_DETAIL_SCREEN,
@@ -122,15 +131,15 @@ export function pushPlayDetailScreen(componentId, id) {
           statusBar: {
             drawBehind: true,
             visible: true,
-            style: 'dark',
+            style: getStatusBarStyle(),
             backgroundColor: 'transparent',
           },
           navigationBar: {
             // visible: false,
-            backgroundColor: 'white',
+            backgroundColor: theme.primary,
           },
           layout: {
-            componentBackgroundColor: '#fff',
+            componentBackgroundColor: theme.primary,
           },
           animations: {
             push: {
@@ -200,6 +209,7 @@ export function pushPlayDetailScreen(componentId, id) {
   })
 }
 export function pushSonglistDetailScreen(componentId, id) {
+  const theme = getTheme()
   InteractionManager.runAfterInteractions(() => {
     Navigation.push(componentId, {
       component: {
@@ -213,15 +223,15 @@ export function pushSonglistDetailScreen(componentId, id) {
           statusBar: {
             drawBehind: true,
             visible: true,
-            style: 'dark',
+            style: getStatusBarStyle(),
             backgroundColor: 'transparent',
           },
           navigationBar: {
             // visible: false,
-            backgroundColor: 'white',
+            backgroundColor: theme.primary,
           },
           layout: {
-            componentBackgroundColor: '#fff',
+            componentBackgroundColor: theme.primary,
           },
           animations: {
             push: {
@@ -332,6 +342,7 @@ export function pushCommentScreen(componentId) {
     })
   */
   InteractionManager.runAfterInteractions(() => {
+    const theme = getTheme()
     Navigation.push(componentId, {
       component: {
         name: COMMENT_SCREEN,
@@ -344,15 +355,15 @@ export function pushCommentScreen(componentId) {
           statusBar: {
             drawBehind: true,
             visible: true,
-            style: 'dark',
+            style: getStatusBarStyle(),
             backgroundColor: 'transparent',
           },
           navigationBar: {
             // visible: false,
-            backgroundColor: 'white',
+            backgroundColor: theme.primary,
           },
           layout: {
-            componentBackgroundColor: '#fff',
+            componentBackgroundColor: theme.primary,
           },
           animations: {
             push: {
@@ -426,7 +437,7 @@ export function pushCommentScreen(componentId) {
 //         statusBar: {
 //           drawBehind: true,
 //           visible: true,
-//           style: 'dark',
+//           style: getStatusBarStyle(),
 //           backgroundColor: 'transparent',
 //         },
 //         animations: {

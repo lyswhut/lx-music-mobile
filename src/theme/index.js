@@ -1,5 +1,4 @@
 import { AppColors, MaterialColors } from './Colors'
-import * as Themes from './themes'
 import {
   FontWeights,
   FontSizes,
@@ -7,6 +6,7 @@ import {
   BorderRadius,
 } from './Typography'
 
+export { default as Themes } from './themes'
 export {
   AppColors,
   MaterialColors,
@@ -14,5 +14,4 @@ export {
   FontSizes,
   BorderWidths,
   BorderRadius,
-  Themes,
 }

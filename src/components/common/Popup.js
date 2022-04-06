@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react'
-import { StyleSheet, View, Text, TouchableOpacity, StatusBar } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 
 import Modal from './Modal'
 import { Icon } from '@/components/common/Icon'
 import { useGetter } from '@/store'
 import { useKeyboard } from '@/utils/hooks'
+import StatusBar from '@/components/common/StatusBar'
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -114,7 +115,7 @@ export default ({
 
   return (
     <Modal visible={visible} hideModal={hide} keyHide={keyHide} bgHide={bgHide} bgColor="rgba(0,0,0,0.2)">
-      <StatusBar backgroundColor="rgba(0,0,0,0)" barStyle="dark-content" translucent={true} />
+      <StatusBar />
       <View style={{ ...styles.centeredView, ...centeredViewStyle, paddingBottom: keyboardShown ? keyboardHeight : 0 }}>
         <View style={{ ...styles.modalView, ...modalViewStyle, backgroundColor: theme.primary }} onStartShouldSetResponder={() => true}>
           <View style={styles.header}>

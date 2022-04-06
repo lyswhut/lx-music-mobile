@@ -1,10 +1,11 @@
 import React from 'react'
-import { View, Text, StyleSheet, SafeAreaView, StatusBar } from 'react-native'
+import { View, Text, StyleSheet, SafeAreaView } from 'react-native'
+import StatusBar from '@/components/common/StatusBar'
 
 const Header = state => {
   return (
     <View style={style.header}>
-      <StatusBar backgroundColor="rgba(0,0,0,0)" barStyle="dark-content" translucent={true} />
+      <StatusBar />
       <SafeAreaView style={style.container}>
         {state.menu.map((item, index) => <View style={style.btn} key={item.id}><Text style={style.btnText} onPress={() => this.handlePress(item, index)}>{item.name}</Text></View>)}
       </SafeAreaView>

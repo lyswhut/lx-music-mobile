@@ -92,7 +92,7 @@ const Menu = ({
 
   // console.log(menuStyle)
   return (
-    <View style={{ ...styles.menu, ...menuStyle }} onStartShouldSetResponder={() => true}>
+    <View style={{ ...styles.menu, ...menuStyle, backgroundColor: theme.primary }} onStartShouldSetResponder={() => true}>
       <Animated.ScrollView keyboardShouldPersistTaps={'always'}>
         {
           menus.map((menu, index) => (

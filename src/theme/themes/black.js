@@ -1,0 +1,40 @@
+export default {
+  id: 'black',
+  isDark: true,
+  colors: {
+    primary: '#1f1f1f',
+
+    normal: '#bfbfbf',
+    normal10: '#b5b5b5',
+    normal20: '#ababab',
+    normal30: '#a1a1a1',
+    normal35: '#9c9c9c',
+    normal40: '#919191',
+    normal50: '#878787',
+    normal60: '#7d7d7d',
+    normal70: '#737373',
+    normal75: '#6e6e6e',
+
+    secondary_5: '#7a7a7a',
+    secondary: '#707070',
+    secondary10: '#5c5c5c',
+    secondary20: '#474747',
+    secondary30: '#333',
+    secondary40: '#2e2e2e',
+    secondary45: '#292929',
+
+    tertiary_5: '#9b7e83',
+    tertiary: '#a68c91',
+    tertiary10: '#b19b9f',
+    tertiary20: '#bca9ac',
+    tertiary30: '#c7b7ba',
+    tertiary40: '#d2c6c8',
+    tertiary45: '#ddd4d6',
+
+    borderColor: '#0f0f0f',
+    borderColor2: '#1b1b1b',
+    borderColor3: '#292929',
+    borderColor4: '#363636',
+    borderColor5: '#424242',
+  },
+}

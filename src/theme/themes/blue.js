@@ -1,5 +1,6 @@
 export default {
   id: 'blue',
+  isDark: false,
   colors: {
     primary: '#fff',
 

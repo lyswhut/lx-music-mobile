@@ -1,8 +1,9 @@
 import React, { memo, useEffect, useCallback, useMemo } from 'react'
-import { View, Text, StyleSheet, StatusBar } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import { useGetter, useDispatch } from '@/store'
 import { screenkeepAwake, screenUnkeepAwake } from '@/utils/utils'
 import { onNavigationComponentDidDisappearEvent } from '@/navigation'
+import StatusBar from '@/components/common/StatusBar'
 
 import Header from './components/Header'
 import Pic from './Pic'
@@ -37,7 +38,7 @@ export default memo(({ componentId, animated }) => {
   const component = useMemo(() => {
     return (
       <>
-        <StatusBar backgroundColor="rgba(0,0,0,0)" barStyle="dark-content" translucent={true} />
+        <StatusBar />
         <View style={{ ...styles.container, backgroundColor: theme.primary }}>
           <View style={styles.left}>
             <Header />

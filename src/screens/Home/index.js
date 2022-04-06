@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 
-import { View, StatusBar, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import Header from './components/Header'
 import HeaderLandscape from './components/HeaderLandscape'
 // import Aside from './components/Aside'
@@ -8,6 +8,7 @@ import Main from './components/Main'
 import FooterPlayer from './components/FooterPlayer'
 import { useGetter, useDispatch } from '@/store'
 import { useDimensions } from '@/utils/hooks'
+import StatusBar from '@/components/common/StatusBar'
 
 const styles = StyleSheet.create({
   container: {
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
 const Landscape = (props) => {
   return (
     <>
-      <StatusBar backgroundColor="rgba(0,0,0,0)" barStyle="dark-content" translucent={true} />
+      <StatusBar />
       <View style={{ ...styles.container, backgroundColor: props.theme.primary }}>
         <HeaderLandscape componentId={props.componentId} />
         <View style={{ flex: 1, flexDirection: 'column', height: '100%', overflow: 'hidden' }}>

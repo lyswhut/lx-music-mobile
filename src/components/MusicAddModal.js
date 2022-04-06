@@ -32,7 +32,7 @@ const Title = ({ musicInfo, isMove }) => {
   const { t } = useTranslation()
   return (
     musicInfo
-      ? <Text style={styles.title}>{t(isMove ? 'list_add_title_first_move' : 'list_add_title_first_add')} <Text style={{ color: theme.secondary }} >{musicInfo.name}</Text> {t('list_add_title_last')}</Text>
+      ? <Text style={{ ...styles.title, color: theme.normal }}>{t(isMove ? 'list_add_title_first_move' : 'list_add_title_first_add')} <Text style={{ color: theme.secondary }} >{musicInfo.name}</Text> {t('list_add_title_last')}</Text>
       : null
   )
 }

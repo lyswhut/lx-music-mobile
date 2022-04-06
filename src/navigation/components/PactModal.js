@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react'
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, Text, ScrollView } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 
 import Button from '@/components/common/Button'
@@ -70,7 +70,7 @@ const VersionModal = ({ componentId }) => {
 
   return (
     <View style={{ ...styles.centeredView }}>
-      <View style={styles.modalView}>
+      <View style={{ ...styles.modalView, backgroundColor: theme.primary }}>
         <View style={{ ...styles.header, backgroundColor: theme.secondary }}></View>
         <View style={styles.main}>
           <Text style={{ ...styles.title, color: theme.normal }}>许可协议</Text>

@@ -1,12 +1,13 @@
 import React, { memo } from 'react'
 
-import { View, StyleSheet, StatusBar, TouchableOpacity, Text } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
 
 import { Icon } from '@/components/common/Icon'
 import { useGetter, useDispatch } from '@/store'
 import { pop } from '@/navigation'
 import { useTranslation } from '@/plugins/i18n'
 // import { AppColors } from '@/theme'
+import StatusBar from '@/components/common/StatusBar'
 
 
 export default memo(({ musicInfo }) => {
@@ -20,7 +21,7 @@ export default memo(({ musicInfo }) => {
 
   return (
     <View style={{ ...styles.header, backgroundColor: theme.primary }} nativeID="header">
-      <StatusBar backgroundColor="rgba(0,0,0,0)" barStyle="dark-content" translucent={true} />
+      <StatusBar />
       <View style={{ ...styles.container }}>
         <TouchableOpacity onPress={back} style={{ ...styles.button }}>
           <Icon name="chevron-left" style={{ color: theme.normal }} size={24} />

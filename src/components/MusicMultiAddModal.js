@@ -30,7 +30,7 @@ const Title = ({ list, isMove }) => {
   const { t } = useTranslation()
   return (
     list.length
-      ? <Text style={styles.title}>{t(isMove ? 'list_multi_add_title_first_move' : 'list_multi_add_title_first_add')} <Text style={{ color: theme.secondary }} >{list.length}</Text> {t('list_multi_add_title_last')}</Text>
+      ? <Text style={{ ...styles.title, color: theme.normal }}>{t(isMove ? 'list_multi_add_title_first_move' : 'list_multi_add_title_first_add')} <Text style={{ color: theme.secondary }} >{list.length}</Text> {t('list_multi_add_title_last')}</Text>
       : null
   )
 }

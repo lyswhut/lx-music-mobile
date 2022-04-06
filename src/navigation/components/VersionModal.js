@@ -169,7 +169,7 @@ const VersionModal = ({ componentId }) => {
 
   return (
     <View style={{ ...styles.centeredView }}>
-      <View style={styles.modalView}>
+      <View style={{ ...styles.modalView, backgroundColor: theme.primary }}>
         <View style={{ ...styles.header, backgroundColor: theme.secondary }}></View>
         <View style={styles.main}>
           <Text style={{ ...styles.title, color: theme.normal }}>{title}</Text>

@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react'
-import { View, Text, StyleSheet, StatusBar, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
 // import Button from '@/components/common/Button'
 import { Icon } from '@/components/common/Icon'
 import { useGetter, useDispatch } from '@/store'
 // import { navigations } from '@/navigation'
+import StatusBar from '@/components/common/StatusBar'
 
 const useActive = index => {
   const activeIndex = useGetter('common', 'navActiveIndex')
@@ -34,7 +35,7 @@ const Header = ({ componentId }) => {
 
   return (
     <View style={{ ...styles.header, backgroundColor: theme.primary }}>
-      <StatusBar backgroundColor="rgba(0,0,0,0)" barStyle="dark-content" translucent={true} />
+      <StatusBar />
       <View style={styles.container}>
         {/* <View style={styles.left}> */}
           {menus.map((item, index) => <HeaderItem info={item} index={index} key={item.id} onPress={setNavActiveIndex} />)}

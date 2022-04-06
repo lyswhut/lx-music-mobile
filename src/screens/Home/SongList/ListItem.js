@@ -1,8 +1,9 @@
 import React, { memo } from 'react'
 import { View, Text, Image, StyleSheet, Platform, TouchableOpacity } from 'react-native'
-import { AppColors } from '@/theme'
+import { useGetter } from '@/store'
 
 export default memo(({ data: { index, item }, width, onPress = () => {} }) => {
+  const theme = useGetter('common', 'theme')
   const handlePress = () => {
     onPress(item, index)
   }
@@ -10,13 +11,13 @@ export default memo(({ data: { index, item }, width, onPress = () => {} }) => {
     item.source
       ? (
           <View style={{ ...styles.listItem, width: width - 20 }}>
-            <View style={{ ...styles.listItemImg, backgroundColor: AppColors.primary }}>
+            <View style={{ ...styles.listItemImg, backgroundColor: theme.primary }}>
               <TouchableOpacity activeOpacity={0.5} onPress={handlePress}>
                 <Image source={{ uri: item.img }} nativeID={`pic${item.id}`} style={{ width: width - 20, height: width - 20 }} borderRadius={4} />
               </TouchableOpacity>
             </View>
             <TouchableOpacity activeOpacity={0.5} onPress={handlePress}>
-              <Text style={{ ...styles.listItemTitle, color: AppColors.normal }} nativeID={`title${item.id}`} numberOfLines={ 2 }>{item.name}</Text>
+              <Text style={{ ...styles.listItemTitle, color: theme.normal }} nativeID={`title${item.id}`} numberOfLines={ 2 }>{item.name}</Text>
             </TouchableOpacity>
             {/* <Text>{JSON.stringify(item)}</Text> */}
           </View>

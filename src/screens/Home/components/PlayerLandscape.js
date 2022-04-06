@@ -1,14 +1,14 @@
 import React from 'react'
-import { View, ScrollView, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { View, ScrollView, Text, StyleSheet, Image, TouchableOpacity, useGetter } from 'react-native'
 import Button from '@/components/common/Button'
 import { Icon } from '@/components/common/Icon'
-import { AppColors } from '@/theme'
 
 export default ({
   asideWidth, targetMusic, toggleNextPlayMode,
   togglePlay, playIcon, playModeIcon, actions,
   menu, homeViewPageIndex, onLayout = () => {}, navPress = () => {},
 }) => {
+  const theme = useGetter('common', 'theme')
   const navBtnWidth = asideWidth * 0.5 - 0.1
   const imgWidth = asideWidth * 0.3
   const paddingBottom = asideWidth * 0.05
@@ -20,13 +20,13 @@ export default ({
   const navIconSize = asideWidth * 0.15
   const iconSize = asideWidth * 0.15
 
-  return <View style={{ ...styles.header, backgroundColor: AppColors.primary }} onLayout={onLayout}>
+  return <View style={{ ...styles.header, backgroundColor: theme.primary }} onLayout={onLayout}>
     <ScrollView style={{ ...styles.navBtnContainer }}>
       <View style={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
         {
           menu.map((item, index) =>
             <Button style={{ ...styles.btn, width: navBtnWidth, height: navBtnWidth }} key={index} onPress={() => navPress(item, index)}>
-              <Icon name={item.icon} style={{ color: homeViewPageIndex == index ? AppColors.secondary : AppColors.normal10 }} size={navIconSize} />
+              <Icon name={item.icon} style={{ color: homeViewPageIndex == index ? theme.secondary : theme.normal10 }} size={navIconSize} />
             </Button>)
         }
       </View>
@@ -36,24 +36,24 @@ export default ({
       <View style={{ flexShrink: 0, width: '100%', flexDirection: 'row', flexWrap: 'wrap' }}>
         <TouchableOpacity activeOpacity={0.5} onPress={toggleNextPlayMode}>
           <Text style={{ ...styles.cotrolBtn, ...btnStyle }}>
-            <Icon name={playModeIcon} style={{ color: AppColors.secondary10 }} size={iconSize} />
+            <Icon name={playModeIcon} style={{ color: theme.secondary10 }} size={iconSize} />
           </Text>
         </TouchableOpacity>
       </View>
       <View style={{ flexShrink: 0, width: '100%', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
         <TouchableOpacity activeOpacity={0.5} onPress={actions.playPrev}>
           <Text style={{ ...styles.cotrolBtn, ...btnStyle, transform: [{ rotate: '180deg' }] }}>
-            <Icon name='nextMusic' style={{ color: AppColors.secondary10 }} size={iconSize} />
+            <Icon name='nextMusic' style={{ color: theme.secondary10 }} size={iconSize} />
           </Text>
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.5} onPress={togglePlay}>
           <Text style={{ ...styles.cotrolBtn, ...btnStyle }}>
-            <Icon name={playIcon} style={{ color: AppColors.secondary10 }} size={iconSize} />
+            <Icon name={playIcon} style={{ color: theme.secondary10 }} size={iconSize} />
           </Text>
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.5} onPress={actions.playNext}>
           <Text style={{ ...styles.cotrolBtn, ...btnStyle }}>
-            <Icon name='nextMusic' style={{ color: AppColors.secondary10 }} size={iconSize} />
+            <Icon name='nextMusic' style={{ color: theme.secondary10 }} size={iconSize} />
           </Text>
         </TouchableOpacity>
       </View>
@@ -61,7 +61,7 @@ export default ({
         <View style={{ borderRadius: 4, marginTop: paddingBottom / 2 }} elevation={1}>
           <Image source={{ uri: targetMusic.img }} borderRadius={4} style={{
             ...styles.playInfoImg,
-            backgroundColor: AppColors.primary,
+            backgroundColor: theme.primary,
             width: imgWidth,
             height: imgWidth,
           }} />

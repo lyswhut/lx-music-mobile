@@ -40,6 +40,7 @@
   "list_create": "Create a new list",
   "list_create_input_placeholder": "What name do you think of...",
   "list_edit_action_tip_add_success": "Added successfully",
+  "list_edit_action_tip_exist": "This song already exists in this list",
   "list_edit_action_tip_move_success": "Moved successfully",
   "list_edit_action_tip_remove_success": "Removed successfully",
   "list_end": "In The End",

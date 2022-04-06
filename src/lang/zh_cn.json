@@ -40,6 +40,7 @@
   "list_create": "新建列表",
   "list_create_input_placeholder": "你想起啥名...",
   "list_edit_action_tip_add_success": "添加成功",
+  "list_edit_action_tip_exist": "该列表已经有这首歌啦",
   "list_edit_action_tip_move_success": "移动成功",
   "list_edit_action_tip_remove_success": "移除成功",
   "list_end": "到底啦~",

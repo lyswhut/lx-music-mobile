@@ -81,7 +81,6 @@ export default memo(({ visible, hideModal, musicInfo, listId, isMove = false }) 
   const allList = useGetter('list', 'allList')
   const addMusicToList = useDispatch('list', 'listAdd')
   const moveMusicToList = useDispatch('list', 'listMove')
-  const removeMusicFromList = useDispatch('list', 'listRemove')
   const { window } = useDimensions()
   const theme = useGetter('common', 'theme')
   const [isEdit, setIsEdit] = useState(false)
@@ -96,7 +95,7 @@ export default memo(({ visible, hideModal, musicInfo, listId, isMove = false }) 
     }
   }, [window])
 
-  const handleSelect = useCallback((list, isRemove) => {
+  const handleSelect = useCallback((list, isExists) => {
     if (isMove) {
       moveMusicToList({
         fromId: listId,
@@ -104,26 +103,20 @@ export default memo(({ visible, hideModal, musicInfo, listId, isMove = false }) 
         musicInfo,
       })
       toast(t('list_edit_action_tip_move_success'))
+      hideModal()
     } else {
-      if (isRemove) {
-        const index = list.list.indexOf(musicInfo)
-        if (index > -1) {
-          removeMusicFromList({
-            listId: list.id,
-            id: musicInfo.songmid,
-          })
-          toast(t('list_edit_action_tip_remove_success'))
-        }
+      if (isExists) {
+        toast(t('list_edit_action_tip_exist'))
       } else {
         addMusicToList({
           musicInfo,
           id: list.id,
         })
         toast(t('list_edit_action_tip_add_success'))
+        hideModal()
       }
     }
-    hideModal()
-  }, [addMusicToList, hideModal, isMove, listId, moveMusicToList, musicInfo, removeMusicFromList, t])
+  }, [addMusicToList, hideModal, isMove, listId, moveMusicToList, musicInfo, t])
 
   const hideEdit = useCallback(() => {
     setIsEdit(false)

@@ -2,7 +2,7 @@ export default {
   id: 'black',
   isDark: true,
   colors: {
-    primary: '#1f1f1f',
+    primary: '#1a1a1a',
 
     normal: '#bfbfbf',
     normal10: '#b5b5b5',
@@ -15,13 +15,13 @@ export default {
     normal70: '#737373',
     normal75: '#6e6e6e',
 
-    secondary_5: '#7a7a7a',
-    secondary: '#707070',
-    secondary10: '#5c5c5c',
-    secondary20: '#474747',
-    secondary30: '#333',
-    secondary40: '#2e2e2e',
-    secondary45: '#292929',
+    secondary_5: '#666',
+    secondary: '#575757',
+    secondary10: '#474747',
+    secondary20: '#383838',
+    secondary30: '#2e2e2e',
+    secondary40: '#292929',
+    secondary45: '#1f1f1f',
 
     tertiary_5: '#9b7e83',
     tertiary: '#a68c91',

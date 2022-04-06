@@ -52,7 +52,7 @@ export default ({ check, label, children, onChange, disabled = false, need = fal
       : (
           <View style={contentStyle}>
             <CheckBox value={check} disabled={isDisabled} onValueChange={onChange} tintColors={tintColors} />
-            <TouchableOpacity style={labelStyle} activeOpacity={0.5} onPress={handleLabelPress}>
+            <TouchableOpacity style={labelStyle} activeOpacity={0.3} onPress={handleLabelPress}>
               {label ? <Text style={{ ...styles.name, color: theme.normal }}>{label}</Text> : children}
             </TouchableOpacity>
           </View>

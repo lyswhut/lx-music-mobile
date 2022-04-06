@@ -3,7 +3,7 @@ import { TextInput, StyleSheet, View, TouchableOpacity } from 'react-native'
 import { Icon } from '@/components/common/Icon'
 import { useGetter } from '@/store'
 
-const Input = ({ onChangeText, onClearText, clearBtn, ...props }, ref) => {
+const Input = ({ onChangeText, onClearText, clearBtn, style, ...props }, ref) => {
   const inputRef = useRef()
   const theme = useGetter('common', 'theme')
   // const scaleClearBtn = useRef(new Animated.Value(0)).current
@@ -62,7 +62,7 @@ const Input = ({ onChangeText, onClearText, clearBtn, ...props }, ref) => {
         autoCapitalize="none"
         onChangeText={changeText}
         autoCompleteType="off"
-        style={{ ...styles.input, color: theme.normal }}
+        style={{ ...styles.input, color: theme.normal, ...style }}
         placeholderTextColor={theme.normal50}
         selectionColor={theme.secondary10}
         ref={inputRef} {...props} />

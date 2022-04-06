@@ -19,7 +19,7 @@ const Btn = ({ ripple: propsRipple, children, disabled, style, ...props }, ref) 
   }))
 
   return (
-    <Pressable android_ripple={ripple} disabled={disabled} style={{ opacity: disabled ? 0.5 : 1, ...style }} {...props} ref={btnRef}>
+    <Pressable android_ripple={ripple} disabled={disabled} style={{ opacity: disabled ? 0.3 : 1, ...style }} {...props} ref={btnRef}>
       {children}
     </Pressable>
   )

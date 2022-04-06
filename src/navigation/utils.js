@@ -4,7 +4,7 @@ import { VERSION_MODAL, PACT_MODAL } from './screenNames'
 import { getter, getStore } from '@/store'
 
 const store = getStore()
-const getStatusBarStyle = () => getter('common', 'isDarkTheme')(store.getState()) ? 'light' : getStatusBarStyle()
+const getStatusBarStyle = () => getter('common', 'isDarkTheme')(store.getState()) ? 'light' : 'dark'
 
 export const dismissOverlay = compId => Navigation.dismissOverlay(compId)
 

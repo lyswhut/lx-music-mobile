@@ -19,6 +19,7 @@ const PlayTimeMax = memo(({ timeStr }) => {
 
 export default () => {
   const { curTimeStr, maxTimeStr, progress, bufferedProgress, duration } = usePlayTime()
+  const theme = useGetter('common', 'theme')
 
   return (
     <>
@@ -29,7 +30,7 @@ export default () => {
         </View>
         <View style={{ flexGrow: 0, flexShrink: 0, flexDirection: 'row' }} >
           <PlayTimeCurrent timeStr={curTimeStr} />
-          <Text style={{ fontSize: 14 }}> / </Text>
+          <Text style={{ fontSize: 14, color: theme.normal }}> / </Text>
           <PlayTimeMax timeStr={maxTimeStr} />
         </View>
       </View>

@@ -21,6 +21,7 @@ export default () => {
   const { curTimeStr, maxTimeStr, progress, bufferedProgress, duration } = usePlayTime()
   const { window } = useDimensions()
   const size = useMemo(() => window.width * 0.4 * 0.4 * 0.125, [window.width])
+  const theme = useGetter('common', 'theme')
 
   return (
     <View style={styles.container} nativeID="player">
@@ -31,7 +32,7 @@ export default () => {
         </View>
         <View style={{ flexGrow: 0, flexShrink: 0, flexDirection: 'row' }} >
           <PlayTimeCurrent size={size} timeStr={curTimeStr} />
-          <Text style={{ fontSize: size }}> / </Text>
+          <Text style={{ fontSize: size, color: theme.normal }}> / </Text>
           <PlayTimeMax size={size} timeStr={maxTimeStr} />
         </View>
       </View>

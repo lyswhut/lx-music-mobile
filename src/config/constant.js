@@ -25,3 +25,19 @@ export const NAV_VIEW_NAMES = {
 }
 
 export const LXM_FILE_EXT_RXP = /\.(json|lxmc)$/
+
+export const MUSIC_TOGGLE_MODE = {
+  listLoop: 'listLoop', // 列表循环
+  random: 'random', // 列表随机
+  list: 'list', // 顺序播放
+  singleLoop: 'singleLoop', // 单曲循环
+  none: 'none', // 禁用
+}
+
+export const MUSIC_TOGGLE_MODE_LIST = [
+  MUSIC_TOGGLE_MODE.listLoop,
+  MUSIC_TOGGLE_MODE.random,
+  MUSIC_TOGGLE_MODE.list,
+  MUSIC_TOGGLE_MODE.singleLoop,
+  MUSIC_TOGGLE_MODE.none,
+]

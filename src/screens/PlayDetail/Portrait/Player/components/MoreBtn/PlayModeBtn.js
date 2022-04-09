@@ -4,12 +4,7 @@ import { Icon } from '@/components/common/Icon'
 import { useGetter, useDispatch } from '@/store'
 import { toast } from '@/utils/tools'
 import { useTranslation } from '@/plugins/i18n'
-const playNextModes = [
-  'listLoop',
-  'random',
-  'list',
-  'singleLoop',
-]
+import { MUSIC_TOGGLE_MODE_LIST, MUSIC_TOGGLE_MODE } from '@/config/constant'
 
 export default memo(() => {
   const togglePlayMethod = useGetter('common', 'togglePlayMethod')
@@ -18,22 +13,22 @@ export default memo(() => {
   const { t } = useTranslation()
 
   const toggleNextPlayMode = () => {
-    let index = playNextModes.indexOf(togglePlayMethod)
-    if (++index >= playNextModes.length) index = -1
-    const mode = playNextModes[index]
-    setPlayNextMode(mode || '')
+    let index = MUSIC_TOGGLE_MODE_LIST.indexOf(togglePlayMethod)
+    if (++index >= MUSIC_TOGGLE_MODE_LIST.length) index = 0
+    const mode = MUSIC_TOGGLE_MODE_LIST[index]
+    setPlayNextMode(mode)
     let modeName
     switch (mode) {
-      case 'listLoop':
+      case MUSIC_TOGGLE_MODE.listLoop:
         modeName = 'play_list_loop'
         break
-      case 'random':
+      case MUSIC_TOGGLE_MODE.random:
         modeName = 'play_list_random'
         break
-      case 'list':
+      case MUSIC_TOGGLE_MODE.list:
         modeName = 'play_list_order'
         break
-      case 'singleLoop':
+      case MUSIC_TOGGLE_MODE.singleLoop:
         modeName = 'play_single_loop'
         break
       default:
@@ -46,16 +41,16 @@ export default memo(() => {
   const playModeIcon = useMemo(() => {
     let playModeIcon = null
     switch (togglePlayMethod) {
-      case 'listLoop':
+      case MUSIC_TOGGLE_MODE.listLoop:
         playModeIcon = 'list-loop'
         break
-      case 'random':
+      case MUSIC_TOGGLE_MODE.random:
         playModeIcon = 'list-random'
         break
-      case 'list':
+      case MUSIC_TOGGLE_MODE.list:
         playModeIcon = 'list-order'
         break
-      case 'singleLoop':
+      case MUSIC_TOGGLE_MODE.singleLoop:
         playModeIcon = 'single-loop'
         break
       default:

@@ -1,11 +1,12 @@
 // const path = require('path')
 // const os = require('os')
 // const { isMac } = require('./utils')
+import { MUSIC_TOGGLE_MODE } from './constant'
 
 const defaultSetting = {
   version: '1.18',
   player: {
-    togglePlayMethod: 'listLoop',
+    togglePlayMethod: MUSIC_TOGGLE_MODE.listLoop,
     highQuality: false,
     isSavePlayTime: false,
     cacheSize: 1024, // unit MB

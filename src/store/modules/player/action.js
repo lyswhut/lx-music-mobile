@@ -23,7 +23,7 @@ import { playInfo as playInfoGetter } from './getter'
 import { play as lrcPlay, setLyric, pause as lrcPause, toggleTranslation as lrcToggleTranslation } from '@/utils/lyric'
 import { showLyric, hideLyric, setLyric as lrcdSetLyric, toggleLock, setTheme, setLyricTextPosition, setAlpha, setTextSize } from '@/utils/lyricDesktop'
 import { action as listAction } from '@/store/modules/list'
-import { LIST_ID_PLAY_LATER } from '@/config/constant'
+import { LIST_ID_PLAY_LATER, MUSIC_TOGGLE_MODE } from '@/config/constant'
 import { i18n } from '@/plugins/i18n'
 // import { defaultList } from '../list/getter'
 
@@ -630,14 +630,14 @@ export const playPrev = () => async(dispatch, getState) => {
   let nextIndex = currentIndex
   if (!playInfo.isTempPlay) {
     switch (common.setting.player.togglePlayMethod) {
-      case 'random':
+      case MUSIC_TOGGLE_MODE.random:
         nextIndex = getRandom(0, filteredList.length)
         break
-      case 'listLoop':
-      case 'list':
+      case MUSIC_TOGGLE_MODE.listLoop:
+      case MUSIC_TOGGLE_MODE.list:
+      case MUSIC_TOGGLE_MODE.singleLoop:
+      case MUSIC_TOGGLE_MODE.none:
         nextIndex = currentIndex === 0 ? filteredList.length - 1 : currentIndex - 1
-        break
-      case 'singleLoop':
         break
       default:
         nextIndex = -1
@@ -652,7 +652,7 @@ export const playPrev = () => async(dispatch, getState) => {
   }))
 }
 
-export const playNext = () => async(dispatch, getState) => {
+export const playNext = isAutoToggle => async(dispatch, getState) => {
   const { player, common } = getState()
   if (player.tempPlayList.length) {
     const playMusicInfo = player.tempPlayList[0]
@@ -705,24 +705,32 @@ export const playNext = () => async(dispatch, getState) => {
   }
   const currentIndex = listPlayIndex
   let nextIndex = currentIndex
-  switch (common.setting.player.togglePlayMethod) {
-    case 'listLoop':
+  let togglePlayMethod = common.setting.player.togglePlayMethod
+  if (isAutoToggle !== true) {
+    switch (togglePlayMethod) {
+      case MUSIC_TOGGLE_MODE.list:
+      case MUSIC_TOGGLE_MODE.singleLoop:
+      case MUSIC_TOGGLE_MODE.none:
+        togglePlayMethod = MUSIC_TOGGLE_MODE.listLoop
+    }
+  }
+  switch (togglePlayMethod) {
+    case MUSIC_TOGGLE_MODE.listLoop:
       nextIndex = currentIndex === filteredList.length - 1 ? 0 : currentIndex + 1
       break
-    case 'random':
+    case MUSIC_TOGGLE_MODE.random:
       nextIndex = getRandom(0, filteredList.length)
       break
-    case 'list':
+    case MUSIC_TOGGLE_MODE.list:
       nextIndex = currentIndex === filteredList.length - 1 ? -1 : currentIndex + 1
       break
-    case 'singleLoop':
+    case MUSIC_TOGGLE_MODE.singleLoop:
       break
     default:
       nextIndex = -1
       break
   }
 
-  console.log(nextIndex)
   if (nextIndex < 0) {
     dispatch(setStatus({ status: STATUS.stop, text: i18n.t('stopped') }))
     lrcPause()

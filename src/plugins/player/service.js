@@ -105,7 +105,7 @@ export default async() => {
 
   TrackPlayer.addEventListener(TPEvent.PlaybackState, async info => {
     const state = store.getState()
-    console.log('playback-state', TPState[info.state])
+    // console.log('playback-state', TPState[info.state])
 
     // console.log((await getCurrentTrack())?.id)
     if (state.player.isGettingUrl) return
@@ -187,7 +187,7 @@ export default async() => {
       if (retryTrack) {
         if (retryTrack.musicId == retryGetUrlId) {
           if (++retryGetUrlNum > 1) {
-            store.dispatch(playerAction.playNext())
+            store.dispatch(playerAction.playNext(true))
             retryGetUrlId = null
             retryTrack = null
             return
@@ -198,7 +198,7 @@ export default async() => {
         }
         store.dispatch(playerAction.refreshMusicUrl(global.playInfo.currentPlayMusicInfo, errorTime))
       } else {
-        store.dispatch(playerAction.playNext())
+        store.dispatch(playerAction.playNext(true))
       }
     }
   //   // if (!info.nextTrack) return

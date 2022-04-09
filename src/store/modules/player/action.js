@@ -9,6 +9,7 @@ import {
   seekTo,
   resetPlay,
   getPosition,
+  isEmpty,
   destroy as msDestroy,
 } from '@/plugins/player/utils'
 import {
@@ -23,6 +24,7 @@ import { play as lrcPlay, setLyric, pause as lrcPause, toggleTranslation as lrcT
 import { showLyric, hideLyric, setLyric as lrcdSetLyric, toggleLock, setTheme, setLyricTextPosition, setAlpha, setTextSize } from '@/utils/lyricDesktop'
 import { action as listAction } from '@/store/modules/list'
 import { LIST_ID_PLAY_LATER } from '@/config/constant'
+import { i18n } from '@/plugins/i18n'
 // import { defaultList } from '../list/getter'
 
 export const TYPES = {
@@ -441,7 +443,7 @@ export const playMusic = playMusicInfo => async(dispatch, getState) => {
   if (playMusicInfo === undefined) {
     if (player.isGettingUrl || !_playMusicInfo) return
     // console.log(player.isGettingUrl, _playMusicInfo)
-    if (/\/\/restorePlay$/.test(playMusicId) || player.status == STATUS.none) {
+    if (/\/\/restorePlay$/.test(playMusicId) || player.status == STATUS.none || isEmpty()) {
       handlePlayMusic({
         getState,
         dispatch,
@@ -717,9 +719,15 @@ export const playNext = () => async(dispatch, getState) => {
       break
     default:
       nextIndex = -1
-      return
+      break
   }
-  if (nextIndex < 0) return
+
+  console.log(nextIndex)
+  if (nextIndex < 0) {
+    dispatch(setStatus({ status: STATUS.stop, text: i18n.t('stopped') }))
+    lrcPause()
+    return
+  }
 
   dispatch(playMusic({
     musicInfo: filteredList[nextIndex],

@@ -1,7 +1,7 @@
 import TrackPlayer, { State as TPState, Event as TPEvent } from 'react-native-track-player'
 import { getStore } from '@/store'
 import { action as playerAction, STATUS } from '@/store/modules/player'
-import { isTempTrack } from './utils'
+import { isTempId, isEmpty } from './utils'
 import { play as lrcPlay, pause as lrcPause } from '@/utils/lyric'
 import { exitApp } from '@/utils/common'
 import { getCurrentTrackId, getCurrentTrack, delayUpdateMusicInfo, buildTrack } from './playList'
@@ -13,10 +13,8 @@ let isInitialized = false
 let retryTrack = null
 let retryGetUrlId = null
 let retryGetUrlNum = 0
-let trackId = ''
 let errorTime = 0
 // let prevDuration = 0
-const tempIdRxp = /\/\/default$|\/\/default\/\/restorePlay$/
 // let isPlaying = false
 
 // 销毁播放器并退出
@@ -107,11 +105,11 @@ export default async() => {
 
   TrackPlayer.addEventListener(TPEvent.PlaybackState, async info => {
     const state = store.getState()
-    // console.log('playback-state', TPState[info.state])
+    console.log('playback-state', TPState[info.state])
 
     // console.log((await getCurrentTrack())?.id)
     if (state.player.isGettingUrl) return
-    if (trackId && tempIdRxp.test(trackId)) return
+    if (isTempId()) return
     let currentIsPlaying = false
 
     switch (info.state) {
@@ -182,8 +180,8 @@ export default async() => {
     // console.log('nextTrack====>', info)
     if (global.isPlayedExit) return handleExitApp()
 
-    trackId = await getCurrentTrackId()
-    if (trackId && isTempTrack(trackId)) {
+    global.playerTrackId = await getCurrentTrackId()
+    if (isEmpty()) {
       console.log('====TEMP PAUSE====')
       TrackPlayer.pause()
       if (retryTrack) {

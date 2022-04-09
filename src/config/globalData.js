@@ -33,3 +33,4 @@ global.playInfo = {
 
 global.isEnableSyncLog = false
 
+global.playerTrackId = ''

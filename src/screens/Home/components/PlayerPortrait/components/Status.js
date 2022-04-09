@@ -13,7 +13,7 @@ export default memo(() => {
   const status = useMemo(() => playStatus == STATUS.playing
     ? text
     : (
-        (playStatus == STATUS.pause || playStatus == STATUS.stop) && text
+        playStatus == STATUS.pause && text
           ? text
           : statusText
       ), [playStatus, statusText, text])

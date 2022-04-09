@@ -5,7 +5,10 @@ import { playMusic as handlePlayMusic } from './playList'
 
 export { useProgress } from './hook'
 
-export const isTempTrack = trackId => /\/\/default$/.test(trackId)
+const emptyIdRxp = /\/\/default$/
+const tempIdRxp = /\/\/default$|\/\/default\/\/restorePlay$/
+export const isEmpty = (trackId = global.playerTrackId) => emptyIdRxp.test(trackId)
+export const isTempId = (trackId = global.playerTrackId) => tempIdRxp.test(trackId)
 
 // export const replacePlayTrack = async(newTrack, oldTrack) => {
 //   console.log('replaceTrack')

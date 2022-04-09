@@ -141,14 +141,7 @@ export default memo(({ visible, hideModal, list, onAdd, excludeList = [], listId
               </TouchableOpacity>
               {
                 isEdit
-                  ? (
-                      <View style={styles.imputContainer}>
-                        <CreateUserList
-                          isEdit={isEdit}
-                          hideEdit={hideEdit}
-                        />
-                      </View>
-                    )
+                  ? <CreateUserList isEdit={isEdit} hideEdit={hideEdit} />
                   : null
               }
             </View>
@@ -194,20 +187,13 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '100%',
-    // paddingRight: 10,
-    // paddingBottom: 10,
+    paddingBottom: 10,
     // backgroundColor: 'rgba(0,0,0,0.2)',
   },
   input: {
+    flex: 1,
     fontSize: 12,
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 10,
-    paddingRight: 10,
-    marginRight: 10,
-    marginBottom: 10,
     borderRadius: 4,
-    width: '100%',
     textAlign: 'center',
   },
 })

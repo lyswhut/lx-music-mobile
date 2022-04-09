@@ -80,11 +80,18 @@ export const pause = () => {
 export const useLrcPlay = () => {
   const [lrcInfo, setLrcInfo] = useState({ line: 0, text: '' })
   useEffect(() => {
-    const callback = (line, text) => {
+    const playCallback = (line, text) => {
       setLrcInfo({ line, text })
     }
-    lrcTools.addPlayHook(callback)
-    return () => lrcTools.removePlayHook(callback)
+    const setLrcCallback = () => {
+      setLrcInfo({ line: 0, text: '' })
+    }
+    lrcTools.addPlayHook(playCallback)
+    lrcTools.addSetLyricHook(setLrcCallback)
+    return () => {
+      lrcTools.removePlayHook(playCallback)
+      lrcTools.removeSetLyricHook(setLrcCallback)
+    }
   }, [setLrcInfo])
 
   return lrcInfo

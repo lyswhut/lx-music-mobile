@@ -377,18 +377,25 @@ export const shareMusic = (shareType, downloadFileName, musicInfo) => {
   }
 }
 
+export const getAppearance = () => {
+  return Appearance.getColorScheme()
+}
+
 export const onAppearanceChange = callback => {
-  callback(Appearance.getColorScheme())
   return Appearance.addChangeListener(({ colorScheme }) => {
     callback(colorScheme)
   })
 }
 
+let isSupportedAutoTheme = null
 export const getIsSupportedAutoTheme = () => {
-  const osVerNum = parseInt(osVer)
-  return isAndroid
-    ? osVerNum >= 10
-    : osVerNum >= 13
+  if (isSupportedAutoTheme == null) {
+    const osVerNum = parseInt(osVer)
+    isSupportedAutoTheme = isAndroid
+      ? osVerNum >= 10
+      : osVerNum >= 13
+  }
+  return isSupportedAutoTheme
 }
 
 export {

@@ -19,7 +19,7 @@ import { init as initMusicTools } from '@/utils/music'
 import { init as initLyric, toggleTranslation } from '@/utils/lyric'
 import { showLyric, onPositionChange } from '@/utils/lyricDesktop'
 import { init as initI18n, supportedLngs } from '@/plugins/i18n'
-import { deviceLanguage, getPlayInfo, toast, onAppearanceChange, getIsSupportedAutoTheme } from '@/utils/tools'
+import { deviceLanguage, getPlayInfo, toast, onAppearanceChange, getIsSupportedAutoTheme, getAppearance } from '@/utils/tools'
 import { LIST_ID_PLAY_TEMP } from '@/config/constant'
 import { connect, SYNC_CODE } from '@/plugins/sync'
 
@@ -127,6 +127,8 @@ const init = () => {
 
 initNavigation(() => {
   init().then(() => {
+    if (getIsSupportedAutoTheme()) store.dispatch(commonAction.setSystemColor(getAppearance()))
+
     return navigations.pushHomeScreen().then(() => {
       SplashScreen.hide()
       if (store.getState().common.setting.isAgreePact) {

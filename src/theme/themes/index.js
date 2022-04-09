@@ -1,6 +1,7 @@
 import green from './green'
 import blue from './blue'
 import orange from './orange'
+import pink from './pink'
 import red from './red'
 import grey from './grey'
 import black from './black'
@@ -9,15 +10,8 @@ export default [
   green,
   blue,
   orange,
+  pink,
   red,
   grey,
   black,
 ]
-
-export { default as green } from './green'
-export { default as blue } from './blue'
-export { default as orange } from './orange'
-export { default as red } from './red'
-export { default as pink } from './pink'
-export { default as grey } from './grey'
-export { default as black } from './black'

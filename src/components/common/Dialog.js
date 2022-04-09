@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     maxWidth: '90%',
     minWidth: '60%',
     maxHeight: '78%',
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     borderRadius: 4,
     // shadowColor: '#000',
     // shadowOffset: {
@@ -70,7 +70,7 @@ export default ({
   const closeBtnComponent = useMemo(() => closeBtn ? <TouchableHighlight style={styles.closeBtn} underlayColor={theme.secondary_5} onPress={hideDialog}><Icon name="close" style={{ color: theme.secondary40, fontSize: 10 }} /></TouchableHighlight> : null, [closeBtn, hideDialog, theme])
 
   return (
-    <Modal visible={visible} hideModal={hideDialog} keyHide={keyHide} bgHide={bgHide} bgColor="rgba(0,0,0,0.2)">
+    <Modal visible={visible} hideModal={hideDialog} keyHide={keyHide} bgHide={bgHide} bgColor="rgba(50,50,50,.3)">
       <View style={{ ...styles.centeredView, paddingBottom: keyboardShown ? keyboardHeight : 0 }}>
         <View style={{ ...styles.modalView, backgroundColor: theme.primary }} onStartShouldSetResponder={() => true}>
           <View style={{ ...styles.header, backgroundColor: theme.secondary }}>

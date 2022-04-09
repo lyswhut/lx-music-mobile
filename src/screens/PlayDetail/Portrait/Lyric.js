@@ -16,7 +16,7 @@ const LrcLine = memo(({ lrc, line, activeLine }) => {
         ...styles.lineText,
         fontSize: playerPortraitStyle.lrcFontSize / 10,
         lineHeight: playerPortraitStyle.lrcFontSize / 10 * 1.25,
-        color: activeLine == line ? theme.secondary : theme.normal30,
+        color: activeLine == line ? theme.secondary : theme.normal50,
       }}>{lrc.text}</Text>
       {
         lrc.translation
@@ -24,7 +24,7 @@ const LrcLine = memo(({ lrc, line, activeLine }) => {
             ...styles.lineTranslationText,
             fontSize: playerPortraitStyle.lrcFontSize / 10 * 0.8,
             lineHeight: playerPortraitStyle.lrcFontSize / 10 * 0.8 * 1.25,
-            color: activeLine == line ? theme.secondary : theme.normal30,
+            color: activeLine == line ? theme.secondary : theme.normal50,
           }}>{lrc.translation}</Text>
           : null
       }

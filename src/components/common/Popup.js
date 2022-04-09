@@ -114,7 +114,7 @@ export default ({
   }, [position])
 
   return (
-    <Modal visible={visible} hideModal={hide} keyHide={keyHide} bgHide={bgHide} bgColor="rgba(0,0,0,0.2)">
+    <Modal visible={visible} hideModal={hide} keyHide={keyHide} bgHide={bgHide} bgColor="rgba(50,50,50,.3)">
       <StatusBar />
       <View style={{ ...styles.centeredView, ...centeredViewStyle, paddingBottom: keyboardShown ? keyboardHeight : 0 }}>
         <View style={{ ...styles.modalView, ...modalViewStyle, backgroundColor: theme.primary }} onStartShouldSetResponder={() => true}>

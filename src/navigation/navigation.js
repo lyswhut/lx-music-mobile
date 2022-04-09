@@ -117,7 +117,6 @@ export function pushPlayDetailScreen(componentId, id) {
   */
   InteractionManager.runAfterInteractions(() => {
     const theme = getTheme()
-    console.log(getStatusBarStyle((store.getState())))
 
     Navigation.push(componentId, {
       component: {

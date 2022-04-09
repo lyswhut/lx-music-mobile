@@ -19,7 +19,7 @@ import { init as initMusicTools } from '@/utils/music'
 import { init as initLyric, toggleTranslation } from '@/utils/lyric'
 import { showLyric, onPositionChange } from '@/utils/lyricDesktop'
 import { init as initI18n, supportedLngs } from '@/plugins/i18n'
-import { deviceLanguage, getPlayInfo, toast } from '@/utils/tools'
+import { deviceLanguage, getPlayInfo, toast, onAppearanceChange, getIsSupportedAutoTheme } from '@/utils/tools'
 import { LIST_ID_PLAY_TEMP } from '@/config/constant'
 import { connect, SYNC_CODE } from '@/plugins/sync'
 
@@ -42,6 +42,13 @@ const init = () => {
     registerPlaybackService(),
   ]).then(() => {
     let setting = store.getState().common.setting
+
+    if (getIsSupportedAutoTheme()) {
+      onAppearanceChange(color => {
+        store.dispatch(commonAction.setSystemColor(color))
+      })
+    }
+
     toggleTranslation(setting.player.isShowLyricTranslation)
     if (setting.sync.enable) {
       connect().catch(err => {

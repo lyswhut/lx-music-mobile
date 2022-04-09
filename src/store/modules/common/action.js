@@ -1,4 +1,4 @@
-import { getData, setData, removeData, getAllKeys, getDataMultiple, setDataMultiple } from '@/plugins/storage'
+import { getData, setData } from '@/plugins/storage'
 import { storageDataPrefix } from '@/config'
 import { action as playerAction, getter as playerGetter } from '@/store/modules/player'
 import { mergeSetting } from '@/config/setting'
@@ -21,6 +21,8 @@ export const TYPES = {
   setPrevSelectListId: null,
   setApiSource: null,
   setTheme: null,
+  setIsAutoTheme: null,
+  setSystemColor: null,
   setSearchSource: null,
   setAgreePact: null,
   setSongList: null,
@@ -192,6 +194,20 @@ export const setTheme = id => async(dispatch, getState) => {
   const { common } = getState()
   await setData(settingKey, common.setting)
 }
+
+export const setIsAutoTheme = enabled => async(dispatch, getState) => {
+  dispatch({
+    type: TYPES.setIsAutoTheme,
+    payload: enabled,
+  })
+  const { common } = getState()
+  await setData(settingKey, common.setting)
+}
+
+export const setSystemColor = color => ({
+  type: TYPES.setSystemColor,
+  payload: color,
+})
 
 export const setLang = id => async(dispatch, getState) => {
   dispatch({

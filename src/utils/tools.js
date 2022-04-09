@@ -1,4 +1,4 @@
-import { Platform, NativeModules, ToastAndroid, BackHandler, Linking, Dimensions, Alert } from 'react-native'
+import { Platform, NativeModules, ToastAndroid, BackHandler, Linking, Dimensions, Alert, Appearance } from 'react-native'
 // import ExtraDimensions from 'react-native-extra-dimensions-android'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { getData, setData, getAllKeys, removeData, removeDataMultiple, setDataMultiple, getDataMultiple } from '@/plugins/storage'
@@ -28,6 +28,9 @@ let deviceLanguage = Platform.OS === 'ios'
     NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
   : NativeModules.I18nManager.localeIdentifier
 deviceLanguage = typeof deviceLanguage === 'string' ? deviceLanguage.substring(0, 5).toLocaleLowerCase() : ''
+
+export const isAndroid = Platform.OS === 'android'
+export const osVer = Platform.constants.Release
 
 const handleSaveListScrollPosition = throttle(data => {
   setData(listPositionPrefix, data)
@@ -372,6 +375,20 @@ export const shareMusic = (shareType, downloadFileName, musicInfo) => {
       toast(i18n.t('copy_name_tip'))
       break
   }
+}
+
+export const onAppearanceChange = callback => {
+  callback(Appearance.getColorScheme())
+  return Appearance.addChangeListener(({ colorScheme }) => {
+    callback(colorScheme)
+  })
+}
+
+export const getIsSupportedAutoTheme = () => {
+  const osVerNum = parseInt(osVer)
+  return isAndroid
+    ? osVerNum >= 10
+    : osVerNum >= 13
 }
 
 export {

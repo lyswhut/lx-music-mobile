@@ -28,6 +28,7 @@ const initialState = {
   },
   qualityList: music.supportQuality[setting.setting.apiSource],
   themes: Themes,
+  systemColor: null,
   versionInfo: {
     status: VERSION_STATUS.checking,
     downloadProgress: {
@@ -210,6 +211,21 @@ const mutations = {
         ...state.setting,
         themeId: id,
       },
+    }
+  },
+  [TYPES.setIsAutoTheme](state, enabled) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        isAutoTheme: enabled,
+      },
+    }
+  },
+  [TYPES.setSystemColor](state, color) {
+    return {
+      ...state,
+      systemColor: color,
     }
   },
   [TYPES.setLang](state, id) {

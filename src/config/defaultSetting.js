@@ -4,7 +4,7 @@
 import { MUSIC_TOGGLE_MODE } from './constant'
 
 const defaultSetting = {
-  version: '1.18',
+  version: '1.19',
   player: {
     togglePlayMethod: MUSIC_TOGGLE_MODE.listLoop,
     highQuality: false,
@@ -98,6 +98,7 @@ const defaultSetting = {
   //   },
   // },
   themeId: 'green',
+  isAutoTheme: true,
   langId: null,
   sourceId: 'kw',
   apiSource: 'temp',

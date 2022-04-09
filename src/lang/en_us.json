@@ -133,6 +133,7 @@
   "setting_basic_sourcename_real": "Original",
   "setting_basic_sourcename_title": "Select the name of music source",
   "setting_basic_theme": "Theme",
+  "setting_basic_theme_auto_theme": "Follow the system light and dark mode to switch themes",
   "setting_list": "List settings",
   "setting_list_add_music_location_type": "Position when the song was added to the list",
   "setting_list_add_music_location_type_bottom": "Bottom",

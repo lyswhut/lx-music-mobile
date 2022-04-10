@@ -2,7 +2,7 @@ export default {
   id: 'black',
   isDark: true,
   colors: {
-    primary: '#000',
+    primary: '#050505',
 
     normal: '#a3a3a3',
     normal10: '#999',

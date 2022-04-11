@@ -10,6 +10,7 @@ export const exitApp = () => {
     hideLyric(),
     destroyPlayer(),
   ]).finally(() => {
+    isDestroying = false
     utilExitApp()
   })
 }

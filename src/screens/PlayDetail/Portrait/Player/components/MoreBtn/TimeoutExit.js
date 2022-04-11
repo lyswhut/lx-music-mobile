@@ -5,7 +5,7 @@ import { useGetter, useDispatch } from '@/store'
 import ConfirmAlert from '@/components/common/ConfirmAlert'
 import { useTranslation } from '@/plugins/i18n'
 import Input from '@/components/common/Input'
-import { startTimeoutExit, stopTimeoutExit, useTimeoutExitTime, getTimeoutExitTime } from '@/utils/timeoutExit'
+import { startTimeoutExit, stopTimeoutExit, useTimeoutExitTimeInfo, getTimeoutExitTime, cancelTimeoutExit } from '@/utils/timeoutExit'
 import { toast } from '@/utils/tools'
 import CheckBox from '@/components/common/CheckBox'
 
@@ -22,20 +22,21 @@ const formatTime = time => {
   return `${h}${m}:${s}`
 }
 const rxp = /([1-9]\d*)/
-const Status = ({ exitTime }) => {
+const Status = ({ exitTimeInfo }) => {
   const theme = useGetter('common', 'theme')
   const { t } = useTranslation()
   return (
     <View style={styles.tip}>
       {
-      exitTime < 0
+      exitTimeInfo.time < 0
         ? (
             <Text style={{ color: theme.normal }}>{t('timeout_exit_tip_off')}</Text>
           )
         : (
-            <Text style={{ color: theme.normal }}>{t('timeout_exit_tip_on', { time: formatTime(exitTime) })}</Text>
+            <Text style={{ color: theme.normal }}>{t('timeout_exit_tip_on', { time: formatTime(exitTimeInfo.time) })}</Text>
           )
-    }
+      }
+      {exitTimeInfo.isPlayedExit ? <Text style={{ fontSize: 12, color: theme.normal40 }}>{t('timeout_exit_btn_wait_tip')}</Text> : null}
     </View>
   )
 }
@@ -45,20 +46,20 @@ export default memo(() => {
   const [visibleAlert, setVisibleAlert] = useState(false)
   const { t } = useTranslation()
   const [text, setText] = useState('')
-  const exitTime = useTimeoutExitTime()
+  const exitTimeInfo = useTimeoutExitTimeInfo()
   const inputRef = useRef()
   const timeoutExit = useGetter('common', 'timeoutExit')
   const timeoutExitPlayed = useGetter('common', 'timeoutExitPlayed')
   const setTimeoutExit = useDispatch('common', 'setTimeoutExit')
   const timeInfo = useMemo(() => {
-    return exitTime < 0
-      ? { cancelText: '', confirmText: '', active: false }
+    return exitTimeInfo.time < 0
+      ? { cancelText: exitTimeInfo.isPlayedExit ? t('timeout_exit_btn_wait_cancel') : '', confirmText: '', active: false }
       : {
           cancelText: t('timeout_exit_btn_cancel'),
           confirmText: t('timeout_exit_btn_update'),
           active: true,
         }
-  }, [exitTime, t])
+  }, [exitTimeInfo, t])
 
   const handleShowTimeoutAlert = () => {
     setText(timeoutExit)
@@ -72,6 +73,10 @@ export default memo(() => {
   }
   const handleAlertCancel = () => {
     setVisibleAlert(false)
+    if (exitTimeInfo.isPlayedExit) {
+      cancelTimeoutExit()
+      return
+    }
     if (!timeInfo.active) return
     stopTimeoutExit()
     toast(t('timeout_exit_tip_cancel'))
@@ -83,10 +88,10 @@ export default memo(() => {
     // }
     const time = parseInt(text)
     if (!time) return
+    cancelTimeoutExit()
     startTimeoutExit(time * 60)
     setVisibleAlert(false)
     toast(t('timeout_exit_tip_on', { time: formatTime(getTimeoutExitTime()) }))
-    global.isPlayedExit = false
     setTimeoutExit({ time: String(time) })
   }
   const onChangeText = useCallback(text => {
@@ -123,7 +128,7 @@ export default memo(() => {
         confirmText={timeInfo.confirmText}
         >
         <View style={styles.alertContent}>
-          <Status exitTime={exitTime} />
+          <Status exitTimeInfo={exitTimeInfo} />
           <View style={styles.inputContent}>
             <Input
               ref={inputRef}

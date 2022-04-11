@@ -242,6 +242,8 @@
   "theme_yellow": "信口雌黄",
   "timeout_exit_btn_cancel": "取消定时",
   "timeout_exit_btn_update": "更新定时",
+  "timeout_exit_btn_wait_cancel": "取消退出",
+  "timeout_exit_btn_wait_tip": "计时已结束，正在等待退出...",
   "timeout_exit_label_isPlayed": "等待歌曲播放完毕再停止播放",
   "timeout_exit_min": "分钟",
   "timeout_exit_tip_cancel": "已取消定时停止播放",

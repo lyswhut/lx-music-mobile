@@ -240,6 +240,8 @@
   "theme_yellow": "Yellow",
   "timeout_exit_btn_cancel": "Cancel timing",
   "timeout_exit_btn_update": "Update timing",
+  "timeout_exit_btn_wait_cancel": "Cancel exit",
+  "timeout_exit_btn_wait_tip": "Timeout expired, waiting to exit...",
   "timeout_exit_label_isPlayed": "Wait for the song to finish playing and then stop playing",
   "timeout_exit_min": "Minutes",
   "timeout_exit_tip_cancel": "Timeout stop playing has been cancelled",

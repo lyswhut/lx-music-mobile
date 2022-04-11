@@ -1,17 +1,8 @@
 import { useEffect, useState } from 'react'
 import BackgroundTimer from 'react-native-background-timer'
 import { getStore } from '@/store'
-import { action as playerAction, STATUS } from '@/store/modules/player'
+import { STATUS } from '@/store/modules/player'
 import { exitApp } from '@/utils/common'
-
-const isStop = status => {
-  switch (status) {
-    case STATUS.pause:
-    case STATUS.stop:
-      return true
-    default: return false
-  }
-}
 
 const timeoutTools = {
   timeout: null,
@@ -20,13 +11,18 @@ const timeoutTools = {
   exit() {
     const store = getStore()
     const state = store.getState()
-    if (state.common.setting.player.timeoutExitPlayed && !isStop(state.player.status)) {
+    if (state.common.setting.player.timeoutExitPlayed && state.player.status == STATUS.playing) {
       global.isPlayedExit = true
+      this.callHooks()
     } else {
-      store.dispatch(playerAction.destroy()).finally(() => {
-        BackgroundTimer.setTimeout(() => {
-          exitApp()
-        }, 1000)
+      exitApp()
+    }
+  },
+  callHooks() {
+    for (const hook of this.timeHooks) {
+      hook({
+        time: this.time,
+        isPlayedExit: global.isPlayedExit,
       })
     }
   },
@@ -35,7 +31,7 @@ const timeoutTools = {
     BackgroundTimer.clearInterval(this.timeout)
     this.timeout = null
     this.time = -1
-    for (const hook of this.timeHooks) hook(this.time)
+    this.callHooks()
   },
   start(time) {
     this.clearTimeout()
@@ -43,19 +39,22 @@ const timeoutTools = {
     this.timeout = BackgroundTimer.setInterval(() => {
       if (this.time > 0) {
         this.time--
-        for (const hook of this.timeHooks) hook(this.time)
+        this.callHooks()
       } else {
         this.clearTimeout()
         this.exit()
       }
     }, 1000)
   },
-  addTimeHook(callback) {
-    this.timeHooks.push(callback)
-    callback(this.time)
+  addTimeHook(hook) {
+    this.timeHooks.push(hook)
+    hook({
+      time: this.time,
+      isPlayedExit: global.isPlayedExit,
+    })
   },
-  removeTimeHook(callback) {
-    this.timeHooks.splice(this.timeHooks.indexOf(callback), 1)
+  removeTimeHook(hook) {
+    this.timeHooks.splice(this.timeHooks.indexOf(hook), 1)
   },
 }
 
@@ -71,16 +70,20 @@ export const getTimeoutExitTime = () => {
   return timeoutTools.time
 }
 
-export const useTimeoutExitTime = () => {
-  const [time, setTime] = useState(0)
+export const useTimeoutExitTimeInfo = () => {
+  const [info, setInfo] = useState({ time: 0, isPlayedExit: false })
   useEffect(() => {
-    const callback = time => {
-      setTime(time)
+    const hook = ({ time, isPlayedExit }) => {
+      setInfo({ time, isPlayedExit })
     }
-    timeoutTools.addTimeHook(callback)
-    return () => { timeoutTools.removeTimeHook(callback) }
-  }, [setTime])
+    timeoutTools.addTimeHook(hook)
+    return () => { timeoutTools.removeTimeHook(hook) }
+  }, [setInfo])
 
-  return time
+  return info
 }
 
+export const cancelTimeoutExit = () => {
+  global.isPlayedExit = false
+  timeoutTools.callHooks()
+}

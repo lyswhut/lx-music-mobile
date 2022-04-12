@@ -1,5 +1,5 @@
 import { hideLyric } from './lyricDesktop'
-import { destroy as destroyPlayer } from '@/plugins/player/utils'
+import { destroy as destroyPlayer, pause } from '@/plugins/player/utils'
 import { exitApp as utilExitApp } from './utils'
 
 let isDestroying = false
@@ -8,8 +8,8 @@ export const exitApp = () => {
   isDestroying = true
   Promise.all([
     hideLyric(),
-    destroyPlayer(),
-  ]).finally(() => {
+    pause(),
+  ]).finally(destroyPlayer).finally(() => {
     isDestroying = false
     utilExitApp()
   })

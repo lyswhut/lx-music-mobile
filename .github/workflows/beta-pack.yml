@@ -36,12 +36,12 @@ jobs:
         uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-caches-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-node-caches-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-caches-
 
       - name: Install dependencies
-        run: yarn install
+        run: npm install
 
       - name: Build Packages
         run: |

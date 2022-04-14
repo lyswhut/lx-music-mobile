@@ -26,4 +26,4 @@
 
 ### 其他
 
-- 升级react-native到 v0.68.0
+- 升级react-native到 v0.68.1

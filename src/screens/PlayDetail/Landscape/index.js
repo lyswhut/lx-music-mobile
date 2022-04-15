@@ -1,5 +1,5 @@
-import React, { memo, useEffect, useCallback, useMemo } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import React, { memo, useEffect, useCallback, useMemo, useRef } from 'react'
+import { View, Text, StyleSheet, AppState } from 'react-native'
 import { useGetter, useDispatch } from '@/store'
 import { screenkeepAwake, screenUnkeepAwake } from '@/utils/utils'
 import { onNavigationComponentDidDisappearEvent } from '@/navigation'
@@ -15,13 +15,15 @@ import MoreBtn from './MoreBtn'
 export default memo(({ componentId, animated }) => {
   const theme = useGetter('common', 'theme')
   const componentIds = useGetter('common', 'componentIds')
+  const showCommentRef = useRef(false)
 
   useEffect(() => {
     let listener
-    if (componentIds.comment) {
+    showCommentRef.current = !!componentIds.comment
+    if (showCommentRef.current) {
       screenUnkeepAwake()
       listener = onNavigationComponentDidDisappearEvent(componentIds.comment, () => {
-        screenkeepAwake()
+        if (AppState.currentState == 'active') screenkeepAwake()
       })
     }
     return () => {
@@ -31,8 +33,19 @@ export default memo(({ componentId, animated }) => {
 
   useEffect(() => {
     screenkeepAwake()
+    let appstateListener = AppState.addEventListener('change', (state) => {
+      switch (state) {
+        case 'active':
+          if (!showCommentRef.current) screenkeepAwake()
+          break
+        case 'background':
+          screenUnkeepAwake()
+          break
+      }
+    })
     return () => {
       screenUnkeepAwake()
+      appstateListener.remove()
     }
   }, [])
   const component = useMemo(() => {

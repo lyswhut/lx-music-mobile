@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, memo, useState, useMemo, useRef } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, AppState } from 'react-native'
 
 import Header from './components/Header'
 // import Aside from './components/Aside'
@@ -31,14 +31,16 @@ export default memo(({ componentId, animated }) => {
   const theme = useGetter('common', 'theme')
   const [pageIndex, setPageIndex] = useState(0)
   const componentIds = useGetter('common', 'componentIds')
-  const currentIndexRef = useRef(pageIndex)
+  const showLyricRef = useRef(false)
+  const showCommentRef = useRef(false)
 
   useEffect(() => {
     let listener
-    if (componentIds.comment) {
-      if (currentIndexRef.current == 1) screenUnkeepAwake()
+    showCommentRef.current = !!componentIds.comment
+    if (showCommentRef.current) {
+      if (showLyricRef.current) screenUnkeepAwake()
       listener = onNavigationComponentDidDisappearEvent(componentIds.comment, () => {
-        if (currentIndexRef.current == 1) screenkeepAwake()
+        if (showLyricRef.current && AppState.currentState == 'active') screenkeepAwake()
       })
     }
     return () => {
@@ -46,10 +48,26 @@ export default memo(({ componentId, animated }) => {
     }
   }, [componentIds])
 
+  useEffect(() => {
+    let appstateListener = AppState.addEventListener('change', (state) => {
+      switch (state) {
+        case 'active':
+          if (showLyricRef.current && !showCommentRef.current) screenkeepAwake()
+          break
+        case 'background':
+          screenUnkeepAwake()
+          break
+      }
+    })
+    return () => {
+      appstateListener.remove()
+    }
+  }, [])
+
   const onPageSelected = useCallback(({ nativeEvent }) => {
     setPageIndex(nativeEvent.position)
-    currentIndexRef.current = nativeEvent.position
-    if (nativeEvent.position == 1) {
+    showLyricRef.current = nativeEvent.position == 1
+    if (showLyricRef.current) {
       screenkeepAwake()
     } else {
       screenUnkeepAwake()

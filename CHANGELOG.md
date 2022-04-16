@@ -6,6 +6,39 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.12.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.11.1...v0.12.0) - 2022-04-16
+
+### 新增
+
+- 为搜索、歌单、排行榜的歌曲菜单添加分享“分享歌曲”按钮
+- 新增设置-基本设置-分享设置，它用于控制歌曲菜单的分享行为，默认使用系统分享
+- 新增是否在通知栏显示歌曲图片设置，默认开启（原来的行为）
+- 新增黑色皮肤“黑灯瞎火”
+- 新增设置-基本设置-主题颜色-跟随系统亮、暗模式切换主题设置，注：此设置需要android 10或ios 13及以上的版本才支持
+
+### 优化
+
+- 现在即使切歌模式处于单曲循环、顺序播放、禁用时，手动切歌将会按照列表循环的规则处理（#69）
+- 添加定时退出计时结束后的提示
+
+### 修复
+
+- 修复wy源搜索某些歌曲时第一页之后的歌曲无法加载的问题
+- 每次启动时过滤无效的歌曲
+- 修复换源失败时的处理问题
+- 修复非循环模式下播放结束后的状态显示问题及无法重新播放的问题（#104）
+- 修复定时退出可能导致崩溃的问题
+- 修复播放详情页歌词界面在把应用切到后台再切回来会导致屏幕常亮失效的问题
+
+### 变更
+
+- 歌曲菜单的“复制歌曲名”改为“分享歌曲”，点击后可以选择第三方应用分享歌曲详情页链接
+- 已存在目录列表的歌曲再次添加时将不会变成移除
+
+### 其他
+
+- 升级react-native到 v0.68.1
+
 ## [0.11.1](https://github.com/lyswhut/lx-music-mobile/compare/v0.11.0...v0.11.1) - 2022-03-20
 
 ### 修复

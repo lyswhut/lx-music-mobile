@@ -41,7 +41,9 @@ jobs:
             ${{ runner.os }}-node-caches-
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install npm@8.5 -g
+          npm install
 
       - name: Build Packages
         run: |

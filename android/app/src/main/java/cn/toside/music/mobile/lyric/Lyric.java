@@ -14,16 +14,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import StatusBarLyric.API.StatusBarLyric;
+
 public class Lyric extends LyricPlayer {
   LyricView lyricView = null;
   LyricEvent lyricEvent = null;
+  StatusBarLyric statusBarLyric = null;
   ReactApplicationContext reactAppContext;
 
   boolean isShowLyric = false;
+  boolean isUseDesktopLyric = true;
   // String lastText = "LX Music ^-^";
   int lastLine = 0;
   List lines = new ArrayList();
-  boolean isShowTranslation = false;
+  boolean isShowTranslation;
   String lyricText = "";
   String lyricTransText = "";
 
@@ -64,62 +68,76 @@ public class Lyric extends LyricPlayer {
     if (!isShowLyric) return;
     setTempPause(true);
 
-    if (lyricView != null) {
-      lyricView.runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-          lyricView.destroyView();
-        }
-      });
+    if (isUseDesktopLyric) {
+      if (lyricView != null) {
+        lyricView.runOnUiThread(new Runnable() {
+          @Override
+          public void run() {
+            lyricView.destroyView();
+          }
+        });
+      }
     }
   }
 
   private void handleScreenOn() {
     if (!isShowLyric) return;
-    if (lyricView == null) lyricView = new LyricView(reactAppContext, lyricEvent);
-    lyricView.runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        lyricView.showLyricView();
-        setViewLyric(lastLine);
-        setTempPause(false);
-      }
-    });
+    if (isUseDesktopLyric) {
+      if (lyricView == null) lyricView = new LyricView(reactAppContext, lyricEvent);
+      lyricView.runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          lyricView.showLyricView();
+          updateLyric(lastLine);
+          setTempPause(false);
+        }
+      });
+    } else {
+      updateLyric(lastLine);
+      setTempPause(false);
+    }
   }
 
-  private void setViewLyric(int lineNum) {
+  private void updateLyric(int lineNum) {
     lastLine = lineNum;
-    if (lyricView == null) return;
+    if (!isShowLyric) return;
     if (lineNum < 0 || lineNum > lines.size() - 1) return;
     HashMap line = (HashMap) lines.get(lineNum);
+    String lineLyric;
+    String lineLyricTranslation;
     if (line == null) {
-      lyricView.setLyric("", "");
+      lineLyric = "";
+      lineLyricTranslation = "";
     } else {
-      lyricView.setLyric((String) line.get("text"), (String) line.get("translation"));
+      lineLyric = (String) line.get("text");
+      lineLyricTranslation = (String) line.get("translation");
+    }
+    if (isUseDesktopLyric) {
+      if (lyricView == null) return;
+      lyricView.setLyric(lineLyric, lineLyricTranslation);
+    } else {
+      if (statusBarLyric == null) return;
+      statusBarLyric.updateLyric(lineLyric);
     }
   }
 
   public void showLyric(Bundle options, Promise promise) {
     if (lyricEvent == null) lyricEvent = new LyricEvent(reactAppContext);
-    if (lyricView == null) lyricView = new LyricView(reactAppContext, lyricEvent);
-    try {
-      lyricView.showLyricView(options);
-    } catch (Exception e) {
-      promise.reject(e);
-      Log.e("Lyric", e.getMessage());
-      return;
+    isUseDesktopLyric = options.getBoolean("isUseDesktopLyric", true);
+    if (isUseDesktopLyric) {
+      showDesktopLyric(options, promise);
+    } else {
+      showStatusBarLyric(options, promise);
     }
-
-    isShowLyric = true;
-    promise.resolve(null);
   }
 
   public void hideLyric() {
     this.pause();
-    if (lyricView != null) {
-      lyricView.destroy();
+    if (isUseDesktopLyric) {
+      hideViewLyric();
+    } else {
+      hideStatusBarLyric();
     }
-    isShowLyric = false;
   }
 
   @Override
@@ -140,7 +158,7 @@ public class Lyric extends LyricPlayer {
 
   @Override
   public void onPlay(int lineNum) {
-    setViewLyric(lineNum);
+    updateLyric(lineNum);
     // Log.d("Lyric", lineNum + " " + text + " " + (String) line.get("translation"));
   }
 
@@ -169,5 +187,62 @@ public class Lyric extends LyricPlayer {
 
   public void setLyricTextPosition(String positionX, String positionY) {
     lyricView.setLyricTextPosition(positionX, positionY);
+  }
+
+  public void setUseDesktopLyric(boolean enable, Bundle options, Promise promise) {
+    if (isShowLyric) {
+      if (isUseDesktopLyric) {
+        hideViewLyric();
+      } else {
+        hideStatusBarLyric();
+      }
+    }
+    isUseDesktopLyric = enable;
+    if (enable) {
+      showDesktopLyric(options, promise);
+    } else {
+      showStatusBarLyric(options, promise);
+    }
+  }
+
+  public void showDesktopLyric (Bundle options, Promise promise) {
+    if (lyricView == null) lyricView = new LyricView(reactAppContext, lyricEvent);
+    try {
+      lyricView.showLyricView(options);
+    } catch (Exception e) {
+      promise.reject(e);
+      Log.e("Lyric", e.getMessage());
+      return;
+    }
+    isShowLyric = true;
+    promise.resolve(null);
+  }
+
+  public void hideViewLyric() {
+    if (lyricView != null) {
+      lyricView.destroy();
+    }
+    isShowLyric = false;
+  }
+
+  public void showStatusBarLyric(Bundle options, Promise promise) {
+    if (statusBarLyric == null) {
+      statusBarLyric = new StatusBarLyric(reactAppContext, null, reactAppContext.getPackageName(), false);
+    }
+    if (statusBarLyric.hasEnable()) {
+      statusBarLyric.updateLyric(lyricText);
+      isShowLyric = true;
+      promise.resolve(null);
+    } else {
+      isShowLyric = false;
+      promise.reject(new Exception("statusBar lyric disabled"));
+    }
+  }
+
+  public void hideStatusBarLyric() {
+    if (statusBarLyric != null) {
+      statusBarLyric.stopLyric();
+    }
+    isShowLyric = false;
   }
 }

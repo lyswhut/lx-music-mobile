@@ -59,6 +59,8 @@ const init = () => {
     }
     if (setting.desktopLyric.enable) {
       showLyric({
+        enable: setting.desktopLyric.enable,
+        isUseDesktopLyric: setting.desktopLyric.isUseDesktopLyric,
         isLock: setting.desktopLyric.isLock,
         themeId: setting.desktopLyric.theme,
         opacity: setting.desktopLyric.style.opacity,

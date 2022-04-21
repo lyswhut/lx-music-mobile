@@ -42,6 +42,7 @@ export const TYPES = {
   setSyncStatus: null,
   setIsClickPlayList: null,
   setIsShowDesktopLyric: null,
+  setIsUseDesktopLyric: null,
   setIsLockDesktopLyric: null,
   setThemeDesktopLyric: null,
   setDesktopLyricPosition: null,
@@ -324,6 +325,15 @@ export const setIsShowDesktopLyric = flag => async(dispatch, getState) => {
   await dispatch(playerAction.toggleDesktopLyric(flag))
   dispatch({
     type: TYPES.setIsShowDesktopLyric,
+    payload: flag,
+  })
+  const { common } = getState()
+  await setData(settingKey, common.setting)
+}
+export const setIsUseDesktopLyric = flag => async(dispatch, getState) => {
+  dispatch(playerAction.setUseDesktopLyric(flag))
+  dispatch({
+    type: TYPES.setIsUseDesktopLyric,
     payload: flag,
   })
   const { common } = getState()

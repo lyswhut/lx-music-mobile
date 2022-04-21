@@ -4,6 +4,7 @@ const { LyricModule } = NativeModules
 
 let isShowLyric = false
 
+// const STATUSBAR_DISABLED = 'statusBar lyric disabled'
 
 export const themes = [
   { id: 'green', value: '#07c556' },
@@ -33,15 +34,9 @@ const getTextPositionY = y => (textPositionY.find(t => t.id == y) || textPositio
 const getAlpha = num => parseInt(num) / 100
 const getTextSize = num => parseInt(num) / 10
 
-
-/**
- * show lyric
- * @param {Number} isLock is lock lyric window
- * @returns {Promise} Promise
- */
-export const showLyric = ({ isLock, themeId, opacity, textSize, positionX, positionY, textPositionX, textPositionY }) => {
-  if (isShowLyric) return Promise.resolve()
-  return LyricModule.showLyric({
+const buildOptions = ({ isUseDesktopLyric, isLock, themeId, opacity, textSize, positionX, positionY, textPositionX, textPositionY }) => {
+  return {
+    isUseDesktopLyric,
     isLock,
     themeColor: getThemeColor(themeId),
     alpha: getAlpha(opacity),
@@ -50,7 +45,17 @@ export const showLyric = ({ isLock, themeId, opacity, textSize, positionX, posit
     lyricViewY: positionY,
     textX: getTextPositionX(textPositionX),
     textY: getTextPositionY(textPositionY),
-  }).then(() => {
+  }
+}
+
+/**
+ * show lyric
+ * @param {Object} options
+ * @returns {Promise} Promise
+ */
+export const showLyric = options => {
+  if (isShowLyric) return Promise.resolve()
+  return LyricModule.showLyric(buildOptions(options)).then(() => {
     isShowLyric = true
   })
 }
@@ -63,6 +68,18 @@ export const hideLyric = () => {
   if (!isShowLyric) return Promise.resolve()
   return LyricModule.hideLyric().then(() => {
     isShowLyric = false
+  })
+}
+
+/**
+ * set use desktop lyric
+ * @param {Opject} options
+ * @returns {Promise} Promise
+ */
+export const setUseDesktopLyric = options => {
+  if (!options.enable) return Promise.resolve()
+  return LyricModule.setUseDesktopLyric(options.isUseDesktopLyric, buildOptions(options)).then(() => {
+    isShowLyric = true
   })
 }
 

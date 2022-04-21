@@ -330,6 +330,18 @@ const mutations = {
       },
     }
   },
+  [TYPES.setIsUseDesktopLyric](state, isUseDesktopLyric) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        desktopLyric: {
+          ...state.setting.desktopLyric,
+          isUseDesktopLyric,
+        },
+      },
+    }
+  },
   [TYPES.setThemeDesktopLyric](state, theme) {
     return {
       ...state,

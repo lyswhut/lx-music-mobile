@@ -88,6 +88,11 @@ public class LyricModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void setUseDesktopLyric(boolean enable, ReadableMap data, Promise promise) {
+    lyric.setUseDesktopLyric(enable, Arguments.toBundle(data), promise);
+  }
+
+  @ReactMethod
   public void toggleLock(boolean isLock, Promise promise) {
     if (isLock) {
       lyric.lockLyric();

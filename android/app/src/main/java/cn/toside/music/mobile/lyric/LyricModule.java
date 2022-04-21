@@ -4,10 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.text.TextUtils;
 import android.util.Log;
-
-import androidx.core.content.ContextCompat;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -16,13 +13,9 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 
-import StatusBarLyric.API.StatusBarLyric;
-import cn.toside.music.mobile.R;
-
 public class LyricModule extends ReactContextBaseJavaModule {
   private final ReactApplicationContext reactContext;
   Lyric lyric;
-  StatusBarLyric statusBarLyric = null;
   // final Map<String, Object> constants = new HashMap<>();
 
   boolean isShowTranslation = false;
@@ -50,33 +43,6 @@ public class LyricModule extends ReactContextBaseJavaModule {
 //  public Map<String, Object> getConstants() {
 //    return constants;
 //  }
-
-  /**
-   * 更新【墨•状态栏歌词】歌词文本
-   * @see <a href="https://github.com/Block-Network/StatusBarLyric">【墨•状态栏歌词】</a>
-   * @param lyric 单行歌词文本
-   */
-  @ReactMethod
-  public void updateStatusBarLyric(String lyric) {
-    if (statusBarLyric == null) {
-      statusBarLyric = new StatusBarLyric(reactContext,
-        ContextCompat.getDrawable(reactContext, R.mipmap.ic_launcher),
-        reactContext.getPackageName(), true);
-    }
-    if (statusBarLyric.hasEnable() && !TextUtils.isEmpty(lyric)) {
-      statusBarLyric.updateLyric(lyric);
-    }
-  }
-
-  /**
-   * 停止【墨•状态栏歌词】歌词显示
-   */
-  @ReactMethod
-  public void stopStatusBarLyric() {
-    if (statusBarLyric != null && statusBarLyric.hasEnable()) {
-      statusBarLyric.stopLyric();
-    }
-  }
 
   @ReactMethod
   public void showLyric(ReadableMap data, Promise promise) {

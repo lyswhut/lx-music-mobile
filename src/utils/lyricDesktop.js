@@ -3,6 +3,7 @@ import { NativeModules, NativeEventEmitter } from 'react-native'
 const { LyricModule } = NativeModules
 
 let isShowLyric = false
+let isUseDesktopLyric = true
 
 // const STATUSBAR_DISABLED = 'statusBar lyric disabled'
 
@@ -55,6 +56,7 @@ const buildOptions = ({ isUseDesktopLyric, isLock, themeId, opacity, textSize, p
  */
 export const showLyric = options => {
   if (isShowLyric) return Promise.resolve()
+  isUseDesktopLyric = options.isUseDesktopLyric
   return LyricModule.showLyric(buildOptions(options)).then(() => {
     isShowLyric = true
   })
@@ -78,6 +80,7 @@ export const hideLyric = () => {
  */
 export const setUseDesktopLyric = options => {
   if (!options.enable) return Promise.resolve()
+  isUseDesktopLyric = options.isUseDesktopLyric
   return LyricModule.setUseDesktopLyric(options.isUseDesktopLyric, buildOptions(options)).then(() => {
     isShowLyric = true
   })
@@ -130,7 +133,7 @@ export const toggleTranslation = isShowTranslation => {
  * @returns {Promise} Promise
  */
 export const toggleLock = isLock => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.toggleLock(isLock)
 }
 
@@ -140,7 +143,7 @@ export const toggleLock = isLock => {
  * @returns {Promise} Promise
  */
 export const setTheme = themeId => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setColor(getThemeColor(themeId))
 }
 
@@ -150,7 +153,7 @@ export const setTheme = themeId => {
  * @returns {Promise} Promise
  */
 export const setAlpha = alpha => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setAlpha(getAlpha(alpha))
 }
 
@@ -160,12 +163,12 @@ export const setAlpha = alpha => {
  * @returns {Promise} Promise
  */
 export const setTextSize = size => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setTextSize(getTextSize(size))
 }
 
 export const setLyricTextPosition = (textX, textY) => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setLyricTextPosition(getTextPositionX(textX), getTextPositionY(textY))
 }
 

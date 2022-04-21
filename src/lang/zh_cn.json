@@ -157,7 +157,7 @@
   "setting_lyric_desktop_text_y_top": "居顶",
   "setting_lyric_desktop_theme": "歌词主题色",
   "setting_lyric_desktop_show_lyric_type_desktop_lyric": "桌面歌词",
-  "setting_lyric_desktop_show_lyric_type_statusbar_lyric": "状态栏歌词（需要设备Root并安装“墨•状态栏歌词”）",
+  "setting_lyric_desktop_show_lyric_type_statusbar_lyric": "墨•状态栏歌词（需要安装“墨•状态栏歌词”模块）",
   "setting_other": "其他",
   "setting_other_cache": "缓存管理（包括歌曲、歌词、错误日志等缓存，没有歌曲播放相关的问题不建议清理）",
   "setting_other_cache_clear_btn": "清理缓存",

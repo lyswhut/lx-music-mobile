@@ -11,3 +11,5 @@
 
 -keep class com.facebook.hermes.unicode.** { *; }
 -keep class com.facebook.jni.** { *; }
+# 排除混淆墨•状态栏歌词相关API
+-keep class StatusBarLyric.API.StatusBarLyric {*;}

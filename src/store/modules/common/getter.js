@@ -52,6 +52,7 @@ export const sourceNameType = state => state.common.setting.sourceNameType
 export const isClickPlayList = state => state.common.setting.list.isClickPlayList
 
 export const isEnableDesktopLyric = state => state.common.setting.desktopLyric.enable
+export const isUseDesktopLyric = state => state.common.setting.desktopLyric.isUseDesktopLyric
 export const isLockDesktopLyric = state => state.common.setting.desktopLyric.isLock
 export const themeDesktopLyric = state => state.common.setting.desktopLyric.theme
 export const desktopLyricPosition = state => state.common.setting.desktopLyric.position

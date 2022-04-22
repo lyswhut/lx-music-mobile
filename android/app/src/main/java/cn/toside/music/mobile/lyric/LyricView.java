@@ -176,7 +176,10 @@ public class LyricView extends Activity implements View.OnTouchListener {
     //  ? WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
     //  : WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
     if (isLock) {
-      layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+      layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+        WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
+        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
       textView.setBackgroundColor(Color.TRANSPARENT);
 
       // 修复 Android 12 的穿透点击问题
@@ -184,7 +187,9 @@ public class LyricView extends Activity implements View.OnTouchListener {
         layoutParams.alpha = 0.8f;
       }
     } else {
-      layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+      layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+        WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
       textView.setBackgroundResource(R.drawable.rounded_corner);
 
       if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
@@ -288,7 +293,10 @@ public class LyricView extends Activity implements View.OnTouchListener {
   public void lockView() {
     isLock = true;
     if (windowManager == null || textView == null) return;
-    layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+    layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+      WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+      WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
+      WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
       layoutParams.alpha = 0.8f;
     }
@@ -299,7 +307,9 @@ public class LyricView extends Activity implements View.OnTouchListener {
   public void unlockView() {
     isLock = false;
     if (windowManager == null || textView == null) return;
-    layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+    layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+      WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+      WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
       layoutParams.alpha = 1.0f;
     }

@@ -18,10 +18,10 @@ import {
   delayUpdateMusicInfo,
 } from '@/plugins/player/playList'
 import { getRandom } from '@/utils'
-import { getMusicUrl, saveMusicUrl, getLyric, saveLyric, assertApiSupport, savePlayInfo, saveList, checkNotificationPermission } from '@/utils/tools'
+import { getMusicUrl, saveMusicUrl, getLyric, saveLyric, assertApiSupport, savePlayInfo, saveList, checkNotificationPermission, toast } from '@/utils/tools'
 import { playInfo as playInfoGetter } from './getter'
 import { play as lrcPlay, setLyric, pause as lrcPause, toggleTranslation as lrcToggleTranslation } from '@/utils/lyric'
-import { showLyric, hideLyric, setLyric as lrcdSetLyric, toggleLock, setTheme, setLyricTextPosition, setAlpha, setTextSize } from '@/utils/lyricDesktop'
+import { showLyric, hideLyric, setUseDesktopLyric as lrcSetUseDesktopLyric, setLyric as lrcdSetLyric, toggleLock, setTheme, setLyricTextPosition, setAlpha, setTextSize } from '@/utils/lyricDesktop'
 import { action as listAction } from '@/store/modules/list'
 import { LIST_ID_PLAY_LATER, MUSIC_TOGGLE_MODE } from '@/config/constant'
 import { i18n } from '@/plugins/i18n'
@@ -808,6 +808,8 @@ export const toggleDesktopLyric = isShow => async(dispatch, getState) => {
         ? getLyric(_playMusicInfo).catch(() => ({ lyric: '', tlyric: '' }))
         : Promise.resolve({ lyric: '', tlyric: '' }),
       showLyric({
+        enable: desktopLyric.enable,
+        isUseDesktopLyric: desktopLyric.isUseDesktopLyric,
         isLock: desktopLyric.isLock,
         themeId: desktopLyric.theme,
         opacity: desktopLyric.style.opacity,
@@ -816,6 +818,8 @@ export const toggleDesktopLyric = isShow => async(dispatch, getState) => {
         positionY: desktopLyric.position.y,
         textPositionX: desktopLyric.textPosition.x,
         textPositionY: desktopLyric.textPosition.y,
+      }).catch(err => {
+        toast(err.message, 'long')
       }),
     ])
     await lrcdSetLyric(lyric, tlyric)
@@ -826,6 +830,38 @@ export const toggleDesktopLyric = isShow => async(dispatch, getState) => {
     }
   } else {
     hideLyric()
+  }
+}
+
+export const setUseDesktopLyric = enable => async(dispatch, getState) => {
+  const { common, player } = getState()
+  const desktopLyric = common.setting.desktopLyric
+
+  const [{ lyric, tlyric }] = await Promise.all([
+    desktopLyric.enable && _playMusicInfo
+      ? getLyric(_playMusicInfo).catch(() => ({ lyric: '', tlyric: '' }))
+      : Promise.resolve({ lyric: '', tlyric: '' }),
+    lrcSetUseDesktopLyric({
+      enable: desktopLyric.enable,
+      isUseDesktopLyric: enable,
+      isLock: desktopLyric.isLock,
+      themeId: desktopLyric.theme,
+      opacity: desktopLyric.style.opacity,
+      textSize: desktopLyric.style.fontSize,
+      positionX: desktopLyric.position.x,
+      positionY: desktopLyric.position.y,
+      textPositionX: desktopLyric.textPosition.x,
+      textPositionY: desktopLyric.textPosition.y,
+    }).catch(err => {
+      toast(err.message, 'long')
+      return Promise.reject(err)
+    }),
+  ])
+  await lrcdSetLyric(lyric, tlyric)
+  if (player.status == STATUS.playing && !player.isGettingUrl) {
+    getPosition().then(position => {
+      lrcPlay(position * 1000)
+    })
   }
 }
 

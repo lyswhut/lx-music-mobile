@@ -3,7 +3,9 @@ import { NativeModules, NativeEventEmitter } from 'react-native'
 const { LyricModule } = NativeModules
 
 let isShowLyric = false
+let isUseDesktopLyric = true
 
+// const STATUSBAR_DISABLED = 'statusBar lyric disabled'
 
 export const themes = [
   { id: 'green', value: '#07c556' },
@@ -33,15 +35,9 @@ const getTextPositionY = y => (textPositionY.find(t => t.id == y) || textPositio
 const getAlpha = num => parseInt(num) / 100
 const getTextSize = num => parseInt(num) / 10
 
-
-/**
- * show lyric
- * @param {Number} isLock is lock lyric window
- * @returns {Promise} Promise
- */
-export const showLyric = ({ isLock, themeId, opacity, textSize, positionX, positionY, textPositionX, textPositionY }) => {
-  if (isShowLyric) return Promise.resolve()
-  return LyricModule.showLyric({
+const buildOptions = ({ isUseDesktopLyric, isLock, themeId, opacity, textSize, positionX, positionY, textPositionX, textPositionY }) => {
+  return {
+    isUseDesktopLyric,
     isLock,
     themeColor: getThemeColor(themeId),
     alpha: getAlpha(opacity),
@@ -50,7 +46,18 @@ export const showLyric = ({ isLock, themeId, opacity, textSize, positionX, posit
     lyricViewY: positionY,
     textX: getTextPositionX(textPositionX),
     textY: getTextPositionY(textPositionY),
-  }).then(() => {
+  }
+}
+
+/**
+ * show lyric
+ * @param {Object} options
+ * @returns {Promise} Promise
+ */
+export const showLyric = options => {
+  if (isShowLyric) return Promise.resolve()
+  isUseDesktopLyric = options.isUseDesktopLyric
+  return LyricModule.showLyric(buildOptions(options)).then(() => {
     isShowLyric = true
   })
 }
@@ -63,6 +70,19 @@ export const hideLyric = () => {
   if (!isShowLyric) return Promise.resolve()
   return LyricModule.hideLyric().then(() => {
     isShowLyric = false
+  })
+}
+
+/**
+ * set use desktop lyric
+ * @param {Opject} options
+ * @returns {Promise} Promise
+ */
+export const setUseDesktopLyric = options => {
+  if (!options.enable) return Promise.resolve()
+  isUseDesktopLyric = options.isUseDesktopLyric
+  return LyricModule.setUseDesktopLyric(options.isUseDesktopLyric, buildOptions(options)).then(() => {
+    isShowLyric = true
   })
 }
 
@@ -113,7 +133,7 @@ export const toggleTranslation = isShowTranslation => {
  * @returns {Promise} Promise
  */
 export const toggleLock = isLock => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.toggleLock(isLock)
 }
 
@@ -123,7 +143,7 @@ export const toggleLock = isLock => {
  * @returns {Promise} Promise
  */
 export const setTheme = themeId => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setColor(getThemeColor(themeId))
 }
 
@@ -133,7 +153,7 @@ export const setTheme = themeId => {
  * @returns {Promise} Promise
  */
 export const setAlpha = alpha => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setAlpha(getAlpha(alpha))
 }
 
@@ -143,12 +163,12 @@ export const setAlpha = alpha => {
  * @returns {Promise} Promise
  */
 export const setTextSize = size => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setTextSize(getTextSize(size))
 }
 
 export const setLyricTextPosition = (textX, textY) => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setLyricTextPosition(getTextPositionX(textX), getTextPositionY(textY))
 }
 

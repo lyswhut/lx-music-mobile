@@ -54,7 +54,7 @@ export const init = async() => {
   lrcTools.init()
 }
 
-export const setLyric = (lyric, translation) => {
+export const setLyric = (lyric, translation = '') => {
   lrcTools.isPlay = false
   lrcTools.lyricText = lyric
   lrcTools.translationText = translation

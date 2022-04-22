@@ -18,8 +18,8 @@ public class LyricPlayer {
 
   String lyric = "";
   String translationLyric = "";
-  List<HashMap> lines;
-  HashMap tags;
+  List<HashMap> lines = new ArrayList<HashMap>();
+  HashMap tags = new HashMap();
   boolean isPlay = false;
   int curLineNum = 0;
   int maxLine = 0;
@@ -99,10 +99,12 @@ public class LyricPlayer {
     if (offsetStr == null || offsetStr.equals("")) {
       tags.put("offset", 0);
     } else {
-      int offset = 0;
+      int offset;
       try {
         offset = Integer.parseInt(offsetStr);
-      } catch (Exception err) {}
+      } catch (Exception err) {
+        offset = 0;
+      }
       tags.put("offset", offset);
     }
   }
@@ -183,7 +185,7 @@ public class LyricPlayer {
       }
     });
 
-    lines = new ArrayList<HashMap>(list.size());
+    // lines = new ArrayList<HashMap>(list.size());
     for (Entry<String, Integer> entry : list) {
       lines.add((HashMap) linesMap.get(entry.getKey()));
     }
@@ -217,7 +219,9 @@ public class LyricPlayer {
     pause();
     isPlay = true;
 
-    performanceTime = getNow() - (int) tags.get("offset") - offset;
+    Object tagOffset = tags.get("offset");
+    if (tagOffset == null) tagOffset = 0;
+    performanceTime = getNow() - (int) tagOffset - offset;
     startPlayTime = curTime;
 
     curLineNum = findCurLineNum(getCurrentTime()) - 1;

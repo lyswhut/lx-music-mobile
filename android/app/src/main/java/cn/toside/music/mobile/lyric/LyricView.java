@@ -21,6 +21,8 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.WritableMap;
 
+import java.util.ArrayList;
+
 import cn.toside.music.mobile.R;
 
 public class LyricView extends Activity implements View.OnTouchListener {
@@ -52,7 +54,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
   private float alpha = 1f;
   private float textSize = 18f;
 
-  private int maxLineNum = 4;
+  private final int maxLineNum = 5;
   // private float lineHeight = 1;
 
   LyricView(ReactApplicationContext reactContext, LyricEvent lyricEvent) {
@@ -217,13 +219,16 @@ public class LyricView extends Activity implements View.OnTouchListener {
     windowManager.addView(textView, layoutParams);
   }
 
-  public void setLyric(String text, String transText) {
+  public void setLyric(String text, ArrayList<String> extendedLyrics) {
     if (textView == null) return;
-    if (transText.equals("")) {
-      textView.setText(text);
-    } else {
-      textView.setText(text + "\n" + transText);
+    if (extendedLyrics.size() > 0) {
+      StringBuilder textBuilder = new StringBuilder(text);
+      for (String lrc : extendedLyrics) {
+        textBuilder.append("\n").append(lrc);
+      }
+      text = textBuilder.toString();
     }
+    textView.setText(text);
   }
 
   @Override

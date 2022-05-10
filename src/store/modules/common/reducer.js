@@ -306,6 +306,18 @@ const mutations = {
       },
     }
   },
+  [TYPES.setIsShowLyricRoma](state, isShowLyricRoma) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        player: {
+          ...state.setting.player,
+          isShowLyricRoma,
+        },
+      },
+    }
+  },
   [TYPES.setIsShowDesktopLyric](state, isShowDesktopLyric) {
     return {
       ...state,

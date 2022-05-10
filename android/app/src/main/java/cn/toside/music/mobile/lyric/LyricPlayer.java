@@ -17,8 +17,8 @@ public class LyricPlayer {
   Pattern timePattern;
 
   String lyric = "";
-  String translationLyric = "";
-  List<HashMap> lines = new ArrayList<HashMap>();
+  ArrayList<String> extendedLyrics = new ArrayList<>();
+  List<HashMap> lines = new ArrayList<>();
   HashMap tags = new HashMap();
   boolean isPlay = false;
   int curLineNum = 0;
@@ -109,9 +109,28 @@ public class LyricPlayer {
     }
   }
 
+  private void parseExtendedLyric(HashMap linesMap, String extendedLyric) {
+    String[] extendedLyricLines = extendedLyric.split("\r\n|\n|\r");
+    for (String translationLine : extendedLyricLines) {
+      String line = translationLine.trim();
+      Matcher result = timePattern.matcher(line);
+      if (result.find()) {
+        String text = line.replaceAll(timeExp, "").trim();
+        if (text.length() > 0) {
+          String timeStr = result.group(1);
+          if (timeStr != null) {
+            timeStr = timeStr.replace("(\\.\\d\\d)0$", "$1");
+            HashMap targetLine = (HashMap) linesMap.get(timeStr);
+            if (targetLine != null) ((ArrayList<String>) targetLine.get("extendedLyrics")).add(text);
+          }
+        }
+      }
+    }
+  }
+
   private void initLines() {
     String[] linesStr = lyric.split("\r\n|\n|\r");
-    lines = new ArrayList<HashMap>();
+    lines = new ArrayList<>();
 
     HashMap linesMap = new HashMap<String, HashMap>();
     HashMap timeMap = new HashMap<String, Integer>();
@@ -124,6 +143,7 @@ public class LyricPlayer {
         if (text.length() > 0) {
           String timeStr = result.group(1);
           if (timeStr == null) continue;
+          timeStr = timeStr.replace("(\\.\\d\\d)0$", "$1");
           String[] timeArr = timeStr.split(":");
           String hours;
           String minutes;
@@ -148,32 +168,22 @@ public class LyricPlayer {
             seconds = timeArr[0];
             milliseconds = timeArr[1];
           }
-          HashMap<String, Object> lineInfo = new HashMap<String, Object>();
+          HashMap<String, Object> lineInfo = new HashMap<>();
           int time = Integer.parseInt(hours) * 60 * 60 * 1000
             + Integer.parseInt(minutes) * 60 * 1000
             + Integer.parseInt(seconds) * 1000
             + Integer.parseInt(milliseconds);
           lineInfo.put("time", time);
           lineInfo.put("text", text);
-          lineInfo.put("translation", "");
+          lineInfo.put("extendedLyrics", new ArrayList<String>(extendedLyrics.size()));
           timeMap.put(timeStr, time);
           linesMap.put(timeStr, lineInfo);
         }
       }
     }
 
-    String[] translationLines = translationLyric.split("\r\n|\n|\r");
-    for (String translationLine : translationLines) {
-      String line = translationLine.trim();
-      Matcher result = timePattern.matcher(line);
-      if (result.find()) {
-        String text = line.replaceAll(timeExp, "").trim();
-        if (text.length() > 0) {
-          String timeStr = result.group(1);
-          HashMap targetLine = (HashMap) linesMap.get(timeStr);
-          if (targetLine != null) targetLine.put("translation", text);
-        }
-      }
+    for (String extendedLyric : extendedLyrics) {
+      parseExtendedLyric(linesMap, extendedLyric);
     }
 
     Set<Entry<String, Integer>> set = timeMap.entrySet();
@@ -195,7 +205,7 @@ public class LyricPlayer {
 
   private void  init() {
     if (lyric == null) lyric = "";
-    if (translationLyric == null) translationLyric = "";
+    if (extendedLyrics == null) extendedLyrics = new ArrayList<>();
     initTag();
     initLines();
     onSetLyric(lines);
@@ -294,10 +304,10 @@ public class LyricPlayer {
     refresh();
   }
 
-  public void setLyric(String lyric, String translationLyric) {
+  public void setLyric(String lyric, ArrayList<String> extendedLyrics) {
     if (isPlay) pause();
     this.lyric = lyric;
-    this.translationLyric = translationLyric;
+    this.extendedLyrics = extendedLyrics;
     init();
   }
 

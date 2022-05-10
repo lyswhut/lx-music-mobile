@@ -11,8 +11,10 @@ const lrcTools = {
   setLyricHooks: [],
   isPlay: false,
   isShowTranslation: false,
+  isShowRoma: false,
   lyricText: '',
   translationText: '',
+  romaText: '',
   init() {
     if (this.isInited) return
     this.isInited = true
@@ -47,6 +49,12 @@ const lrcTools = {
   removeSetLyricHook(callback) {
     this.setLyricHooks.splice(this.setLyricHooks.indexOf(callback), 1)
   },
+  setLyric() {
+    const extendedLyrics = []
+    if (this.isShowTranslation && this.translationText) extendedLyrics.push(this.translationText)
+    if (this.isShowRoma && this.romaText) extendedLyrics.push(this.romaText)
+    this.lrc.setLyric(this.lyricText, extendedLyrics)
+  },
 }
 
 
@@ -54,16 +62,22 @@ export const init = async() => {
   lrcTools.init()
 }
 
-export const setLyric = (lyric, translation = '') => {
+export const setLyric = (lyric, translation, romalrc) => {
   lrcTools.isPlay = false
   lrcTools.lyricText = lyric
   lrcTools.translationText = translation
-  lrcTools.lrc.setLyric(lrcTools.lyricText, lrcTools.isShowTranslation ? lrcTools.translationText : '')
+  lrcTools.romaText = romalrc
+  lrcTools.setLyric()
 }
 export const toggleTranslation = isShow => {
   lrcTools.isShowTranslation = isShow
   if (!lrcTools.lyricText) return
-  lrcTools.lrc.setLyric(lrcTools.lyricText, isShow ? lrcTools.translationText : '')
+  lrcTools.setLyric()
+}
+export const toggleRoma = isShow => {
+  lrcTools.isShowRoma = isShow
+  if (!lrcTools.lyricText) return
+  lrcTools.setLyric()
 }
 export const play = time => {
   // console.log(time)

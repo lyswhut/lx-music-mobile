@@ -92,9 +92,9 @@ export const pause = () => {
  * @param {String} translation lyric translation
  * @returns {Promise} Promise
  */
-export const setLyric = (lyric, translation) => {
+export const setLyric = (lyric, translation, romalrc) => {
   if (!isShowLyric) return Promise.resolve()
-  return LyricModule.setLyric(lyric, translation)
+  return LyricModule.setLyric(lyric, translation || '', romalrc || '')
 }
 
 /**
@@ -105,6 +105,16 @@ export const setLyric = (lyric, translation) => {
 export const toggleTranslation = isShowTranslation => {
   // if (!isShowLyric) return Promise.resolve()
   return LyricModule.toggleTranslation(isShowTranslation)
+}
+
+/**
+ * toggle show roma lyric
+ * @param {Boolean} isShowRoma is show roma lyric
+ * @returns {Promise} Promise
+ */
+export const toggleRoma = isShowRoma => {
+  // if (!isShowLyric) return Promise.resolve()
+  return LyricModule.toggleRoma(isShowRoma)
 }
 
 /**

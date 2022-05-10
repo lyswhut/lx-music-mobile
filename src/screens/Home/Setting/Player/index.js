@@ -5,6 +5,7 @@ import IsPlayHighQuality from './IsPlayHighQuality'
 import IsHandleAudioFocus from './IsHandleAudioFocus'
 import IsShowNotificationImage from './IsShowNotificationImage'
 import IsShowLyricTranslation from './IsShowLyricTranslation'
+import IsShowLyricRoma from './IsShowLyricRoma'
 import MaxCache from './MaxCache'
 import { useTranslation } from '@/plugins/i18n'
 
@@ -43,6 +44,7 @@ export default memo(() => {
       <IsHandleAudioFocus />
       <IsShowNotificationImage />
       <IsShowLyricTranslation />
+      <IsShowLyricRoma />
       <MaxCache />
       {/* <View style={{ marginLeft: 15, marginBottom: 15 }}>
         <Text>播放歌曲切换方式</Text>

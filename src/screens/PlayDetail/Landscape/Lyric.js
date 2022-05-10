@@ -17,17 +17,17 @@ const LrcLine = memo(({ lrc, line, activeLine }) => {
         ...styles.lineText,
         fontSize: playerLandscapeStyle.lrcFontSize / 10,
         lineHeight: playerLandscapeStyle.lrcFontSize / 10 * 1.25,
-        color: activeLine == line ? theme.secondary : theme.normal30,
+        color: activeLine == line ? theme.secondary : theme.normal50,
       }}>{lrc.text}</Text>
       {
-        lrc.translation
-          ? <Text style={{
+        lrc.extendedLyrics.map((lrc, index) => {
+          return (<Text style={{
             ...styles.lineTranslationText,
             fontSize: playerLandscapeStyle.lrcFontSize / 10 * 0.8,
             lineHeight: playerLandscapeStyle.lrcFontSize / 10 * 0.8 * 1.25,
-            color: activeLine == line ? theme.secondary : theme.normal30,
-          }}>{lrc.translation}</Text>
-          : null
+            color: activeLine == line ? theme.secondary : theme.normal50,
+          }} key={index}>{lrc}</Text>)
+        })
       }
     </View>
   )

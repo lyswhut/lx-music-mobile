@@ -20,7 +20,7 @@ import {
 import { getRandom } from '@/utils'
 import { getMusicUrl, saveMusicUrl, getLyric, saveLyric, assertApiSupport, savePlayInfo, saveList, checkNotificationPermission } from '@/utils/tools'
 import { playInfo as playInfoGetter } from './getter'
-import { play as lrcPlay, setLyric, pause as lrcPause, toggleTranslation as lrcToggleTranslation } from '@/utils/lyric'
+import { play as lrcPlay, setLyric, pause as lrcPause, toggleTranslation as lrcToggleTranslation, toggleRoma as lrcToggleRoma } from '@/utils/lyric'
 import { showLyric, hideLyric, setLyric as lrcdSetLyric, toggleLock, setTheme, setLyricTextPosition, setAlpha, setTextSize } from '@/utils/lyricDesktop'
 import { action as listAction } from '@/store/modules/list'
 import { LIST_ID_PLAY_LATER, MUSIC_TOGGLE_MODE } from '@/config/constant'
@@ -142,10 +142,10 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
         }
       })
     }
-    dispatch(getLrc(musicInfo)).then(({ lyric, tlyric }) => {
+    dispatch(getLrc(musicInfo)).then(({ lyric, tlyric, rlyric }) => {
       if (playMusicId != id) return
       const player = getState().player
-      setLyric(lyric, tlyric)
+      setLyric(lyric, tlyric, rlyric)
       if (player.status == STATUS.playing && !player.isGettingUrl) {
         getPosition().then(position => {
           lrcPlay(position * 1000)
@@ -201,10 +201,10 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
       delayUpdateMusicInfo(buildTrack({ musicInfo, type }))
     })
   }
-  dispatch(getLrc(musicInfo)).then(({ lyric, tlyric }) => {
+  dispatch(getLrc(musicInfo)).then(({ lyric, tlyric, rlyric }) => {
     if (playMusicId != id) return
     const player = getState().player
-    setLyric(lyric, tlyric)
+    setLyric(lyric, tlyric, rlyric)
     if (player.status == STATUS.playing && !player.isGettingUrl) {
       getPosition().then(position => {
         lrcPlay(position * 1000)
@@ -513,11 +513,15 @@ export const getPic = musicInfo => (dispatch, getState) => {
 }
 export const getLrc = musicInfo => async(dispatch, getState) => {
   let lyricInfo = await getLyric(musicInfo)
-  if (lyricInfo.lyric && lyricInfo.tlyric != null) return lyricInfo
+  if (lyricInfo.lyric && lyricInfo.tlyric != null) {
+    if (lyricInfo.rlyric == null) {
+      if (musicInfo.source != 'wy') return lyricInfo
+    } return lyricInfo
+  }
 
-  return handleGetLyric(dispatch, getState().player.listInfo.id, musicInfo).then(({ lyric, tlyric }) => {
+  return handleGetLyric(dispatch, getState().player.listInfo.id, musicInfo).then(({ lyric, tlyric, rlyric }) => {
     // picRequest = null
-    lyricInfo = { lyric, tlyric }
+    lyricInfo = { lyric, tlyric, rlyric }
     saveLyric(musicInfo, lyricInfo)
     return lyricInfo
   }).catch(err => {
@@ -799,14 +803,24 @@ export const toggleTranslation = isShow => async(dispatch, getState) => {
   }
 }
 
+export const toggleRoma = isShow => async(dispatch, getState) => {
+  lrcToggleRoma(isShow)
+  const player = getState().player
+  if (player.status == STATUS.playing && !player.isGettingUrl) {
+    getPosition().then(position => {
+      lrcPlay(position * 1000)
+    })
+  }
+}
+
 export const toggleDesktopLyric = isShow => async(dispatch, getState) => {
   if (isShow) {
     const { common, player } = getState()
     const desktopLyric = common.setting.desktopLyric
-    const [{ lyric, tlyric }] = await Promise.all([
+    const [{ lyric, tlyric, rlyric }] = await Promise.all([
       _playMusicInfo
-        ? getLyric(_playMusicInfo).catch(() => ({ lyric: '', tlyric: '' }))
-        : Promise.resolve({ lyric: '', tlyric: '' }),
+        ? getLyric(_playMusicInfo).catch(() => ({ lyric: '', tlyric: '', rlyric: '' }))
+        : Promise.resolve({ lyric: '', tlyric: '', rlyric: '' }),
       showLyric({
         isLock: desktopLyric.isLock,
         themeId: desktopLyric.theme,
@@ -818,7 +832,7 @@ export const toggleDesktopLyric = isShow => async(dispatch, getState) => {
         textPositionY: desktopLyric.textPosition.y,
       }),
     ])
-    await lrcdSetLyric(lyric, tlyric)
+    await lrcdSetLyric(lyric, tlyric, rlyric)
     if (player.status == STATUS.playing && !player.isGettingUrl) {
       getPosition().then(position => {
         lrcPlay(position * 1000)

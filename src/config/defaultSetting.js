@@ -4,7 +4,7 @@
 import { MUSIC_TOGGLE_MODE } from './constant'
 
 const defaultSetting = {
-  version: '1.19',
+  version: '1.20',
   player: {
     togglePlayMethod: MUSIC_TOGGLE_MODE.listLoop,
     highQuality: false,
@@ -14,6 +14,7 @@ const defaultSetting = {
     timeoutExitPlayed: true,
     isHandleAudioFocus: true,
     isShowLyricTranslation: false,
+    isShowLyricRoma: false,
     isShowNotificationImage: true,
     portrait: {
       style: {

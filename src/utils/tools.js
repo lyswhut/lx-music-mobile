@@ -187,7 +187,7 @@ export const clearMusicUrl = async() => {
 }
 
 export const getLyric = musicInfo => getData(`${storageDataPrefix.lyric}${musicInfo.source}_${musicInfo.songmid}`).then(lrcInfo => lrcInfo || {})
-export const saveLyric = (musicInfo, { lyric, tlyric, lxlyric }) => setData(`${storageDataPrefix.lyric}${musicInfo.source}_${musicInfo.songmid}`, { lyric, tlyric, lxlyric })
+export const saveLyric = (musicInfo, { lyric, tlyric, rlyric, lxlyric }) => setData(`${storageDataPrefix.lyric}${musicInfo.source}_${musicInfo.songmid}`, { lyric, tlyric, rlyric, lxlyric })
 export const clearLyric = async() => {
   let keys = (await getAllKeys()).filter(key => key.startsWith(storageDataPrefix.lyric))
   await removeDataMultiple(keys)

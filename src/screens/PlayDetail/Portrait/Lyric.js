@@ -1,6 +1,6 @@
 import React, { memo, useMemo, useCallback, useEffect, useRef } from 'react'
 import { View, Text, StyleSheet, FlatList } from 'react-native'
-import { useGetter, useDispatch } from '@/store'
+import { useGetter } from '@/store'
 // import { useLayout } from '@/utils/hooks'
 import { useLrcPlay, useLrcSet } from '@/plugins/lyric'
 // import { log } from '@/utils/log'
@@ -19,14 +19,14 @@ const LrcLine = memo(({ lrc, line, activeLine }) => {
         color: activeLine == line ? theme.secondary : theme.normal50,
       }}>{lrc.text}</Text>
       {
-        lrc.translation
-          ? <Text style={{
+        lrc.extendedLyrics.map((lrc, index) => {
+          return (<Text style={{
             ...styles.lineTranslationText,
             fontSize: playerPortraitStyle.lrcFontSize / 10 * 0.8,
             lineHeight: playerPortraitStyle.lrcFontSize / 10 * 0.8 * 1.25,
             color: activeLine == line ? theme.secondary : theme.normal50,
-          }}>{lrc.translation}</Text>
-          : null
+          }} key={index}>{lrc}</Text>)
+        })
       }
     </View>
   )

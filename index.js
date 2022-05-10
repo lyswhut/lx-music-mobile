@@ -16,7 +16,7 @@ import { action as commonAction } from '@/store/modules/common'
 import { action as playerAction } from '@/store/modules/player'
 import { action as listAction } from '@/store/modules/list'
 import { init as initMusicTools } from '@/utils/music'
-import { init as initLyric, toggleTranslation } from '@/utils/lyric'
+import { init as initLyric, toggleTranslation, toggleRoma } from '@/utils/lyric'
 import { showLyric, onPositionChange } from '@/utils/lyricDesktop'
 import { init as initI18n, supportedLngs } from '@/plugins/i18n'
 import { deviceLanguage, getPlayInfo, toast, onAppearanceChange, getIsSupportedAutoTheme, getAppearance } from '@/utils/tools'
@@ -50,6 +50,7 @@ const init = () => {
     }
 
     toggleTranslation(setting.player.isShowLyricTranslation)
+    toggleRoma(setting.player.isShowLyricRoma)
     if (setting.sync.enable) {
       connect().catch(err => {
         if (err.message == SYNC_CODE.unknownServiceAddress) {

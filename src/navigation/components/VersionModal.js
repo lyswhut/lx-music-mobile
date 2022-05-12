@@ -16,7 +16,7 @@ const VersionItem = ({ version, desc }) => {
   return (
     <View style={{ marginBottom: 10 }}>
       <Text style={{ ...styles.label, color: theme.normal, marginBottom: 2 }}>v{version}</Text>
-      <Text style={{ ...styles.desc, color: theme.normal }}>{desc}</Text>
+      <Text selectable style={{ ...styles.desc, color: theme.normal }}>{desc}</Text>
     </View>
   )
 }
@@ -182,7 +182,7 @@ const VersionModal = ({ componentId }) => {
                     <View>
                       <Text style={{ ...styles.label, color: theme.normal }}>{t('version_label_change_log')}</Text>
                       <View style={{ paddingLeft: 10, marginTop: 5 }}>
-                        <Text style={{ ...styles.desc, color: theme.normal }}>{versionInfo.desc}</Text>
+                        <Text selectable style={{ ...styles.desc, color: theme.normal }}>{versionInfo.desc}</Text>
                       </View>
                     </View>
                   )

@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
     width: 26,
     height: 26,
     borderRadius: 4,
+    elevation: 1,
   },
   name: {
     marginTop: 2,

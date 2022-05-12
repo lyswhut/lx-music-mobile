@@ -14,6 +14,8 @@ export const themes = [
   { id: 'purple', value: '#c851d4' },
   { id: 'orange', value: '#ffad12' },
   { id: 'grey', value: '#bdc3c7' },
+  { id: 'black', value: '#333333' },
+  { id: 'white', value: '#ffffff' },
 ]
 
 export const textPositionX = [

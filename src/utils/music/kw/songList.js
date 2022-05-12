@@ -7,7 +7,6 @@ export default {
   _requestObj_tags: null,
   _requestObj_hotTags: null,
   _requestObj_list: null,
-  _requestObj_listDetail: null,
   limit_list: 36,
   limit_song: 10000,
   successCode: 200,
@@ -167,13 +166,10 @@ export default {
   },
 
   getListDetailDigest8(id, page, tryNum = 0) {
-    if (this._requestObj_listDetail) {
-      this._requestObj_listDetail.cancelHttp()
-    }
     if (tryNum > 2) return Promise.reject(new Error('try max num'))
 
-    this._requestObj_listDetail = httpFetch(this.getListDetailUrl(id, page))
-    return this._requestObj_listDetail.promise.then(({ body }) => {
+    const requestObj = httpFetch(this.getListDetailUrl(id, page))
+    return requestObj.promise.then(({ body }) => {
       if (body.result !== 'ok') return this.getListDetail(id, page, ++tryNum)
       return {
         list: this.filterListDetail(body.musiclist),
@@ -192,24 +188,18 @@ export default {
     })
   },
   getListDetailDigest5Info(id, tryNum = 0) {
-    if (this._requestObj_listDetail) {
-      this._requestObj_listDetail.cancelHttp()
-    }
     if (tryNum > 2) return Promise.reject(new Error('try max num'))
-    this._requestObj_listDetail = httpFetch(`http://qukudata.kuwo.cn/q.k?op=query&cont=ninfo&node=${id}&pn=0&rn=1&fmt=json&src=mbox&level=2`)
-    return this._requestObj_listDetail.promise.then(({ statusCode, body }) => {
+    const requestObj = httpFetch(`http://qukudata.kuwo.cn/q.k?op=query&cont=ninfo&node=${id}&pn=0&rn=1&fmt=json&src=mbox&level=2`)
+    return requestObj.promise.then(({ statusCode, body }) => {
       if (statusCode != 200 || !body.child) return this.getListDetail(id, ++tryNum)
       // console.log(body)
       return body.child.length ? body.child[0].sourceid : null
     })
   },
   getListDetailDigest5Music(id, page, tryNum = 0) {
-    if (this._requestObj_listDetail) {
-      this._requestObj_listDetail.cancelHttp()
-    }
     if (tryNum > 2) return Promise.reject(new Error('try max num'))
-    this._requestObj_listDetail = httpFetch(`http://nplserver.kuwo.cn/pl.svc?op=getlistinfo&pid=${id}&pn=${page - 1}}&rn=${this.limit_song}&encode=utf-8&keyset=pl2012&identity=kuwo&pcmp4=1`)
-    return this._requestObj_listDetail.promise.then(({ body }) => {
+    const requestObj = httpFetch(`http://nplserver.kuwo.cn/pl.svc?op=getlistinfo&pid=${id}&pn=${page - 1}}&rn=${this.limit_song}&encode=utf-8&keyset=pl2012&identity=kuwo&pcmp4=1`)
+    return requestObj.promise.then(({ body }) => {
       // console.log(body)
       if (body.result !== 'ok') return this.getListDetail(id, page, ++tryNum)
       return {
@@ -309,7 +299,6 @@ export default {
   getTags() {
     return Promise.all([this.getTag(), this.getHotTag()]).then(([tags, hotTag]) => ({ tags, hotTag, source: 'kw' }))
   },
-
   getDetailPageUrl(id) {
     if ((/[?&:/]/.test(id))) id = id.replace(this.regExps.listDetailLink, '$1')
     else if (/^digest-/.test(id)) {

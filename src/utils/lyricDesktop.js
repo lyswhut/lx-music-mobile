@@ -1,9 +1,10 @@
-import { NativeModules, NativeEventEmitter } from 'react-native'
+import { NativeModules, NativeEventEmitter, Dimensions } from 'react-native'
 
 const { LyricModule } = NativeModules
 
 let isShowLyric = false
 
+let changeListener
 
 export const themes = [
   { id: 'green', value: '#07c556' },
@@ -35,13 +36,22 @@ const getTextPositionY = y => (textPositionY.find(t => t.id == y) || textPositio
 const getAlpha = num => parseInt(num) / 100
 const getTextSize = num => parseInt(num) / 10
 
+const listenChange = () => {
+  unlistenChange()
+  changeListener = Dimensions.addEventListener('change', fixViewPosition)
+}
+const unlistenChange = () => {
+  if (!changeListener) return
+  changeListener.remove()
+  changeListener = null
+}
 
 /**
  * show lyric
  * @param {Number} isLock is lock lyric window
  * @returns {Promise} Promise
  */
-export const showLyric = ({ isLock, themeId, opacity, textSize, positionX, positionY, textPositionX, textPositionY }) => {
+export const showLyric = ({ width, maxLineNum, isLock, themeId, opacity, textSize, positionX, positionY, textPositionX, textPositionY }) => {
   if (isShowLyric) return Promise.resolve()
   return LyricModule.showLyric({
     isLock,
@@ -52,8 +62,11 @@ export const showLyric = ({ isLock, themeId, opacity, textSize, positionX, posit
     lyricViewY: positionY,
     textX: getTextPositionX(textPositionX),
     textY: getTextPositionY(textPositionY),
+    width,
+    maxLineNum,
   }).then(() => {
     isShowLyric = true
+    listenChange()
   })
 }
 
@@ -65,6 +78,7 @@ export const hideLyric = () => {
   if (!isShowLyric) return Promise.resolve()
   return LyricModule.hideLyric().then(() => {
     isShowLyric = false
+    unlistenChange()
   })
 }
 
@@ -157,6 +171,27 @@ export const setAlpha = alpha => {
 export const setTextSize = size => {
   if (!isShowLyric) return Promise.resolve()
   return LyricModule.setTextSize(getTextSize(size))
+}
+
+export const setPosition = (x, y) => {
+  if (!isShowLyric) return Promise.resolve()
+  return LyricModule.setPosition(x, y)
+}
+
+export const setMaxLineNum = maxLineNum => {
+  console.log(maxLineNum, isShowLyric)
+  if (!isShowLyric) return Promise.resolve()
+  return LyricModule.setMaxLineNum(maxLineNum)
+}
+
+export const setWidth = width => {
+  if (!isShowLyric) return Promise.resolve()
+  return LyricModule.setWidth(width)
+}
+
+export const fixViewPosition = () => {
+  if (!isShowLyric) return Promise.resolve()
+  return LyricModule.fixViewPosition()
 }
 
 export const setLyricTextPosition = (textX, textY) => {

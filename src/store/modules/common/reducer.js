@@ -393,6 +393,30 @@ const mutations = {
       },
     }
   },
+  [TYPES.setDesktopLyricWidth](state, width) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        desktopLyric: {
+          ...state.setting.desktopLyric,
+          width,
+        },
+      },
+    }
+  },
+  [TYPES.setDesktopLyricMaxLineNum](state, maxLineNum) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        desktopLyric: {
+          ...state.setting.desktopLyric,
+          maxLineNum,
+        },
+      },
+    }
+  },
   [TYPES.setDesktopLyricTextPosition](state, textPosition) {
     return {
       ...state,

@@ -4,6 +4,8 @@ import Section from '../components/Section'
 import IsShowLyric from './IsShowLyric'
 import IsLockLyric from './IsLockLyric'
 import TextSize from './TextSize'
+import ViewWidth from './ViewWidth'
+import MaxLineNum from './MaxLineNum'
 import TextOpacity from './TextOpacity'
 import TextPositionX from './TextPositionX'
 import TextPositionY from './TextPositionY'
@@ -19,6 +21,8 @@ export default memo(() => {
       <IsLockLyric />
       <Theme />
       <TextSize />
+      <ViewWidth />
+      <MaxLineNum />
       <TextOpacity />
       <TextPositionX />
       <TextPositionY />

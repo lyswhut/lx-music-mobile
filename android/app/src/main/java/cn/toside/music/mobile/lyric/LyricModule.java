@@ -121,6 +121,18 @@ public class LyricModule extends ReactContextBaseJavaModule {
   public void setTextSize(float size) { lyric.setTextSize(size); }
 
   @ReactMethod
+  public void fixViewPosition() { lyric.fixViewPosition(); }
+
+  @ReactMethod
+  public void setPosition(int x, int y) { lyric.setPosition(x, y); }
+
+  @ReactMethod
+  public void setMaxLineNum(int maxLineNum) { lyric.setMaxLineNum(maxLineNum); }
+
+  @ReactMethod
+  public void setWidth(int width) { lyric.setWidth(width); }
+
+  @ReactMethod
   public void setLyricTextPosition(String positionX, String positionY, Promise promise) {
     lyric.setLyricTextPosition(positionX, positionY);
     promise.resolve(null);

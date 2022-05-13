@@ -64,6 +64,8 @@ const init = () => {
         themeId: setting.desktopLyric.theme,
         opacity: setting.desktopLyric.style.opacity,
         textSize: setting.desktopLyric.style.fontSize,
+        width: setting.desktopLyric.width,
+        maxLineNum: setting.desktopLyric.maxLineNum,
         positionX: setting.desktopLyric.position.x,
         positionY: setting.desktopLyric.position.y,
         textPositionX: setting.desktopLyric.textPosition.x,

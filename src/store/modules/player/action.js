@@ -21,7 +21,17 @@ import { getRandom } from '@/utils'
 import { getMusicUrl, saveMusicUrl, getLyric, saveLyric, assertApiSupport, savePlayInfo, saveList, checkNotificationPermission } from '@/utils/tools'
 import { playInfo as playInfoGetter } from './getter'
 import { play as lrcPlay, setLyric, pause as lrcPause, toggleTranslation as lrcToggleTranslation, toggleRoma as lrcToggleRoma } from '@/utils/lyric'
-import { showLyric, hideLyric, setLyric as lrcdSetLyric, toggleLock, setTheme, setLyricTextPosition, setAlpha, setTextSize } from '@/utils/lyricDesktop'
+import {
+  showLyric, hideLyric,
+  setLyric as lrcdSetLyric,
+  toggleLock,
+  setTheme,
+  setLyricTextPosition,
+  setAlpha,
+  setTextSize,
+  setWidth,
+  setMaxLineNum,
+} from '@/utils/lyricDesktop'
 import { action as listAction } from '@/store/modules/list'
 import { LIST_ID_PLAY_LATER, MUSIC_TOGGLE_MODE } from '@/config/constant'
 import { i18n } from '@/plugins/i18n'
@@ -845,6 +855,12 @@ export const toggleDesktopLyric = isShow => async(dispatch, getState) => {
 
 export const toggleDesktopLyricLock = isLock => async(dispatch, getState) => {
   toggleLock(isLock)
+}
+export const setDesktopLyricWidth = width => async(dispatch, getState) => {
+  setWidth(width)
+}
+export const setDesktopLyricMaxLineNum = maxLineNum => async(dispatch, getState) => {
+  setMaxLineNum(maxLineNum)
 }
 export const setDesktopLyricTheme = theme => async(dispatch, getState) => {
   setTheme(theme)

@@ -1,6 +1,6 @@
 {
   "name": "lx-music-mobile",
-  "version": "0.13.0-beta",
+  "version": "0.13.0-beta2",
   "versionCode": 41,
   "scripts": {
     "ar": "react-native run-android",
@@ -45,7 +45,7 @@
     "buffer": "^6.0.3",
     "console-browserify": "^1.2.0",
     "events": "^3.3.0",
-    "i18next": "^21.8.0",
+    "i18next": "^21.8.2",
     "js-htmlencode": "^0.3.0",
     "lrc-file-parser": "^2.0.0",
     "pako": "^2.0.4",

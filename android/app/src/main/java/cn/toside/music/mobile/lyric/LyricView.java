@@ -87,7 +87,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
             // if (rotation == Surface.ROTATION_90){} // check rotations here
             // if (rotation == Surface.ROTATION_270){} //
             Log.d("Lyric", "rotation: " + rotation);
-            fixViewPositionHandler.postDelayed(fixViewPositionRunnable, 1000);
+            fixViewPositionHandler.postDelayed(fixViewPositionRunnable, 300);
           }
           mLastRotation = rotation;
         }

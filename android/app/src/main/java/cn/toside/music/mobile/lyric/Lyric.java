@@ -164,11 +164,6 @@ public class Lyric extends LyricPlayer {
     lyricView.unlockView();
   }
 
-  public void fixViewPosition() {
-    if (lyricView == null) return;
-    lyricView.fixViewPosition();
-  }
-
   public void setPosition(int x, int y) {
     if (lyricView == null) return;
     lyricView.setPosition(x, y);

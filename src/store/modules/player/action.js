@@ -836,6 +836,8 @@ export const toggleDesktopLyric = isShow => async(dispatch, getState) => {
         themeId: desktopLyric.theme,
         opacity: desktopLyric.style.opacity,
         textSize: desktopLyric.style.fontSize,
+        width: desktopLyric.width,
+        maxLineNum: desktopLyric.maxLineNum,
         positionX: desktopLyric.position.x,
         positionY: desktopLyric.position.y,
         textPositionX: desktopLyric.textPosition.x,

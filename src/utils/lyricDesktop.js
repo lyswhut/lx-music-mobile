@@ -1,10 +1,8 @@
-import { NativeModules, NativeEventEmitter, Dimensions } from 'react-native'
+import { NativeModules, NativeEventEmitter } from 'react-native'
 
 const { LyricModule } = NativeModules
 
 let isShowLyric = false
-
-let changeListener
 
 export const themes = [
   { id: 'green', value: '#07c556' },
@@ -36,15 +34,6 @@ const getTextPositionY = y => (textPositionY.find(t => t.id == y) || textPositio
 const getAlpha = num => parseInt(num) / 100
 const getTextSize = num => parseInt(num) / 10
 
-const listenChange = () => {
-  unlistenChange()
-  changeListener = Dimensions.addEventListener('change', fixViewPosition)
-}
-const unlistenChange = () => {
-  if (!changeListener) return
-  changeListener.remove()
-  changeListener = null
-}
 
 /**
  * show lyric
@@ -66,7 +55,6 @@ export const showLyric = ({ width, maxLineNum, isLock, themeId, opacity, textSiz
     maxLineNum,
   }).then(() => {
     isShowLyric = true
-    listenChange()
   })
 }
 
@@ -78,7 +66,6 @@ export const hideLyric = () => {
   if (!isShowLyric) return Promise.resolve()
   return LyricModule.hideLyric().then(() => {
     isShowLyric = false
-    unlistenChange()
   })
 }
 

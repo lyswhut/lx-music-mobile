@@ -1,5 +1,6 @@
 package cn.toside.music.mobile.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -24,6 +25,7 @@ import com.facebook.react.bridge.WritableNativeArray;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 public class UtilsModule extends ReactContextBaseJavaModule {
   private final ReactApplicationContext reactContext;
@@ -49,13 +51,7 @@ public class UtilsModule extends ReactContextBaseJavaModule {
       Log.d("Utils", "killProcess");
       android.os.Process.killProcess(android.os.Process.myPid());
     } else {
-      if(Build.VERSION.SDK_INT >= 21){
-        currentActivity.finishAndRemoveTask();
-      } else if(Build.VERSION.SDK_INT >= 16){
-        currentActivity.finishAffinity();
-      } else{
-        currentActivity.finish();
-      }
+      currentActivity.finishAndRemoveTask();
       System.exit(0);
     }
   }
@@ -64,12 +60,8 @@ public class UtilsModule extends ReactContextBaseJavaModule {
   public void getSupportedAbis(Promise promise) {
     // https://github.com/react-native-device-info/react-native-device-info/blob/ff8f672cb08fa39a887567d6e23e2f08778e8340/android/src/main/java/com/learnium/RNDeviceInfo/RNDeviceModule.java#L877
     WritableArray array = new WritableNativeArray();
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      for (String abi : Build.SUPPORTED_ABIS) {
-        array.pushString(abi);
-      }
-    } else {
-      array.pushString(Build.CPU_ABI);
+    for (String abi : Build.SUPPORTED_ABIS) {
+      array.pushString(abi);
     }
     promise.resolve(array);
   }
@@ -128,11 +120,8 @@ public class UtilsModule extends ReactContextBaseJavaModule {
     final Activity activity = getCurrentActivity();
 
     if (activity != null) {
-      activity.runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-          activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }
+      activity.runOnUiThread(() -> {
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
       });
     }
   }
@@ -143,11 +132,8 @@ public class UtilsModule extends ReactContextBaseJavaModule {
     final Activity activity = getCurrentActivity();
 
     if (activity != null) {
-      activity.runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-          activity.getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }
+      activity.runOnUiThread(() -> {
+        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
       });
     }
   }
@@ -165,7 +151,7 @@ public class UtilsModule extends ReactContextBaseJavaModule {
         try {
           WifiInfo info = wifi.getConnectionInfo();
           int ipAddress = info.getIpAddress();
-          String stringip = String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
+          @SuppressLint("DefaultLocale") String stringip = String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
             (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
           promise.resolve(stringip);
         }catch (Exception e) {
@@ -244,7 +230,7 @@ public class UtilsModule extends ReactContextBaseJavaModule {
     shareIntent.setType("text/plain");
     shareIntent.putExtra(Intent.EXTRA_TEXT,text);
     shareIntent.putExtra(Intent.EXTRA_SUBJECT, title);
-    reactContext.getCurrentActivity().startActivity(Intent.createChooser(shareIntent, shareTitle));
+    Objects.requireNonNull(reactContext.getCurrentActivity()).startActivity(Intent.createChooser(shareIntent, shareTitle));
   }
 }
 

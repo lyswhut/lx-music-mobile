@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -65,9 +66,13 @@ public class LyricView extends Activity implements View.OnTouchListener {
   private int mLastRotation;
   private OrientationEventListener orientationEventListener = null;
 
+  final Handler fixViewPositionHandler;
+  final Runnable fixViewPositionRunnable = this::fixViewPosition;
+
   LyricView(ReactApplicationContext reactContext, LyricEvent lyricEvent) {
     this.reactContext = reactContext;
     this.lyricEvent = lyricEvent;
+    fixViewPositionHandler = new Handler();
   }
 
   private void listenOrientationEvent() {
@@ -81,14 +86,14 @@ public class LyricView extends Activity implements View.OnTouchListener {
             //rotation changed
             // if (rotation == Surface.ROTATION_90){} // check rotations here
             // if (rotation == Surface.ROTATION_270){} //
-            // Log.d("Lyric", "rotation: " + rotation);
-            fixViewPosition();
+            Log.d("Lyric", "rotation: " + rotation);
+            fixViewPositionHandler.postDelayed(fixViewPositionRunnable, 1000);
           }
           mLastRotation = rotation;
         }
       };
     }
-    // Log.d("Lyric", "orientationEventListener: " + orientationEventListener.canDetectOrientation());
+    Log.d("Lyric", "orientationEventListener: " + orientationEventListener.canDetectOrientation());
     if (orientationEventListener.canDetectOrientation()) {
       orientationEventListener.enable();
     }
@@ -112,16 +117,22 @@ public class LyricView extends Activity implements View.OnTouchListener {
     return flag;
   }
 
-  private void updateWH() {
+  /**
+   * update screen width and height
+   * @return has updated
+   */
+  private boolean updateWH() {
     Display display = windowManager.getDefaultDisplay();
     Point size = new Point();
     display.getSize(size);
+    if (maxWidth == size.x && maxHeight == size.y) return false;
     maxWidth = size.x;
     maxHeight = size.y;
+    return true;
   }
 
   private void fixViewPosition() {
-    updateWH();
+    if (!updateWH()) return;
 
     int width = (int)(maxWidth * widthPercentage);
     if (layoutParams.width != width) layoutParams.width = width;
@@ -140,9 +151,9 @@ public class LyricView extends Activity implements View.OnTouchListener {
 
     // layoutParams.x = x;
     // layoutParams.y = y;
-    // Log.d("Lyric", "widthPercentage: " + widthPercentage + "  prevViewPercentageX: " + prevViewPercentageX);
-    // Log.d("Lyric", "prevViewPercentageY: " + prevViewPercentageY + "  layoutParams.x: " + layoutParams.x);
-    // Log.d("Lyric", "layoutParams.y: " + layoutParams.y + "  layoutParams.width: " + layoutParams.width);
+    Log.d("Lyric", "widthPercentage: " + widthPercentage + "  prevViewPercentageX: " + prevViewPercentageX);
+    Log.d("Lyric", "prevViewPercentageY: " + prevViewPercentageY + "  layoutParams.x: " + layoutParams.x);
+    Log.d("Lyric", "layoutParams.y: " + layoutParams.y + "  layoutParams.width: " + layoutParams.width);
 
     windowManager.updateViewLayout(textView, layoutParams);
   }
@@ -511,12 +522,12 @@ public class LyricView extends Activity implements View.OnTouchListener {
     if (textView == null || windowManager == null) return;
     windowManager.removeView(textView);
     textView = null;
+    removeOrientationEvent();
   }
 
   public void destroy() {
     destroyView();
     windowManager = null;
     layoutParams = null;
-    removeOrientationEvent();
   }
 }

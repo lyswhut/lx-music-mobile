@@ -68,11 +68,8 @@ public class Lyric extends LyricPlayer {
     setTempPause(true);
 
     if (lyricView != null) {
-      lyricView.runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-          lyricView.destroyView();
-        }
+      lyricView.runOnUiThread(() -> {
+        lyricView.destroyView();
       });
     }
   }
@@ -80,13 +77,10 @@ public class Lyric extends LyricPlayer {
   private void handleScreenOn() {
     if (!isShowLyric) return;
     if (lyricView == null) lyricView = new LyricView(reactAppContext, lyricEvent);
-    lyricView.runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        lyricView.showLyricView();
-        setViewLyric(lastLine);
-        setTempPause(false);
-      }
+    lyricView.runOnUiThread(() -> {
+      lyricView.showLyricView();
+      setViewLyric(lastLine);
+      setTempPause(false);
     });
   }
 

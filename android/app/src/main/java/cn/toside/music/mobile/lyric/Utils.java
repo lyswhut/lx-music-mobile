@@ -8,22 +8,19 @@ public class Utils {
     return new TimeoutEvent(runnable, delay);
   }
   public static void clearTimeout(Object timeoutEvent) {
-    if (timeoutEvent != null && timeoutEvent instanceof TimeoutEvent) {
+    if (timeoutEvent instanceof TimeoutEvent) {
       ((TimeoutEvent) timeoutEvent).cancelTimeout();
     }
   }
   private static class TimeoutEvent {
-    private static Handler handler = new Handler();
+    private static final Handler handler = new Handler();
     private volatile Runnable runnable;
 
     private TimeoutEvent(Runnable task, long delay) {
       runnable = task;
-      handler.postDelayed(new Runnable() {
-        @Override
-        public void run() {
-          if (runnable != null) {
-            runnable.run();
-          }
+      handler.postDelayed(() -> {
+        if (runnable != null) {
+          runnable.run();
         }
       }, delay);
     }

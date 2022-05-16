@@ -67,7 +67,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
   private OrientationEventListener orientationEventListener = null;
 
   final Handler fixViewPositionHandler;
-  final Runnable fixViewPositionRunnable = this::fixViewPosition;
+  final Runnable fixViewPositionRunnable = this::updateViewPosition;
 
   LyricView(ReactApplicationContext reactContext, LyricEvent lyricEvent) {
     this.reactContext = reactContext;
@@ -86,14 +86,14 @@ public class LyricView extends Activity implements View.OnTouchListener {
             //rotation changed
             // if (rotation == Surface.ROTATION_90){} // check rotations here
             // if (rotation == Surface.ROTATION_270){} //
-            Log.d("Lyric", "rotation: " + rotation);
+            // Log.d("Lyric", "rotation: " + rotation);
             fixViewPositionHandler.postDelayed(fixViewPositionRunnable, 300);
           }
           mLastRotation = rotation;
         }
       };
     }
-    Log.d("Lyric", "orientationEventListener: " + orientationEventListener.canDetectOrientation());
+    // Log.d("Lyric", "orientationEventListener: " + orientationEventListener.canDetectOrientation());
     if (orientationEventListener.canDetectOrientation()) {
       orientationEventListener.enable();
     }
@@ -132,36 +132,37 @@ public class LyricView extends Activity implements View.OnTouchListener {
   }
 
   private void fixViewPosition() {
+    int maxX = maxWidth - layoutParams.width;
+    int x = (int)(maxWidth * prevViewPercentageX);
+    if (x < 0) x = 0;
+    else if (x > maxX) x = maxX;
+    if (layoutParams.x != x) layoutParams.x = x;
+
+    int maxY = maxHeight - layoutParams.height;
+    int y = (int)(maxHeight * prevViewPercentageY);
+    if (y < 0) y = 0;
+    else if (y > maxY) y = maxY;
+    if (layoutParams.y != y) layoutParams.y = y;
+  }
+
+  private void updateViewPosition() {
     if (!updateWH()) return;
 
     int width = (int)(maxWidth * widthPercentage);
     if (layoutParams.width != width) layoutParams.width = width;
 
-    layoutParams.x = (int)(maxWidth * prevViewPercentageX);
-    layoutParams.y = (int)(maxHeight * prevViewPercentageY);
-
-    // int maxX = this.maxWidth - layoutParams.width;
-    // int maxY = this.maxHeight - layoutParams.height;
-    // int x = layoutParams.x;
-    // int y = layoutParams.y;
-    // if (x < 0) x = 0;
-    // else if (x > maxX) x = maxX;
-    // if (y < 0) y = 0;
-    // else if (y > maxY) y = maxY;
-
-    // layoutParams.x = x;
-    // layoutParams.y = y;
-    Log.d("Lyric", "widthPercentage: " + widthPercentage + "  prevViewPercentageX: " + prevViewPercentageX);
-    Log.d("Lyric", "prevViewPercentageY: " + prevViewPercentageY + "  layoutParams.x: " + layoutParams.x);
-    Log.d("Lyric", "layoutParams.y: " + layoutParams.y + "  layoutParams.width: " + layoutParams.width);
+    fixViewPosition();
+    // Log.d("Lyric", "widthPercentage: " + widthPercentage + "  prevViewPercentageX: " + prevViewPercentageX);
+    // Log.d("Lyric", "prevViewPercentageY: " + prevViewPercentageY + "  layoutParams.x: " + layoutParams.x);
+    // Log.d("Lyric", "layoutParams.y: " + layoutParams.y + "  layoutParams.width: " + layoutParams.width);
 
     windowManager.updateViewLayout(textView, layoutParams);
   }
 
-  public void sendPositionEvent(int x, int y) {
+  public void sendPositionEvent(float x, float y) {
     WritableMap params = Arguments.createMap();
-    params.putInt("x", x);
-    params.putInt("y", y);
+    params.putDouble("x", x);
+    params.putDouble("y", y);
     lyricEvent.sendEvent(lyricEvent.SET_VIEW_POSITION, params);
   }
 
@@ -188,16 +189,15 @@ public class LyricView extends Activity implements View.OnTouchListener {
   public void showLyricView(Bundle options) {
     isLock = options.getBoolean("isLock", isLock);
     themeColor = options.getString("themeColor", themeColor);
-    prevViewPercentageX = (int) options.getDouble("lyricViewX", 0) / 100f;
-    prevViewPercentageY = (int) options.getDouble("lyricViewY", 0) / 100f;
+    prevViewPercentageX = (float) options.getDouble("lyricViewX", 0f) / 100f;
+    prevViewPercentageY = (float) options.getDouble("lyricViewY", 0f) / 100f;
     textX = options.getString("textX", textX);
     textY = options.getString("textY", textY);
     alpha = (float) options.getDouble("alpha", alpha);
     textSize = (float) options.getDouble("textSize", textSize);
-    widthPercentage = (int) options.getDouble("width", 100) / 100f;
+    widthPercentage = (float) options.getDouble("width", 100) / 100f;
     maxLineNum = (int) options.getDouble("maxLineNum", maxLineNum);
     handleShowLyric();
-    fixViewPosition();
     listenOrientationEvent();
   }
   public void showLyricView() {
@@ -207,7 +207,6 @@ public class LyricView extends Activity implements View.OnTouchListener {
       Log.e("Lyric", e.getMessage());
       return;
     }
-    fixViewPosition();
     listenOrientationEvent();
   }
 
@@ -304,10 +303,6 @@ public class LyricView extends Activity implements View.OnTouchListener {
 
     updateWH();
 
-    //显示位置与指定位置的相对位置差
-    layoutParams.x = (int)(maxWidth * prevViewPercentageX);
-    layoutParams.y = (int)(maxHeight * prevViewPercentageY);
-
     //悬浮窗的宽高
     // layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
     // layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -316,6 +311,12 @@ public class LyricView extends Activity implements View.OnTouchListener {
     layoutParams.width = (int)(maxWidth * widthPercentage);
     // layoutParams.height = 100;
     layoutParams.height = textView.getPaint().getFontMetricsInt(null) * maxLineNum + 8;
+
+    //显示位置与指定位置的相对位置差
+    layoutParams.x = (int)(maxWidth * prevViewPercentageX);
+    layoutParams.y = (int)(maxHeight * prevViewPercentageY);
+
+    fixViewPosition();
 
     //设置透明
     layoutParams.format = PixelFormat.TRANSPARENT;
@@ -338,18 +339,18 @@ public class LyricView extends Activity implements View.OnTouchListener {
     textView.setText(text);
   }
 
-  public void setPosition(int x, int y) {
-    if (textView == null) return;
-    layoutParams.x = x;
-    layoutParams.y = y;
-    windowManager.updateViewLayout(textView, layoutParams);
-  }
-
   public void setMaxLineNum(int maxLineNum) {
     if (textView == null) return;
     this.maxLineNum = maxLineNum;
     textView.setMaxLines(maxLineNum);
     layoutParams.height = textView.getPaint().getFontMetricsInt(null) * maxLineNum + 8;
+
+    int maxY = maxHeight - layoutParams.height;
+    int y = layoutParams.y;
+    if (y < 0) y = 0;
+    else if (y > maxY) y = maxY;
+    if (layoutParams.y != y) layoutParams.y = y;
+
     windowManager.updateViewLayout(textView, layoutParams);
   }
 
@@ -392,9 +393,9 @@ public class LyricView extends Activity implements View.OnTouchListener {
         tranY = nowY - lastY;
 
         int x = layoutParams.x + (int)tranX;
-        int y = layoutParams.y + (int)tranY;
         if (x < 0) x = 0;
         else if (x > maxX) x = maxX;
+        int y = layoutParams.y + (int)tranY;
         if (y < 0) y = 0;
         else if (y > maxY) y = maxY;
 
@@ -426,8 +427,8 @@ public class LyricView extends Activity implements View.OnTouchListener {
         //根据移动的位置来判断
         // dy = 0;
         tranY = 0;
-        int percentageX = (int)((float)layoutParams.x / (float) maxWidth * 100f);
-        int percentageY = (int)((float)layoutParams.y / (float) maxHeight * 100f);
+        float percentageX = (float)layoutParams.x / (float) maxWidth * 100f;
+        float percentageY = (float)layoutParams.y / (float) maxHeight * 100f;
         if (percentageX != prevViewPercentageX || percentageY != prevViewPercentageY) {
           prevViewPercentageX = percentageX / 100f;
           prevViewPercentageY = percentageY / 100f;

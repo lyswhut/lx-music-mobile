@@ -166,7 +166,6 @@ export const setPosition = (x, y) => {
 }
 
 export const setMaxLineNum = maxLineNum => {
-  console.log(maxLineNum, isShowLyric)
   if (!isShowLyric) return Promise.resolve()
   return LyricModule.setMaxLineNum(maxLineNum)
 }

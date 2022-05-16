@@ -158,11 +158,6 @@ public class Lyric extends LyricPlayer {
     lyricView.unlockView();
   }
 
-  public void setPosition(int x, int y) {
-    if (lyricView == null) return;
-    lyricView.setPosition(x, y);
-  }
-
   public void setMaxLineNum(int maxLineNum) {
     if (lyricView == null) return;
     lyricView.setMaxLineNum(maxLineNum);

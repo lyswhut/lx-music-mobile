@@ -66,9 +66,10 @@ jobs:
 
       - name: Generate file MD5
         run: |
-          echo -e '\n### File MD5\n' >> ./publish/changeLog.md
+          echo -e '\n### File MD5\n```\n' >> ./publish/changeLog.md
           cd android/app/build/outputs/apk/release
           md5sum *.apk >> ../../../../../../publish/changeLog.md
+          echo -e '\n```\n' >> ../../../../../../publish/changeLog.md
 
       - name: Release
         uses: softprops/action-gh-release@v1

@@ -124,7 +124,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
   private boolean updateWH() {
     Display display = windowManager.getDefaultDisplay();
     Point size = new Point();
-    display.getSize(size);
+    display.getRealSize(size);
     if (maxWidth == size.x && maxHeight == size.y) return false;
     maxWidth = size.x;
     maxHeight = size.y;

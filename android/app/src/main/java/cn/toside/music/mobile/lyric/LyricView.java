@@ -131,12 +131,20 @@ public class LyricView extends Activity implements View.OnTouchListener {
     return true;
   }
 
+  private void setLayoutParamsHeight() {
+    int height = textView.getPaint().getFontMetricsInt(null) * maxLineNum + 8;
+    if (height > maxHeight - 100) height = maxHeight - 100;
+    layoutParams.height = height;
+  }
+
   private void fixViewPosition() {
     int maxX = maxWidth - layoutParams.width;
     int x = (int)(maxWidth * prevViewPercentageX);
     if (x < 0) x = 0;
     else if (x > maxX) x = maxX;
     if (layoutParams.x != x) layoutParams.x = x;
+
+    setLayoutParamsHeight();
 
     int maxY = maxHeight - layoutParams.height;
     int y = (int)(maxHeight * prevViewPercentageY);
@@ -309,8 +317,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
     // layoutParams.width= DisplayUtil.dp2px(mContext,55);
     // layoutParams.height= DisplayUtil.dp2px(mContext,55);
     layoutParams.width = (int)(maxWidth * widthPercentage);
-    // layoutParams.height = 100;
-    layoutParams.height = textView.getPaint().getFontMetricsInt(null) * maxLineNum + 8;
+    setLayoutParamsHeight();
 
     //显示位置与指定位置的相对位置差
     layoutParams.x = (int)(maxWidth * prevViewPercentageX);
@@ -343,7 +350,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
     if (textView == null) return;
     this.maxLineNum = maxLineNum;
     textView.setMaxLines(maxLineNum);
-    layoutParams.height = textView.getPaint().getFontMetricsInt(null) * maxLineNum + 8;
+    setLayoutParamsHeight();
 
     int maxY = maxHeight - layoutParams.height;
     int y = layoutParams.y;
@@ -515,7 +522,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
     this.textSize = size;
     if (windowManager == null || textView == null) return;
     textView.setTextSize(size);
-    layoutParams.height = textView.getPaint().getFontMetricsInt(null) * maxLineNum + 8;
+    setLayoutParamsHeight();
     windowManager.updateViewLayout(textView, layoutParams);
   }
 

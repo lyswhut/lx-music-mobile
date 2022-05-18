@@ -33,7 +33,7 @@ export default memo(() => {
         <Text style={{ color: theme.secondary10 }}>{isSliding ? sliderSize : fontSize}</Text>
         <Slider
           minimumValue={100}
-          maximumValue={360}
+          maximumValue={500}
           onSlidingComplete={handleSlidingComplete}
           onValueChange={handleValueChange}
           onSlidingStart={handleSlidingStart}

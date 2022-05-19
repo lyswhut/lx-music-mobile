@@ -18,7 +18,8 @@
     "postinstall": "npm run nodeify"
   },
   "engines": {
-    "node": ">= 12"
+    "node": ">= 16",
+    "npm": ">= 8.5.2"
   },
   "repository": {
     "type": "git",
@@ -38,14 +39,14 @@
   },
   "homepage": "https://github.com/lyswhut/lx-music-mobile#readme",
   "dependencies": {
-    "@react-native-async-storage/async-storage": "^1.17.4",
+    "@react-native-async-storage/async-storage": "^1.17.5",
     "@react-native-clipboard/clipboard": "^1.10.0",
     "@react-native-community/checkbox": "^0.5.12",
     "@react-native-community/slider": "^4.2.2",
     "buffer": "^6.0.3",
     "console-browserify": "^1.2.0",
     "events": "^3.3.0",
-    "i18next": "^21.8.2",
+    "i18next": "^21.8.3",
     "js-htmlencode": "^0.3.0",
     "lrc-file-parser": "^2.0.0",
     "pako": "^2.0.4",
@@ -59,7 +60,7 @@
     "react-native-exception-handler": "^2.10.10",
     "react-native-fs": "^2.20.0",
     "react-native-navigation": "^7.27.1",
-    "react-native-pager-view": "^5.4.15",
+    "react-native-pager-view": "^5.4.17",
     "react-native-randombytes": "^3.6.1",
     "react-native-splash-screen": "^3.3.0",
     "react-native-track-player": "git+https://github.com/lyswhut/react-native-track-player.git#21155f4a4790c9bd5381091739fbd52d0a95e98d",
@@ -70,15 +71,15 @@
     "redux-subscriber": "^1.1.0",
     "redux-thunk": "^2.4.1",
     "reselect": "^4.1.5",
-    "socket.io": "^4.5.0",
+    "socket.io": "^4.5.1",
     "stream-browserify": "^1.0.0",
     "url": "~0.10.1",
     "util": "~0.10.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.10",
+    "@babel/core": "^7.17.12",
     "@babel/eslint-parser": "^7.17.0",
-    "@babel/plugin-proposal-export-namespace-from": "^7.16.7",
+    "@babel/plugin-proposal-export-namespace-from": "^7.17.12",
     "@babel/runtime": "^7.17.9",
     "babel-jest": "^26.6.3",
     "babel-plugin-module-resolver": "^4.1.0",
@@ -90,7 +91,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.5.0",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "^0.67.0",

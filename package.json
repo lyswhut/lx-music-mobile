@@ -1,6 +1,6 @@
 {
   "name": "lx-music-mobile",
-  "version": "0.13.0-beta5",
+  "version": "0.13.0-beta6",
   "versionCode": 41,
   "scripts": {
     "ar": "react-native run-android",
@@ -60,7 +60,7 @@
     "react-native-exception-handler": "^2.10.10",
     "react-native-fs": "^2.20.0",
     "react-native-navigation": "^7.27.1",
-    "react-native-pager-view": "^5.4.17",
+    "react-native-pager-view": "^5.4.22",
     "react-native-randombytes": "^3.6.1",
     "react-native-splash-screen": "^3.3.0",
     "react-native-track-player": "git+https://github.com/lyswhut/react-native-track-player.git#21155f4a4790c9bd5381091739fbd52d0a95e98d",
@@ -77,15 +77,15 @@
     "util": "~0.10.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.12",
+    "@babel/core": "^7.18.0",
     "@babel/eslint-parser": "^7.17.0",
     "@babel/plugin-proposal-export-namespace-from": "^7.17.12",
-    "@babel/runtime": "^7.17.9",
+    "@babel/runtime": "^7.18.0",
     "babel-jest": "^26.6.3",
     "babel-plugin-module-resolver": "^4.1.0",
     "changelog-parser": "^2.8.1",
     "cross-env": "^7.0.3",
-    "eslint": "^8.15.0",
+    "eslint": "^8.16.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-html": "^6.2.0",
     "eslint-plugin-import": "^2.26.0",

@@ -39,6 +39,7 @@ export const TYPES = {
   setAddMusicLocationType: null,
   setIsShowLyricTranslation: null,
   setIsShowLyricRoma: null,
+  setIsS2T: null,
   setIsEnableSync: null,
   setSyncStatus: null,
   setIsClickPlayList: null,
@@ -329,6 +330,15 @@ export const setIsShowLyricRoma = flag => async(dispatch, getState) => {
     type: TYPES.setIsShowLyricRoma,
     payload: flag,
   })
+  const { common } = getState()
+  await setData(settingKey, common.setting)
+}
+export const setIsS2T = flag => async(dispatch, getState) => {
+  dispatch({
+    type: TYPES.setIsS2T,
+    payload: flag,
+  })
+  dispatch(playerAction.toggleS2T())
   const { common } = getState()
   await setData(settingKey, common.setting)
 }

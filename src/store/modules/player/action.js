@@ -36,6 +36,7 @@ import { action as listAction } from '@/store/modules/list'
 import { LIST_ID_PLAY_LATER, MUSIC_TOGGLE_MODE } from '@/config/constant'
 import { i18n } from '@/plugins/i18n'
 // import { defaultList } from '../list/getter'
+import { tranditionalize } from '@/utils/simplify-chinese-main'
 
 export const TYPES = {
   setPic: null,
@@ -154,8 +155,8 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
     }
     dispatch(getLrc(musicInfo)).then(({ lyric, tlyric, rlyric }) => {
       if (playMusicId != id) return
-      const player = getState().player
-      setLyric(lyric, tlyric, rlyric)
+      const { common, player } = getState()
+      setLyric(common.setting.player.isS2t ? tranditionalize(lyric) : lyric, common.setting.player.isS2t ? tranditionalize(tlyric) : tlyric, rlyric)
       if (player.status == STATUS.playing && !player.isGettingUrl) {
         getPosition().then(position => {
           lrcPlay(position * 1000)
@@ -213,8 +214,8 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
   }
   dispatch(getLrc(musicInfo)).then(({ lyric, tlyric, rlyric }) => {
     if (playMusicId != id) return
-    const player = getState().player
-    setLyric(lyric, tlyric, rlyric)
+    const { common, player } = getState()
+    setLyric(common.setting.player.isS2t ? tranditionalize(lyric) : lyric, common.setting.player.isS2t ? tranditionalize(tlyric) : tlyric, rlyric)
     if (player.status == STATUS.playing && !player.isGettingUrl) {
       getPosition().then(position => {
         lrcPlay(position * 1000)
@@ -823,6 +824,21 @@ export const toggleRoma = isShow => async(dispatch, getState) => {
   }
 }
 
+export const toggleS2T = () => async(dispatch, getState) => {
+  if (!global.playInfo.currentPlayMusicInfo) return
+  let id = playMusicId
+  dispatch(getLrc(global.playInfo.currentPlayMusicInfo)).then(({ lyric, tlyric, rlyric }) => {
+    if (playMusicId != id) return
+    const { common, player } = getState()
+    setLyric(common.setting.player.isS2t ? tranditionalize(lyric) : lyric, common.setting.player.isS2t ? tranditionalize(tlyric) : tlyric, rlyric)
+    if (player.status == STATUS.playing && !player.isGettingUrl) {
+      getPosition().then(position => {
+        lrcPlay(position * 1000)
+      })
+    }
+  })
+}
+
 export const toggleDesktopLyric = isShow => async(dispatch, getState) => {
   if (isShow) {
     const { common, player } = getState()
@@ -844,7 +860,7 @@ export const toggleDesktopLyric = isShow => async(dispatch, getState) => {
         textPositionY: desktopLyric.textPosition.y,
       }),
     ])
-    await lrcdSetLyric(lyric, tlyric, rlyric)
+    await lrcdSetLyric(player.isS2t ? tranditionalize(lyric) : lyric, player.isS2t ? tranditionalize(tlyric) : tlyric, rlyric)
     if (player.status == STATUS.playing && !player.isGettingUrl) {
       getPosition().then(position => {
         lrcPlay(position * 1000)

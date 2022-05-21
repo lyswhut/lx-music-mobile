@@ -318,6 +318,18 @@ const mutations = {
       },
     }
   },
+  [TYPES.setIsS2T](state, isS2t) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        player: {
+          ...state.setting.player,
+          isS2t,
+        },
+      },
+    }
+  },
   [TYPES.setIsShowDesktopLyric](state, isShowDesktopLyric) {
     return {
       ...state,

@@ -860,7 +860,7 @@ export const toggleDesktopLyric = isShow => async(dispatch, getState) => {
         textPositionY: desktopLyric.textPosition.y,
       }),
     ])
-    await lrcdSetLyric(player.isS2t ? tranditionalize(lyric) : lyric, player.isS2t ? tranditionalize(tlyric) : tlyric, rlyric)
+    await lrcdSetLyric(common.setting.player.isS2t ? tranditionalize(lyric) : lyric, common.setting.player.isS2t ? tranditionalize(tlyric) : tlyric, rlyric)
     if (player.status == STATUS.playing && !player.isGettingUrl) {
       getPosition().then(position => {
         lrcPlay(position * 1000)

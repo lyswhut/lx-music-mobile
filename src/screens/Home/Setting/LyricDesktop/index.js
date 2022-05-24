@@ -3,6 +3,7 @@ import React, { memo } from 'react'
 import Section from '../components/Section'
 import IsShowLyric from './IsShowLyric'
 import IsLockLyric from './IsLockLyric'
+import IsSingleLine from './IsSingleLine'
 import TextSize from './TextSize'
 import ViewWidth from './ViewWidth'
 import MaxLineNum from './MaxLineNum'
@@ -19,6 +20,7 @@ export default memo(() => {
     <Section title={t('setting_lyric_desktop')}>
       <IsShowLyric />
       <IsLockLyric />
+      <IsSingleLine />
       <Theme />
       <TextSize />
       <ViewWidth />

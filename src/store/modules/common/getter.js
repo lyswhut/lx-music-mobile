@@ -57,6 +57,7 @@ export const themeDesktopLyric = state => state.common.setting.desktopLyric.them
 export const desktopLyricPosition = state => state.common.setting.desktopLyric.position
 export const desktopLyricTextPosition = state => state.common.setting.desktopLyric.textPosition
 export const desktopLyricStyle = state => state.common.setting.desktopLyric.style
+export const desktopLyricSingleLine = state => state.common.setting.desktopLyric.isSingleLine
 export const desktopLyricWidth = state => state.common.setting.desktopLyric.width
 export const desktopLyricMaxLineNum = state => state.common.setting.desktopLyric.maxLineNum
 

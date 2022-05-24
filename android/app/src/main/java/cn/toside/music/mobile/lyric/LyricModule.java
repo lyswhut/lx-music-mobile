@@ -113,18 +113,34 @@ public class LyricModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void setAlpha(float alpha) {
+  public void setAlpha(float alpha, Promise promise) {
     lyric.setAlpha(alpha);
+    promise.resolve(null);
   }
 
   @ReactMethod
-  public void setTextSize(float size) { lyric.setTextSize(size); }
+  public void setTextSize(float size, Promise promise) {
+    lyric.setTextSize(size);
+    promise.resolve(null);
+  }
 
   @ReactMethod
-  public void setMaxLineNum(int maxLineNum) { lyric.setMaxLineNum(maxLineNum); }
+  public void setMaxLineNum(int maxLineNum, Promise promise) {
+    lyric.setMaxLineNum(maxLineNum);
+    promise.resolve(null);
+  }
 
   @ReactMethod
-  public void setWidth(int width) { lyric.setWidth(width); }
+  public void setSingleLine(boolean singleLine, Promise promise) {
+    lyric.setSingleLine(singleLine);
+    promise.resolve(null);
+  }
+
+  @ReactMethod
+  public void setWidth(int width, Promise promise) {
+    lyric.setWidth(width);
+    promise.resolve(null);
+  }
 
   @ReactMethod
   public void setLyricTextPosition(String positionX, String positionY, Promise promise) {

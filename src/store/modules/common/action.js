@@ -48,6 +48,7 @@ export const TYPES = {
   setThemeDesktopLyric: null,
   setDesktopLyricPosition: null,
   setDesktopLyricWidth: null,
+  setDesktopLyricSingleLine: null,
   setDesktopLyricMaxLineNum: null,
   setDesktopLyricTextPosition: null,
   setDesktopLyricStyle: null,
@@ -391,6 +392,15 @@ export const setDesktopLyricPosition = position => async(dispatch, getState) => 
   dispatch({
     type: TYPES.setDesktopLyricPosition,
     payload: position,
+  })
+  const { common } = getState()
+  await setData(settingKey, common.setting)
+}
+export const setDesktopLyricSingleLine = isSingleLine => async(dispatch, getState) => {
+  dispatch(playerAction.setDesktopLyricSingleLine(isSingleLine))
+  dispatch({
+    type: TYPES.setDesktopLyricSingleLine,
+    payload: isSingleLine,
   })
   const { common } = getState()
   await setData(settingKey, common.setting)

@@ -9,7 +9,6 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -18,7 +17,6 @@ import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -29,7 +27,7 @@ import java.util.ArrayList;
 import cn.toside.music.mobile.R;
 
 public class LyricView extends Activity implements View.OnTouchListener {
-  TextView textView = null;
+  LyricSwitchView textView = null;
   WindowManager windowManager = null;
   WindowManager.LayoutParams layoutParams = null;
   final private ReactApplicationContext reactContext;
@@ -51,6 +49,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
   // private static boolean isVibrated = false;
 
   private boolean isLock = false;
+  private boolean isSingleLine = false;
   private String themeColor = "#07c556";
   // private String lastText = "LX Music ^-^";
   private String textX = "LEFT";
@@ -62,6 +61,8 @@ public class LyricView extends Activity implements View.OnTouchListener {
 
   private int maxLineNum = 5;
   // private float lineHeight = 1;
+  private String currentLyric = "LX Music ^-^";
+  private ArrayList<String> currentExtendedLyrics = new ArrayList<>();
 
   private int mLastRotation;
   private OrientationEventListener orientationEventListener = null;
@@ -196,6 +197,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
 // boolean isLock, String themeColor, float alpha, int lyricViewX, int lyricViewY, String textX, String textY
   public void showLyricView(Bundle options) {
     isLock = options.getBoolean("isLock", isLock);
+    isSingleLine = options.getBoolean("isSingleLine", isSingleLine);
     themeColor = options.getString("themeColor", themeColor);
     prevViewPercentageX = (float) options.getDouble("lyricViewX", 0f) / 100f;
     prevViewPercentageY = (float) options.getDouble("lyricViewY", 0f) / 100f;
@@ -218,6 +220,49 @@ public class LyricView extends Activity implements View.OnTouchListener {
     listenOrientationEvent();
   }
 
+  private void createTextView() {
+    textView = new LyricSwitchView(reactContext, isSingleLine);
+    textView.setText(currentLyric);
+
+    textView.setTextColor(Color.parseColor(themeColor));
+    textView.setAlpha(alpha);
+    textView.setTextSize(textSize);
+    // Log.d("Lyric", "alpha: " + alpha + " text size: " + textSize);
+
+    //监听 OnTouch 事件 为了实现"移动歌词"功能
+    textView.setOnTouchListener(this);
+
+    if (!isSingleLine) {
+      int textPositionX;
+      int textPositionY;
+      switch (textX) {
+        case "CENTER":
+          textPositionX = Gravity.CENTER;
+          break;
+        case "RIGHT":
+          textPositionX = Gravity.RIGHT;
+          break;
+        case "left":
+        default:
+          textPositionX = Gravity.LEFT;
+          break;
+      }
+      switch (textY) {
+        case "CENTER":
+          textPositionY = Gravity.CENTER;
+          break;
+        case "BOTTOM":
+          textPositionY = Gravity.BOTTOM;
+          break;
+        case "TOP":
+        default:
+          textPositionY = Gravity.TOP;
+          break;
+      }
+      textView.setGravity(textPositionX | textPositionY);
+      textView.setMaxLines(maxLineNum);
+    }
+  }
   private void handleShowLyric() {
     if (windowManager == null) {
       windowManager = (WindowManager) reactContext.getSystemService(Context.WINDOW_SERVICE);
@@ -237,46 +282,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
     // 使用Application context
     // 创建UI控件，避免Activity销毁导致上下文出现问题,因为现在的悬浮窗是系统级别的，不依赖与Activity存在
     //创建自定义的TextView
-    textView = new TextView(reactContext);
-    textView.setText("LX Music ^-^");
-    // Log.d("Lyric", "textX: " + textX + "  textY: " + textY);
-    int textPositionX;
-    int textPositionY;
-    switch (textX) {
-      case "CENTER":
-        textPositionX = Gravity.CENTER;
-        break;
-      case "RIGHT":
-        textPositionX = Gravity.RIGHT;
-        break;
-      case "left":
-      default:
-        textPositionX = Gravity.LEFT;
-        break;
-    }
-    switch (textY) {
-      case "CENTER":
-        textPositionY = Gravity.CENTER;
-        break;
-      case "BOTTOM":
-        textPositionY = Gravity.BOTTOM;
-        break;
-      case "TOP":
-      default:
-        textPositionY = Gravity.TOP;
-        break;
-    }
-    textView.setGravity(textPositionX | textPositionY);
-    textView.setTextColor(Color.parseColor(themeColor));
-    textView.setAlpha(alpha);
-    textView.setTextSize(textSize);
-    Log.d("Lyric", "alpha: " + alpha + " text size: " + textSize);
-    textView.setShadowLayer(0.3f, 0, 0, Color.BLACK);
-    textView.setMaxLines(maxLineNum);
-    textView.setEllipsize(TextUtils.TruncateAt.END);
-
-    //监听 OnTouch 事件 为了实现"移动歌词"功能
-    textView.setOnTouchListener(this);
+    createTextView();
 
     // layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT | WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
     // layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
@@ -333,8 +339,10 @@ public class LyricView extends Activity implements View.OnTouchListener {
   }
 
   public void setLyric(String text, ArrayList<String> extendedLyrics) {
+    currentLyric = text;
+    currentExtendedLyrics = extendedLyrics;
     if (textView == null) return;
-    if (extendedLyrics.size() > 0 && maxLineNum > 1) {
+    if (extendedLyrics.size() > 0 && maxLineNum > 1 && !isSingleLine) {
       int num = maxLineNum - 1;
       StringBuilder textBuilder = new StringBuilder(text);
       for (String lrc : extendedLyrics) {
@@ -347,9 +355,9 @@ public class LyricView extends Activity implements View.OnTouchListener {
   }
 
   public void setMaxLineNum(int maxLineNum) {
-    if (textView == null) return;
     this.maxLineNum = maxLineNum;
-    textView.setMaxLines(maxLineNum);
+    if (textView == null) return;
+    if (!isSingleLine) textView.setMaxLines(maxLineNum);
     setLayoutParamsHeight();
 
     int maxY = maxHeight - layoutParams.height;
@@ -480,7 +488,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
   public void setLyricTextPosition(String textX, String textY) {
     this.textX = textX;
     this.textY = textY;
-    if (windowManager == null || textView == null) return;
+    if (windowManager == null || textView == null || isSingleLine) return;
     int textPositionX;
     int textPositionY;
     // Log.d("Lyric", "textX: " + textX + "  textY: " + textY);
@@ -516,6 +524,19 @@ public class LyricView extends Activity implements View.OnTouchListener {
     this.alpha = alpha;
     if (textView == null) return;
     textView.setAlpha(alpha);
+  }
+
+  public void setSingleLine(boolean isSingleLine) {
+    this.isSingleLine = isSingleLine;
+    if (textView == null) return;
+    windowManager.removeView(textView);
+    createTextView();
+    windowManager.addView(textView, layoutParams);
+
+    if (isLock) lockView();
+    else unlockView();
+
+    setLyric(currentLyric, currentExtendedLyrics);
   }
 
   public void setTextSize(float size) {

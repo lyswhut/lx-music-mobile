@@ -405,6 +405,18 @@ const mutations = {
       },
     }
   },
+  [TYPES.setDesktopLyricSingleLine](state, isSingleLine) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        desktopLyric: {
+          ...state.setting.desktopLyric,
+          isSingleLine,
+        },
+      },
+    }
+  },
   [TYPES.setDesktopLyricWidth](state, width) {
     return {
       ...state,

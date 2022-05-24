@@ -40,9 +40,10 @@ const getTextSize = num => parseInt(num) / 10
  * @param {Number} isLock is lock lyric window
  * @returns {Promise} Promise
  */
-export const showLyric = ({ width, maxLineNum, isLock, themeId, opacity, textSize, positionX, positionY, textPositionX, textPositionY }) => {
+export const showLyric = ({ isSingleLine, width, maxLineNum, isLock, themeId, opacity, textSize, positionX, positionY, textPositionX, textPositionY }) => {
   if (isShowLyric) return Promise.resolve()
   return LyricModule.showLyric({
+    isSingleLine,
     isLock,
     themeColor: getThemeColor(themeId),
     alpha: getAlpha(opacity),
@@ -158,6 +159,11 @@ export const setAlpha = alpha => {
 export const setTextSize = size => {
   if (!isShowLyric) return Promise.resolve()
   return LyricModule.setTextSize(getTextSize(size))
+}
+
+export const setSingleLine = isSingleLine => {
+  if (!isShowLyric) return Promise.resolve()
+  return LyricModule.setSingleLine(isSingleLine)
 }
 
 export const setPosition = (x, y) => {

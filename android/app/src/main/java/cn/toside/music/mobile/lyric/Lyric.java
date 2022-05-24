@@ -168,6 +168,11 @@ public class Lyric extends LyricPlayer {
     lyricView.setWidth(width);
   }
 
+  public void setSingleLine(boolean singleLine) {
+    if (lyricView == null) return;
+    lyricView.setSingleLine(singleLine);
+  }
+
   public void toggleTranslation(boolean isShowTranslation) {
     this.isShowTranslation = isShowTranslation;
     refreshLyric();

@@ -173,6 +173,11 @@ public class Lyric extends LyricPlayer {
     lyricView.setSingleLine(singleLine);
   }
 
+  public void setShowToggleAnima(boolean showToggleAnima) {
+    if (lyricView == null) return;
+    lyricView.setShowToggleAnima(showToggleAnima);
+  }
+
   public void toggleTranslation(boolean isShowTranslation) {
     this.isShowTranslation = isShowTranslation;
     refreshLyric();

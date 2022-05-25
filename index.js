@@ -60,6 +60,7 @@ const init = () => {
     }
     if (setting.desktopLyric.enable) {
       showLyric({
+        isShowToggleAnima: setting.desktopLyric.showToggleAnima,
         isSingleLine: setting.desktopLyric.isSingleLine,
         isLock: setting.desktopLyric.isLock,
         themeId: setting.desktopLyric.theme,

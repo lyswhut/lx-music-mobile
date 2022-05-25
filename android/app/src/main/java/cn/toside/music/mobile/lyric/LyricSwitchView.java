@@ -21,47 +21,40 @@ import java.util.ArrayList;
 // https://github.com/Block-Network/StatusBarLyric/blob/main/app/src/main/java/statusbar/lyric/view/LyricSwitchView.kt
 @SuppressLint({"ViewConstructor"})
 public final class LyricSwitchView extends TextSwitcher {
-  private LyricTextView lyricTextView;
-  private LyricTextView lyricTextView2;
-  private TextView textView;
-  private TextView textView2;
-  private ArrayList<LyricTextView> viewArray;
-  private ArrayList<TextView> textViewArray;
-  private final boolean isSingleLine;
-  private int maxLine = 1;
+  private final TextView textView;
+  private final TextView textView2;
+  private final ArrayList<TextView> viewArray;
+  // private final boolean isSingleLine;
+  private boolean isShowAnima;
 
-  public LyricSwitchView(Context context, boolean isSingleLine) {
+  public LyricSwitchView(Context context, boolean isSingleLine, boolean isShowAnima) {
     super(context);
-    this.isSingleLine = isSingleLine;
+    // this.isSingleLine = isSingleLine;
+    this.isShowAnima = isShowAnima;
 
     if (isSingleLine) {
       viewArray = new ArrayList<>(2);
-      lyricTextView = new LyricTextView(context);
-      lyricTextView2 = new LyricTextView(context);
-      viewArray.add(lyricTextView);
-      viewArray.add(lyricTextView2);
-      for (LyricTextView v : viewArray) {
+      textView = new LyricTextView(context);
+      textView2 = new LyricTextView(context);
+      viewArray.add(textView);
+      viewArray.add(textView2);
+      for (TextView v : viewArray) {
         v.setShadowLayer(0.1f, 0, 0, Color.BLACK);
       }
-      setAnima();
-      this.addView(lyricTextView);
-      this.addView(lyricTextView2);
     } else {
-      textViewArray = new ArrayList<>(2);
+      viewArray = new ArrayList<>(2);
       textView = new TextView(context);
       textView2 = new TextView(context);
-      textViewArray.add(textView);
-      textViewArray.add(textView2);
-      for (TextView v : textViewArray) {
+      viewArray.add(textView);
+      viewArray.add(textView2);
+      for (TextView v : viewArray) {
         v.setShadowLayer(0.2f, 0, 0, Color.BLACK);
         v.setEllipsize(TextUtils.TruncateAt.END);
       }
-      setAnima();
-      this.addView(textView);
-      this.addView(textView2);
     }
-
     setAnima();
+    this.addView(textView);
+    this.addView(textView2);
   }
 
   @Nullable
@@ -124,13 +117,19 @@ public final class LyricSwitchView extends TextSwitcher {
   }
 
   private void setAnima() {
-    if (isSingleLine) {
-      setInAnimation(inAnim("top", lyricTextView.getTextSize()));
-      setOutAnimation(outAnim("top", lyricTextView.getTextSize()));
+    if (isShowAnima) {
+      float size = textView.getTextSize();
+      setInAnimation(inAnim("top", size));
+      setOutAnimation(outAnim("top", size));
     } else {
-      setInAnimation(inAnim("top", textView.getTextSize() * maxLine));
-      setOutAnimation(outAnim("top", textView.getTextSize() * maxLine));
+      setInAnimation(null);
+      setOutAnimation(null);
     }
+  }
+
+  public void setShowAnima(boolean showAnima) {
+    isShowAnima = showAnima;
+    setAnima();
   }
 
   public CharSequence getText() {
@@ -143,87 +142,44 @@ public final class LyricSwitchView extends TextSwitcher {
   }
 
   public void setWidth(int i) {
-    if (isSingleLine) {
-      for (LyricTextView v : viewArray) v.setWidth(i);
-    } else {
-      for (TextView v : textViewArray) v.setWidth(i);
-    }
+    for (TextView v : viewArray) v.setWidth(i);
   }
 
   public void setTextColor(int i) {
-    if (isSingleLine) {
-      for (LyricTextView v : viewArray) v.setTextColor(i);
-    } else {
-      for (TextView v : textViewArray) v.setTextColor(i);
-    }
+    for (TextView v : viewArray) v.setTextColor(i);
   }
 
   public void setSourceText(CharSequence str) {
-    if (isSingleLine) {
-      for (LyricTextView v : viewArray) v.setText(str);
-    } else {
-      for (TextView v : textViewArray) v.setText(str);
-    }
+    for (TextView v : viewArray) v.setText(str);
   }
 
   public void setLetterSpacings(float letterSpacing) {
-    if (isSingleLine) {
-      for (LyricTextView v : viewArray) v.setLetterSpacing(letterSpacing);
-    } else {
-      for (TextView v : textViewArray) v.setLetterSpacing(letterSpacing);
-    }
+    for (TextView v : viewArray) v.setLetterSpacing(letterSpacing);
   }
 
   public void setHeight(int i) {
-    if (isSingleLine) {
-      for (LyricTextView v : viewArray) v.setHeight(i);
-    } else {
-      for (TextView v : textViewArray) v.setHeight(i);
-    }
+    for (TextView v : viewArray) v.setHeight(i);
   }
 
   public void setTypeface(Typeface typeface) {
-    if (isSingleLine) {
-      for (LyricTextView v : viewArray) v.setTypeface(typeface);
-    } else {
-      for (TextView v : textViewArray) v.setTypeface(typeface);
-    }
+    for (TextView v : viewArray) v.setTypeface(typeface);
   }
 
   public void setSingleLine(boolean bool) {
-    if (isSingleLine) {
-      for (LyricTextView v : viewArray) v.setSingleLine(bool);
-    } else {
-      for (TextView v : textViewArray) v.setSingleLine(bool);
-    }
+    for (TextView v : viewArray) v.setSingleLine(bool);
   }
 
   public void setMaxLines(int i) {
-    if (isSingleLine) {
-      for (LyricTextView v : viewArray) v.setMaxLines(i);
-      maxLine = 1;
-    } else {
-      for (TextView v : textViewArray) v.setMaxLines(i);
-      maxLine = i;
-    }
-    setAnima();
+    for (TextView v : viewArray) v.setMaxLines(i);
   }
 
   public void setTextSize(float f) {
-    if (isSingleLine) {
-      for (LyricTextView v : viewArray) v.setTextSize(f);
-    } else {
-      for (TextView v : textViewArray) v.setTextSize(f);
-    }
+    for (TextView v : viewArray) v.setTextSize(f);
     setAnima();
   }
 
   public void setGravity(int i) {
-    if (isSingleLine) {
-      for (LyricTextView v : viewArray) v.setGravity(i);
-    } else {
-      for (TextView v : textViewArray) v.setGravity(i);
-    }
+    for (TextView v : viewArray) v.setGravity(i);
   }
 
 }

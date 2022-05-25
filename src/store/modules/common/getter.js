@@ -58,6 +58,7 @@ export const desktopLyricPosition = state => state.common.setting.desktopLyric.p
 export const desktopLyricTextPosition = state => state.common.setting.desktopLyric.textPosition
 export const desktopLyricStyle = state => state.common.setting.desktopLyric.style
 export const desktopLyricSingleLine = state => state.common.setting.desktopLyric.isSingleLine
+export const desktopLyricShowToggleAnima = state => state.common.setting.desktopLyric.showToggleAnima
 export const desktopLyricWidth = state => state.common.setting.desktopLyric.width
 export const desktopLyricMaxLineNum = state => state.common.setting.desktopLyric.maxLineNum
 

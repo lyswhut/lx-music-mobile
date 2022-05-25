@@ -137,6 +137,12 @@ public class LyricModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void setShowToggleAnima(boolean showToggleAnima, Promise promise) {
+    lyric.setShowToggleAnima(showToggleAnima);
+    promise.resolve(null);
+  }
+
+  @ReactMethod
   public void setWidth(int width, Promise promise) {
     lyric.setWidth(width);
     promise.resolve(null);

@@ -417,6 +417,18 @@ const mutations = {
       },
     }
   },
+  [TYPES.setDesktopLyricShowToggleAnima](state, showToggleAnima) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        desktopLyric: {
+          ...state.setting.desktopLyric,
+          showToggleAnima,
+        },
+      },
+    }
+  },
   [TYPES.setDesktopLyricWidth](state, width) {
     return {
       ...state,

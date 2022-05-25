@@ -4,7 +4,7 @@
 import { MUSIC_TOGGLE_MODE } from './constant'
 
 const defaultSetting = {
-  version: '1.23',
+  version: '1.24',
   player: {
     togglePlayMethod: MUSIC_TOGGLE_MODE.listLoop,
     highQuality: false,
@@ -35,6 +35,7 @@ const defaultSetting = {
     width: 100,
     maxLineNum: 5,
     isSingleLine: false,
+    showToggleAnima: true,
     // width: 380,
     // height: 420,
     position: {

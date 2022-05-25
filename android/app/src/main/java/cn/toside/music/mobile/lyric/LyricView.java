@@ -50,6 +50,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
 
   private boolean isLock = false;
   private boolean isSingleLine = false;
+  private boolean isShowToggleAnima = false;
   private String themeColor = "#07c556";
   // private String lastText = "LX Music ^-^";
   private String textX = "LEFT";
@@ -133,9 +134,10 @@ public class LyricView extends Activity implements View.OnTouchListener {
   }
 
   private void setLayoutParamsHeight() {
-    int height = textView.getPaint().getFontMetricsInt(null) * maxLineNum + 8;
+    int height = textView.getPaint().getFontMetricsInt(null) * maxLineNum;
     if (height > maxHeight - 100) height = maxHeight - 100;
     layoutParams.height = height;
+    textView.setHeight(height);
   }
 
   private void fixViewPosition() {
@@ -158,7 +160,10 @@ public class LyricView extends Activity implements View.OnTouchListener {
     if (!updateWH()) return;
 
     int width = (int)(maxWidth * widthPercentage);
-    if (layoutParams.width != width) layoutParams.width = width;
+    if (layoutParams.width != width) {
+      layoutParams.width = width;
+      textView.setWidth(width);
+    }
 
     fixViewPosition();
     // Log.d("Lyric", "widthPercentage: " + widthPercentage + "  prevViewPercentageX: " + prevViewPercentageX);
@@ -198,6 +203,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
   public void showLyricView(Bundle options) {
     isLock = options.getBoolean("isLock", isLock);
     isSingleLine = options.getBoolean("isSingleLine", isSingleLine);
+    isShowToggleAnima = options.getBoolean("isShowToggleAnima", isShowToggleAnima);
     themeColor = options.getString("themeColor", themeColor);
     prevViewPercentageX = (float) options.getDouble("lyricViewX", 0f) / 100f;
     prevViewPercentageY = (float) options.getDouble("lyricViewY", 0f) / 100f;
@@ -221,7 +227,8 @@ public class LyricView extends Activity implements View.OnTouchListener {
   }
 
   private void createTextView() {
-    textView = new LyricSwitchView(reactContext, isSingleLine);
+    textView = new LyricSwitchView(reactContext, isSingleLine, isShowToggleAnima);
+    textView.setText("");
     textView.setText(currentLyric);
 
     textView.setTextColor(Color.parseColor(themeColor));
@@ -232,34 +239,35 @@ public class LyricView extends Activity implements View.OnTouchListener {
     //监听 OnTouch 事件 为了实现"移动歌词"功能
     textView.setOnTouchListener(this);
 
+    int textPositionX;
+    int textPositionY;
+    switch (textX) {
+      case "CENTER":
+        textPositionX = Gravity.CENTER;
+        break;
+      case "RIGHT":
+        textPositionX = Gravity.END;
+        break;
+      case "left":
+      default:
+        textPositionX = Gravity.START;
+        break;
+    }
+    switch (textY) {
+      case "CENTER":
+        textPositionY = Gravity.CENTER;
+        break;
+      case "BOTTOM":
+        textPositionY = Gravity.BOTTOM;
+        break;
+      case "TOP":
+      default:
+        textPositionY = Gravity.TOP;
+        break;
+    }
+    textView.setGravity(textPositionX | textPositionY);
+
     if (!isSingleLine) {
-      int textPositionX;
-      int textPositionY;
-      switch (textX) {
-        case "CENTER":
-          textPositionX = Gravity.CENTER;
-          break;
-        case "RIGHT":
-          textPositionX = Gravity.RIGHT;
-          break;
-        case "left":
-        default:
-          textPositionX = Gravity.LEFT;
-          break;
-      }
-      switch (textY) {
-        case "CENTER":
-          textPositionY = Gravity.CENTER;
-          break;
-        case "BOTTOM":
-          textPositionY = Gravity.BOTTOM;
-          break;
-        case "TOP":
-        default:
-          textPositionY = Gravity.TOP;
-          break;
-      }
-      textView.setGravity(textPositionX | textPositionY);
       textView.setMaxLines(maxLineNum);
     }
   }
@@ -323,6 +331,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
     // layoutParams.width= DisplayUtil.dp2px(mContext,55);
     // layoutParams.height= DisplayUtil.dp2px(mContext,55);
     layoutParams.width = (int)(maxWidth * widthPercentage);
+    textView.setWidth(layoutParams.width);
     setLayoutParamsHeight();
 
     //显示位置与指定位置的相对位置差
@@ -373,6 +382,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
     if (textView == null) return;
     widthPercentage = width / 100f;
     layoutParams.width = (int)(maxWidth * widthPercentage);
+    textView.setWidth(layoutParams.width);
 
     int maxX = maxWidth - layoutParams.width;
     int x = layoutParams.x;
@@ -488,25 +498,25 @@ public class LyricView extends Activity implements View.OnTouchListener {
   public void setLyricTextPosition(String textX, String textY) {
     this.textX = textX;
     this.textY = textY;
-    if (windowManager == null || textView == null || isSingleLine) return;
+    if (windowManager == null || textView == null) return;
     int textPositionX;
     int textPositionY;
     // Log.d("Lyric", "textX: " + textX + "  textY: " + textY);
     switch (textX) {
       case "CENTER":
-        textPositionX = Gravity.CENTER;
+        textPositionX = Gravity.CENTER_HORIZONTAL;
         break;
       case "RIGHT":
-        textPositionX = Gravity.RIGHT;
+        textPositionX = Gravity.END;
         break;
       case "left":
       default:
-        textPositionX = Gravity.LEFT;
+        textPositionX = Gravity.START;
         break;
     }
     switch (textY) {
       case "CENTER":
-        textPositionY = Gravity.CENTER;
+        textPositionY = Gravity.CENTER_VERTICAL;
         break;
       case "BOTTOM":
         textPositionY = Gravity.BOTTOM;
@@ -531,12 +541,20 @@ public class LyricView extends Activity implements View.OnTouchListener {
     if (textView == null) return;
     windowManager.removeView(textView);
     createTextView();
+    textView.setWidth(layoutParams.width);
+    textView.setHeight(layoutParams.height);
     windowManager.addView(textView, layoutParams);
 
     if (isLock) lockView();
     else unlockView();
 
     setLyric(currentLyric, currentExtendedLyrics);
+  }
+
+  public void setShowToggleAnima(boolean showToggleAnima) {
+    isShowToggleAnima = showToggleAnima;
+    if (textView == null) return;
+    textView.setShowAnima(showToggleAnima);
   }
 
   public void setTextSize(float size) {

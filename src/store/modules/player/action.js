@@ -32,6 +32,7 @@ import {
   setWidth,
   setMaxLineNum,
   setSingleLine,
+  setShowToggleAnima,
 } from '@/utils/lyricDesktop'
 import { action as listAction } from '@/store/modules/list'
 import { LIST_ID_PLAY_LATER, MUSIC_TOGGLE_MODE } from '@/config/constant'
@@ -849,6 +850,7 @@ export const toggleDesktopLyric = isShow => async(dispatch, getState) => {
         ? getLyric(_playMusicInfo).catch(() => ({ lyric: '', tlyric: '', rlyric: '' }))
         : Promise.resolve({ lyric: '', tlyric: '', rlyric: '' }),
       showLyric({
+        isShowToggleAnima: desktopLyric.showToggleAnima,
         isSingleLine: desktopLyric.isSingleLine,
         isLock: desktopLyric.isLock,
         themeId: desktopLyric.theme,
@@ -878,6 +880,9 @@ export const toggleDesktopLyricLock = isLock => async(dispatch, getState) => {
 }
 export const setDesktopLyricSingleLine = isSingleLine => async(dispatch, getState) => {
   setSingleLine(isSingleLine)
+}
+export const setDesktopLyricShowToggleAnima = showToggleAnima => async(dispatch, getState) => {
+  setShowToggleAnima(showToggleAnima)
 }
 export const setDesktopLyricWidth = width => async(dispatch, getState) => {
   setWidth(width)

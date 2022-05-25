@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
+import android.view.Gravity;
 import android.widget.TextView;
 
 // https://github.com/Block-Network/StatusBarLyric/blob/main/app/src/main/java/statusbar/lyric/view/LyricTextView.kt
@@ -12,16 +14,18 @@ public class LyricTextView extends TextView {
   private boolean isStop = true;
   private float textLength = 0F;
   private float viewWidth = 0F;
+  private float viewHeight = 0F;
   private final float SPEED_LIMIT = 0.135F;
   private float speed;
-  // private float speed = 4F;
-  private long time = 0;
   private float xx = 0F;
+  private int gravityVertical = Gravity.TOP;
+  private int gravityHorizontal = Gravity.CENTER;
+  private float y = 0F;
   private String text = null;
   private final Paint mPaint;
   private final Runnable mStartScrollRunnable;
   private final Runnable invalidateRunnable;
-  public static final int startScrollDelay = 1000;
+  public static final int startScrollDelay = 1500;
   public static final int invalidateDelay = 10;
 
   public LyricTextView(Context context) {
@@ -35,7 +39,7 @@ public class LyricTextView extends TextView {
   private void init() {
     xx = 0.0F;
     textLength = getTextLength();
-    viewWidth = (float) getWidth();
+    // viewWidth = (float) getWidth();
   }
 
   @Override
@@ -71,6 +75,35 @@ public class LyricTextView extends TextView {
   @Override
   public void setWidth(int pixels) {
     super.setWidth(pixels);
+    viewWidth = pixels;
+    if (text == null) return;
+    post(mStartScrollRunnable);
+  }
+
+  @Override
+  public void setHeight(int pixels) {
+    super.setHeight(pixels);
+    viewHeight = pixels;
+    y = getDrawY();
+    if (text == null) return;
+    post(mStartScrollRunnable);
+  }
+
+  @Override
+  public void setGravity(int gravity) {
+    if ((gravity & Gravity.RELATIVE_HORIZONTAL_GRAVITY_MASK) == 0) {
+      gravity |= Gravity.START;
+    }
+    if ((gravity & Gravity.VERTICAL_GRAVITY_MASK) == 0) {
+      gravity |= Gravity.TOP;
+    }
+
+    gravityVertical = gravity & Gravity.VERTICAL_GRAVITY_MASK;
+    gravityHorizontal = gravity & Gravity.RELATIVE_HORIZONTAL_GRAVITY_MASK;
+
+    y = getDrawY();
+    // Log.d("Lyric", "gravityVertical: " + gravityVertical + " gravityHorizontal: " + gravityHorizontal);
+
     if (text == null) return;
     post(mStartScrollRunnable);
   }
@@ -79,18 +112,11 @@ public class LyricTextView extends TextView {
   protected void onDraw(Canvas canvas) {
     float mSpeed = speed;
     if (text != null) {
-      float y = getTextSize() / 2 + Math.abs(mPaint.ascent() + mPaint.descent()) / 2;
-      if (getText().length() <= 20 && System.currentTimeMillis() - time <= (long)1500) {
-        canvas.drawText(text, xx, y, mPaint);
-        invalidateAfter();
-        return;
-      }
-
+      Log.d("Lyric", "getHeight: " + getHeight() + " y: " + y);
+      canvas.drawText(text, getDrawX(), y, mPaint);
       if (getText().length() >= 20) {
         mSpeed += mSpeed;
       }
-
-      canvas.drawText(text, xx, y, mPaint);
     }
 
     if (!isStop) {
@@ -127,12 +153,53 @@ public class LyricTextView extends TextView {
     return mPaint == null ? 0.0F : mPaint.measureText(text);
   }
 
+  private float getDrawY() {
+    Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
+    float top = fontMetrics.top;
+    float bottom = fontMetrics.bottom;
+    float ascent = fontMetrics.ascent;
+    // float descent = fontMetrics.descent;
+
+    float y;
+
+    // float y = Math.abs(mPaint.ascent() + mPaint.descent()) / 2;
+    switch (gravityVertical) {
+      case Gravity.CENTER_VERTICAL:
+        y = viewHeight / 2F + (bottom - top) / 2 - bottom;
+        break;
+      case Gravity.BOTTOM:
+        y = viewHeight - bottom;
+        break;
+      default:
+        y = -ascent;
+        break;
+    }
+    return y;
+  }
+
+  private float getDrawX() {
+    float x;
+    if (textLength < viewWidth) {
+      switch (gravityHorizontal) {
+        case Gravity.CENTER_HORIZONTAL:
+          x = (viewWidth - textLength) / 2;
+          break;
+        case Gravity.END:
+          x = viewWidth - textLength;
+          break;
+        default:
+          x = 0;
+          break;
+      }
+      isStop = true;
+    } else {
+      x = xx;
+    }
+    return x;
+  }
+
   // public void setSpeed(float speed) {
   //  this.speed = speed;
   // }
 
-  public void setTextT(CharSequence charSequence) {
-    super.setText(charSequence);
-    time = System.currentTimeMillis();
-  }
 }

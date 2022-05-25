@@ -121,7 +121,7 @@ public class LyricTextView extends TextView {
 
     if (!isStop) {
       if (viewWidth - xx + mSpeed >= textLength) {
-        xx = viewWidth > textLength ? 0.0F : viewWidth - textLength;
+        xx = viewWidth - textLength - 2;
         stopScroll();
       } else {
         xx -= mSpeed;

@@ -1,5 +1,6 @@
 import { TYPES } from './action'
 import music from '@/utils/music'
+import { deduplicationList } from '@/utils/tools'
 const sortList = {}
 const sources = []
 for (const source of music.sources) {
@@ -83,18 +84,11 @@ const mutations = {
     }
   },
   [TYPES.setListDetail](state, { result, pageKey, listKey, source, id, page }) {
-    const listIds = new Set()
-    let list = listKey == state.listDetail.listKey && page != 1 ? [...state.listDetail.list, ...result.list] : result.list
-    list = list.filter(item => {
-      if (listIds.has(item.songmid)) return false
-      listIds.add(item.songmid)
-      return true
-    })
     return {
       ...state,
       listDetail: {
         ...state.listDetail,
-        list,
+        list: deduplicationList(listKey == state.listDetail.listKey && page != 1 ? [...state.listDetail.list, ...result.list] : result.list),
         id,
         source,
         total: result.total,

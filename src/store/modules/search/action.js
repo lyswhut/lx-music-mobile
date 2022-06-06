@@ -1,4 +1,5 @@
 import music from '@/utils/music'
+import { deduplicationList } from '@/utils/tools'
 
 export const TYPES = {
   loading: null,
@@ -63,7 +64,7 @@ export const search = ({ page, limit }) => (dispatch, getState) => {
         source: state.common.setting.search.searchSource,
         total: 0,
       }
-    }).then(data => dispatch({ type: TYPES.setList, payload: { page, ...data } }))
+    }).then(data => dispatch({ type: TYPES.setList, payload: { page, ...data, list: deduplicationList(data.list) } }))
       .finally(() => dispatch({ type: TYPES.loading, payload: false }))
   }
 }

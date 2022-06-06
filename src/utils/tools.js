@@ -398,6 +398,17 @@ export const getIsSupportedAutoTheme = () => {
   return isSupportedAutoTheme
 }
 
+
+export const deduplicationList = list => {
+  const ids = new Set()
+  return list.filter(s => {
+    if (ids.has(s.songmid)) return false
+    ids.add(s.songmid)
+    return true
+  })
+}
+
+
 export {
   deviceLanguage,
 }

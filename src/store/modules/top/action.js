@@ -1,4 +1,5 @@
 import music from '@/utils/music'
+import { deduplicationList } from '@/utils/tools'
 
 const cache = new Map()
 const LIST_LOAD_LIMIT = 30
@@ -128,7 +129,7 @@ export const getListAll = ({ id: tabId, isRefresh = false }) => (dispatch, getSt
         : loadData(bangId, loadPage).then(result1 => loadDetail(++loadPage).then(result2 => [...result1.list, ...result2]))
     }
     return loadDetail().then(result2 => [...result.list, ...result2])
-  })
+  }).then(list => deduplicationList(list))
 }
 
 export const setBoardsList = ({ boards, source }) => {

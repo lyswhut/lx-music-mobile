@@ -1,5 +1,7 @@
 import { TYPES } from './action'
 import music from '@/utils/music'
+import { deduplicationList } from '@/utils/tools'
+
 const sourceList = {}
 const sources = []
 for (const source of music.sources) {
@@ -52,7 +54,7 @@ const mutations = {
       ...state,
       listInfo: {
         ...state.listInfo,
-        list: listKey == state.listInfo.listKey && page != 1 ? [...state.listInfo.list, ...result.list] : result.list,
+        list: deduplicationList(listKey == state.listInfo.listKey && page != 1 ? [...state.listInfo.list, ...result.list] : result.list),
         total: result.total,
         limit: result.limit,
         page,

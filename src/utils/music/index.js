@@ -95,18 +95,18 @@ export const findMusic = async(musicInfo) => {
           (
             item.sortedSinger === sortedSinger && item.lowerCaseName === lowerCaseName
           ) ||
-            (
-              item.interval === musicInfo.interval && item.lowerCaseName === lowerCaseName &&
-              (item.sortedSinger.includes(sortedSinger) || sortedSinger.includes(item.sortedSinger))
-            ) ||
-            (
-              item.lowerCaseName === lowerCaseName && item.lowerCaseAlbumName === lowerCaseAlbumName &&
-              item.interval === musicInfo.interval
-            ) ||
-            (
-              item.lowerCaseName === lowerCaseName && item.lowerCaseAlbumName === lowerCaseAlbumName &&
-              (item.sortedSinger.includes(sortedSinger) || sortedSinger.includes(item.sortedSinger))
-            )
+          (
+            item.interval === musicInfo.interval && item.lowerCaseName === lowerCaseName &&
+            (item.sortedSinger.includes(sortedSinger) || sortedSinger.includes(item.sortedSinger))
+          ) ||
+          (
+            item.lowerCaseName === lowerCaseName && item.lowerCaseAlbumName === lowerCaseAlbumName &&
+            item.interval === musicInfo.interval
+          ) ||
+          (
+            item.lowerCaseName === lowerCaseName && item.lowerCaseAlbumName === lowerCaseAlbumName &&
+            (item.sortedSinger.includes(sortedSinger) || sortedSinger.includes(item.sortedSinger))
+          )
         ) {
           return item
         }

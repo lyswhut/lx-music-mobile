@@ -261,7 +261,13 @@ const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) =>
         handleImportAndExportList('export', selectedListRef.current.index)
         break
       case 'sync':
-        handleSyncSourceList(selectedListRef.current.index)
+        confirmDialog({
+          message: t('list_sync_confirm_tip', { name: selectedListRef.current.name }),
+          confirmButtonText: t('list_remove_tip_button'),
+        }).then(isSync => {
+          if (!isSync) return
+          handleSyncSourceList(selectedListRef.current.index)
+        })
         break
         // case 'changePosition':
 

@@ -67,6 +67,7 @@
   "list_select_single": "Single Select",
   "list_select_unall": "Reverse Selection",
   "list_sync": "Update",
+  "list_sync_confirm_tip": "This will replace the songs in {{name}} with the songs in the online list, are you sure you want to update?",
   "list_update_error": "Update failed",
   "list_update_success": "Update completed",
   "load_failed": "Ah, loading failed 😥",

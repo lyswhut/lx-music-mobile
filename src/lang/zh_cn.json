@@ -68,6 +68,7 @@
   "list_select_single": "单选",
   "list_select_unall": "反选",
   "list_sync": "更新",
+  "list_sync_confirm_tip": "这将会把 {{name}} 内的歌曲替换成在线列表的歌曲，你确认要更新吗？",
   "list_update_error": "更新失败",
   "list_update_success": "更新成功",
   "load_failed": "啊 加载失败了 😥",

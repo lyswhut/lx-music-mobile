@@ -408,6 +408,38 @@ export const deduplicationList = list => {
   })
 }
 
+export const showImportTip = type => {
+  let message
+  switch (type) {
+    case 'defautlList':
+    case 'playList':
+      message = i18n.t('list_import_tip__playlist')
+      break
+    case 'setting':
+      message = i18n.t('list_import_tip__setting')
+      break
+    case 'allData':
+      message = i18n.t('list_import_tip__alldata')
+      break
+    case 'playListPart':
+      message = i18n.t('list_import_tip__playlist_part')
+      break
+
+    default:
+      message = i18n.t('list_import_tip__unknown')
+      break
+  }
+  Alert.alert(
+    i18n.t('list_import_tip__failed'),
+    message,
+    [
+      {
+        text: i18n.t('ok'),
+      },
+    ],
+  )
+}
+
 
 export {
   deviceLanguage,

@@ -10,7 +10,7 @@ import SubTitle from '../components/SubTitle'
 import Button from '../components/Button'
 import ChoosePath from '@/components/common/ChoosePath'
 import { useTranslation } from '@/plugins/i18n'
-import { toast, handleSaveFile, handleReadFile, confirmDialog } from '@/utils/tools'
+import { toast, handleSaveFile, handleReadFile, confirmDialog, showImportTip } from '@/utils/tools'
 
 const exportAllList = async(allList, path) => {
   const data = JSON.parse(JSON.stringify({
@@ -169,7 +169,7 @@ export default memo(() => {
                 handleImportPartList(listData)
                 break
 
-              default: return toast(t('setting_backup_part_import_list_tip_failed'))
+              default: return showImportTip(listData.type)
             }
           })
         })

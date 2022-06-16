@@ -20,7 +20,7 @@ import {
 import { getRandom } from '@/utils'
 import { getMusicUrl, saveMusicUrl, getLyric, saveLyric, assertApiSupport, savePlayInfo, saveList, checkNotificationPermission } from '@/utils/tools'
 import { playInfo as playInfoGetter } from './getter'
-import { play as lrcPlay, setLyric, pause as lrcPause, toggleTranslation as lrcToggleTranslation, toggleRoma as lrcToggleRoma } from '@/utils/lyric'
+import { play as lrcPlay, setLyric, pause as lrcPause, stop as lrcStop, toggleTranslation as lrcToggleTranslation, toggleRoma as lrcToggleRoma } from '@/utils/lyric'
 import {
   showLyric, hideLyric,
   setLyric as lrcdSetLyric,
@@ -127,7 +127,7 @@ const handlePlayMusic = async({ getState, dispatch, playMusicInfo, musicInfo, is
     clearTimeout(timeout)
     timeout = null
   }
-  setLyric('')
+  // setLyric('')
   console.log('Handle Play Music ====================>', musicInfo.name)
   global.playInfo.currentPlayMusicInfo = _playMusicInfo = musicInfo
   let id = `${musicInfo.source}//${musicInfo.songmid}//${type}`
@@ -304,9 +304,11 @@ const getNextMusicInfo = state => {
  */
 export const stopMusic = () => async(dispatch, getState) => {
   _playMusicInfo = null
-  dispatch(setPlayIndex(-1))
+  await dispatch(playMusic(null))
   dispatch(setStatus({ status: STATUS.stop, text: '' }))
-  await stop()
+  lrcStop()
+  savePlayInfo(null)
+  delayUpdateMusicInfo({})
 }
 
 export const pauseMusic = () => async(dispatch, getState) => {
@@ -481,6 +483,9 @@ export const playMusic = playMusicInfo => async(dispatch, getState) => {
         playIndex,
       },
     })
+    global.playInfo.currentPlayMusicInfo = _playMusicInfo = playMusicInfo
+    playMusicId = ''
+    global.playInfo.isPlaying = false
     await stop()
   } else { // 设置歌曲信息并播放歌曲
     setLyric('')

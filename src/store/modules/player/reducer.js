@@ -119,8 +119,8 @@ const mutations = {
   [TYPES.setPlayMusicInfo](state, { playMusicInfo, playIndex }) {
     return {
       ...state,
-      playMusicInfo: playMusicInfo,
-      playIndex: playIndex,
+      playMusicInfo,
+      playIndex,
     }
   },
 }

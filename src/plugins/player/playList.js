@@ -135,7 +135,7 @@ export const updateMetaInfo = async track => {
   //   artwork = global.playInfo.musicInfo.img
   //   duration = global.playInfo.duration || 0
   // }
-
+  console.log(global.playInfo)
   global.playInfo.isPlaying = await TrackPlayer.getState() == State.Playing
   await TrackPlayer.updateNowPlayingMetadata({
     title: track.title || 'Unknow',
@@ -143,7 +143,7 @@ export const updateMetaInfo = async track => {
     album: track.album || null,
     artwork: isShowNotificationImage ? global.playInfo?.currentPlayMusicInfo?.img ?? null : null,
     duration: global.playInfo?.duration || 0,
-  }, global.playInfo.isPlaying)
+  }, global.playInfo?.isPlaying)
 }
 
 

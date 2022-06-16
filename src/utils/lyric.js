@@ -50,6 +50,13 @@ export const pause = () => {
 }
 
 /**
+ * stop lyric
+ */
+export const stop = () => {
+  setLyric('')
+}
+
+/**
  * toggle show translation
  * @param {Boolean} isShowTranslation is show translation
  */

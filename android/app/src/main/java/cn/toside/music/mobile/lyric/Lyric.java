@@ -87,13 +87,14 @@ public class Lyric extends LyricPlayer {
   private void setViewLyric(int lineNum) {
     lastLine = lineNum;
     if (lyricView == null) return;
-    if (lineNum < 0 || lineNum > lines.size() - 1) return;
-    HashMap line = (HashMap) lines.get(lineNum);
-    if (line == null) {
-      lyricView.setLyric("", new ArrayList<>(0));
-    } else {
-      lyricView.setLyric((String) line.get("text"), (ArrayList<String>) line.get("extendedLyrics"));
+    if (lineNum >= 0 && lineNum < lines.size()) {
+      HashMap line = (HashMap) lines.get(lineNum);
+      if (line != null) {
+        lyricView.setLyric((String) line.get("text"), (ArrayList<String>) line.get("extendedLyrics"));
+        return;
+      }
     }
+    lyricView.setLyric("", new ArrayList<>(0));
   }
 
   public void showLyric(Bundle options, Promise promise) {
@@ -136,6 +137,7 @@ public class Lyric extends LyricPlayer {
   @Override
   public void onSetLyric(List lines) {
     this.lines = lines;
+    setViewLyric(-1);
     // for (int i = 0; i < lines.size(); i++) {
     //   HashMap line = (HashMap) lines.get(i);
     //   Log.d("Lyric", "onSetLyric: " +(String) line.get("text") + " " + line.get("extendedLyrics"));

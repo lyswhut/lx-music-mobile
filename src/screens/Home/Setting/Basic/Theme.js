@@ -4,10 +4,7 @@ import { StyleSheet, View, Text, ImageBackground, TouchableOpacity, InteractionM
 import { useGetter, useDispatch } from '@/store'
 
 import SubTitle from '../components/SubTitle'
-import CheckBoxItem from '../components/CheckBoxItem'
 import { useTranslation } from '@/plugins/i18n'
-import { getIsSupportedAutoTheme } from '@/utils/tools'
-const isSupportedAutoTheme = getIsSupportedAutoTheme()
 
 const useActive = id => {
   const activeThemeId = useGetter('common', 'activeThemeId')
@@ -44,9 +41,6 @@ export default memo(() => {
     })
   }, [setTheme])
 
-  const isAutoTheme = useGetter('common', 'isAutoTheme')
-  const setIsAutoTheme = useDispatch('common', 'setIsAutoTheme')
-
   return (
     <SubTitle title={t('setting_basic_theme')}>
       <View style={styles.list}>
@@ -54,17 +48,6 @@ export default memo(() => {
           themes.map(({ id, color, image }) => <ThemeItem key={id} color={color} image={image} id={id} setTheme={setThemeId} />)
         }
       </View>
-
-      {
-        isSupportedAutoTheme
-          ? (
-              <View style={{ marginTop: 25, marginLeft: -25 }}>
-                <CheckBoxItem check={isAutoTheme} onChange={setIsAutoTheme} label={t('setting_basic_theme_auto_theme')} />
-              </View>
-            )
-          : null
-      }
-
     </SubTitle>
   )
 })

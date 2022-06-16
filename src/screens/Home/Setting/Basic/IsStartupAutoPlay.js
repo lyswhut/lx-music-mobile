@@ -14,7 +14,7 @@ export default memo(() => {
 
   return (
     <View style={{ marginTop: 5, marginBottom: 15 }}>
-      <CheckBoxItem check={startupAutoPlay} label={t('setting_basic__startup_auto_play')} onChange={setStartupAutoPlay} />
+      <CheckBoxItem check={startupAutoPlay} label={t('setting_basic_startup_auto_play')} onChange={setStartupAutoPlay} />
     </View>
   )
 })

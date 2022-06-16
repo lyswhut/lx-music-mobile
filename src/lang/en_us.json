@@ -123,7 +123,7 @@
   "setting_backup_part_import_setting": "Import settings",
   "setting_backup_part_import_setting_desc": "Select the Settings file",
   "setting_basic": "General",
-  "setting_basic__startup_auto_play": "Play music automatically after startup",
+  "setting_basic_startup_auto_play": "Play music automatically after startup",
   "setting_basic_animation": "Random pop-up animation",
   "setting_basic_lang": "Language",
   "setting_basic_share_type": "Share",

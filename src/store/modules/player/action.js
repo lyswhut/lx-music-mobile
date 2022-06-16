@@ -430,7 +430,7 @@ export const refreshMusicUrl = (musicInfo, restorePlayTime) => (dispatch, getSta
   }
   const songmid = targetMusic.songmid
   const index = state.player.listInfo.list.findIndex(m => m.songmid == songmid)
-  handlePlayMusic({
+  return handlePlayMusic({
     getState,
     dispatch,
     index,

@@ -6,6 +6,7 @@ import Source from './Source'
 import SourceName from './SourceName'
 import Language from './Language'
 import ShareType from './ShareType'
+import IsStartupAutoPlay from './IsStartupAutoPlay'
 import { useTranslation } from '@/plugins/i18n'
 
 export default memo(() => {
@@ -15,6 +16,7 @@ export default memo(() => {
   return (
     <Section title={t('setting_basic')}>
       <Theme />
+      <IsStartupAutoPlay />
       <Source />
       <Language />
       <SourceName />

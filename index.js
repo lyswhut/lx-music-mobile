@@ -117,7 +117,12 @@ const init = () => {
 
         return
       }
-      global.restorePlayInfo = info
+
+      let setting = store.getState().common.setting
+      global.restorePlayInfo = {
+        info,
+        startupAutoPlay: setting.startupAutoPlay,
+      }
 
       store.dispatch(playerAction.setList({
         list: {

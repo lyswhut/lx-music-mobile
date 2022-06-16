@@ -258,6 +258,15 @@ const mutations = {
       },
     }
   },
+  [TYPES.setStartupAutoPlay](state, startupAutoPlay) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        startupAutoPlay,
+      },
+    }
+  },
   [TYPES.setPlayerCacheSize](state, size) {
     return {
       ...state,

@@ -19,6 +19,7 @@ export const TYPES = {
   setNavScreenName: null,
   setPlayNextMode: null,
   setPrevSelectListId: null,
+  setStartupAutoPlay: null,
   setApiSource: null,
   setTheme: null,
   setIsAutoTheme: null,
@@ -172,6 +173,15 @@ export const setPlayNextMode = mode => async(dispatch, getState) => {
   const state = getState()
   if (mode == 'random') dispatch(playerAction.addMusicToPlayedList(playerGetter.playMusicInfo(state)))
   await setData(settingKey, state.common.setting)
+}
+
+export const setStartupAutoPlay = enable => async(dispatch, getState) => {
+  dispatch({
+    type: TYPES.setStartupAutoPlay,
+    payload: enable,
+  })
+  const { common } = getState()
+  await setData(settingKey, common.setting)
 }
 
 export const setApiSource = id => async(dispatch, getState) => {

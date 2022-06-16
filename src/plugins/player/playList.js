@@ -2,6 +2,7 @@ import TrackPlayer, { State } from 'react-native-track-player'
 import BackgroundTimer from 'react-native-background-timer'
 import { defaultUrl } from '@/config'
 import { getStore } from '@/store'
+import { action as playerAction } from '@/store/modules/player'
 
 const store = getStore()
 const list = []
@@ -98,7 +99,10 @@ export const playMusic = async(tracks, time) => {
       if (time) await TrackPlayer.seekTo(time)
       if (global.restorePlayInfo) {
         await TrackPlayer.pause()
+        let startupAutoPlay = global.restorePlayInfo.startupAutoPlay
         global.restorePlayInfo = null
+
+        if (startupAutoPlay) store.dispatch(playerAction.playMusic())
       } else {
         await TrackPlayer.play()
       }

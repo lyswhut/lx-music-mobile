@@ -11,6 +11,8 @@ export const common = state => state.common
 export const navMenus = state => state.common.nav.menus
 export const navActiveIndex = state => state.common.nav.activeIndex
 
+export const startupAutoPlay = state => state.common.setting.startupAutoPlay
+
 export const setting = state => state.common.setting
 
 export const componentIds = state => state.common.componentIds

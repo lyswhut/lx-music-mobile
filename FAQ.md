@@ -1,5 +1,7 @@
 # lx-music-mobile 常见问题
 
+本文档已迁移到：<https://lyswhut.github.io/lx-music-doc/mobile/faq>
+
 在阅读本常见问题后，仍然无法解决你的问题，请提交issue或者加企鹅群`830125506`反馈（无事勿加，入群先看群公告），反馈时请**注明**已阅读常见问题！
 
 ## LX Music中的音乐播放列表机制

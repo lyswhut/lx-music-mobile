@@ -31,7 +31,7 @@
 软件变化请查看：[更新日志](https://github.com/lyswhut/lx-music-mobile/blob/master/CHANGELOG.md)<br>
 软件下载请转到：[发布页面](https://github.com/lyswhut/lx-music-mobile/releases)<br>
 或者到网盘下载（网盘内有MAC、windows版）：`https://www.lanzoui.com/b0bf2cfa/` 密码：`glqw`（若链接无法打开请百度：蓝奏云链接打不开）<br>
-使用常见问题请转至：[常见问题](https://github.com/lyswhut/lx-music-mobile/blob/master/FAQ.md)<br>
+使用常见问题请转至：[常见问题](https://lyswhut.github.io/lx-music-doc/mobile/faq)<br>
 桌面版项目地址：<https://github.com/lyswhut/lx-music-desktop>
 
 ### 源代码使用方式

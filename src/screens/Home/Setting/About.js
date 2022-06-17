@@ -24,7 +24,7 @@ export default memo(() => {
     openUrl('https://www.lanzoui.com/b0bf2cfa/')
   }
   const openFAQPage = () => {
-    openUrl('https://github.com/lyswhut/lx-music-mobile/blob/master/FAQ.md')
+    openUrl('https://lyswhut.github.io/lx-music-doc/mobile/faq')
   }
   // const openIssuesPage = () => {
   //   openUrl('https://github.com/lyswhut/lx-music-mobile/issues')

@@ -6,6 +6,31 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.14.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.13.0...v0.14.0) - 2022-06-17
+
+### 新增
+
+- 新增设置-桌面歌词-单行歌词设置，默认关闭，启用后只显示一行歌词，超出窗口宽度自动滚动到末尾
+- 新增设置-桌面歌词-显示歌词切换动画，默认启用，如果你觉得切换动画影响视觉可以将其关闭
+- 新增设置-基本设置-启动后自动播放音乐，默认关闭
+
+### 优化
+
+- 支持mg源的歌词翻译（之前添加的歌曲需要去设置清空缓存才会刷新歌词）
+- 添加歌曲列表更新操作的二次确认
+- 添加导入文件错误时的指引提示
+
+### 修复
+
+- 修复桌面歌词转繁体设置不立即生效的问题
+- 修复搜索、歌单、排行榜列表可能在切换新内容后出现上次列表内容的残留问题（#118）
+- 修复在某些系统上播放音乐会导致应用崩溃的问题（#129）
+- 修复停止播放后的播放器状态清理问题
+
+### 文档
+
+移动版文档已迁移到：<https://lyswhut.github.io/lx-music-doc/mobile>
+
 ## [0.13.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.12.0...v0.13.0) - 2022-05-22
 
 从这个版本起，你可以将桌面歌词拖动到状态栏上，然后将歌词字体调小后配合新增的歌词窗口宽度、行数设置，模拟出类似状态栏歌词的效果。

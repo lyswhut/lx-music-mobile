@@ -8,6 +8,7 @@ import Language from './Language'
 import ShareType from './ShareType'
 import IsAutoTheme from './IsAutoTheme'
 import IsStartupAutoPlay from './IsStartupAutoPlay'
+import IsAutoHidePlayBar from './IsAutoHidePlayBar'
 import { useTranslation } from '@/plugins/i18n'
 
 export default memo(() => {
@@ -19,6 +20,7 @@ export default memo(() => {
       <Theme />
       <IsAutoTheme />
       <IsStartupAutoPlay />
+      <IsAutoHidePlayBar />
       <Source />
       <Language />
       <SourceName />

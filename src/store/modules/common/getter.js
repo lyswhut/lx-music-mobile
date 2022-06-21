@@ -12,6 +12,7 @@ export const navMenus = state => state.common.nav.menus
 export const navActiveIndex = state => state.common.nav.activeIndex
 
 export const startupAutoPlay = state => state.common.setting.startupAutoPlay
+export const autoHidePlayBar = state => state.common.setting.autoHidePlayBar
 
 export const setting = state => state.common.setting
 

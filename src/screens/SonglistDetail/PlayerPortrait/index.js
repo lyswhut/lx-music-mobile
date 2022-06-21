@@ -2,7 +2,7 @@ import React, { useCallback, memo, useMemo, useEffect } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { useLayout, useKeyboard } from '@/utils/hooks'
 import { useGetter, useDispatch } from '@/store'
-import { BorderWidths } from '@/theme'
+// import { BorderWidths } from '@/theme'
 
 import Pic from './components/Pic'
 import Title from './components/Title'
@@ -14,6 +14,7 @@ export default memo(() => {
   // const { onLayout, ...layout } = useLayout()
   const { keyboardShown } = useKeyboard()
   const theme = useGetter('common', 'theme')
+  const autoHidePlayBar = useGetter('common', 'autoHidePlayBar')
   const componentIds = useGetter('common', 'componentIds')
 
 
@@ -35,7 +36,7 @@ export default memo(() => {
 
   // console.log(layout)
 
-  return keyboardShown ? null : playerComponent
+  return autoHidePlayBar && keyboardShown ? null : playerComponent
 })
 
 const styles = StyleSheet.create({

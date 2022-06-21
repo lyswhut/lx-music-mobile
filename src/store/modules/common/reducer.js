@@ -267,6 +267,15 @@ const mutations = {
       },
     }
   },
+  [TYPES.setAutoHidePlayBar](state, autoHidePlayBar) {
+    return {
+      ...state,
+      setting: {
+        ...state.setting,
+        autoHidePlayBar,
+      },
+    }
+  },
   [TYPES.setPlayerCacheSize](state, size) {
     return {
       ...state,

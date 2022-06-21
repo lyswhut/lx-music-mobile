@@ -4,7 +4,7 @@
 import { MUSIC_TOGGLE_MODE } from './constant'
 
 const defaultSetting = {
-  version: '1.25',
+  version: '1.26',
   player: {
     togglePlayMethod: MUSIC_TOGGLE_MODE.listLoop,
     highQuality: false,
@@ -114,6 +114,7 @@ const defaultSetting = {
   ignoreVersion: null,
   isAgreePact: false,
   startupAutoPlay: false,
+  autoHidePlayBar: true,
 }
 
 const overwriteSetting = {

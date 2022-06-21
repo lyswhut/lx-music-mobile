@@ -20,6 +20,7 @@ export const TYPES = {
   setPlayNextMode: null,
   setPrevSelectListId: null,
   setStartupAutoPlay: null,
+  setAutoHidePlayBar: null,
   setApiSource: null,
   setTheme: null,
   setIsAutoTheme: null,
@@ -178,6 +179,15 @@ export const setPlayNextMode = mode => async(dispatch, getState) => {
 export const setStartupAutoPlay = enable => async(dispatch, getState) => {
   dispatch({
     type: TYPES.setStartupAutoPlay,
+    payload: enable,
+  })
+  const { common } = getState()
+  await setData(settingKey, common.setting)
+}
+
+export const setAutoHidePlayBar = enable => async(dispatch, getState) => {
+  dispatch({
+    type: TYPES.setAutoHidePlayBar,
     payload: enable,
   })
   const { common } = getState()

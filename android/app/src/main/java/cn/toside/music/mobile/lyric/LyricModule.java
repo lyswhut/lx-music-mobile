@@ -53,7 +53,7 @@ public class LyricModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void hideLyric(Promise promise) {
-    lyric.hideLyric();
+    if (lyric != null) lyric.hideLyric();
     promise.resolve(null);
   }
 
@@ -62,95 +62,95 @@ public class LyricModule extends ReactContextBaseJavaModule {
   public void setLyric(String lyric, String translation, String romaLyric, Promise promise) {
     // Log.d("Lyric", "set lyric: " + lyric);
     // Log.d("Lyric", "set lyric translation: " + translation);
-    this.lyric.setLyric(lyric, translation, romaLyric);
+    if (lyric != null) this.lyric.setLyric(lyric, translation, romaLyric);
     promise.resolve(null);
   }
 
   @ReactMethod
   public void toggleTranslation(boolean isShowTranslation, Promise promise) {
     this.isShowTranslation = isShowTranslation;
-    if (lyric == null) return;
-    lyric.toggleTranslation(isShowTranslation);
+    if (lyric != null) lyric.toggleTranslation(isShowTranslation);
     promise.resolve(null);
   }
 
   @ReactMethod
   public void toggleRoma(boolean isShowRoma, Promise promise) {
     this.isShowRoma = isShowRoma;
-    if (lyric == null) return;
-    lyric.toggleRoma(isShowRoma);
+    if (lyric != null) lyric.toggleRoma(isShowRoma);
     promise.resolve(null);
   }
 
   @ReactMethod
   public void play(int time, Promise promise) {
     Log.d("Lyric", "play lyric: " + time);
-    lyric.play(time);
+    if (lyric != null) lyric.play(time);
     promise.resolve(null);
   }
 
   @ReactMethod
   public void pause(Promise promise) {
     Log.d("Lyric", "play pause");
-    lyric.pause();
+    if (lyric != null) lyric.pause();
     promise.resolve(null);
   }
 
   @ReactMethod
   public void toggleLock(boolean isLock, Promise promise) {
-    if (isLock) {
-      lyric.lockLyric();
-    } else {
-      lyric.unlockLyric();
+    if (lyric != null) {
+      if (isLock) {
+        lyric.lockLyric();
+      } else {
+        lyric.unlockLyric();
+      }
     }
     promise.resolve(null);
   }
 
   @ReactMethod
   public void setColor(String themeColor, Promise promise) {
-    lyric.setColor(themeColor);
+    if (lyric != null) lyric.setColor(themeColor);
     promise.resolve(null);
   }
 
   @ReactMethod
   public void setAlpha(float alpha, Promise promise) {
-    lyric.setAlpha(alpha);
+    if (lyric != null) lyric.setAlpha(alpha);
     promise.resolve(null);
   }
 
   @ReactMethod
   public void setTextSize(float size, Promise promise) {
-    lyric.setTextSize(size);
+    if (lyric != null) lyric.setTextSize(size);
     promise.resolve(null);
   }
 
   @ReactMethod
   public void setMaxLineNum(int maxLineNum, Promise promise) {
-    lyric.setMaxLineNum(maxLineNum);
+    if (lyric != null) lyric.setMaxLineNum(maxLineNum);
     promise.resolve(null);
   }
 
   @ReactMethod
   public void setSingleLine(boolean singleLine, Promise promise) {
-    lyric.setSingleLine(singleLine);
+    if (lyric != null) lyric.setSingleLine(singleLine);
     promise.resolve(null);
   }
 
   @ReactMethod
   public void setShowToggleAnima(boolean showToggleAnima, Promise promise) {
-    lyric.setShowToggleAnima(showToggleAnima);
+    if (lyric != null) lyric.setShowToggleAnima(showToggleAnima);
     promise.resolve(null);
   }
 
   @ReactMethod
   public void setWidth(int width, Promise promise) {
-    lyric.setWidth(width);
+    if (lyric != null) lyric.setWidth(width);
     promise.resolve(null);
   }
 
   @ReactMethod
   public void setLyricTextPosition(String positionX, String positionY, Promise promise) {
-    lyric.setLyricTextPosition(positionX, positionY);
+    if (lyric != null) lyric.setLyricTextPosition(positionX, positionY);
     promise.resolve(null);
   }
 

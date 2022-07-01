@@ -348,6 +348,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
   }
 
   public void setLyric(String text, ArrayList<String> extendedLyrics) {
+    if (text.equals("") && text.equals(currentLyric) && extendedLyrics.size() == 0) return;
     currentLyric = text;
     currentExtendedLyrics = extendedLyrics;
     if (textView == null) return;

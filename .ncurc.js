@@ -10,6 +10,7 @@ module.exports = {
     'babel-jest',
     'jest',
 
+    'react-native',
     'react',
     'react-test-renderer',
   ]

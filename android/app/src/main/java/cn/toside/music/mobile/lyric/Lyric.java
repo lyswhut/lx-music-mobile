@@ -150,9 +150,8 @@ public class Lyric extends LyricPlayer {
     // Log.d("Lyric", lineNum + " " + text + " " + (String) line.get("translation"));
   }
 
-  @Override
-  public void pause() {
-    super.pause();
+  public void pauseLyric() {
+    pause();
     if (!isShowLyric) return;
     if (lyricView != null) lyricView.setLyric("", new ArrayList<>(0));
   }

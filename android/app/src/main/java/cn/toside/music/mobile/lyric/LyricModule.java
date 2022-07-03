@@ -90,7 +90,7 @@ public class LyricModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void pause(Promise promise) {
     Log.d("Lyric", "play pause");
-    if (lyric != null) lyric.pause();
+    if (lyric != null) lyric.pauseLyric();
     promise.resolve(null);
   }
 

@@ -390,6 +390,7 @@ export default memo(({ currentList, handleCancelMultiSelect, showListSearchBar }
   return (
     <View>
       <TouchableOpacity onPress={showPopup} style={{ ...styles.currentList, borderBottomWidth: BorderWidths.normal, borderBottomColor: theme.borderColor }}>
+        <Icon style={{ ...styles.sourceMenuIcon, color: theme.secondary30, fontSize: 18 }} name="chevron-right" />
         <Text numberOfLines={1} style={{ ...styles.sourceMenu, color: theme.secondary, flex: 1 }}>{currentList.name}</Text>
         <TouchableOpacity style={styles.btns} onPress={showListSearchBar}>
           <Icon style={{ color: theme.secondary30, fontSize: 16 }} name="search-2" />
@@ -404,9 +405,15 @@ export default memo(({ currentList, handleCancelMultiSelect, showListSearchBar }
 
 
 const styles = StyleSheet.create({
+  sourceMenuIcon: {
+    paddingLeft: 8,
+    paddingRight: 3,
+    paddingTop: 10,
+    paddingBottom: 0,
+  },
   sourceMenu: {
     minWidth: 70,
-    paddingLeft: 10,
+    // paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 10,
     paddingBottom: 10,

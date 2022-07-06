@@ -27,7 +27,7 @@ export default memo(({ item, onPress }) => {
           </View>
           <View style={styles.row2}><Text style={{ ...styles.listItemDesc, color: theme.normal50 }} numberOfLines={1}>{item.mtime ? new Date(item.mtime).toLocaleString() : item.desc}</Text></View>
         </View>
-        {item.isDir ? <Icon name="chevron-right" style={{ color: theme.secondary20, fontSize: 18 }} /> : <Text style={{ ...styles.size, color: theme.normal40 }}>{item.sizeText}</Text>}
+        {item.isDir ? <Icon name="chevron-right-2" style={{ color: theme.secondary20, fontSize: 18 }} /> : <Text style={{ ...styles.size, color: theme.normal40 }}>{item.sizeText}</Text>}
       </TouchableOpacity>
     </View>
   )

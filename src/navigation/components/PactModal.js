@@ -20,6 +20,7 @@ const VersionModal = ({ componentId }) => {
   }
 
   const handleConfirm = () => {
+    let _isAgreePact = isAgreePact
     if (!isAgreePact) setAgreePact(true)
     Navigation.dismissOverlay(componentId)
     setTimeout(() => {
@@ -29,7 +30,7 @@ const VersionModal = ({ componentId }) => {
         [{
           text: Buffer.from('e5a5bde79a8420284f4b29', 'hex').toString(),
           onPress: () => {
-            checkVersion()
+            if (!_isAgreePact) checkVersion()
           },
         }],
       )

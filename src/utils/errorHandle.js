@@ -21,7 +21,7 @@ ${isFatal ? 'Fatal:' : ''} ${e.name} ${e.message}
       }],
     )
   }
-  log.error(e.message)
+  log.error(e.stack)
 }
 
 if (process.env.NODE_ENV !== 'development') {

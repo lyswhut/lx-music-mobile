@@ -228,6 +228,7 @@ export default {
       time: item.createTime,
       img: item.coverImgUrl,
       grade: item.grade,
+      total: item.trackCount,
       desc: item.description,
       source: 'wy',
     }))

@@ -6,6 +6,19 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.14.1](https://github.com/lyswhut/lx-music-mobile/compare/v0.14.0...v0.14.1) - 2022-07-09
+
+### 优化
+
+- 添加“弹出键盘时自动隐藏播放栏”设置，默认启用（原来的行为），若在某些设备上播放栏无法显示时则可以关闭此设置
+- 优化切歌时桌面歌词的切换动画显示
+- 暂停播放时自动隐藏桌面歌词
+- 在我的列表-列表名左侧添加了一个图标，以表示此处可以点击切换列表
+
+### 修复
+
+- 修复tx源搜索失效的问题
+
 ## [0.14.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.13.0...v0.14.0) - 2022-06-17
 
 ### 新增

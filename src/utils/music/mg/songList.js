@@ -294,6 +294,7 @@ export default {
       time: item.createTime,
       img: item.image,
       grade: item.grade,
+      total: item.contentCount,
       desc: item.summary,
       source: 'mg',
     }))

@@ -114,11 +114,13 @@ export default memo(() => {
   useEffect(() => {
     let list = boards[sourceId]
     if (list.length) {
+      if (list.some(b => b.id == tabId)) return
       setTop({ tabId: list[0].id })
       return
     }
     getBoardsList().then(() => {
       list = boards[sourceId]
+      if (list.some(b => b.id == tabId)) return
       setTop({ tabId: list.length ? list[0].id : null })
     })
   }, [sourceId])

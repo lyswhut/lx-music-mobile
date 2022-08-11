@@ -100,6 +100,7 @@
   "player_setting_lrc_font_size": "Lyric font size setting",
   "quality_high_quality": "HQ",
   "quality_lossless": "SQ",
+  "quality_lossless_24bit": "24bit",
   "setting_about": "About LX Music",
   "setting_backup": "Backup and Recovery",
   "setting_backup_all": "All data (list data and setting data)",

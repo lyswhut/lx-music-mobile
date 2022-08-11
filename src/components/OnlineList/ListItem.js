@@ -1,7 +1,7 @@
 import React, { useCallback, memo, useRef, useMemo } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import { useGetter } from '@/store'
-import Button from '@/components/common/Button'
+// import Button from '@/components/common/Button'
 import Badge from '@/components/common/Badge'
 import { BorderWidths } from '@/theme'
 import { useTranslation } from '@/plugins/i18n'
@@ -10,7 +10,10 @@ import { Icon } from '@/components/common/Icon'
 const useQualityTag = musicInfo => {
   const { t } = useTranslation()
   let info = {}
-  if (musicInfo._types.ape || musicInfo._types.flac) {
+  if (musicInfo._types.flac32bit) {
+    info.type = 'secondary'
+    info.text = t('quality_lossless_24bit')
+  } else if (musicInfo._types.ape || musicInfo._types.flac) {
     info.type = 'secondary'
     info.text = t('quality_lossless')
   } else if (musicInfo._types['320k']) {

@@ -6,7 +6,7 @@ import crypto from 'crypto'
  * @param {*} type
  */
 
-const types = ['flac', 'wav', 'ape', '320k', '192k', '128k']
+const types = ['flac32bit', 'flac', 'wav', 'ape', '320k', '192k', '128k']
 export const getMusicType = (info, type) => {
   const list = global.globalObj.qualityList[info.source]
   if (!list) return '128k'

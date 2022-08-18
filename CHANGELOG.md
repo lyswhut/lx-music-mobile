@@ -6,6 +6,17 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.14.2](https://github.com/lyswhut/lx-music-mobile/compare/v0.14.1...v0.14.2) - 2022-08-18
+
+### 优化
+
+- 为tx、kw源添加 Flac 24bit 音质显示，注：由于之前没有记录此音质，所以之前收藏的歌曲信息中不包含它
+
+### 修复
+
+- 修复排行榜在旋转屏幕后，选中的榜单被重置回第一个的问题
+- 修复企鹅音乐搜索失效的问题
+
 ## [0.14.1](https://github.com/lyswhut/lx-music-mobile/compare/v0.14.0...v0.14.1) - 2022-07-09
 
 ### 优化

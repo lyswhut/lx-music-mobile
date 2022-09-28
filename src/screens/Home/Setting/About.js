@@ -88,7 +88,7 @@ export default memo(() => {
         <Text style={textStyle}>如果你喜欢并经常使用洛雪音乐，并想要第一时间尝鲜洛雪的新功能<Text style={{ textDecorationLine: 'line-through' }}>（当小白鼠）</Text>，</Text>
         <Text style={textStyle}>可以加入测试企鹅群 </Text>
         <TouchableOpacity onPress={goToQQGroup2}><Text style={textLinkStyle}>768786588</Text></TouchableOpacity>
-        <Text style={textStyle}>注意：测试版的功可能会不稳定，<Text style={{ fontWeight: 'bold' }}>打算潜水的勿加</Text></Text>
+        <Text style={textStyle}>注意：测试版的功能可能会不稳定，<Text style={{ fontWeight: 'bold' }}>打算潜水的勿加</Text></Text>
       </View>
       <View style={styles.part}>
         <Text style={textStyle}>由于软件开发的初衷仅是为了对新技术的学习与研究，因此软件直至停止维护都将会一直保持纯净。</Text>

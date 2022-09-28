@@ -12,8 +12,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LyricPlayer {
-  final String timeExp = "^\\[([\\d:.]*)]";
+  final String timeFieldExp = "^(?:\\[[\\d:.]+])+";
+  final String timeExp = "[\\d:.]+";
 //  HashMap tagRegMap;
+  Pattern timeFieldPattern;
   Pattern timePattern;
 
   String lyric = "";
@@ -40,6 +42,7 @@ public class LyricPlayer {
 //    tagRegMap.put("by", "by");
 //    tags = new HashMap();
 
+    timeFieldPattern = Pattern.compile(timeFieldExp);
     timePattern = Pattern.compile(timeExp);
   }
 
@@ -86,7 +89,7 @@ public class LyricPlayer {
 
   private void initTag() {
     tags = new HashMap();
-    Matcher matcher = Pattern.compile("\\[(ti|ar|al|offset|by):\\s*(\\S+(?:\\s+\\S+)*)\\s*\\]").matcher(this.lyric);
+    Matcher matcher = Pattern.compile("\\[(ti|ar|al|offset|by):\\s*(\\S+(?:\\s+\\S+)*)\\s*]").matcher(this.lyric);
     while (matcher.find()) {
       String key = matcher.group(1);
       if (key == null) continue;
@@ -113,12 +116,14 @@ public class LyricPlayer {
     String[] extendedLyricLines = extendedLyric.split("\r\n|\n|\r");
     for (String translationLine : extendedLyricLines) {
       String line = translationLine.trim();
-      Matcher result = timePattern.matcher(line);
-      if (result.find()) {
-        String text = line.replaceAll(timeExp, "").trim();
+      Matcher timeFieldResult = timeFieldPattern.matcher(line);
+      if (timeFieldResult.find()) {
+        String timeField = timeFieldResult.group();
+        String text = line.replaceAll(timeFieldExp, "").trim();
         if (text.length() > 0) {
-          String timeStr = result.group(1);
-          if (timeStr != null) {
+          Matcher timeMatchResult = timePattern.matcher(timeField);
+          while (timeMatchResult.find()) {
+            String timeStr = timeMatchResult.group();
             timeStr = timeStr.replace("(\\.\\d\\d)0$", "$1");
             HashMap targetLine = (HashMap) linesMap.get(timeStr);
             if (targetLine != null) ((ArrayList<String>) targetLine.get("extendedLyrics")).add(text);
@@ -137,47 +142,50 @@ public class LyricPlayer {
 
     for (String lineStr : linesStr) {
       String line = lineStr.trim();
-      Matcher result = timePattern.matcher(line);
-      if (result.find()) {
-        String text = line.replaceAll(timeExp, "").trim();
+      Matcher timeFieldResult = timeFieldPattern.matcher(line);
+      if (timeFieldResult.find()) {
+        String timeField = timeFieldResult.group();
+        String text = line.replaceAll(timeFieldExp, "").trim();
         if (text.length() > 0) {
-          String timeStr = result.group(1);
-          if (timeStr == null) continue;
-          timeStr = timeStr.replace("(\\.\\d\\d)0$", "$1");
-          String[] timeArr = timeStr.split(":");
-          String hours;
-          String minutes;
-          String seconds;
-          String milliseconds = "0";
-          switch (timeArr.length) {
-            case 3:
-              hours = timeArr[0];
-              minutes = timeArr[1];
-              seconds = timeArr[2];
-              break;
-            case 2:
-              hours = "0";
-              minutes = timeArr[0];
-              seconds = timeArr[1];
-              break;
-            default:
-              return;
+          Matcher timeMatchResult = timePattern.matcher(timeField);
+          while (timeMatchResult.find()) {
+            String timeStr = timeMatchResult.group();
+            timeStr = timeStr.replace("(\\.\\d\\d)0$", "$1");
+            String[] timeArr = timeStr.split(":");
+            String hours;
+            String minutes;
+            String seconds;
+            String milliseconds = "0";
+            switch (timeArr.length) {
+              case 3:
+                hours = timeArr[0];
+                minutes = timeArr[1];
+                seconds = timeArr[2];
+                break;
+              case 2:
+                hours = "0";
+                minutes = timeArr[0];
+                seconds = timeArr[1];
+                break;
+              default:
+                return;
+            }
+            if (seconds.contains(".")) {
+              timeArr = seconds.split("\\.");
+              seconds = timeArr[0];
+              milliseconds = timeArr[1];
+            }
+            HashMap<String, Object> lineInfo = new HashMap<>();
+            int time = Integer.parseInt(hours) * 60 * 60 * 1000
+              + Integer.parseInt(minutes) * 60 * 1000
+              + Integer.parseInt(seconds) * 1000
+              + Integer.parseInt(milliseconds);
+            lineInfo.put("time", time);
+            lineInfo.put("text", text);
+            lineInfo.put("extendedLyrics", new ArrayList<String>(extendedLyrics.size()));
+            timeMap.put(timeStr, time);
+            linesMap.put(timeStr, lineInfo);
           }
-          if (seconds.contains(".")) {
-            timeArr = seconds.split("\\.");
-            seconds = timeArr[0];
-            milliseconds = timeArr[1];
-          }
-          HashMap<String, Object> lineInfo = new HashMap<>();
-          int time = Integer.parseInt(hours) * 60 * 60 * 1000
-            + Integer.parseInt(minutes) * 60 * 1000
-            + Integer.parseInt(seconds) * 1000
-            + Integer.parseInt(milliseconds);
-          lineInfo.put("time", time);
-          lineInfo.put("text", text);
-          lineInfo.put("extendedLyrics", new ArrayList<String>(extendedLyrics.size()));
-          timeMap.put(timeStr, time);
-          linesMap.put(timeStr, lineInfo);
         }
       }
     }

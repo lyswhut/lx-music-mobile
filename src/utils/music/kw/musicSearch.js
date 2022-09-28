@@ -109,7 +109,7 @@ export default {
       if (!result || (result.TOTAL !== '0' && result.SHOW === '0')) return this.search(str, page, { limit }, ++retryNum)
       let list = this.handleResult(result.abslist)
 
-      if (list == null) return this.search(str, page, { limit })
+      if (list == null) return this.search(str, page, { limit }, ++retryNum)
 
       this.total = parseInt(result.TOTAL)
       this.page = page

@@ -151,6 +151,10 @@ public class LyricPlayer {
           while (timeMatchResult.find()) {
             String timeStr = timeMatchResult.group();
             timeStr = timeStr.replace("(\\.\\d\\d)0$", "$1");
+            if (linesMap.containsKey(timeStr)) {
+              ((ArrayList<String>) ((HashMap) linesMap.get(timeStr)).get("extendedLyrics")).add(text);
+              continue;
+            }
             String[] timeArr = timeStr.split(":");
             String hours;
             String minutes;
@@ -168,7 +172,7 @@ public class LyricPlayer {
                 seconds = timeArr[1];
                 break;
               default:
-                return;
+                continue;
             }
             if (seconds.contains(".")) {
               timeArr = seconds.split("\\.");

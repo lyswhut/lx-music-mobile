@@ -11,6 +11,7 @@ import Button from '../components/Button'
 import ChoosePath from '@/components/common/ChoosePath'
 import { useTranslation } from '@/plugins/i18n'
 import { toast, handleSaveFile, handleReadFile, confirmDialog, showImportTip } from '@/utils/tools'
+import { toOldMusicInfo } from '@/utils/listData'
 
 const exportAllList = async(allList, path) => {
   const data = JSON.parse(JSON.stringify({
@@ -62,6 +63,17 @@ const handleSetList = (setList, lists) => {
   })
 }
 
+const handleSetListV2 = (setList, lists) => {
+  if (!lists.length) return Promise.resolve()
+  const list = lists.shift()
+  list.list = list.list.map(m => toOldMusicInfo(m))
+  return setList(list).then(() => handleSetListV2(setList, lists)).catch(err => {
+    toast(err.message)
+    log.error(err.message)
+    return handleSetListV2(setList, lists)
+  })
+}
+
 export default memo(() => {
   const { t } = useTranslation()
   const [isShowChoosePath, setShowChoosePath] = useState(false)
@@ -91,7 +103,7 @@ export default memo(() => {
     setShowChoosePath(true)
   }, [t])
 
-  const handleImportPartList = useCallback(async(listData) => {
+  const handleImportPartList = useCallback(async(listData, isV2) => {
     const targetList = global.allList[listData.data.id]
     if (targetList) {
       const confirm = await confirmDialog({
@@ -105,7 +117,7 @@ export default memo(() => {
         setList({
           name: listData.data.name,
           id: listData.data.id,
-          list: listData.data.list,
+          list: isV2 ? listData.data.list.map(m => toOldMusicInfo(m)) : listData.data.list,
           source: listData.data.source,
           sourceListId: listData.data.sourceListId,
         })
@@ -117,7 +129,7 @@ export default memo(() => {
     createUserList({
       name: listData.data.name,
       id: listData.data.id,
-      list: listData.data.list,
+      list: isV2 ? listData.data.list.map(m => toOldMusicInfo(m)) : listData.data.list,
       source: listData.data.source,
       sourceListId: listData.data.sourceListId,
       // position: Math.max(selectedListRef.current.index, -1),
@@ -166,7 +178,22 @@ export default memo(() => {
                 break
 
               case 'playListPart':
-                handleImportPartList(listData)
+                handleImportPartList(listData, false)
+                break
+              case 'playList_v2':
+                toast(t('setting_backup_part_import_list_tip_runing'))
+                handleSetListV2(setList, listData.data).then(() => {
+                  toast(t('setting_backup_part_import_list_tip_success'))
+                })
+                break
+              case 'allData_v2':
+                toast(t('setting_backup_part_import_list_tip_runing'))
+                handleSetListV2(setList, listData.playList).then(() => {
+                  toast(t('setting_backup_part_import_list_tip_success'))
+                })
+                break
+              case 'playListPart_v2':
+                handleImportPartList(listData, true)
                 break
 
               default: return showImportTip(listData.type)

@@ -17,6 +17,7 @@ import musicSdk from '@/utils/music'
 import ChoosePath from '@/components/common/ChoosePath'
 import { log } from '@/utils/log'
 import Popup from '@/components/common/Popup'
+import { toOldMusicInfo } from '@/utils/listData'
 
 const exportList = async(list, path) => {
   const data = JSON.parse(JSON.stringify({
@@ -95,7 +96,13 @@ const ImportExport = ({ actionType, visible, hide, selectedListRef }) => {
       case 'import':
         toast(t('setting_backup_part_import_list_tip_unzip'))
         importList(path).then(async listData => {
-          if (listData.type != 'playListPart') return showImportTip(listData.type)
+          switch (listData.type) {
+            case 'playListPart':
+            case 'playListPart_v2':
+              break
+            default: return showImportTip(listData.type)
+          }
+          const isV2 = listData.type == 'playListPart_v2'
           const targetList = global.allList[listData.data.id]
           if (targetList) {
             const confirm = await confirmDialog({
@@ -109,7 +116,7 @@ const ImportExport = ({ actionType, visible, hide, selectedListRef }) => {
               setList({
                 name: listData.data.name,
                 id: listData.data.id,
-                list: listData.data.list,
+                list: isV2 ? listData.data.list.map(m => toOldMusicInfo(m)) : listData.data.list,
                 source: listData.data.source,
                 sourceListId: listData.data.sourceListId,
               })
@@ -121,7 +128,7 @@ const ImportExport = ({ actionType, visible, hide, selectedListRef }) => {
           createUserList({
             name: listData.data.name,
             id: listData.data.id,
-            list: listData.data.list,
+            list: isV2 ? listData.data.list.map(m => toOldMusicInfo(m)) : listData.data.list,
             source: listData.data.source,
             sourceListId: listData.data.sourceListId,
             position: Math.max(selectedListRef.current.index, -1),

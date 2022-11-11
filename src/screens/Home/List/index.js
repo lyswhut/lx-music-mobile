@@ -285,7 +285,7 @@ const List = () => {
   const handleSearchListItemPress = useCallback(item => {
     const index = currentList.list.findIndex(s => s.songmid == item.songmid)
     if (index < 0) return
-    flatListRef.current.scrollToIndex({ index: index, viewPosition: 0.3, animated: true })
+    flatListRef.current.scrollToIndex({ index, viewPosition: 0.3, animated: true })
     handleHideSearchBar()
   }, [currentList, handleHideSearchBar])
   const handleRenderSearchListItem = useCallback((item, index) => {

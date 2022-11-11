@@ -129,7 +129,7 @@ export default {
     const { url: location, statusCode } = await requestObj_listDetailLink.promise
     // console.log(body, location)
     if (statusCode > 400) return this.getDetailUrl(link, page, ++retryNum)
-    if (location) {
+    if (location.split('?')[0] != link.split('?')[0]) {
       this.cachedUrl[link] = location
       return this.getListDetail(location, page)
     }

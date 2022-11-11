@@ -7,7 +7,7 @@ import { useGetter, useDispatch } from '@/store'
 import { debounce } from '@/utils'
 
 const debounceTipSearch = debounce((str, tempSearchSource, callback) => {
-  return music[tempSearchSource].tempSearch.search(str).then(callback)
+  return music[tempSearchSource]?.tempSearch.search(str).then(callback) ?? Promise.reject(new Error('source not found'))
 }, 200)
 
 export default forwardRef(({ onSetTipList, setPage }, ref) => {
@@ -50,7 +50,7 @@ export default forwardRef(({ onSetTipList, setPage }, ref) => {
     if (str.length) {
       debounceTipSearch(str, tempSearchSource, onSetTipList)
     } else {
-      music[tempSearchSource].tempSearch.search('')
+      music[tempSearchSource]?.tempSearch.search('')
       hideTipList()
     }
   }, [setText, hideTipList, tempSearchSource, onSetTipList])

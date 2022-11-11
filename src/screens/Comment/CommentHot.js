@@ -93,7 +93,6 @@ export default memo(({ musicInfo, setTotal }) => {
   }, [musicInfo, setTotal])
 
   const handleShowComment = useCallback(musicInfo => {
-    if (!musicInfo.songmid || !music[musicInfo.source].comment) return
     listInfo.current.page = 1
     listInfo.current.total = 0
     listInfo.current.maxPage = 1
@@ -101,6 +100,7 @@ export default memo(({ musicInfo, setTotal }) => {
     listInfo.current.isLoading = false
     listInfo.current.isLoadError = false
     setCommentList([])
+    if (!musicInfo.songmid || !music[musicInfo.source]?.comment) return setIsEnd(true)
     handleGetComment(musicInfo, 1).then(({ comments, maxPage, total }) => {
       listInfo.current.total = total
       listInfo.current.maxPage = maxPage

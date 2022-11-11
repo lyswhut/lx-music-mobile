@@ -55,7 +55,7 @@ export const search = ({ page, limit }) => (dispatch, getState) => {
       .finally(() => dispatch({ type: TYPES.loading, payload: false }))
   } else {
     dispatch({ type: TYPES.loading, payload: true })
-    return music[state.common.setting.search.searchSource].musicSearch.search(text, page, limit).catch(error => {
+    return (music[state.common.setting.search.searchSource]?.musicSearch.search(text, page, limit) ?? Promise.reject(new Error('source not found'))).catch(error => {
       console.log(error)
       return {
         allPage: 1,

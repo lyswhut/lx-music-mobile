@@ -311,7 +311,7 @@ const List = memo(({ setVisiblePanel, currentList, handleCancelMultiSelect }) =>
         if (!list) return []
         rename = true
         remove = true
-        sync = list.source && !!musicSdk[list.source].songList
+        sync = list.source && !!musicSdk[list.source]?.songList
         break
     }
 

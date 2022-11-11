@@ -28,7 +28,7 @@ export const getTags = () => (dispatch, getState) => {
   const state = getState()
   let source = state.common.setting.songList.source
   if (state.songList.tags[source]) return Promise.resolve()
-  return music[source].songList.getTags().then(result => dispatch(setTags({ tags: result, source })))
+  return music[source]?.songList.getTags().then(result => dispatch(setTags({ tags: result, source }))) ?? Promise.reject(new Error('source not found'))
 }
 export const getList = ({ page = 1, isRefresh = false }) => (dispatch, getState) => {
   const allState = getState()

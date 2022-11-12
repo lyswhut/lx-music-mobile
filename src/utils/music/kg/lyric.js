@@ -9,14 +9,19 @@ const parseLyric = str => {
   if (headExp.test(str)) str = str.replace(headExp, '')
   let trans = str.match(/\[language:([\w=\\/+]+)\]/)
   let lyric
+  let rlyric
   let tlyric
   if (trans) {
     str = str.replace(/\[language:[\w=\\/+]+\]\n/, '')
     let json = JSON.parse(Buffer.from(trans[1], 'base64').toString())
     for (const item of json.content) {
-      if (item.type == 1) {
-        tlyric = item.lyricContent
-        break
+      switch (item.type) {
+        case 0:
+          rlyric = item.lyricContent
+          break
+        case 1:
+          tlyric = item.lyricContent
+          break
       }
     }
   }
@@ -30,17 +35,22 @@ const parseLyric = str => {
     time %= 60
     let s = parseInt(time).toString().padStart(2, '0')
     time = `${m}:${s}.${ms}`
-    if (tlyric) tlyric[i] = `[${time}]${tlyric[i++][0]}`
+    if (rlyric) rlyric[i] = `[${time}]${rlyric[i]?.join('') ?? ''}`
+    if (tlyric) tlyric[i] = `[${time}]${tlyric[i]?.join('') ?? ''}`
+    i++
     return str.replace(result[1], time)
   })
+  rlyric = rlyric ? rlyric.join('\n') : ''
   tlyric = tlyric ? tlyric.join('\n') : ''
   lxlyric = lxlyric.replace(/<(\d+,\d+),\d+>/g, '<$1>')
   lxlyric = decodeName(lxlyric)
   lyric = lxlyric.replace(/<\d+,\d+>/g, '')
+  rlyric = decodeName(rlyric)
   tlyric = decodeName(tlyric)
   return {
     lyric,
     tlyric,
+    rlyric,
     lxlyric,
   }
 }

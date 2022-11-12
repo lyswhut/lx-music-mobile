@@ -313,7 +313,7 @@ export default {
 
     if (infoData.code != 200) return null
 
-    console.log(infoData)
+    // console.log(infoData)
     return {
       name: infoData.data.userInfo.nickname + '喜欢的音乐',
       img: infoData.data.userInfo.headImg,
@@ -366,7 +366,7 @@ export default {
       author: '',
       play_count: '',
     }
-    console.log(listData)
+    // console.log(listData)
     return listData
   },
 

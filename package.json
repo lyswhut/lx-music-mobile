@@ -1,6 +1,6 @@
 {
   "name": "lx-music-mobile",
-  "version": "0.15.0-beta.2",
+  "version": "0.15.0-beta.3",
   "versionCode": 46,
   "scripts": {
     "ar": "react-native run-android",
@@ -49,7 +49,7 @@
     "buffer": "^6.0.3",
     "console-browserify": "^1.2.0",
     "events": "^3.3.0",
-    "i18next": "^22.0.4",
+    "i18next": "^22.0.6",
     "js-htmlencode": "^0.3.0",
     "lrc-file-parser": "^2.2.1",
     "pako": "^2.1.0",
@@ -62,7 +62,7 @@
     "react-native-crypto": "^2.2.0",
     "react-native-exception-handler": "^2.10.10",
     "react-native-fs": "^2.20.0",
-    "react-native-navigation": "^7.30.1",
+    "react-native-navigation": "^7.30.2",
     "react-native-pager-view": "^6.1.0",
     "react-native-randombytes": "^3.6.1",
     "react-native-splash-screen": "^3.3.0",

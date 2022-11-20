@@ -6,6 +6,24 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.15.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.14.3...v0.15.0) - 2022-11-20
+
+### 新增
+
+- 支持导入PC端v2版本的列表数据
+- 添加kg源罗马音歌词的支持
+- 支持打开波点音乐歌单（需在酷我源打开）
+
+### 修复
+
+- 支持单行多时间标签歌词解析，修复某些歌词会出现时间标签的问题
+- 修复某些类型的kg歌单无法导入的问题
+- 修复异常歌单、歌曲数据导致的崩溃问题（#157）
+
+### 其他
+
+- 升级react-native到 v0.68.5
+
 ## [0.14.3](https://github.com/lyswhut/lx-music-mobile/compare/v0.14.2...v0.14.3) - 2022-09-03
 
 ### 修复

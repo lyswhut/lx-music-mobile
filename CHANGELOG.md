@@ -6,6 +6,12 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.15.3](https://github.com/lyswhut/lx-music-mobile/compare/v0.15.2...v0.15.3) - 2022-12-10
+
+### 修复
+
+- 修复鸿蒙系统下的崩溃问题
+
 ## [0.15.2](https://github.com/lyswhut/lx-music-mobile/compare/v0.15.1...v0.15.2) - 2022-12-10
 
 ### 修复

@@ -124,7 +124,8 @@ public class LyricPlayer {
           Matcher timeMatchResult = timePattern.matcher(timeField);
           while (timeMatchResult.find()) {
             String timeStr = timeMatchResult.group();
-            timeStr = timeStr.replaceAll("(?:\\.0+|(\\.\\d+?)0+)$", "$1");
+            if (!timeStr.contains(".")) timeStr += ".0";
+            timeStr = timeStr.replaceAll("(?:\\.0+|0+)$", "");
             HashMap targetLine = (HashMap) linesMap.get(timeStr);
             if (targetLine != null) ((ArrayList<String>) targetLine.get("extendedLyrics")).add(text);
           }
@@ -150,7 +151,8 @@ public class LyricPlayer {
           Matcher timeMatchResult = timePattern.matcher(timeField);
           while (timeMatchResult.find()) {
             String timeStr = timeMatchResult.group();
-            timeStr = timeStr.replaceAll("(?:\\.0+|(\\.\\d+?)0+)$", "$1");
+            if (!timeStr.contains(".")) timeStr += ".0";
+            timeStr = timeStr.replaceAll("(?:\\.0+|0+)$", "");
             if (linesMap.containsKey(timeStr)) {
               ((ArrayList<String>) ((HashMap) linesMap.get(timeStr)).get("extendedLyrics")).add(text);
               continue;

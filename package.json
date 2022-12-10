@@ -51,7 +51,7 @@
     "events": "^3.3.0",
     "i18next": "^22.1.5",
     "js-htmlencode": "^0.3.0",
-    "lrc-file-parser": "^2.2.6",
+    "lrc-file-parser": "^2.2.7",
     "pako": "^2.1.0",
     "process": "^0.11.10",
     "prop-types": "^15.8.1",

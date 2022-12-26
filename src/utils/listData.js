@@ -30,6 +30,7 @@ export const toNewMusicInfo = (oldMusicInfo) => {
       case 'tx':
         meta.strMediaMid = oldMusicInfo.strMediaMid
         meta.albumMid = oldMusicInfo.albumMid
+        meta.id = oldMusicInfo.songId
         break
       case 'mg':
         meta.copyrightId = oldMusicInfo.copyrightId
@@ -79,6 +80,7 @@ export const toOldMusicInfo = (minfo) => {
       case 'tx':
         oInfo.strMediaMid = minfo.meta.strMediaMid
         oInfo.albumMid = minfo.meta.albumMid
+        oInfo.songId = minfo.meta.id
         break
       case 'mg':
         oInfo.copyrightId = minfo.meta.copyrightId

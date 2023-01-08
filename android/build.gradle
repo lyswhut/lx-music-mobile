@@ -6,7 +6,9 @@ buildscript {
     ext {
         buildToolsVersion = "31.0.0"
         minSdkVersion = 21
-        compileSdkVersion = 30
+        compileSdkVersion = 31
+        // ? 是否尝试启用sdk31
+        // targetSdkVersion = 31
         // https://github.com/itinance/react-native-fs/issues/998#issuecomment-831337442
         targetSdkVersion = 29
         kotlinVersion = "1.5.31" // Or any version above 1.3.x
@@ -26,9 +28,9 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.4")
+        classpath("com.android.tools.build:gradle:7.2.1")
         classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("de.undercouch:gradle-download-task:4.1.2")
+        classpath("de.undercouch:gradle-download-task:5.0.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

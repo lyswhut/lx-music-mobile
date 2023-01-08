@@ -20,6 +20,24 @@ import cn.toside.music.mobile.newarchitecture.MainApplicationReactNativeHost;
 import cn.toside.music.mobile.utils.UtilsPackage;
 
 public class MainApplication extends NavigationApplication {
+  // @Override
+  public boolean getUseDeveloperSupport() {
+    return BuildConfig.DEBUG;
+  }
+
+  // @Override
+  protected List<ReactPackage> getPackages() {
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    List<ReactPackage> packages = new PackageList(this).getPackages();
+    // Packages that cannot be autolinked yet can be added manually here, for example:
+    // packages.add(new MyReactNativePackage());
+    return packages;
+  }
+
+  // @Override
+  protected String getJSMainModuleName() {
+    return "index";
+  }
 
   private final ReactNativeHost mReactNativeHost =
       new NavigationReactNativeHost(this) {

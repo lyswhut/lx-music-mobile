@@ -15,6 +15,7 @@
     "pack:android:debug": "./gradlew assembleDebug",
     "pack": "npm run pack:android",
     "pack:android": "./gradlew assembleRelease",
+    "pack:vs": "cd ./android && ./gradlew assembleRelease",
     "clear": "react-native clean-project",
     "publish": "node publish",
     "nodeify": "rn-nodeify --hack --install process,crypto,events,constant,console,stream,url,util",

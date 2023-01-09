@@ -26,6 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 import com.facebook.react.fabric.ReactNativeConfig;
 
+import cn.toside.music.mobile.cache.CachePackage;
+import cn.toside.music.mobile.gzip.GzipPackage;
+import cn.toside.music.mobile.lyric.LyricPackage;
+import cn.toside.music.mobile.newarchitecture.MainApplicationReactNativeHost;
+import cn.toside.music.mobile.utils.UtilsPackage;
+
 /**
  * A {@link ReactNativeHost} that helps you load everything needed for the New Architecture, both
  * TurboModule delegates and the Fabric Renderer.
@@ -52,6 +58,10 @@ public class MainApplicationReactNativeHost extends ReactNativeHost {
     //     packages.add(new TurboReactPackage() { ... });
     // If you have custom Fabric Components, their ViewManagers should also be loaded here
     // inside a ReactPackage.
+    packages.add(new GzipPackage());
+    packages.add(new CachePackage());
+    packages.add(new UtilsPackage());
+    packages.add(new LyricPackage());
     return packages;
   }
 

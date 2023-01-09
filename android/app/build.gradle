@@ -192,6 +192,7 @@ android {
             from("$reactAndroidProjectDir/src/main/jni/prebuilt/lib")
             into("$buildDir/react-ndk/exported")
         }
+
         afterEvaluate {
             // If you wish to add a custom TurboModule or component locally,
             // you should uncomment this line.
@@ -289,7 +290,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation project(":ReactAndroid")  // From node_modules
+    implementation project(':ReactAndroid')  // From node_modules
 
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules

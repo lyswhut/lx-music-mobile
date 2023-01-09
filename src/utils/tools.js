@@ -1,14 +1,36 @@
-import { Platform, NativeModules, ToastAndroid, BackHandler, Linking, Dimensions, Alert, Appearance } from 'react-native'
+import {
+  Platform,
+  NativeModules,
+  ToastAndroid,
+  BackHandler,
+  Linking,
+  Dimensions,
+  Alert,
+  Appearance,
+} from 'react-native'
 // import ExtraDimensions from 'react-native-extra-dimensions-android'
 import Clipboard from '@react-native-clipboard/clipboard'
-import { getData, setData, getAllKeys, removeData, removeDataMultiple, setDataMultiple, getDataMultiple } from '@/plugins/storage'
+import {
+  getData,
+  setData,
+  getAllKeys,
+  removeData,
+  removeDataMultiple,
+  setDataMultiple,
+  getDataMultiple,
+} from '@/plugins/storage'
 import { storageDataPrefix } from '@/config'
 import { throttle } from './index'
 import { gzip, ungzip } from '@/utils/gzip'
 import { readFile, writeFile, temporaryDirectoryPath, unlink } from '@/utils/fs'
-import { isNotificationsEnabled, openNotificationPermissionActivity, shareText } from '@/utils/utils'
+import {
+  isNotificationsEnabled,
+  openNotificationPermissionActivity,
+  shareText,
+} from '@/utils/utils'
 import { i18n } from '@/plugins/i18n'
 import music from '@/utils/music'
+import i18next from 'i18next'
 
 const playInfoStorageKey = storageDataPrefix.playInfo
 const listPositionPrefix = storageDataPrefix.listPosition
@@ -21,13 +43,16 @@ const defaultListKey = listPrefix + 'default'
 const loveListKey = listPrefix + 'love'
 const notificationTipEnableKey = storageDataPrefix.notificationTipEnable
 
-
 // https://stackoverflow.com/a/47349998
-let deviceLanguage = Platform.OS === 'ios'
-  ? NativeModules.SettingsManager.settings.AppleLocale ||
-    NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
-  : NativeModules.I18nManager.localeIdentifier
-deviceLanguage = typeof deviceLanguage === 'string' ? deviceLanguage.substring(0, 5).toLocaleLowerCase() : ''
+let deviceLanguage =
+  Platform.OS === 'ios'
+    ? NativeModules.SettingsManager.settings.AppleLocale ||
+      NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
+    : i18next.language
+deviceLanguage =
+  typeof deviceLanguage === 'string'
+    ? deviceLanguage.substring(0, 5).toLocaleLowerCase()
+    : ''
 
 export const isAndroid = Platform.OS === 'android'
 export const osVer = Platform.constants.Release
@@ -35,7 +60,6 @@ export const osVer = Platform.constants.Release
 const handleSaveListScrollPosition = throttle(data => {
   setData(listPositionPrefix, data)
 }, 1000)
-
 
 // fix https://github.com/facebook/react-native/issues/4934
 export const getWindowSise = windowDimensions => {
@@ -59,7 +83,6 @@ export const getWindowSise = windowDimensions => {
   // }
   // return windowSize
 }
-
 
 /**
  * 显示toast
@@ -92,15 +115,16 @@ export const toast = (message, duration = 'short', position = 'bottom') => {
   ToastAndroid.show(message, duration, position)
 }
 
-export const openUrl = url => Linking.canOpenURL(url).then(() => Linking.openURL(url))
+export const openUrl = url =>
+  Linking.canOpenURL(url).then(() => Linking.openURL(url))
 
-export const assertApiSupport = source => global.globalObj.qualityList[source] != undefined
+export const assertApiSupport = source =>
+  global.globalObj.qualityList[source] != undefined
 
 // const handleRemoveDataMultiple = async keys => {
 //   await removeDataMultiple(keys.splice(0, 500))
 //   if (keys.length) return handleRemoveDataMultiple(keys)
 // }
-
 
 export const getAllListData = async() => {
   let defaultList
@@ -127,12 +151,12 @@ export const getAllListData = async() => {
         break
     }
   }
-  const listPositionData = await getData(listPositionPrefix) || {}
+  const listPositionData = (await getData(listPositionPrefix)) || {}
   const listPosition = {}
   for (const [key, value] of Object.entries(listPositionData)) {
     listPosition[key] = value
   }
-  const listSortData = await getData(listSortPrefix) || {}
+  const listSortData = (await getData(listSortPrefix)) || {}
   return {
     defaultList,
     loveList,
@@ -144,25 +168,28 @@ export const getAllListData = async() => {
 
 export const saveList = async listData => {
   if (Array.isArray(listData)) {
-    await setDataMultiple(listData.map(list => ({ key: listPrefix + list.id, value: list })))
+    await setDataMultiple(
+      listData.map(list => ({ key: listPrefix + list.id, value: list })),
+    )
   } else {
     await setData(listPrefix + listData.id, listData)
   }
 }
 export const removeList = async listId => {
   if (Array.isArray(listId)) {
-    await removeDataMultiple(listId.map(id => {
-      delete global.listScrollPosition[id]
-      delete global.listSort[id]
-      return listPrefix + id
-    }))
+    await removeDataMultiple(
+      listId.map(id => {
+        delete global.listScrollPosition[id]
+        delete global.listSort[id]
+        return listPrefix + id
+      }),
+    )
   } else {
     await removeData(listPrefix + listId)
   }
   await setData(listSortPrefix, global.listSort)
   handleSaveListScrollPosition(global.listScrollPosition)
 }
-
 
 export const saveListAllSort = async listSort => {
   global.listSort = listSort
@@ -179,22 +206,44 @@ export const removeListSort = async listIds => {
   setData(listSortPrefix, global.listSort)
 }
 
-export const getMusicUrl = (musicInfo, type) => getData(`${storageDataPrefix.musicUrl}${musicInfo.source}_${musicInfo.songmid}_${type}`).then(url => url || '')
-export const saveMusicUrl = (musicInfo, type, url) => setData(`${storageDataPrefix.musicUrl}${musicInfo.source}_${musicInfo.songmid}_${type}`, url)
+export const getMusicUrl = (musicInfo, type) =>
+  getData(
+    `${storageDataPrefix.musicUrl}${musicInfo.source}_${musicInfo.songmid}_${type}`,
+  ).then(url => url || '')
+export const saveMusicUrl = (musicInfo, type, url) =>
+  setData(
+    `${storageDataPrefix.musicUrl}${musicInfo.source}_${musicInfo.songmid}_${type}`,
+    url,
+  )
 export const clearMusicUrl = async() => {
-  let keys = (await getAllKeys()).filter(key => key.startsWith(storageDataPrefix.musicUrl))
+  let keys = (await getAllKeys()).filter(key =>
+    key.startsWith(storageDataPrefix.musicUrl),
+  )
   await removeDataMultiple(keys)
 }
 
-export const getLyric = musicInfo => getData(`${storageDataPrefix.lyric}${musicInfo.source}_${musicInfo.songmid}`).then(lrcInfo => lrcInfo || {})
-export const saveLyric = (musicInfo, { lyric, tlyric, rlyric, lxlyric }) => setData(`${storageDataPrefix.lyric}${musicInfo.source}_${musicInfo.songmid}`, { lyric, tlyric, rlyric, lxlyric })
+export const getLyric = musicInfo =>
+  getData(
+    `${storageDataPrefix.lyric}${musicInfo.source}_${musicInfo.songmid}`,
+  ).then(lrcInfo => lrcInfo || {})
+export const saveLyric = (musicInfo, { lyric, tlyric, rlyric, lxlyric }) =>
+  setData(
+    `${storageDataPrefix.lyric}${musicInfo.source}_${musicInfo.songmid}`,
+    { lyric, tlyric, rlyric, lxlyric },
+  )
 export const clearLyric = async() => {
-  let keys = (await getAllKeys()).filter(key => key.startsWith(storageDataPrefix.lyric))
+  let keys = (await getAllKeys()).filter(key =>
+    key.startsWith(storageDataPrefix.lyric),
+  )
   await removeDataMultiple(keys)
 }
 
 export const clearMusicUrlAndLyric = async() => {
-  let keys = (await getAllKeys()).filter(key => key.startsWith(storageDataPrefix.musicUrl) || key.startsWith(storageDataPrefix.lyric))
+  let keys = (await getAllKeys()).filter(
+    key =>
+      key.startsWith(storageDataPrefix.musicUrl) ||
+      key.startsWith(storageDataPrefix.lyric),
+  )
   await removeDataMultiple(keys)
 }
 
@@ -202,12 +251,9 @@ export const delaySavePlayInfo = throttle(n => {
   setData(playInfoStorageKey, n)
 }, 2000)
 export const savePlayInfo = (info, isDelay) => {
-  isDelay
-    ? delaySavePlayInfo(info)
-    : setData(playInfoStorageKey, info)
+  isDelay ? delaySavePlayInfo(info) : setData(playInfoStorageKey, info)
 }
 export const getPlayInfo = () => getData(playInfoStorageKey)
-
 
 export const saveListScrollPosition = (listId, position) => {
   global.listScrollPosition[listId] = position
@@ -230,7 +276,7 @@ export const getSyncAuthKey = async serverId => {
 }
 
 export const setSyncAuthKey = async(serverId, key) => {
-  let keys = await getData(syncAuthKeyPrefix) || {}
+  let keys = (await getData(syncAuthKeyPrefix)) || {}
   keys[serverId] = key
   await setData(syncAuthKeyPrefix, keys)
 }
@@ -238,7 +284,7 @@ export const setSyncAuthKey = async(serverId, key) => {
 let syncHostInfo
 export const getSyncHost = async() => {
   if (syncHostInfo === undefined) {
-    syncHostInfo = await getData(syncHostPrefix) || { host: '', port: '23332' }
+    syncHostInfo = (await getData(syncHostPrefix)) || { host: '', port: '23332' }
   }
   return { ...syncHostInfo }
 }
@@ -253,7 +299,7 @@ export const setSyncHost = async({ host, port }) => {
 let syncHostHistory
 export const getSyncHostHistory = async() => {
   if (syncHostHistory === undefined) {
-    syncHostHistory = await getData(syncHostHistoryPrefix) || []
+    syncHostHistory = (await getData(syncHostHistoryPrefix)) || []
   }
   return syncHostHistory
 }
@@ -261,7 +307,7 @@ export const addSyncHostHistory = async(host, port) => {
   let syncHostHistory = await getSyncHostHistory()
   if (syncHostHistory.some(h => h.host == host && h.port == port)) return
   syncHostHistory.unshift({ host, port })
-  if (syncHostHistory.length > 20) syncHostHistory = syncHostHistory.slice(0, 20) // 最多存储20个
+  if (syncHostHistory.length > 20) { syncHostHistory = syncHostHistory.slice(0, 20) } // 最多存储20个
   await setData(syncHostHistoryPrefix, syncHostHistory)
 }
 export const removeSyncHostHistory = async index => {
@@ -279,7 +325,7 @@ export const handleSaveFile = async(path, data) => {
   await gzip(tempFilePath, path)
   await unlink(tempFilePath)
 }
-export const handleReadFile = async(path) => {
+export const handleReadFile = async path => {
   let isJSON = path.endsWith('.json')
   let data
   if (isJSON) {
@@ -300,25 +346,30 @@ export const confirmDialog = ({
   bgClose = true,
 }) => {
   return new Promise(resolve => {
-    Alert.alert(null, message, [
+    Alert.alert(
+      null,
+      message,
+      [
+        {
+          text: cancelButtonText,
+          onPress() {
+            resolve(false)
+          },
+        },
+        {
+          text: confirmButtonText,
+          onPress() {
+            resolve(true)
+          },
+        },
+      ],
       {
-        text: cancelButtonText,
-        onPress() {
+        cancelable: bgClose,
+        onDismiss() {
           resolve(false)
         },
       },
-      {
-        text: confirmButtonText,
-        onPress() {
-          resolve(true)
-        },
-      },
-    ], {
-      cancelable: bgClose,
-      onDismiss() {
-        resolve(false)
-      },
-    })
+    )
   })
 }
 
@@ -364,11 +415,18 @@ export const resetNotificationPermissionCheck = () => {
 export const shareMusic = (shareType, downloadFileName, musicInfo) => {
   const name = musicInfo.name
   const singer = musicInfo.singer
-  const detailUrl = music[musicInfo.source]?.getMusicDetailPageUrl(musicInfo) ?? ''
-  const musicTitle = downloadFileName.replace('歌名', name).replace('歌手', singer)
+  const detailUrl =
+    music[musicInfo.source]?.getMusicDetailPageUrl(musicInfo) ?? ''
+  const musicTitle = downloadFileName
+    .replace('歌名', name)
+    .replace('歌手', singer)
   switch (shareType) {
     case 'system':
-      shareText(i18n.t('share_card_title_music', { name }), i18n.t('share_title_music'), `${musicTitle.replace(/\s/g, '')} \n${detailUrl}`)
+      shareText(
+        i18n.t('share_card_title_music', { name }),
+        i18n.t('share_title_music'),
+        `${musicTitle.replace(/\s/g, '')} \n${detailUrl}`,
+      )
       break
     case 'clipboard':
       clipboardWriteText(`${musicTitle} ${detailUrl}`)
@@ -391,13 +449,10 @@ let isSupportedAutoTheme = null
 export const getIsSupportedAutoTheme = () => {
   if (isSupportedAutoTheme == null) {
     const osVerNum = parseInt(osVer)
-    isSupportedAutoTheme = isAndroid
-      ? osVerNum >= 10
-      : osVerNum >= 13
+    isSupportedAutoTheme = isAndroid ? osVerNum >= 10 : osVerNum >= 13
   }
   return isSupportedAutoTheme
 }
-
 
 export const deduplicationList = list => {
   const ids = new Set()
@@ -429,18 +484,11 @@ export const showImportTip = type => {
       message = i18n.t('list_import_tip__unknown')
       break
   }
-  Alert.alert(
-    i18n.t('list_import_tip__failed'),
-    message,
-    [
-      {
-        text: i18n.t('ok'),
-      },
-    ],
-  )
+  Alert.alert(i18n.t('list_import_tip__failed'), message, [
+    {
+      text: i18n.t('ok'),
+    },
+  ])
 }
 
-
-export {
-  deviceLanguage,
-}
+export { deviceLanguage }

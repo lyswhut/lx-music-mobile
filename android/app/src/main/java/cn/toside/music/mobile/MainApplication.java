@@ -19,28 +19,11 @@ import cn.toside.music.mobile.lyric.LyricPackage;
 import cn.toside.music.mobile.newarchitecture.MainApplicationReactNativeHost;
 import cn.toside.music.mobile.utils.UtilsPackage;
 
-public class MainApplication extends NavigationApplication {
-  // @Override
-  public boolean getUseDeveloperSupport() {
-    return BuildConfig.DEBUG;
-  }
-
-  // @Override
-  protected List<ReactPackage> getPackages() {
-    @SuppressWarnings("UnnecessaryLocalVariable")
-    List<ReactPackage> packages = new PackageList(this).getPackages();
-    // Packages that cannot be autolinked yet can be added manually here, for example:
-    // packages.add(new MyReactNativePackage());
-    return packages;
-  }
-
-  // @Override
-  protected String getJSMainModuleName() {
-    return "index";
-  }
+public class MainApplication extends NavigationApplication { 
 
   private final ReactNativeHost mReactNativeHost =
       new NavigationReactNativeHost(this) {
+      
         @Override
         public boolean getUseDeveloperSupport() {
           return BuildConfig.DEBUG;
@@ -67,6 +50,7 @@ public class MainApplication extends NavigationApplication {
 
   private final ReactNativeHost mNewArchitectureNativeHost =
     new MainApplicationReactNativeHost(this);
+    
   @Override
   public ReactNativeHost getReactNativeHost() {
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {

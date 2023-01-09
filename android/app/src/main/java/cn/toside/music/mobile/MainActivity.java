@@ -1,11 +1,6 @@
 package cn.toside.music.mobile;
 
-import android.os.Bundle;
-
 import com.reactnativenavigation.NavigationActivity;
-
-import org.devio.rn.splashscreen.SplashScreen;
-
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 

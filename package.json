@@ -19,7 +19,8 @@
     "clear": "react-native clean-project",
     "publish": "node publish",
     "nodeify": "rn-nodeify --hack --install process,crypto,events,constant,console,stream,url,util",
-    "postinstall": "npm run nodeify"
+    "postinstall": "npm run nodeify",
+    "clean": "cd ./android && ./gradlew clean"
   },
   "engines": {
     "node": ">= 16",
@@ -117,14 +118,6 @@
     "_stream_duplex": "readable-stream/duplex",
     "_stream_passthrough": "readable-stream/passthrough",
     "stream": "stream-browserify"
-  },
-  "codegenConfig": {
-    "name": "CustomAnimationView",
-    "type": "components",
-    "jsSrcsDir": "./src",
-    "android": {
-      "javaPackageName": "com.custom.animation"
-    }
   },
   "browser": {
     "console": "console-browserify",

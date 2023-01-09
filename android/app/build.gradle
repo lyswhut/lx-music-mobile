@@ -1,4 +1,4 @@
-apply plugin: "com.android.application"
+apply plugin: 'com.android.application'
 
 import com.android.build.OutputFile
 import groovy.json.JsonSlurper
@@ -83,7 +83,7 @@ project.ext.react = [
     enableHermes: true,  // clean and rebuild if changing
 ]
 
-apply from: "../../node_modules/react-native/react.gradle"
+apply from: '../../node_modules/react-native/react.gradle'
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -120,26 +120,26 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  * on project.ext.react, JavaScript will not be compiled to Hermes Bytecode
  * and the benefits of using Hermes will therefore be sharply reduced.
  */
-def enableHermes = project.ext.react.get("enableHermes", false);
+def enableHermes = project.ext.react.get('enableHermes', false)
 
 /**
  * Architectures to build native code for.
  */
 def reactNativeArchitectures() {
-    def value = project.getProperties().get("reactNativeArchitectures")
-    return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
+    def value = project.getProperties().get('reactNativeArchitectures')
+    return value ? value.split(',') : ['armeabi-v7a', 'x86', 'x86_64', 'arm64-v8a']
 }
 
 // Get version number
 def getNpmPackageJson() {
-    def inputFile = new File("../package.json")
+    def inputFile = new File('../package.json')
     def packageJson = new JsonSlurper().parseText(inputFile.text)
     return packageJson
 }
 def npmPackageJson = getNpmPackageJson()
-def verCode = npmPackageJson["versionCode"]
-def verName = npmPackageJson["version"]
-def applicationName = npmPackageJson["name"]
+def verCode = npmPackageJson['versionCode']
+def verName = npmPackageJson['version']
+def applicationName = npmPackageJson['name']
 
 android {
     ndkVersion rootProject.ext.ndkVersion
@@ -147,13 +147,13 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "cn.toside.music.mobile"
+        applicationId 'cn.toside.music.mobile'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode verCode
         versionName verName
         multiDexEnabled true
-        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+        buildConfigField 'boolean', 'IS_NEW_ARCHITECTURE_ENABLED', isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {
             // We configure the CMake build only if you decide to opt-in for the New Architecture.
@@ -163,12 +163,12 @@ android {
                         "-DREACT_ANDROID_DIR=$rootDir/../node_modules/react-native/ReactAndroid",
                         "-DREACT_ANDROID_BUILD_DIR=$rootDir/../node_modules/react-native/ReactAndroid/build",
                         "-DNODE_MODULES_DIR=$rootDir/../node_modules",
-                        "-DANDROID_STL=c++_shared"
+                        '-DANDROID_STL=c++_shared'
                 }
             }
             if (!enableSeparateBuildPerCPUArchitecture) {
                 ndk {
-                    abiFilters (*reactNativeArchitectures())
+                    abiFilters(*reactNativeArchitectures())
                 }
             }
         }
@@ -182,13 +182,13 @@ android {
             }
         }
         def reactAndroidProjectDir = project(':ReactAndroid').projectDir
-        def packageReactNdkDebugLibs = tasks.register("packageReactNdkDebugLibs", Copy) {
-            dependsOn(":ReactAndroid:packageReactNdkDebugLibsForBuck")
+        def packageReactNdkDebugLibs = tasks.register('packageReactNdkDebugLibs', Copy) {
+            dependsOn(':ReactAndroid:packageReactNdkDebugLibsForBuck')
             from("$reactAndroidProjectDir/src/main/jni/prebuilt/lib")
             into("$buildDir/react-ndk/exported")
         }
-        def packageReactNdkReleaseLibs = tasks.register("packageReactNdkReleaseLibs", Copy) {
-            dependsOn(":ReactAndroid:packageReactNdkReleaseLibsForBuck")
+        def packageReactNdkReleaseLibs = tasks.register('packageReactNdkReleaseLibs', Copy) {
+            dependsOn(':ReactAndroid:packageReactNdkReleaseLibsForBuck')
             from("$reactAndroidProjectDir/src/main/jni/prebuilt/lib")
             into("$buildDir/react-ndk/exported")
         }
@@ -206,10 +206,10 @@ android {
             configureCMakeDebug.dependsOn(preDebugBuild)
             reactNativeArchitectures().each { architecture ->
                 tasks.findByName("configureCMakeDebug[${architecture}]")?.configure {
-                    dependsOn("preDebugBuild")
+                    dependsOn('preDebugBuild')
                 }
                 tasks.findByName("configureCMakeRelWithDebInfo[${architecture}]")?.configure {
-                    dependsOn("preReleaseBuild")
+                    dependsOn('preReleaseBuild')
                 }
             }
         }
@@ -220,7 +220,7 @@ android {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
             universalApk true  // If true, also generate a universal APK
-            include (*reactNativeArchitectures())
+            include(*reactNativeArchitectures())
         }
     }
     signingConfigs {
@@ -231,7 +231,7 @@ android {
                 keyAlias MYAPP_UPLOAD_KEY_ALIAS
                 keyPassword MYAPP_UPLOAD_KEY_PASSWORD
             } else {
-                def keystorePropertiesFile = rootProject.file("keystore.properties")
+                def keystorePropertiesFile = rootProject.file('keystore.properties')
                 def keystoreProperties = new Properties()
                 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
@@ -257,7 +257,7 @@ android {
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             signingConfig signingConfigs.release
         }
@@ -269,31 +269,32 @@ android {
             // For each separate APK per architecture, set a unique version code as described here:
             // https://developer.android.com/studio/build/configure-apk-splits.html
             // Example: versionCode 1 will generate 1001 for armeabi-v7a, 1002 for x86, etc.
-            def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
+            def versionCodes = ['armeabi-v7a': 1, 'x86': 2, 'arm64-v8a': 3, 'x86_64': 4]
             def abi = output.getFilter(OutputFile.ABI)
-            
+
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
                         defaultConfig.versionCode * 1000 + versionCodes.get(abi)
-               
+
                 output.outputFileName =
                         "${applicationName}-v${defaultConfig.versionName}-${abi}.apk"
             } else {
                 output.outputFileName =
                         "${applicationName}-v${defaultConfig.versionName}-universal.apk"
             }
-
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(":ReactAndroid")  // From node_modules
 
     //noinspection GradleDynamicVersion
-    implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation 'com.facebook.react:react-native:+'  // From node_modules
 
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 
     implementation 'com.android.support:multidex:1.0.3'
 
@@ -316,7 +317,7 @@ dependencies {
 
     if (enableHermes) {
         //noinspection GradleDynamicVersion
-        implementation("com.facebook.react:hermes-engine:+") { // From node_modules
+        implementation('com.facebook.react:hermes-engine:+') { // From node_modules
             exclude group:'com.facebook.fbjni'
         }
     } else {
@@ -330,11 +331,11 @@ if (isNewArchitectureEnabled()) {
     // This will be applied to all the imported transtitive dependency.
     configurations.all {
         resolutionStrategy.dependencySubstitution {
-            substitute(module("com.facebook.react:react-native"))
-                    .using(project(":ReactAndroid"))
+            substitute(module('com.facebook.react:react-native'))
+                    .using(project(':ReactAndroid'))
                     .because("On New Architecture we're building React Native from source")
-            substitute(module("com.facebook.react:hermes-engine"))
-                    .using(project(":ReactAndroid:hermes-engine"))
+            substitute(module('com.facebook.react:hermes-engine'))
+                    .using(project(':ReactAndroid:hermes-engine'))
                     .because("On New Architecture we're building Hermes from source")
         }
     }
@@ -347,14 +348,14 @@ task copyDownloadableDepsToLibs(type: Copy) {
     into 'libs'
 }
 
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply from: file('../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle'); applyNativeModulesAppBuildGradle(project)
 
 def isNewArchitectureEnabled() {
     // To opt-in for the New Architecture, you can either:
     // - Set `newArchEnabled` to true inside the `gradle.properties` file
     // - Invoke gradle with `-newArchEnabled=true`
     // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
-    return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+    return project.hasProperty('newArchEnabled') && project.newArchEnabled == 'true'
 }
 
-apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+apply from: '../../node_modules/react-native-vector-icons/fonts.gradle'

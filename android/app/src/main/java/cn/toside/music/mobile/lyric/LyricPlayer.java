@@ -14,6 +14,8 @@ import java.util.regex.Pattern;
 public class LyricPlayer {
   final String timeFieldExp = "^(?:\\[[\\d:.]+])+";
   final String timeExp = "[\\d:.]+";
+  final String timeLabelRxp = "^(\\[[\\d:]+\\.)0+(\\d+])";
+  final String timeLabelFixRxp = "(?:\\.0+|0+)$";
 //  HashMap tagRegMap;
   Pattern timeFieldPattern;
   Pattern timePattern;
@@ -124,8 +126,9 @@ public class LyricPlayer {
           Matcher timeMatchResult = timePattern.matcher(timeField);
           while (timeMatchResult.find()) {
             String timeStr = timeMatchResult.group();
-            if (!timeStr.contains(".")) timeStr += ".0";
-            timeStr = timeStr.replaceAll("(?:\\.0+|0+)$", "");
+            if (timeStr.contains(".")) timeStr = timeStr.replaceAll(timeLabelRxp, "$1$2");
+            else timeStr += ".0";
+            timeStr = timeStr.replaceAll(timeLabelFixRxp, "");
             HashMap targetLine = (HashMap) linesMap.get(timeStr);
             if (targetLine != null) ((ArrayList<String>) targetLine.get("extendedLyrics")).add(text);
           }
@@ -151,8 +154,9 @@ public class LyricPlayer {
           Matcher timeMatchResult = timePattern.matcher(timeField);
           while (timeMatchResult.find()) {
             String timeStr = timeMatchResult.group();
-            if (!timeStr.contains(".")) timeStr += ".0";
-            timeStr = timeStr.replaceAll("(?:\\.0+|0+)$", "");
+            if (timeStr.contains(".")) timeStr = timeStr.replaceAll(timeLabelRxp, "$1$2");
+            else timeStr += ".0";
+            timeStr = timeStr.replaceAll(timeLabelFixRxp, "");
             if (linesMap.containsKey(timeStr)) {
               ((ArrayList<String>) ((HashMap) linesMap.get(timeStr)).get("extendedLyrics")).add(text);
               continue;

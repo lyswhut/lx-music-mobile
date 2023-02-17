@@ -1,9 +1,8 @@
 import { httpGet } from '@/utils/request'
 import { author, name } from '../../package.json'
 import { downloadFile, stopDownload, temporaryDirectoryPath } from '@/utils/fs'
-import { getSupportedAbis, installApk } from '@/utils/utils'
+import { getSupportedAbis, installApk } from '@/utils/nativeModules/utils'
 import { APP_PROVIDER_NAME } from '@/config/constant'
-import { toast } from './tools'
 
 const abis = [
   'arm64-v8a',
@@ -67,7 +66,7 @@ const getTargetAbi = async() => {
   return abis[abis.length - 1]
 }
 let downloadJobId = null
-const noop = () => {}
+const noop = (total, download) => {}
 let apkSavePath
 
 export const downloadNewVersion = async(version, onDownload = noop) => {
@@ -75,7 +74,7 @@ export const downloadNewVersion = async(version, onDownload = noop) => {
   const url = `https://github.com/${author.name}/${name}/releases/download/v${version}/${name}-v${version}-${abi}.apk`
   let savePath = temporaryDirectoryPath + '/lx-music-mobile.apk'
 
-  if (downloadJobId) await stopDownload(downloadJobId)
+  if (downloadJobId) stopDownload(downloadJobId)
 
   const { jobId, promise } = downloadFile(url, savePath, {
     progressInterval: 500,

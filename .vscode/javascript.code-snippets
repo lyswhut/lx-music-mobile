@@ -16,7 +16,7 @@
 	// 	"description": "Log output to console"
 	// }
 	"Import translation": {
-		"scope": "javascript,typescript",
+		"scope": "javascript,typescript,typescriptreact",
 		"prefix": "imtl",
 		"body": [
 			"import { useTranslation } from '@/plugins/i18n'",
@@ -24,16 +24,32 @@
 		],
 		"description": "Translation Language"
 	},
-	"Import store hook": {
-		"scope": "javascript,typescript",
-		"prefix": "imsh",
+	"Import store setting": {
+		"scope": "javascript,typescript,typescriptreact",
+		"prefix": "imss",
 		"body": [
-			"import { useGetter, useDispatch } from '@/store'"
+			"import settingState from '@/store/setting/state'"
 		],
-		"description": "Import store hook"
+		"description": "Import store setting"
+	},
+	"Import store player": {
+		"scope": "javascript,typescript,typescriptreact",
+		"prefix": "imsp",
+		"body": [
+			"import playerState from '@/store/player/state'"
+		],
+		"description": "Import store player"
+	},
+	"Import store list": {
+		"scope": "javascript,typescript,typescriptreact",
+		"prefix": "imsl",
+		"body": [
+			"import listState from '@/store/list/state'"
+		],
+		"description": "Import store list"
 	},
 	"Import toast": {
-		"scope": "javascript,typescript",
+		"scope": "javascript,typescript,typescriptreact",
 		"prefix": "imts",
 		"body": [
 			"import { toast } from '@/utils/tools'",
@@ -42,7 +58,7 @@
 		"description": "Import toast"
 	},
 	"Use getter theme": {
-		"scope": "javascript,typescript",
+		"scope": "javascript,typescript,typescriptreact",
 		"prefix": "ugt",
 		"body": [
 			"const theme = useGetter('common', 'theme')"

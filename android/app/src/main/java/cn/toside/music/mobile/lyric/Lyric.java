@@ -196,8 +196,8 @@ public class Lyric extends LyricPlayer {
     refreshLyric();
   }
 
-  public void setColor(String color) {
-    lyricView.setColor(color);
+  public void setPlayedColor(String unplayColor, String playedColor, String shadowColor) {
+    lyricView.setColor(unplayColor, playedColor, shadowColor);
   }
 
   public void setAlpha(float alpha) { lyricView.setAlpha(alpha); }

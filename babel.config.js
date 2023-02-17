@@ -7,6 +7,12 @@ module.exports = {
       {
         root: ['.'],
         extensions: [
+          '.android.ts',
+          '.ios.ts',
+          '.android.tsx',
+          '.ios.tsx',
+          '.tsx',
+          '.ts',
           '.android.js',
           '.ios.js',
           '.android.jsx',

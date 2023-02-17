@@ -1,4 +1,4 @@
-import music from '@/utils/music'
+import music from '@/utils/musicSdk'
 import { deduplicationList } from '@/utils/tools'
 
 const cache = new Map()
@@ -23,8 +23,8 @@ export const getBoardsList = () => (dispatch, getState) => {
   // let key = `${source}${tabId}${page}`
   // if (state.list.length && state.key == key) return true
   // commit('clearList')
-  if (state.top.boards[source]?.length) return Promise.resolve()
-  return music[source]?.leaderboard.getBoards().then(result => dispatch(setBoardsList({ boards: result, source }))) ?? Promise.reject(new Error('source not found'))
+  if (state.top.boards[source].length) return Promise.resolve()
+  return music[source].leaderboard.getBoards().then(result => dispatch(setBoardsList({ boards: result, source })))
 }
 
 const getListLimit = ({ source, tabId, bangId, page }) => {
@@ -37,7 +37,7 @@ const getListLimit = ({ source, tabId, bangId, page }) => {
   if (listCache.has(prevPageKey)) {
     sourcePage = listCache.get(prevPageKey).sourcePage
   }
-  return music[source]?.leaderboard.getList(bangId, sourcePage + 1).then(result => {
+  return music[source].leaderboard.getList(bangId, sourcePage + 1).then(result => {
     let p = page
     if (listCache.has(tempListKey)) {
       const list = listCache.get(tempListKey)
@@ -71,7 +71,7 @@ const getListLimit = ({ source, tabId, bangId, page }) => {
       p++
     } while (result.list.length > 0)
     return listCache.get(`${source}__${tabId}__${page}`).data
-  }) ?? Promise.reject(new Error('source not found'))
+  })
 }
 
 export const getList = ({ page, isRefresh = false }) => (dispatch, getState) => {

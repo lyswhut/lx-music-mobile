@@ -1,5 +1,5 @@
 import { TYPES } from './action'
-import music from '@/utils/music'
+import music from '@/utils/musicSdk'
 import { deduplicationList } from '@/utils/tools'
 
 const sourceList = {}

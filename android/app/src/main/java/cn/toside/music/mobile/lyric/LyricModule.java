@@ -107,8 +107,8 @@ public class LyricModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void setColor(String themeColor, Promise promise) {
-    if (lyric != null) lyric.setColor(themeColor);
+  public void setColor(String unplayColor, String playedColor, String shadowColor, Promise promise) {
+    if (lyric != null) lyric.setPlayedColor(unplayColor, playedColor, shadowColor);
     promise.resolve(null);
   }
 

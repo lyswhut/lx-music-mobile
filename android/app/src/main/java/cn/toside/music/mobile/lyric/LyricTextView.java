@@ -65,6 +65,12 @@ public class LyricTextView extends TextView {
   }
 
   @Override
+  public void setShadowLayer(float radius, float dx, float dy, int shadowColor) {
+    if (mPaint != null) mPaint.setShadowLayer(radius, dx, dy, shadowColor);
+    post(mStartScrollRunnable);
+  }
+
+  @Override
   public void setTextSize(float size) {
     super.setTextSize(size);
     speed = SPEED_LIMIT * size;

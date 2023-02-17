@@ -1,6 +1,6 @@
 import { TYPES } from './action'
 
-import music from '@/utils/music'
+import music from '@/utils/musicSdk'
 
 let historyList
 if (historyList == null) {

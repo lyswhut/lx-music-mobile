@@ -1,4 +1,4 @@
-import music from '@/utils/music'
+import music from '@/utils/musicSdk'
 import { deduplicationList } from '@/utils/tools'
 
 const cache = new Map()
@@ -28,7 +28,7 @@ export const getTags = () => (dispatch, getState) => {
   const state = getState()
   let source = state.common.setting.songList.source
   if (state.songList.tags[source]) return Promise.resolve()
-  return music[source]?.songList.getTags().then(result => dispatch(setTags({ tags: result, source }))) ?? Promise.reject(new Error('source not found'))
+  return music[source].songList.getTags().then(result => dispatch(setTags({ tags: result, source })))
 }
 export const getList = ({ page = 1, isRefresh = false }) => (dispatch, getState) => {
   const allState = getState()

@@ -1,22 +1,22 @@
 package cn.toside.music.mobile;
 
+import android.app.Application;
 import android.content.Context;
-
 import com.facebook.react.PackageList;
+import com.reactnativenavigation.NavigationApplication;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
+import com.reactnativenavigation.react.NavigationReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.config.ReactFeatureFlags;
-import com.reactnativenavigation.NavigationApplication;
-import com.reactnativenavigation.react.NavigationReactNativeHost;
-
+import com.facebook.soloader.SoLoader;
+import cn.toside.music.mobile.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import cn.toside.music.mobile.cache.CachePackage;
 import cn.toside.music.mobile.gzip.GzipPackage;
 import cn.toside.music.mobile.lyric.LyricPackage;
-import cn.toside.music.mobile.newarchitecture.MainApplicationReactNativeHost;
 import cn.toside.music.mobile.utils.UtilsPackage;
 
 public class MainApplication extends NavigationApplication {
@@ -34,10 +34,10 @@ public class MainApplication extends NavigationApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
-          packages.add(new GzipPackage());
           packages.add(new CachePackage());
-          packages.add(new UtilsPackage());
+          packages.add(new GzipPackage());
           packages.add(new LyricPackage());
+          packages.add(new UtilsPackage());
           return packages;
         }
 
@@ -48,7 +48,8 @@ public class MainApplication extends NavigationApplication {
       };
 
   private final ReactNativeHost mNewArchitectureNativeHost =
-    new MainApplicationReactNativeHost(this);
+      new MainApplicationReactNativeHost(this);
+
   @Override
   public ReactNativeHost getReactNativeHost() {
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {

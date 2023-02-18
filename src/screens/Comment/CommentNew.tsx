@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { filterList, getNewComment } from './utils'
 import music from '@/utils/musicSdk'
-import List, { ListType } from './components/List'
+import List, { type ListType } from './components/List'
 const limit = 15
 
 export default ({ musicInfo, onUpdateTotal }: {

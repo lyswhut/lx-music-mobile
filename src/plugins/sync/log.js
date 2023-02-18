@@ -11,7 +11,6 @@ export default {
     writeLog.error(...args)
   },
   info(...args) {
-    console.log(args)
     if (global.lx.isEnableSyncLog) writeLog.info(...args)
   },
   warn(...args) {

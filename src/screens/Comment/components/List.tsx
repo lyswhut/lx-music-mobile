@@ -69,7 +69,6 @@ const List = forwardRef<ListType, ListProps>(({
     let label: FooterLabel
     switch (status) {
       case 'refreshing': return null
-      case 'idle':
       case 'loading':
         label = 'list_loading'
         break
@@ -78,6 +77,9 @@ const List = forwardRef<ListType, ListProps>(({
         break
       case 'error':
         label = 'list_error'
+        break
+      case 'idle':
+        label = null
         break
     }
     return <Footer label={label} onLoadMore={onLoadMore} />
@@ -88,12 +90,12 @@ const List = forwardRef<ListType, ListProps>(({
       ref={flatListRef}
       style={styles.list}
       data={currentList}
-      onEndReachedThreshold={0.6}
-      maxToRenderPerBatch={4}
+      onEndReachedThreshold={0.5}
+      // maxToRenderPerBatch={4}
       // updateCellsBatchingPeriod={80}
-      windowSize={8}
-      removeClippedSubviews={true}
-      initialNumToRender={12}
+      // windowSize={8}
+      removeClippedSubviews={false}
+      // initialNumToRender={12}
       renderItem={renderItem}
       keyExtractor={getkey}
       // onRefresh={onRefresh}
@@ -105,7 +107,7 @@ const List = forwardRef<ListType, ListProps>(({
   )
 })
 
-type FooterLabel = 'list_loading' | 'list_end' | 'list_error'
+type FooterLabel = 'list_loading' | 'list_end' | 'list_error' | null
 const Footer = ({ label, onLoadMore }: {
   label: FooterLabel
   onLoadMore: () => void
@@ -117,9 +119,13 @@ const Footer = ({ label, onLoadMore }: {
     onLoadMore()
   }
   return (
-    <View>
-      <Text onPress={handlePress} style={styles.footer} color={theme['c-font-label']}>{t(label)}</Text>
-    </View>
+    label
+      ? (
+          <View>
+            <Text onPress={handlePress} style={styles.footer} color={theme['c-font-label']}>{t(label)}</Text>
+          </View>
+        )
+      : null
   )
 }
 

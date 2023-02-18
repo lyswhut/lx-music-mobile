@@ -11,12 +11,13 @@ export default {
     writeLog.error(...args)
   },
   info(...args) {
-    if (global.isEnableSyncLog) writeLog.info(...args)
+    console.log(args)
+    if (global.lx.isEnableSyncLog) writeLog.info(...args)
   },
   warn(...args) {
-    if (global.isEnableSyncLog) writeLog.warn(...args)
+    if (global.lx.isEnableSyncLog) writeLog.warn(...args)
   },
   error(...args) {
-    if (global.isEnableSyncLog) writeLog.error(...args)
+    if (global.lx.isEnableSyncLog) writeLog.error(...args)
   },
 }

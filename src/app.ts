@@ -1,5 +1,5 @@
 import '@/utils/errorHandle'
-// import { init as initLog, log } from '@/utils/log'
+import { init as initLog } from '@/utils/log'
 import '@/config/globalData'
 import { init as initNavigation, navigations } from '@/navigation'
 import { getFontSize } from '@/utils/data'
@@ -7,11 +7,14 @@ import { Alert } from 'react-native'
 import { exitApp } from './utils/nativeModules/utils'
 
 console.log('starting app...')
+let isInited = false
+let handlePushedHomeScreen: () => void
 
-initNavigation(async() => {
+const handleInit = async() => {
+  if (isInited) return
+  void initLog()
   global.lx.fontSize = await getFontSize()
   const { default: init } = await import('@/core/init')
-  let handlePushedHomeScreen: () => void
   try {
     handlePushedHomeScreen = await init()
   } catch (err: any) {
@@ -27,7 +30,13 @@ initNavigation(async() => {
     })
     return
   }
-  navigations.pushHomeScreen().then(() => {
+  isInited = true
+}
+
+initNavigation(async() => {
+  await handleInit()
+  if (!isInited) return
+  await navigations.pushHomeScreen().then(() => {
     handlePushedHomeScreen()
   }).catch((err: any) => {
     Alert.alert('Error', err.message, [

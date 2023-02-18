@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState, useEffect } from 'react'
+import React, { memo, useState, useEffect } from 'react'
 import { StyleSheet, View, InteractionManager } from 'react-native'
 
 // import { gzip, ungzip } from 'pako'
@@ -10,6 +10,7 @@ import { getAppCacheSize, clearAppCache } from '@/utils/nativeModules/cache'
 import { sizeFormate } from '@/utils'
 import { useI18n } from '@/lang'
 import Text from '@/components/common/Text'
+import { clearMusicUrl } from '@/utils/data'
 
 export default memo(() => {
   const t = useI18n()
@@ -19,13 +20,13 @@ export default memo(() => {
   // TODO clear list cache
   // const clearCache = useDispatch('list', 'clearCache')
 
-  const handleGetAppCacheSize = useCallback(() => {
+  const handleGetAppCacheSize = () => {
     void getAppCacheSize().then(size => {
       setCacheSize(sizeFormate(size))
     })
-  }, [])
+  }
 
-  const handleCleanCache = useCallback(() => {
+  const handleCleanCache = () => {
     if (cacheSize == null) return
     void confirmDialog({
       message: t('confirm_tip'),
@@ -36,7 +37,7 @@ export default memo(() => {
       void InteractionManager.runAfterInteractions(() => {
         Promise.all([
           clearAppCache(),
-          // clearCache(),
+          clearMusicUrl(),
           resetNotificationPermissionCheck(),
         ]).then(() => {
           toast(t('setting_other_cache_clear_success_tip'))
@@ -46,7 +47,7 @@ export default memo(() => {
         })
       })
     })
-  }, [cacheSize, handleGetAppCacheSize, t])
+  }
 
 
   useEffect(() => {
@@ -55,7 +56,7 @@ export default memo(() => {
 
   return (
     <>
-      <SubTitle title={t('setting_other_cache')}>
+      <SubTitle title={t('setting__other_resource_cache')}>
         <View style={styles.cacheSize}>
           <Text>{cacheSize == null ? t('setting_other_cache_getting') : t('setting_other_cache_size') + cacheSize}</Text>
         </View>

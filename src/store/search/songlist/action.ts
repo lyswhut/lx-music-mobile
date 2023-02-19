@@ -49,6 +49,7 @@ const setLists = (results: SearchResult[], page: number, text: string): ListInfo
   listInfo.page = page
   list = handleSortList(list, text)
   listInfo.list = page > 1 ? [...listInfo.list, ...list] : list
+  state.source = 'all'
   return listInfo.list
 }
 
@@ -59,6 +60,7 @@ const setList = (datas: SearchResult, page: number, text: string): ListInfoItem[
   listInfo.total = datas.total
   listInfo.page = page
   listInfo.limit = datas.limit
+  state.source = datas.source
   return listInfo.list
 }
 

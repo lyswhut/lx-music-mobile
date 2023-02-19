@@ -50,6 +50,7 @@ const setLists = (results: SearchResult[], page: number, text: string): LX.Music
   // listInfo.limit = limit
   listInfo.page = page
   listInfo.list = deduplicationList(page > 1 ? [...listInfo.list, ...list] : list)
+  state.source = 'all'
 
   return listInfo.list
 }
@@ -63,6 +64,7 @@ const setList = (datas: SearchResult, page: number, text: string): LX.Music.Musi
   listInfo.maxPage = datas.allPage
   listInfo.page = page
   listInfo.limit = datas.limit
+  state.source = datas.source
 
   return listInfo.list
 }

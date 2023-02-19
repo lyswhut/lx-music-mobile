@@ -9,6 +9,7 @@ import musicSdk from '@/utils/musicSdk'
 import { getData, removeData, saveData } from '@/plugins/storage'
 import BackgroundTimer from 'react-native-background-timer'
 import { scaleSizeH, scaleSizeW, setSpText } from './pixelRatio'
+import { toOldMusicInfo } from './index'
 
 
 // https://stackoverflow.com/a/47349998
@@ -230,7 +231,7 @@ export const resetNotificationPermissionCheck = async() => {
 export const shareMusic = (shareType: LX.ShareType, downloadFileName: LX.AppSetting['download.fileName'], musicInfo: LX.Music.MusicInfo) => {
   const name = musicInfo.name
   const singer = musicInfo.singer
-  const detailUrl = musicInfo.source == 'local' ? '' : musicSdk[musicInfo.source]?.getMusicDetailPageUrl(musicInfo) ?? ''
+  const detailUrl = musicInfo.source == 'local' ? '' : musicSdk[musicInfo.source]?.getMusicDetailPageUrl(toOldMusicInfo(musicInfo)) ?? ''
   const musicTitle = downloadFileName.replace('歌名', name).replace('歌手', singer)
   switch (shareType) {
     case 'system':

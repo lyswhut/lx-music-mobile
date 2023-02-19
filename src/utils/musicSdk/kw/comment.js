@@ -1,5 +1,5 @@
 import { httpFetch } from '../../request'
-import { dateFormat2 } from '../../'
+import { dateFormat2 } from '../../index'
 
 export default {
   _requestObj: null,

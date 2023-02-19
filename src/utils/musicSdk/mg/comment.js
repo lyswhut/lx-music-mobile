@@ -1,6 +1,6 @@
 import { httpFetch } from '../../request'
 import album from './album'
-import { dateFormat2 } from '../../'
+import { dateFormat2 } from '../../index'
 
 export default {
   _requestObj: null,

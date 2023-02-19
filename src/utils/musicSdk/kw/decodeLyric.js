@@ -34,7 +34,8 @@ const decodeLyric = async(buf, isGetLyricx) => {
 
   return iconv.decode(Buffer.from(output), 'gb18030')
 }
-export default async({ lrcBase64, isGetLyricx }) => {
-  const lrc = await decodeLyric(Buffer.from(lrcBase64, 'base64'), isGetLyricx)
+export default async({ lrcBuffer, isGetLyricx }) => {
+  const lrc = await decodeLyric(lrcBuffer, isGetLyricx)
+  // console.log(lrc)
   return Buffer.from(lrc).toString('base64')
 }

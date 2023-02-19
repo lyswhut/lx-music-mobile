@@ -1,5 +1,5 @@
 import { httpFetch } from '../../request'
-import { decodeName } from '../..'
+import { decodeName } from '../../index'
 
 export default {
   _requestObj: null,

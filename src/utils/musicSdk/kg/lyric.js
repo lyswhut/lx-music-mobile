@@ -1,6 +1,6 @@
 import { httpFetch } from '../../request'
 import { decodeLyric } from './util'
-import { decodeName } from '../..'
+import { decodeName } from '../../index'
 
 const headExp = /^.*\[id:\$\w+\]\n/
 

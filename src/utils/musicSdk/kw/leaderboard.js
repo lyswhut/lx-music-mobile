@@ -116,8 +116,8 @@ export default {
         }
       }
       if (formats.includes('HIRFLAC')) {
-        types.push({ type: 'flac32bit', size: null })
-        _types.flac32bit = {
+        types.push({ type: 'flac24bit', size: null })
+        _types.flac24bit = {
           size: null,
         }
       }

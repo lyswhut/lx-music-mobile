@@ -1,5 +1,5 @@
 // import '../../polyfill/array.find'
-// import jshtmlencode from 'js-htmlencode'
+
 import { httpFetch } from '../../request'
 import { formatPlayTime, decodeName } from '../../index'
 // import { debug } from '../../utils/env'
@@ -47,8 +47,8 @@ export default {
         if (info) {
           switch (info[2]) {
             case '4000':
-              types.push({ type: 'flac32bit', size: info[4] })
-              _types.flac32bit = {
+              types.push({ type: 'flac24bit', size: info[4] })
+              _types.flac24bit = {
                 size: info[4].toLocaleUpperCase(),
               }
               break
@@ -106,10 +106,10 @@ export default {
     // http://newlyric.kuwo.cn/newlyric.lrc?62355680
     return this.musicSearch(str, page, limit).then(({ body: result }) => {
       // console.log(result)
-      if (!result || (result.TOTAL !== '0' && result.SHOW === '0')) return this.search(str, page, { limit }, ++retryNum)
+      if (!result || (result.TOTAL !== '0' && result.SHOW === '0')) return this.search(str, page, limit, ++retryNum)
       let list = this.handleResult(result.abslist)
 
-      if (list == null) return this.search(str, page, { limit }, ++retryNum)
+      if (list == null) return this.search(str, page, limit, ++retryNum)
 
       this.total = parseInt(result.TOTAL)
       this.page = page

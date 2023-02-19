@@ -2,7 +2,7 @@
 // import { weapi } from './utils/crypto'
 import { sizeFormate, formatPlayTime } from '../../index'
 // import musicDetailApi from './musicDetail'
-import { eapiRequest } from './utils'
+import { eapiRequest } from './utils/index'
 
 export default {
   limit: 30,
@@ -78,11 +78,11 @@ export default {
     if (limit == null) limit = this.limit
     return this.musicSearch(str, page, limit).then(result => {
       // console.log(result)
-      if (!result || result.code !== 200) return this.search(str, page, { limit }, retryNum)
+      if (!result || result.code !== 200) return this.search(str, page, limit, retryNum)
       let list = this.handleResult(result.result.songs || [])
       // console.log(list)
 
-      if (list == null) return this.search(str, page, { limit }, retryNum)
+      if (list == null) return this.search(str, page, limit, retryNum)
 
       this.total = result.result.songCount || 0
       this.page = page

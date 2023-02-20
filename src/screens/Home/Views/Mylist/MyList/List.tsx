@@ -4,7 +4,7 @@ import { View, TouchableOpacity, FlatList, InteractionManager, type NativeScroll
 import { Icon } from '@/components/common/Icon'
 
 import { useTheme } from '@/store/theme/hook'
-import { useActiveListId, useMyList } from '@/store/list/hook'
+import { useActiveListId, useListFetching, useMyList } from '@/store/list/hook'
 import { createStyle } from '@/utils/tools'
 import { LIST_SCROLL_POSITION_KEY } from '@/config/constant'
 import { getListPosition, saveListPosition } from '@/utils/data'
@@ -17,16 +17,16 @@ type FlatListType = FlatListProps<LX.List.MyListInfo>
 
 const ITEM_HEIGHT = scaleSizeH(40)
 
-const ListItem = memo(({ item, index, activeId, onPress, onShowMenu, loading }: {
+const ListItem = memo(({ item, index, activeId, onPress, onShowMenu }: {
   onPress: (item: LX.List.MyListInfo) => void
   index: number
   activeId: string
   item: LX.List.MyListInfo
   onShowMenu: (item: LX.List.MyListInfo, index: number, position: { x: number, y: number, w: number, h: number }) => void
-  loading: boolean
 }) => {
   const theme = useTheme()
   const moreButtonRef = useRef<TouchableOpacity>(null)
+  const fetching = useListFetching(item.id)
 
   const active = activeId == item.id
 
@@ -44,7 +44,7 @@ const ListItem = memo(({ item, index, activeId, onPress, onShowMenu, loading }: 
   }
 
   return (
-    <View style={{ ...styles.listItem, height: ITEM_HEIGHT, opacity: loading ? 0.5 : 1 }}>
+    <View style={{ ...styles.listItem, height: ITEM_HEIGHT, opacity: fetching ? 0.5 : 1 }}>
       {
         active
           ? <Icon style={styles.listActiveIcon} name="chevron-right" size={12} color={theme['c-primary-font']} />
@@ -103,7 +103,6 @@ export default ({ onShowMenu }: {
       key={item.id}
       item={item}
       index={index}
-      loading={false}
       activeId={activeListId}
       onPress={handleToggleList}
       onShowMenu={showMenu}

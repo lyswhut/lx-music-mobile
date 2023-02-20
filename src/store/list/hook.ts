@@ -74,8 +74,11 @@ export const useListFetching = (listId: string) => {
   const [fetching, setFetching] = useState(!!state.fetchingListStatus[listId])
 
   useEffect(() => {
+    let prevStatus = state.fetchingListStatus[listId]
     const handleUpdate = (status: InitState['fetchingListStatus']) => {
-      setFetching(!!status[listId])
+      let currentStatus = status[listId]
+      if (currentStatus == null || prevStatus == status[listId]) return
+      setFetching(prevStatus = currentStatus)
     }
     global.state_event.on('fetchingListStatusUpdated', handleUpdate)
     return () => {

@@ -254,6 +254,7 @@
   "setting_sync_enbale": "Enable sync",
   "setting_sync_history": "History address",
   "setting_sync_history_empty": "Nothing here",
+  "setting_sync_history_title": "Connection history",
   "setting_sync_host_label": "Synchronization service IP address",
   "setting_sync_host_tip": "Please enter the synchronization service IP address",
   "setting_sync_port_label": "Synchronization service port number",

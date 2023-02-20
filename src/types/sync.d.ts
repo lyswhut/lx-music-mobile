@@ -1,4 +1,4 @@
-import { io } from 'socket.io-client'
+import { type io } from 'socket.io-client'
 
 declare global {
   namespace LX {

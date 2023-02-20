@@ -1,4 +1,4 @@
-import ChoosePath, { ChoosePathType } from '@/components/common/ChoosePath'
+import ChoosePath, { type ChoosePathType } from '@/components/common/ChoosePath'
 import { LXM_FILE_EXT_RXP } from '@/config/constant'
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import { InteractionManager } from 'react-native'

@@ -61,12 +61,12 @@
     "react-native-quick-crypto": "^0.5.0",
     "react-native-track-player": "github:lyswhut/react-native-track-player#38027954a5ac6e3d92961745e0a9633fc647f47a",
     "react-native-vector-icons": "^9.2.0",
-    "socket.io-client": "^4.6.0"
+    "socket.io-client": "^4.6.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.12",
+    "@babel/core": "^7.21.0",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
-    "@babel/runtime": "^7.20.13",
+    "@babel/runtime": "^7.21.0",
     "@tsconfig/react-native": "^2.0.3",
     "@types/react": "^18.0.28",
     "@types/react-native": "^0.70.11",

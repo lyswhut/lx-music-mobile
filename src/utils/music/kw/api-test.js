@@ -35,7 +35,7 @@ const api_test = {
       family: 4,
     })
     requestObj.promise = requestObj.promise.then(({ body }) => {
-      return body.code === 0 ? Promise.resolve({ type, url: body.url }) : Promise.reject(new Error(requestMsg.fail))
+      return body.code === 200 ? Promise.resolve({ type, url: body.url }) : Promise.reject(new Error(requestMsg.fail))
     })
     return requestObj
   },

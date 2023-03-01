@@ -28,7 +28,7 @@ const updateUserList = async(userLists: LX.List.UserListInfo[]) => {
 
 const checkListExist = (changedIds: string[]) => {
   const index = changedIds.indexOf(listState.activeListId)
-  if (index < 0) return
+  if (index < 0 || listState.allList.some(l => l.id == listState.activeListId)) return
   setActiveList(LIST_IDS.DEFAULT)
 }
 

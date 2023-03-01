@@ -8,7 +8,7 @@ import {
   removeListPosition,
   removeListUpdateInfo,
 } from '@/utils/data'
-import { arrPush, arrPushByPosition, arrUnshift, freezeListItem } from '@/utils/common'
+import { arrPush, arrPushByPosition, arrUnshift } from '@/utils/common'
 import { LIST_IDS } from '@/config/constant'
 
 export const userLists: LX.List.UserListInfo[] = []
@@ -20,9 +20,8 @@ export const setUserLists = (lists: LX.List.UserListInfo[]) => {
 }
 
 export const setMusicList = (listId: string, musicList: LX.Music.MusicInfo[]): LX.Music.MusicInfo[] => {
-  const list = freezeListItem(musicList)
-  allMusicList.set(listId, list)
-  return list
+  allMusicList.set(listId, musicList)
+  return musicList
 }
 export const removeMusicList = (id: string) => {
   allMusicList.delete(id)
@@ -225,7 +224,6 @@ export const listMusicAdd = async(id: string, musicInfos: LX.Music.MusicInfo[], 
   for (const item of targetList) listSet.add(item.id)
   musicInfos = musicInfos.filter(item => {
     if (listSet.has(item.id)) return false
-    Object.freeze(item)
     listSet.add(item.id)
     return true
   })
@@ -277,7 +275,7 @@ export const listMusicUpdateInfo = async(musicInfos: LX.List.ListActionMusicUpda
       interval: musicInfo.interval,
       meta: musicInfo.meta,
     })
-    targetList.splice(index, 1, Object.freeze(info))
+    targetList.splice(index, 1, info)
     updateListIds.add(id)
   }
   return Array.from(updateListIds)

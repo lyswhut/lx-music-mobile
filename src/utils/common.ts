@@ -222,12 +222,12 @@ export const arrPushByPosition = <T>(list: T[], newList: T[], position: number) 
   return list
 }
 
-export const freezeListItem = <T extends any[]>(list: T): MakeArrayItemReadOnly<T> => {
-  for (let i = 0; i < list.length; i++) {
-    Object.freeze(list[i])
-  }
-  return list
-}
+// export const freezeListItem = <T extends any[]>(list: T): MakeArrayItemReadOnly<T> => {
+//   for (let i = 0; i < list.length; i++) {
+//     Object.freeze(list[i])
+//   }
+//   return list
+// }
 
 export const b64DecodeUnicode = (str: string) => {
   // Going backwards: from bytestream, to percent-encoding, to original string.

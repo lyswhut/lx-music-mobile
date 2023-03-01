@@ -5,13 +5,18 @@ import { SYNC_CODE } from '@/config/constant'
 import log from '../log'
 import { parseUrl } from './utils'
 
+let connectId = 0
+
 const handleConnect = async(host: string, authCode?: string) => {
   // const hostInfo = await getSyncHost()
   // console.log(hostInfo)
   // if (!hostInfo || !hostInfo.host || !hostInfo.port) throw new Error(SYNC_CODE.unknownServiceAddress)
+  const id = connectId
   const urlInfo = parseUrl(host)
   await disconnectServer(false)
+  if (id != connectId) return
   const keyInfo = await handleAuth(urlInfo, authCode)
+  if (id != connectId) return
   socketConnect(urlInfo, keyInfo)
 }
 const handleDisconnect = async() => {
@@ -23,7 +28,9 @@ const connectServer = async(host: string, authCode?: string) => {
     status: false,
     message: SYNC_CODE.connecting,
   })
+  const id = connectId
   return handleConnect(host, authCode).catch(async err => {
+    if (id != connectId) return
     sendSyncStatus({
       status: false,
       message: err.message,
@@ -44,6 +51,7 @@ const connectServer = async(host: string, authCode?: string) => {
 const disconnectServer = async(isResetStatus = true) => handleDisconnect().then(() => {
   log.info('disconnect...')
   if (isResetStatus) {
+    connectId++
     sendSyncStatus({
       status: false,
       message: '',

@@ -121,9 +121,8 @@ const HistoryList = forwardRef<HistoryListType, HistoryListProps>(({ onSelect },
   )
 })
 
-export default memo(({ setHost, isWaiting }: {
+export default memo(({ setHost }: {
   setHost: (host: string) => void
-  isWaiting: boolean
 }) => {
   const t = useI18n()
   const isEnableSync = useSettingValue('sync.enable')
@@ -141,7 +140,7 @@ export default memo(({ setHost, isWaiting }: {
   return (
     <>
       <View style={styles.btn}>
-        <Button disabled={isWaiting || isEnableSync} onPress={showPopup}>{t('setting_sync_history')}</Button>
+        <Button disabled={isEnableSync} onPress={showPopup}>{t('setting_sync_history')}</Button>
       </View>
       <HistoryList ref={listRef} onSelect={handleSelect} />
     </>

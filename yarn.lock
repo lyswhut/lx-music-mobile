@@ -1179,10 +1179,10 @@
   dependencies:
     "merge-options" "^3.0.4"
 
-"@react-native-clipboard/clipboard@^1.11.1":
-  "integrity" "sha512-nvSIIHzybVWqYxcJE5hpT17ekxAAg383Ggzw5WrYHtkKX61N1AwaKSNmXs5xHV7pmKSOe/yWjtSwxIzfW51I5Q=="
-  "resolved" "https://registry.npmjs.org/@react-native-clipboard/clipboard/-/clipboard-1.11.1.tgz"
-  "version" "1.11.1"
+"@react-native-clipboard/clipboard@^1.11.2":
+  "integrity" "sha512-bHyZVW62TuleiZsXNHS1Pv16fWc0fh8O9WvBzl4h2fykqZRW9a+Pv/RGTH56E3X2PqzHP38K5go8zmCZUoIsoQ=="
+  "resolved" "https://registry.npmjs.org/@react-native-clipboard/clipboard/-/clipboard-1.11.2.tgz"
+  "version" "1.11.2"
 
 "@react-native-community/checkbox@^0.5.14":
   "integrity" "sha512-UmGf3wBpoCXLmVRKIDZyzOG+QR1fOhm0FOw4KzxHTCXpsBvZgIn5wbJ+MWk4io5RohQdY8GSX2MYFmkPJeJpeA=="

@@ -50,11 +50,9 @@ const HostInput = memo(({ setHost, host, disabled }: {
 })
 
 
-export default memo(({ host, setHost, isWaiting, setIsWaiting }: {
+export default memo(({ host, setHost }: {
   host: string
-  isWaiting: boolean
   setHost: (host: string) => void
-  setIsWaiting: (isWaiting: boolean) => void
 }) => {
   const t = useI18n()
   const setIsEnableSync = useCallback((enable: boolean) => {
@@ -104,13 +102,8 @@ export default memo(({ host, setHost, isWaiting, setIsWaiting }: {
 
     if (enable) void addSyncHostHistory(host)
 
-    global.lx.isSyncEnableing = true
-    setIsWaiting(true)
-    ;(enable ? connectServer(host) : disconnectServer()).finally(() => {
-      global.lx.isSyncEnableing = false
-      setIsWaiting(false)
-    })
-  }, [host, setIsEnableSync, setIsWaiting])
+    void (enable ? connectServer(host) : disconnectServer())
+  }, [host, setIsEnableSync])
 
 
   const handleUpdateHost = useCallback((h: string) => {
@@ -155,12 +148,12 @@ export default memo(({ host, setHost, isWaiting, setIsWaiting }: {
   return (
     <>
       <View style={styles.infoContent}>
-        <CheckBoxItem disabled={isWaiting || !host} check={isEnableSync} label={t('setting_sync_enbale')} onChange={handleSetEnableSync} />
+        <CheckBoxItem disabled={!host} check={isEnableSync} label={t('setting_sync_enbale')} onChange={handleSetEnableSync} />
         <Text style={styles.textAddr} size={13}>{t('setting_sync_address', { address })}</Text>
         <Text style={styles.text} size={13}>{t('setting_sync_status', { status })}</Text>
       </View>
       <View style={styles.inputContent} >
-        <HostInput setHost={handleUpdateHost} host={host} disabled={isWaiting || isEnableSync} />
+        <HostInput setHost={handleUpdateHost} host={host} disabled={isEnableSync} />
       </View>
       <ConfirmAlert
         onCancel={handleCancelSetCode}

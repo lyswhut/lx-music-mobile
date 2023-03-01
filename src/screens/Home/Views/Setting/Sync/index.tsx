@@ -10,12 +10,11 @@ export default memo(() => {
   const t = useI18n()
 
   const [host, setHost] = useState('')
-  const [isWaiting, setIsWaiting] = useState(global.lx.isSyncEnableing)
 
   return (
     <Section title={t('setting_sync')}>
-      <IsEnable host={host} setHost={setHost} isWaiting={isWaiting} setIsWaiting={setIsWaiting} />
-      <History setHost={setHost} isWaiting={isWaiting} />
+      <IsEnable host={host} setHost={setHost} />
+      <History setHost={setHost} />
     </Section>
   )
 })

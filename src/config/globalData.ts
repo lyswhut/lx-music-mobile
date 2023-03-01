@@ -42,8 +42,6 @@ global.lx = {
   // prevListPlayIndex: -1,
 
   // syncKeyInfo: {},
-  isSyncEnableing: false,
-
 
   isEnableSyncLog: false,
 

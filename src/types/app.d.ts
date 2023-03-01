@@ -28,7 +28,6 @@ interface Lx {
   restorePlayInfo: LX.Player.SavedPlayInfo | null
   isScreenKeepAwake: boolean
   isPlayedStop: boolean
-  isSyncEnableing: boolean
   isEnableSyncLog: boolean
   playerTrackId: string
 

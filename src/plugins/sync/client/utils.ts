@@ -1,4 +1,4 @@
-import { createCipheriv, createDecipheriv, generateKeyPair, publicEncrypt, privateDecrypt, constants } from 'crypto'
+import { generateKeyPair } from 'crypto'
 import BackgroundTimer from 'react-native-background-timer'
 
 export const request = async(url: string, { timeout = 10000, ...options }: RequestInit & { timeout?: number } = {}) => {
@@ -26,6 +26,7 @@ export const request = async(url: string, { timeout = 10000, ...options }: Reque
   })
 }
 
+
 // export const aesEncrypt = (text: string, key: string, iv: string) => {
 //   const cipher = createCipheriv('aes-128-cbc', Buffer.from(key, 'base64'), Buffer.from(iv, 'base64'))
 //   return Buffer.concat([cipher.update(Buffer.from(text)), cipher.final()]).toString('base64')
@@ -35,16 +36,6 @@ export const request = async(url: string, { timeout = 10000, ...options }: Reque
 //   const decipher = createDecipheriv('aes-128-cbc', Buffer.from(key, 'base64'), Buffer.from(iv, 'base64'))
 //   return Buffer.concat([decipher.update(Buffer.from(text, 'base64')), decipher.final()]).toString()
 // }
-
-export const aesEncrypt = (text: string, key: string) => {
-  const cipher = createCipheriv('aes-128-ecb', Buffer.from(key, 'base64'), '')
-  return Buffer.concat([cipher.update(Buffer.from(text)), cipher.final()]).toString('base64')
-}
-
-export const aesDecrypt = (text: string, key: string) => {
-  const decipher = createDecipheriv('aes-128-ecb', Buffer.from(key, 'base64'), '')
-  return Buffer.concat([decipher.update(Buffer.from(text, 'base64')), decipher.final()]).toString()
-}
 
 export const generateRsaKey = async() => new Promise<{ publicKey: string, privateKey: string }>((resolve, reject) => {
   generateKeyPair(
@@ -63,7 +54,10 @@ export const generateRsaKey = async() => new Promise<{ publicKey: string, privat
       },
     },
     (err, publicKey, privateKey) => {
-      if (err) return reject(err)
+      if (err) {
+        reject(err)
+        return
+      }
       resolve({
         publicKey,
         privateKey,
@@ -72,25 +66,15 @@ export const generateRsaKey = async() => new Promise<{ publicKey: string, privat
   )
 })
 
-export const rsaEncrypt = (buffer: Buffer, key: string): string => {
-  return publicEncrypt({ key, padding: constants.RSA_PKCS1_OAEP_PADDING }, buffer).toString('base64')
-}
-export const rsaDecrypt = (buffer: Buffer, key: string): Buffer => {
-  return privateDecrypt({ key, padding: constants.RSA_PKCS1_OAEP_PADDING }, buffer)
-}
 
-
-export const encryptMsg = (msg: string) => {
+export const encryptMsg = (keyInfo: LX.Sync.KeyInfo, msg: string): string => {
   return msg
-  // return `${createHash('md5').update(msg).digest('hex')}${msg}`
-  // const keyInfo = global.lx.syncKeyInfo
   // if (!keyInfo) return ''
-  // return aesEncrypt(msg, keyInfo.key)
+  // return aesEncrypt(msg, keyInfo.key, keyInfo.iv)
 }
 
-export const decryptMsg = (enMsg: string) => {
+export const decryptMsg = (keyInfo: LX.Sync.KeyInfo, enMsg: string): string => {
   return enMsg
-  // const keyInfo = global.lx.syncKeyInfo
   // if (!keyInfo) return ''
   // let msg = ''
   // try {
@@ -99,4 +83,34 @@ export const decryptMsg = (enMsg: string) => {
   //   console.log(err)
   // }
   // return msg
+}
+
+
+export const parseUrl = (href: string): LX.Sync.UrlInfo => {
+  // const url = new URL(host)
+  // console.log(host)
+  // let hostPath = url.host + url.pathname
+  // let href = url.href
+  if (href.endsWith('/')) href = href.replace(/\/$/, '')
+  // if (href.endsWith('/')) href = href.replace(/\/$/, '')
+  const httpProtocol = /^https:/.test(href) ? 'https:' : 'http:'
+
+  console.log({
+    wsProtocol: httpProtocol == 'https:' ? 'wss:' : 'ws:',
+    httpProtocol,
+    hostPath: href.replace(httpProtocol + '//', ''),
+    href,
+  })
+
+  return {
+    wsProtocol: httpProtocol == 'https:' ? 'wss:' : 'ws:',
+    httpProtocol,
+    hostPath: href.replace(httpProtocol + '//', ''),
+    href,
+  }
+}
+
+
+export const sendStatus = (status: LX.Sync.Status) => {
+  // syncLog.log(JSON.stringify(status))
 }

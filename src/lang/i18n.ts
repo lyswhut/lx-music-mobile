@@ -76,7 +76,7 @@ const createI18n = (_locale: Langs = locale): I18n => {
     },
     fillMessage(message: string, vals: TranslateValues): string {
       for (const [key, val] of Object.entries(vals)) {
-        message = message.replace(new RegExp('{{' + key + '}}', 'g'), String(val))
+        message = message.replace(new RegExp('{' + key + '}', 'g'), String(val))
       }
       return message
     },

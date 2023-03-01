@@ -1,7 +1,16 @@
 
-const state: LX.Sync.Status = {
-  status: false,
-  message: '',
+interface InitState {
+  status: LX.Sync.Status
+  serverName: string
+  syncModeComponentId: string
+}
+const state: InitState = {
+  status: {
+    status: false,
+    message: '',
+  },
+  serverName: '',
+  syncModeComponentId: '',
 }
 
 

@@ -3,15 +3,21 @@ import state from './state'
 
 export default {
   setStatus(info: LX.Sync.Status) {
-    state.status = info.status
-    state.message = info.message
+    state.status.status = info.status
+    state.status.message = info.message
 
-    global.state_event.syncStatusUpdated({ ...state })
+    global.state_event.syncStatusUpdated({ ...state.status })
   },
   setMessage(message: LX.Sync.Status['message']) {
-    state.message = message
+    state.status.message = message
 
-    global.state_event.syncStatusUpdated({ ...state })
+    global.state_event.syncStatusUpdated({ ...state.status })
+  },
+  setServerNmae(name: string) {
+    state.serverName = name
+  },
+  setSyncModeComponentId(id: string) {
+    state.syncModeComponentId = id
   },
 }
 

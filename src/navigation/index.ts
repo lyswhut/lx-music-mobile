@@ -30,6 +30,7 @@ const init = (callback: () => void | Promise<void>) => {
 }
 
 export * from './utils'
+export * from './event'
 export * from './hooks'
 
 export {

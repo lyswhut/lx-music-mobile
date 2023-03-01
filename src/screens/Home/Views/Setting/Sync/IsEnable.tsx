@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import CheckBoxItem from '../components/CheckBoxItem'
 import ConfirmAlert, { type ConfirmAlertType } from '@/components/common/ConfirmAlert'
 import Input from '@/components/common/Input'
-import { connect, disconnect, SYNC_CODE } from '@/plugins/sync'
+import { connectServer, disconnectServer } from '@/plugins/sync'
 import InputItem from '../components/InputItem'
 import { getWIFIIPV4Address } from '@/utils/nativeModules/utils'
 import { createStyle, toast } from '@/utils/tools'
@@ -16,9 +16,9 @@ import { useSettingValue } from '@/store/setting/hook'
 import { useTheme } from '@/store/theme/hook'
 import { useStatus } from '@/store/sync/hook'
 import Text from '@/components/common/Text'
+import { SYNC_CODE } from '@/config/constant'
 
-const addressRxp = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/
-const portRxp = /(\d+)/
+const addressRxp = /^https?:\/\/\S+/i
 
 const HostInput = memo(({ setHost, host, disabled }: {
   setHost: (host: string) => void
@@ -28,11 +28,11 @@ const HostInput = memo(({ setHost, host, disabled }: {
   const t = useI18n()
 
   const hostAddress = useMemo(() => {
-    return addressRxp.test(host) ? RegExp.$1 : ''
+    return addressRxp.test(host) ? host : ''
   }, [host])
 
   const setHostAddress = useCallback((value: string, callback: (host: string) => void) => {
-    let hostAddress = addressRxp.test(value) ? RegExp.$1 : ''
+    let hostAddress = addressRxp.test(value) ? value.trim() : ''
     callback(hostAddress)
     if (host == hostAddress) return
     setHost(hostAddress)
@@ -49,40 +49,11 @@ const HostInput = memo(({ setHost, host, disabled }: {
   )
 })
 
-const PortInput = memo(({ setPort, port, disabled }: {
-  setPort: (port: string) => void
-  port: string
-  disabled?: boolean
-}) => {
-  const t = useI18n()
 
-  const portNum = useMemo(() => {
-    return portRxp.test(port) ? RegExp.$1 : ''
-  }, [port])
-
-  const setPortAddress = useCallback((value: string, callback: (port: string) => void) => {
-    let portNum = portRxp.test(value) ? RegExp.$1 : ''
-    callback(portNum)
-    if (port == portNum) return
-    setPort(portNum)
-  }, [port, setPort])
-
-  return (
-    <InputItem
-      editable={!disabled}
-      value={portNum}
-      label={t('setting_sync_port_label')}
-      onChanged={setPortAddress}
-      keyboardType="number-pad"
-      placeholder={t('setting_sync_port_tip')} />
-  )
-})
-
-
-export default memo(({ hostInfo, setHostInfo, isWaiting, setIsWaiting }: {
-  hostInfo: { host: string, port: string }
+export default memo(({ host, setHost, isWaiting, setIsWaiting }: {
+  host: string
   isWaiting: boolean
-  setHostInfo: (hostInfo: { host: string, port: string }) => void
+  setHost: (host: string) => void
   setIsWaiting: (isWaiting: boolean) => void
 }) => {
   const t = useI18n()
@@ -99,9 +70,9 @@ export default memo(({ hostInfo, setHostInfo, isWaiting, setIsWaiting }: {
 
   useEffect(() => {
     isUnmountedRef.current = false
-    void getSyncHost().then(hostInfo => {
+    void getSyncHost().then(host => {
       if (isUnmountedRef.current) return
-      setHostInfo(hostInfo)
+      setHost(host)
     })
     void getWIFIIPV4Address().then(address => {
       if (isUnmountedRef.current) return
@@ -131,32 +102,23 @@ export default memo(({ hostInfo, setHostInfo, isWaiting, setIsWaiting }: {
   const handleSetEnableSync = useCallback((enable: boolean) => {
     setIsEnableSync(enable)
 
-    if (enable) void addSyncHostHistory(hostInfo.host, hostInfo.port)
+    if (enable) void addSyncHostHistory(host)
 
     global.lx.isSyncEnableing = true
     setIsWaiting(true)
-    ;(enable ? connect() : disconnect()).finally(() => {
+    ;(enable ? connectServer(host) : disconnectServer()).finally(() => {
       global.lx.isSyncEnableing = false
       setIsWaiting(false)
     })
-  }, [hostInfo, setIsEnableSync, setIsWaiting])
+  }, [host, setIsEnableSync, setIsWaiting])
 
 
-  const setHost = useCallback((host: string) => {
-    if (host == hostInfo.host) return
-    const newHostInfo = { ...hostInfo, host }
-    void setSyncHost(newHostInfo)
-    setHostInfo(newHostInfo)
-  }, [hostInfo])
-  const setPort = useCallback((port: string) => {
-    if (port == hostInfo.host) return
-    const newHostInfo = { ...hostInfo, port }
-    void setSyncHost(newHostInfo)
-    setHostInfo(newHostInfo)
-  }, [hostInfo])
+  const handleUpdateHost = useCallback((h: string) => {
+    if (h == host) return
+    void setSyncHost(h)
+    setHost(h)
+  }, [host, setHost])
 
-  const host = useMemo(() => hostInfo.host, [hostInfo.host])
-  const port = useMemo(() => hostInfo.port, [hostInfo.port])
 
   const status = useMemo(() => {
     let status
@@ -183,23 +145,22 @@ export default memo(({ hostInfo, setHostInfo, isWaiting, setIsWaiting }: {
     confirmAlertRef.current?.setVisible(false)
   }, [])
   const handleSetCode = useCallback(() => {
-    const code = authCode.trim()
-    if (code.length != 6) return
-    void connect(code)
+    // const code = authCode.trim()
+    // if (code.length != 6) return
+    void connectServer(host, authCode)
     setAuthCode('')
     confirmAlertRef.current?.setVisible(false)
-  }, [authCode])
+  }, [host, authCode])
 
   return (
     <>
       <View style={styles.infoContent}>
-        <CheckBoxItem disabled={isWaiting || !port || !host} check={isEnableSync} label={t('setting_sync_enbale')} onChange={handleSetEnableSync} />
+        <CheckBoxItem disabled={isWaiting || !host} check={isEnableSync} label={t('setting_sync_enbale')} onChange={handleSetEnableSync} />
         <Text style={styles.textAddr} size={13}>{t('setting_sync_address', { address })}</Text>
         <Text style={styles.text} size={13}>{t('setting_sync_status', { status })}</Text>
       </View>
       <View style={styles.inputContent} >
-        <HostInput setHost={setHost} host={host} disabled={isWaiting || isEnableSync} />
-        <PortInput setPort={setPort} port={port} disabled={isWaiting || isEnableSync} />
+        <HostInput setHost={handleUpdateHost} host={host} disabled={isWaiting || isEnableSync} />
       </View>
       <ConfirmAlert
         onCancel={handleCancelSetCode}

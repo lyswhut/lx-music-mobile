@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback, useEffect, useRef } from 'react'
+import React, { memo, useState, useEffect, useRef } from 'react'
 
 import { StyleSheet, View, Keyboard } from 'react-native'
 import type { InputType, InputProps } from '@/components/common/Input'
@@ -19,14 +19,14 @@ export default memo(({ value, label, onChanged, ...props }: InputItemProps) => {
   const isMountRef = useRef(false)
   const inputRef = useRef<InputType>(null)
   const theme = useTheme()
-  const saveValue = useCallback(() => {
+  const saveValue = () => {
     onChanged?.(text, (value: string) => {
       if (!isMountRef.current) return
       const newValue = String(value)
       setText(newValue)
       textRef.current = newValue
     })
-  }, [onChanged, text])
+  }
   useEffect(() => {
     isMountRef.current = true
     return () => {
@@ -56,10 +56,10 @@ export default memo(({ value, label, onChanged, ...props }: InputItemProps) => {
       textRef.current = newValue
     }
   }, [value])
-  const handleSetSelectMode = useCallback((text: string) => {
+  const handleSetSelectMode = (text: string) => {
     setText(text)
     textRef.current = text
-  }, [])
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.label} size={14}>{label}</Text>

@@ -1,34 +1,30 @@
 import handleAuth from './auth'
-import { connect as socketConnect, disconnect as socketDisconnect } from './client'
-import { getSyncHost } from '@/utils/data'
-import { SYNC_CODE } from './config'
+import { connect as socketConnect, disconnect as socketDisconnect, sendSyncStatus, sendSyncMessage } from './client'
+// import { getSyncHost } from '@/utils/data'
+import { SYNC_CODE } from '@/config/constant'
 import log from '../log'
-import { setSyncMessage, setSyncStatus } from '@/core/sync'
+import { parseUrl } from './utils'
 
-const handleConnect = async(authCode?: string) => {
-  const hostInfo = await getSyncHost()
+const handleConnect = async(host: string, authCode?: string) => {
+  // const hostInfo = await getSyncHost()
   // console.log(hostInfo)
-  if (!hostInfo || !hostInfo.host || !hostInfo.port) throw new Error(SYNC_CODE.unknownServiceAddress)
-  await disconnect(false)
-  const keyInfo = await handleAuth(hostInfo.host, hostInfo.port, authCode)
-  socketConnect(hostInfo.host, hostInfo.port, keyInfo)
+  // if (!hostInfo || !hostInfo.host || !hostInfo.port) throw new Error(SYNC_CODE.unknownServiceAddress)
+  const urlInfo = parseUrl(host)
+  await disconnectServer(false)
+  const keyInfo = await handleAuth(urlInfo, authCode)
+  socketConnect(urlInfo, keyInfo)
 }
 const handleDisconnect = async() => {
   await socketDisconnect()
 }
 
-const connect = async(authCode?: string) => {
-  setSyncStatus({
+const connectServer = async(host: string, authCode?: string) => {
+  sendSyncStatus({
     status: false,
     message: SYNC_CODE.connecting,
   })
-  return handleConnect(authCode).then(() => {
-    setSyncStatus({
-      status: true,
-      message: '',
-    })
-  }).catch(async err => {
-    setSyncStatus({
+  return handleConnect(host, authCode).catch(async err => {
+    sendSyncStatus({
       status: false,
       message: err.message,
     })
@@ -45,21 +41,24 @@ const connect = async(authCode?: string) => {
   })
 }
 
-const disconnect = async(isResetStatus = true) => handleDisconnect().then(() => {
+const disconnectServer = async(isResetStatus = true) => handleDisconnect().then(() => {
   log.info('disconnect...')
   if (isResetStatus) {
-    setSyncStatus({
+    sendSyncStatus({
       status: false,
       message: '',
     })
   }
 }).catch((err: any) => {
   log.error(`disconnect error: ${err.message as string}`)
-  setSyncMessage(err.message)
+  sendSyncMessage(err.message)
 })
 
 export {
-  connect,
-  disconnect,
-  SYNC_CODE,
+  connectServer,
+  disconnectServer,
 }
+
+export {
+  getStatus,
+} from './client'

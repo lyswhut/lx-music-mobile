@@ -10,6 +10,7 @@ import { getData, removeData, saveData } from '@/plugins/storage'
 import BackgroundTimer from 'react-native-background-timer'
 import { scaleSizeH, scaleSizeW, setSpText } from './pixelRatio'
 import { toOldMusicInfo } from './index'
+import { stringMd5 } from 'react-native-quick-md5'
 
 
 // https://stackoverflow.com/a/47349998
@@ -416,6 +417,7 @@ export const createStyle = <T extends StyleSheet.NamedStyles<T>>(styles: T | Sty
   return StyleSheet.create(newStyle as StyleSheet.NamedStyles<T>)
 }
 
+export const toMD5 = stringMd5
 
 export {
   deviceLanguage,

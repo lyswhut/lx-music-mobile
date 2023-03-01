@@ -4,7 +4,7 @@ import { View, TouchableOpacity, ScrollView } from 'react-native'
 import { Icon } from '@/components/common/Icon'
 
 import Button from '../components/Button'
-import { getSyncHostHistory, removeSyncHostHistory, setSyncHost } from '@/utils/data'
+import { getSyncHostHistory, removeSyncHostHistory, setSyncHost } from '@/plugins/sync/data'
 import Popup, { type PopupType } from '@/components/common/Popup'
 import { BorderWidths } from '@/theme'
 import Text from '@/components/common/Text'
@@ -24,7 +24,7 @@ const HistoryListItem = ({ item, index, onRemove, onSelect }: {
   const theme = useTheme()
   const handleSetHost = () => {
     onSelect(index)
-    // setHostInfo({
+    // setHost({
     //   host: item.host,
     //   port: item.port,
     // })
@@ -40,8 +40,7 @@ const HistoryListItem = ({ item, index, onRemove, onSelect }: {
   return (
     <View style={{ ...styles.listItem, borderBottomColor: theme['c-border-background'] }}>
       <TouchableOpacity style={styles.listName} onPress={handleSetHost}>
-        <Text numberOfLines={1}>{item.host}</Text>
-        <Text color={theme['c-font-label']} numberOfLines={1}>{item.port}</Text>
+        <Text numberOfLines={1}>{item}</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={handleRemove} style={styles.listBtn}>
         <Icon name="remove" color={theme['c-font-label']} size={12} />
@@ -109,7 +108,7 @@ const HistoryList = forwardRef<HistoryListType, HistoryListProps>(({ onSelect },
                         item={item}
                         index={index}
                         onRemove={handleRemove}
-                        key={`${item.host}:${item.port}`}
+                        key={item}
                         onSelect={handleSelect}
                       />
                   ))
@@ -122,8 +121,8 @@ const HistoryList = forwardRef<HistoryListType, HistoryListProps>(({ onSelect },
   )
 })
 
-export default memo(({ setHostInfo, isWaiting }: {
-  setHostInfo: (hostInfo: { host: string, port: string }) => void
+export default memo(({ setHost, isWaiting }: {
+  setHost: (host: string) => void
   isWaiting: boolean
 }) => {
   const t = useI18n()
@@ -135,7 +134,7 @@ export default memo(({ setHostInfo, isWaiting }: {
   }
 
   const handleSelect = (item: SyncHistoryItem) => {
-    setHostInfo(item)
+    setHost(item)
     void setSyncHost(item)
   }
 

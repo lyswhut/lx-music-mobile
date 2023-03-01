@@ -4,7 +4,7 @@
   "versionCode": 53,
   "private": true,
   "scripts": {
-    "ar": "react-native run-android",
+    "dev": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "sc": "react-native start --reset-cache",
@@ -59,9 +59,9 @@
     "react-native-pager-view": "^6.1.4",
     "react-native-quick-base64": "^2.0.5",
     "react-native-quick-crypto": "^0.5.0",
+    "react-native-quick-md5": "^3.0.4",
     "react-native-track-player": "github:lyswhut/react-native-track-player#38027954a5ac6e3d92961745e0a9633fc647f47a",
-    "react-native-vector-icons": "^9.2.0",
-    "socket.io-client": "^4.6.1"
+    "react-native-vector-icons": "^9.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",

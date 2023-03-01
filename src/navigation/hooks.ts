@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { EmitterSubscription } from 'react-native'
+import { type EmitterSubscription } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 
 export const useNavigationCommandComplete = (callback = () => {}) => {

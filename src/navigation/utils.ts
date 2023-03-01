@@ -1,5 +1,9 @@
 import { Navigation } from 'react-native-navigation'
-import { VERSION_MODAL, PACT_MODAL } from './screenNames'
+import {
+  VERSION_MODAL,
+  PACT_MODAL,
+  SYNC_MODE_MODAL,
+} from './screenNames'
 import themeState from '@/store/theme/state'
 
 
@@ -58,6 +62,50 @@ export const showVersionModal = () => {
   void Navigation.showOverlay({
     component: {
       name: VERSION_MODAL,
+      options: {
+        layout: {
+          componentBackgroundColor: 'transparent',
+        },
+        overlay: {
+          interceptTouchOutside: true,
+        },
+        statusBar: {
+          drawBehind: true,
+          visible: true,
+          style: getStatusBarStyle(themeState.theme.isDark),
+          backgroundColor: 'transparent',
+          // animate: true,
+        },
+        // animations: {
+
+        //   showModal: {
+        //     enter: {
+        //       enabled: true,
+        //       alpha: {
+        //         from: 0,
+        //         to: 1,
+        //         duration: 300,
+        //       },
+        //     },
+        //     exit: {
+        //       enabled: true,
+        //       alpha: {
+        //         from: 1,
+        //         to: 0,
+        //         duration: 300,
+        //       },
+        //     },
+        //   },
+        // },
+      },
+    },
+  })
+}
+
+export const showSyncModeModal = () => {
+  void Navigation.showOverlay({
+    component: {
+      name: SYNC_MODE_MODAL,
       options: {
         layout: {
           componentBackgroundColor: 'transparent',

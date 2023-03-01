@@ -9,13 +9,13 @@ import { useI18n } from '@/lang'
 export default memo(() => {
   const t = useI18n()
 
-  const [hostInfo, setHostInfo] = useState({ host: '', port: '' })
+  const [host, setHost] = useState('')
   const [isWaiting, setIsWaiting] = useState(global.lx.isSyncEnableing)
 
   return (
     <Section title={t('setting_sync')}>
-      <IsEnable hostInfo={hostInfo} setHostInfo={setHostInfo} isWaiting={isWaiting} setIsWaiting={setIsWaiting} />
-      <History setHostInfo={setHostInfo} isWaiting={isWaiting} />
+      <IsEnable host={host} setHost={setHost} isWaiting={isWaiting} setIsWaiting={setIsWaiting} />
+      <History setHost={setHost} isWaiting={isWaiting} />
     </Section>
   )
 })

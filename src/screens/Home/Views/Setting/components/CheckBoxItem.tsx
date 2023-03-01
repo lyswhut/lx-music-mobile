@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 
 import { View } from 'react-native'
 
-import CheckBox, { CheckBoxProps } from '@/components/common/CheckBox'
+import CheckBox, { type CheckBoxProps } from '@/components/common/CheckBox'
 import { createStyle } from '@/utils/tools'
 
 

@@ -1,7 +1,6 @@
 import ChoosePath, { type ChoosePathType } from '@/components/common/ChoosePath'
 import { LXM_FILE_EXT_RXP } from '@/config/constant'
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react'
-import { InteractionManager } from 'react-native'
 import { handleExport, handleImport } from './listAction'
 
 export interface SelectInfo {
@@ -88,9 +87,7 @@ export default forwardRef<ListImportExportType, {}>((props, ref) => {
         handleImport(path, selectInfoRef.current.index)
         break
       case 'export':
-        void InteractionManager.runAfterInteractions(() => {
-          handleExport(selectInfoRef.current.listInfo, path)
-        })
+        handleExport(selectInfoRef.current.listInfo, path)
         break
     }
   }

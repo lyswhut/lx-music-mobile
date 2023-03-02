@@ -3,7 +3,7 @@ import { getLocalListData, setLocalListData } from '../utils'
 // import { removeSelectModeListener, sendCloseSelectMode, sendSelectMode } from '@main/modules/winMain'
 import { SYNC_CLOSE_CODE } from '@/config/constant'
 import { removeSyncModeEvent, selectSyncMode } from '@/core/sync'
-import { toMD5 } from '@/utils/tools'
+import { toast, toMD5 } from '@/utils/tools'
 
 const logInfo = (eventName: keyof LX.Sync.ActionSyncSendType, success = false) => {
   log.info(`[${eventName as string}]${eventName.replace('list:sync:list_sync_', '').replace(/_/g, ' ')}${success ? ' success' : ''}`)
@@ -74,5 +74,6 @@ export default async(socket: LX.Sync.Socket) => new Promise<void>((resolve, reje
     unregisterEvents()
     resolve()
     logInfo('list:sync:finished', true)
+    toast('Sync successfully')
   }))
 })

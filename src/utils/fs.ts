@@ -13,7 +13,7 @@ export const mkdir = async(path: string) => RNFS.mkdir(path)
 
 export const stat = async(path: string) => RNFS.stat(path)
 
-export const readFile = async(path: string, encoding = 'utf8') => RNFS.readFile(path, encoding)
+// export const readFile = async(path: string, encoding = 'utf8') => RNFS.readFile(path, encoding)
 
 export const copyFile = async(fromPath: string, toPath: string) => RNFS.copyFile(fromPath, toPath)
 
@@ -21,7 +21,7 @@ export const moveFile = async(fromPath: string, toPath: string) => RNFS.moveFile
 
 export const existsFile = async(path: string) => RNFS.exists(path)
 
-export const writeFile = async(path: string, data: string, encoding = 'utf8') => RNFS.writeFile(path, data, encoding)
+// export const writeFile = async(path: string, data: string, encoding = 'utf8') => RNFS.writeFile(path, data, encoding)
 
 export const appendFile = async(path: string, data: string, encoding = 'utf8') => RNFS.appendFile(path, data, encoding)
 
@@ -50,4 +50,6 @@ export const downloadFile = (url: string, path: string, options: Omit<RNFS.Downl
   })
 }
 
-export const stopDownload = (jobId: number) => RNFS.stopDownload(jobId)
+export const stopDownload = (jobId: number) => {
+  RNFS.stopDownload(jobId)
+}

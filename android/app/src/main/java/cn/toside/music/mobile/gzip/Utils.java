@@ -1,9 +1,9 @@
 package cn.toside.music.mobile.gzip;
 
-import org.apache.commons.io.FileUtils;
+
+import static cn.toside.music.mobile.utils.Utils.deletePath;
 
 import java.io.File;
-import java.io.IOException;
 
 // https://github.com/FWC1994/react-native-gzip/blob/main/android/src/main/java/com/reactlibrary/GzipModule.java
 public class Utils {
@@ -17,16 +17,8 @@ public class Utils {
         return false;
       }
 
-      try {
-        if (targetFile.isDirectory()) {
-          FileUtils.deleteDirectory(targetFile);
-        } else {
-          targetFile.delete();
-        }
-        targetFile.mkdirs();
-      } catch (IOException ex) {
-        return false;
-      }
+      deletePath(targetFile);
+      // targetFile.mkdirs();
     }
     return true;
   }
@@ -41,9 +33,7 @@ public class Utils {
         return false;
       }
 
-      if (targetFile.isFile()) {
-        targetFile.delete();
-      }
+      deletePath(targetFile);
     }
     return true;
   }

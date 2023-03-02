@@ -34,3 +34,10 @@ export const openNotificationPermissionActivity = UtilsModule.openNotificationPe
 export const shareText = async(shareTitle: string, title: string, text: string): Promise<void> => {
   UtilsModule.shareText(shareTitle, title, text)
 }
+
+export const writeFile = async(filePath: string, data: string): Promise<void> => {
+  return UtilsModule.writeStringToFile(filePath, data)
+}
+export const readFile = async(filePath: string): Promise<string> => {
+  return UtilsModule.getStringFromFile(filePath)
+}

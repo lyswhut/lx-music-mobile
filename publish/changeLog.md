@@ -33,4 +33,4 @@
 
 ### 其他
 
-- 升级React Native到v0.70.7
+- 升级React Native到v0.71.3并启用新架构

@@ -1,10 +1,10 @@
-import { Platform, NativeModules, ToastAndroid, BackHandler, Linking, Dimensions, Alert, Appearance, PermissionsAndroid, AppState, StyleSheet, type ScaledSize } from 'react-native'
+import { Platform, ToastAndroid, BackHandler, Linking, Dimensions, Alert, Appearance, PermissionsAndroid, AppState, StyleSheet, type ScaledSize } from 'react-native'
 // import ExtraDimensions from 'react-native-extra-dimensions-android'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { storageDataPrefix } from '@/config/constant'
 import { gzip, ungzip } from '@/utils/nativeModules/gzip'
 import { temporaryDirectoryPath, unlink } from '@/utils/fs'
-import { isNotificationsEnabled, openNotificationPermissionActivity, readFile, shareText, writeFile } from '@/utils/nativeModules/utils'
+import { getSystemLocales, isNotificationsEnabled, openNotificationPermissionActivity, readFile, shareText, writeFile } from '@/utils/nativeModules/utils'
 import musicSdk from '@/utils/musicSdk'
 import { getData, removeData, saveData } from '@/plugins/storage'
 import BackgroundTimer from 'react-native-background-timer'
@@ -12,13 +12,16 @@ import { scaleSizeH, scaleSizeW, setSpText } from './pixelRatio'
 import { toOldMusicInfo } from './index'
 import { stringMd5 } from 'react-native-quick-md5'
 
-
 // https://stackoverflow.com/a/47349998
-let deviceLanguage = Platform.OS === 'ios'
-  ? NativeModules.SettingsManager.settings.AppleLocale ||
-    NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
-  : NativeModules.I18nManager.localeIdentifier
-deviceLanguage = typeof deviceLanguage === 'string' ? deviceLanguage.substring(0, 5).toLocaleLowerCase() : ''
+export const getDeviceLanguage = async() => {
+  // let deviceLanguage = Platform.OS === 'ios'
+  //   ? NativeModules.SettingsManager.settings.AppleLocale ||
+  //     NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
+  //   : await getSystemLocales()
+  // deviceLanguage = typeof deviceLanguage === 'string' ? deviceLanguage.substring(0, 5).toLocaleLowerCase() : ''
+  return await getSystemLocales()
+}
+
 
 export const isAndroid = Platform.OS === 'android'
 // @ts-expect-error
@@ -418,7 +421,3 @@ export const createStyle = <T extends StyleSheet.NamedStyles<T>>(styles: T | Sty
 }
 
 export const toMD5 = stringMd5
-
-export {
-  deviceLanguage,
-}

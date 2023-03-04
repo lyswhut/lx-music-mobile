@@ -13,8 +13,10 @@ import android.os.Build;
 import android.util.Log;
 import android.view.WindowManager;
 
+import androidx.core.app.LocaleManagerCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.os.LocaleListCompat;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -25,6 +27,7 @@ import com.facebook.react.bridge.WritableNativeArray;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class UtilsModule extends ReactContextBaseJavaModule {
@@ -250,6 +253,26 @@ public class UtilsModule extends ReactContextBaseJavaModule {
       taskRunner.executeAsync(new Utils.WriteStringToFile(filePath, dataStr), promise::resolve);
     } catch (RuntimeException err) {
       promise.reject("-2", err.getMessage());
+    }
+  }
+
+  // https://stackoverflow.com/questions/73463341/in-per-app-language-how-to-get-app-locale-in-api-33-if-system-locale-is-diffe
+  @ReactMethod
+  public void getSystemLocales(Promise promise) {
+    Locale locale = null;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      LocaleListCompat list = LocaleManagerCompat.getSystemLocales(reactContext);
+      if (list.size() > 0) {
+        locale = list.get(0);
+
+      } else promise.resolve(null);
+    } else {
+      locale = Locale.getDefault();
+    }
+    if (locale == null) {
+      promise.resolve("");
+    } else {
+      promise.resolve(locale.toString());
     }
   }
 }

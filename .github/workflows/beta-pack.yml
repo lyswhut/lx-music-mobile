@@ -8,8 +8,7 @@ on:
 jobs:
   Android:
     name: Android
-    # runs-on: ubuntu-latest
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Check out git repository
         uses: actions/checkout@v3
@@ -18,12 +17,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-
-      - name: Install Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '11'
 
       - name: Cache Gradle Wrapper
         uses: actions/cache@v3
@@ -54,7 +47,7 @@ jobs:
         run: |
           cd android
           echo ${{ secrets.KEYSTORE_STORE_FILE_BASE64 }} | base64 --decode > app/${{ secrets.KEYSTORE_STORE_FILE }}
-          ./gradlew assembleRelease --no-daemon -PMYAPP_UPLOAD_STORE_FILE='${{ secrets.KEYSTORE_STORE_FILE }}' -PMYAPP_UPLOAD_KEY_ALIAS='${{ secrets.KEYSTORE_KEY_ALIAS }}' -PMYAPP_UPLOAD_STORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}' -PMYAPP_UPLOAD_KEY_PASSWORD='${{ secrets.KEYSTORE_KEY_PASSWORD }}'
+          ./gradlew assembleRelease -PMYAPP_UPLOAD_STORE_FILE='${{ secrets.KEYSTORE_STORE_FILE }}' -PMYAPP_UPLOAD_KEY_ALIAS='${{ secrets.KEYSTORE_KEY_ALIAS }}' -PMYAPP_UPLOAD_STORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}' -PMYAPP_UPLOAD_KEY_PASSWORD='${{ secrets.KEYSTORE_KEY_PASSWORD }}'
 
       # Push tag to GitHub if package.json version's tag is not tagged
       - name: Get package version
@@ -63,8 +56,7 @@ jobs:
       - name: Generate file MD5
         run: |
           cd android/app/build/outputs/apk/release
-          md5 *.apk
-      # md5sum *.apk
+          md5sum *.apk
 
       - name: Upload Artifact arm64-v8a
         uses: actions/upload-artifact@v3

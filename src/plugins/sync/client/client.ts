@@ -33,12 +33,13 @@ const handleConnection = (socket: LX.Sync.Socket) => {
 
 const heartbeatTools = {
   failedNum: 0,
-  maxTryNum: 3,
+  maxTryNum: 100000,
+  stepMs: 3000,
   pingTimeout: null as NodeJS.Timeout | null,
   delayRetryTimeout: null as NodeJS.Timeout | null,
   handleOpen() {
     console.log('open')
-    this.failedNum = 0
+    // this.failedNum = 0
     this.heartbeat()
   },
   heartbeat() {
@@ -65,16 +66,23 @@ const heartbeatTools = {
       throw new Error('connect error')
     }
 
+    const waitTime = Math.min(2000 + Math.floor(this.failedNum / 2) * this.stepMs, 30000)
+
+    // sendSyncStatus({
+    //   status: false,
+    //   message: `Waiting ${waitTime / 1000}s reconnnect...`,
+    // })
+
     this.delayRetryTimeout = setTimeout(() => {
       this.delayRetryTimeout = null
       if (!client) return
       console.log(dateFormat(new Date()), 'reconnnect...')
       sendSyncStatus({
         status: false,
-        message: `Try reconnnect... (${this.failedNum}/${this.maxTryNum})`,
+        message: `Try reconnnect... (${this.failedNum})`,
       })
       connect(client.data.urlInfo, client.data.keyInfo)
-    }, 2000)
+    }, waitTime)
   },
   clearTimeout() {
     if (this.delayRetryTimeout) {
@@ -95,7 +103,7 @@ const heartbeatTools = {
       if (data == 'ping') this.heartbeat()
     })
     socket.addEventListener('close', (event) => {
-      console.log(event.code)
+      // console.log(event.code)
       switch (event.code) {
         case SYNC_CLOSE_CODE.normal:
         case SYNC_CLOSE_CODE.failed:
@@ -176,6 +184,7 @@ export const connect = (urlInfo: LX.Sync.UrlInfo, keyInfo: LX.Sync.KeyInfo) => {
         status: true,
         message: '',
       })
+      heartbeatTools.failedNum = 0
     }).catch(err => {
       if (err.message == 'closed') {
         sendSyncStatus({

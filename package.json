@@ -16,7 +16,7 @@
     "pack:android:debug": "./gradlew assembleDebug",
     "pack": "npm run pack:android",
     "pack:android": "cd android && gradlew.bat assembleRelease",
-    "clear": "react-native clean-project",
+    "clear": "cd android && gradlew.bat clean",
     "build:theme": "node src/theme/themes/createThemes.js",
     "publish": "node publish"
   },

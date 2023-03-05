@@ -1,5 +1,5 @@
 import React, { useRef, useImperativeHandle, forwardRef, useState } from 'react'
-import Modal, { MusicMultiAddModalType as ModalType, SelectInfo } from './MusicMultiAddModal'
+import Modal, { type MusicMultiAddModalType as ModalType, type SelectInfo } from './MusicMultiAddModal'
 
 export interface MusicMultiAddModalType {
   show: (info: SelectInfo) => void

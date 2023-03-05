@@ -13,7 +13,7 @@ export default forwardRef<ListType, {}>((props, ref) => {
   const listRef = useRef<SonglistType>(null)
   const isUnmountedRef = useRef(false)
   useImperativeHandle(ref, () => ({
-    loadList(source, sortId, tagId) {
+    async loadList(source, sortId, tagId) {
       const listInfo = songlistState.listInfo
       listRef.current?.setList([])
       if (listInfo.tagId == tagId && listInfo.sortId == sortId && listInfo.source == source && listInfo.list.length) {

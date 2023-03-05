@@ -61,7 +61,7 @@ const codeAuth = async(urlInfo: LX.Sync.UrlInfo, serverId: string, authCode: str
 
 const keyAuth = async(urlInfo: LX.Sync.UrlInfo, keyInfo: LX.Sync.KeyInfo) => {
   const msg = aesEncrypt(SYNC_CODE.authMsg + await getDeviceName(), keyInfo.key)
-  return request(`${urlInfo.httpProtocol}//${urlInfo.hostPath}/ah`, { headers: { i: keyInfo.clientId, m: msg } }).then(({ text, code }) => {
+  return request(`${urlInfo.httpProtocol}//${urlInfo.hostPath}/ah`, { headers: { i: keyInfo.clientId, m: msg } }).then(async({ text, code }) => {
     if (code != 200) throw new Error(SYNC_CODE.authFailed)
 
     let msg

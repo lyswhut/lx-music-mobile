@@ -18,7 +18,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
   const headerRef = useRef<HeaderType>(null)
   const isUnmountedRef = useRef(false)
   useImperativeHandle(ref, () => ({
-    loadList(source, id) {
+    async loadList(source, id) {
       const listDetailInfo = songlistState.listDetailInfo
       listRef.current?.setList([])
       if (listDetailInfo.id == id && listDetailInfo.source == source && listDetailInfo.list.length) {
@@ -99,6 +99,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
     })
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const header = useMemo(() => <Header ref={headerRef} componentId={componentId} />, [])
 
   return <OnlineList

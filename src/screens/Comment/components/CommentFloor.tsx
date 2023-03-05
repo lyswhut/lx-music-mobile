@@ -52,6 +52,7 @@ const CommentFloor = memo(({ comment, isLast }: {
         <Text style={styles.likedCount} size={12} color={ theme['c-450'] }>{comment.likedCount}</Text>
       </View>
     )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

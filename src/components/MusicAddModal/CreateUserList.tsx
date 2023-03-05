@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { View } from 'react-native'
-import Input, { InputType } from '@/components/common/Input'
+import Input, { type InputType } from '@/components/common/Input'
 import { createStyle } from '@/utils/tools'
 import { useI18n } from '@/lang'
 import { createUserList } from '@/core/list'

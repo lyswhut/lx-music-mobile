@@ -1,7 +1,7 @@
 import { createIconSetFromIcoMoon } from 'react-native-vector-icons'
 import icoMoonConfig from '@/resources/fonts/selection.json'
 import { scaleSizeW } from '@/utils/pixelRatio'
-import { ComponentProps } from 'react'
+import { type ComponentProps } from 'react'
 import { useTheme } from '@/store/theme/hook'
 
 // import IconAntDesign from 'react-native-vector-icons/AntDesign'

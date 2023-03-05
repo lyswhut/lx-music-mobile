@@ -18,7 +18,7 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
   const listRef = useRef<OnlineListType>(null)
   const isUnmountedRef = useRef(false)
   useImperativeHandle(ref, () => ({
-    loadList(source, id) {
+    async loadList(source, id) {
       const listDetailInfo = boardState.listDetailInfo
       listRef.current?.setList([])
       if (listDetailInfo.id == id && listDetailInfo.source == source && listDetailInfo.list.length) {

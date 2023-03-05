@@ -216,7 +216,7 @@ export const getListDetailAll = async(source: LX.OnlineSource, id: string, isRef
     if (pageCache) return pageCache.data
     return getListDetailLimit(source, id, page)
   }
-  return loadData(1).then(result => {
+  return loadData(1).then(async result => {
     if (result.total <= result.limit) return result.list
 
     let maxPage = Math.ceil(result.total / result.limit)

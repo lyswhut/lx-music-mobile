@@ -37,7 +37,7 @@ export default forwardRef<ActiveListType, ActiveListProps>(({ onShowSearchBar },
 
   useEffect(() => {
     void getListPrevSelectId().then((id) => {
-      void setActiveList(id)
+      setActiveList(id)
     })
   }, [])
 

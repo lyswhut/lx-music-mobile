@@ -80,7 +80,7 @@ const getMusicPlayUrl = async(musicInfo: LX.Music.MusicInfo | LX.Download.ListIt
     if (global.lx.isPlayedStop || diffCurrentMusicInfo(musicInfo)) return null
 
     return url
-  }).catch(err => {
+  }).catch(async err => {
     // console.log('err', err.message)
     if (global.lx.isPlayedStop ||
       diffCurrentMusicInfo(musicInfo) ||

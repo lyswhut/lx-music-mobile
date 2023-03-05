@@ -1,12 +1,12 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { View, ImageBackground, TouchableOpacity, InteractionManager, ImageSourcePropType } from 'react-native'
+import { View, ImageBackground, TouchableOpacity, InteractionManager, type ImageSourcePropType } from 'react-native'
 import { setTheme } from '@/core/theme'
 import { useI18n } from '@/lang'
 import { useSettingValue } from '@/store/setting/hook'
 import { useTheme } from '@/store/theme/hook'
 
 import SubTitle from '../components/SubTitle'
-import { BG_IMAGES, getAllThemes, LocalTheme } from '@/theme/themes'
+import { BG_IMAGES, getAllThemes, type LocalTheme } from '@/theme/themes'
 import Text from '@/components/common/Text'
 import { createStyle } from '@/utils/tools'
 import { scaleSizeH } from '@/utils/pixelRatio'
@@ -28,7 +28,7 @@ const ThemeItem = ({ id, name, color, image, setTheme }: {
   const isActive = useActive(id)
 
   return (
-    <TouchableOpacity style={{ ...styles.item, width: scaleSizeH(ITEM_HEIGHT) }} activeOpacity={0.5} onPress={() => setTheme(id)}>
+    <TouchableOpacity style={{ ...styles.item, width: scaleSizeH(ITEM_HEIGHT) }} activeOpacity={0.5} onPress={() => { setTheme(id) }}>
       <View style={{ ...styles.colorContent, width: scaleSizeH(COLOR_ITEM_HEIGHT), borderColor: isActive ? color : 'transparent' }}>
         {
           image

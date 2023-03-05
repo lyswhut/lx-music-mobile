@@ -113,10 +113,10 @@ export default forwardRef<MultipleModeBarType, MultipleModeBarProps>(({ onSelect
     return (
       <Animated.View style={animaStyle}>
         <View style={styles.switchBtn}>
-          <Button onPress={() => onSwitchMode('single')} style={{ ...styles.btn, backgroundColor: selectMode == 'single' ? theme['c-button-background'] : 'rgba(0,0,0,0)' }}>
+          <Button onPress={() => { onSwitchMode('single') }} style={{ ...styles.btn, backgroundColor: selectMode == 'single' ? theme['c-button-background'] : 'rgba(0,0,0,0)' }}>
             <Text color={theme['c-button-font']}>{global.i18n.t('list_select_single')}</Text>
           </Button>
-          <Button onPress={() => onSwitchMode('range')} style={{ ...styles.btn, backgroundColor: selectMode == 'range' ? theme['c-button-background'] : 'rgba(0,0,0,0)' }}>
+          <Button onPress={() => { onSwitchMode('range') }} style={{ ...styles.btn, backgroundColor: selectMode == 'range' ? theme['c-button-background'] : 'rgba(0,0,0,0)' }}>
             <Text color={theme['c-button-font']}>{global.i18n.t('list_select_range')}</Text>
           </Button>
         </View>

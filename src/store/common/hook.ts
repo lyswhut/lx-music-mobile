@@ -46,6 +46,7 @@ export const usePageVisible = (visibleNames: COMPONENT_IDS[], onChange: (visible
     return () => {
       global.state_event.off('componentIdsUpdated', handlecheck)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 }
 
@@ -62,6 +63,7 @@ export const useAssertApiSupport = (source: LX.Source) => {
     return () => {
       global.state_event.off('apiSourceUpdated', handleUpdate)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return value

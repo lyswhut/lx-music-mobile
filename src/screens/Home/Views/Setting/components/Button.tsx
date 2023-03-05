@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 
-import Button, { BtnProps } from '@/components/common/Button'
+import Button, { type BtnProps } from '@/components/common/Button'
 import Text from '@/components/common/Text'
 import { useTheme } from '@/store/theme/hook'
 import { createStyle } from '@/utils/tools'

@@ -2,9 +2,9 @@ import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react'
 // import { StyleSheet, View, Text, StatusBar, ScrollView } from 'react-native'
 
 // import { useGetter, useDispatch } from '@/store'
-import List, { ListType } from './List'
+import List, { type ListType } from './List'
 
-import ConfirmAlert, { ConfirmAlertType } from '@/components/common/ConfirmAlert'
+import ConfirmAlert, { type ConfirmAlertType } from '@/components/common/ConfirmAlert'
 import { checkStoragePermissions, requestStoragePermission, toast } from '@/utils/tools'
 import { useI18n } from '@/lang'
 

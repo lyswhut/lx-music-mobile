@@ -124,7 +124,7 @@ export const useLrcSet = () => {
       setLines(lines)
     }
     lrcTools.addSetLyricHook(callback)
-    return () => lrcTools.removeSetLyricHook(callback)
+    return () => { lrcTools.removeSetLyricHook(callback) }
   }, [])
 
   return lines

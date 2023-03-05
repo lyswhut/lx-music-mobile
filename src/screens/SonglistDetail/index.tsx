@@ -24,6 +24,7 @@ export default ({ componentId }: { componentId: string }) => {
     return () => {
       isUnmountedRef.current = true
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 

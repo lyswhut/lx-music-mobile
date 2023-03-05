@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useImperativeHandle, forwardRef, useState } from 'react'
 import { useI18n } from '@/lang'
-import Menu, { MenuType, Position } from '@/components/common/Menu'
+import Menu, { type MenuType, type Position } from '@/components/common/Menu'
 
 export interface SelectInfo {
   listId: string

@@ -5,7 +5,7 @@ import settingState from '@/store/setting/state'
 import themeState from '@/store/theme/state'
 import { isUrl } from '@/utils'
 import { externalDirectoryPath } from '@/utils/fs'
-import { ImageSourcePropType } from 'react-native'
+import { type ImageSourcePropType } from 'react-native'
 
 export const BG_IMAGES = {
   'china_ink.jpg': require('./images/china_ink.jpg') as ImageSourcePropType,

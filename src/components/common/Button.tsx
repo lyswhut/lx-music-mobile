@@ -1,6 +1,6 @@
 import { useTheme } from '@/store/theme/hook'
 import React, { useMemo, useRef, useImperativeHandle, forwardRef } from 'react'
-import { Pressable, PressableProps, StyleSheet, View, ViewProps } from 'react-native'
+import { Pressable, type PressableProps, StyleSheet, type View, type ViewProps } from 'react-native'
 // import { AppColors } from '@/theme'
 
 

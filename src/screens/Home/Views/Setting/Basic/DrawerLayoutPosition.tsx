@@ -31,7 +31,7 @@ const Item = ({ position, label }: {
 }) => {
   const isActive = useActive(position)
   // const [toggleCheckBox, setToggleCheckBox] = useState(false)
-  return <CheckBox marginRight={8} check={isActive} label={label} onChange={() => updateSetting({ 'common.drawerLayoutPosition': position })} need />
+  return <CheckBox marginRight={8} check={isActive} label={label} onChange={() => { updateSetting({ 'common.drawerLayoutPosition': position }) }} need />
 }
 
 export default memo(() => {

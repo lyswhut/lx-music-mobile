@@ -143,7 +143,7 @@ export const getListDetailAll = async(id: string, isRefresh = false): Promise<LX
     if (pageCache) return pageCache.data
     return getListLimit(source, bangId, page)
   }
-  return loadData(1).then(result => {
+  return loadData(1).then(async result => {
     if (result.total <= result.limit) return result.list
 
     let maxPage = Math.ceil(result.total / result.limit)

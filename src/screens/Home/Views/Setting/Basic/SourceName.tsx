@@ -27,7 +27,7 @@ const Item = ({ id, name }: {
 }) => {
   const isActive = useActive(id)
   // const [toggleCheckBox, setToggleCheckBox] = useState(false)
-  return <CheckBox marginBottom={3} check={isActive} label={name} onChange={() => setSourceNameType(id)} need />
+  return <CheckBox marginBottom={3} check={isActive} label={name} onChange={() => { setSourceNameType(id) }} need />
 }
 
 export default memo(() => {

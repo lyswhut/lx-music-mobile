@@ -1,5 +1,5 @@
-import React, { useState, forwardRef, useImperativeHandle, Ref } from 'react'
-import { FlatList, FlatListProps } from 'react-native'
+import React, { useState, forwardRef, useImperativeHandle, type Ref } from 'react'
+import { FlatList, type FlatListProps } from 'react-native'
 
 // import InsetShadow from 'react-native-inset-shadow'
 

@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useImperativeHandle, forwardRef, useState } fro
 import { View, TouchableWithoutFeedback } from 'react-native'
 import { useDimensions } from '@/utils/hooks'
 
-import Modal, { ModalType } from '@/components/common/Modal'
+import Modal, { type ModalType } from '@/components/common/Modal'
 import { createStyle } from '@/utils/tools'
 // import { useGetter } from '@/store'
 

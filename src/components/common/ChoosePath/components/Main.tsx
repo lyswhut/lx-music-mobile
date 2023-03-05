@@ -4,7 +4,7 @@ import { createStyle } from '@/utils/tools'
 import React, { useMemo } from 'react'
 import { View, FlatList } from 'react-native'
 
-import ListItem, { PathItem } from './ListItem'
+import ListItem, { type PathItem } from './ListItem'
 
 
 export default ({ list, onSetPath, toParentDir }: {

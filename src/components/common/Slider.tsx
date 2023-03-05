@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 
-import Slider, { SliderProps as _SliderProps } from '@react-native-community/slider'
+import Slider, { type SliderProps as _SliderProps } from '@react-native-community/slider'
 import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 

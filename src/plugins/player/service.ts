@@ -76,7 +76,7 @@ const registerPlaybackService = async() => {
     global.app_event.setProgress(position)
   })
 
-  TrackPlayer.addEventListener(TPEvent.PlaybackState, info => {
+  TrackPlayer.addEventListener(TPEvent.PlaybackState, async info => {
     if (global.lx.gettingUrlId || isTempId()) return
     // let currentIsPlaying = false
 

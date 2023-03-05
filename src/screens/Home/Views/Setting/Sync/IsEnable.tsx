@@ -80,6 +80,7 @@ export default memo(({ host, setHost }: {
     return () => {
       isUnmountedRef.current = true
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

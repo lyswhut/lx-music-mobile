@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react'
 import { View } from 'react-native'
 
-import InputItem, { InputItemProps } from '../components/InputItem'
+import InputItem, { type InputItemProps } from '../components/InputItem'
 import { createStyle, toast } from '@/utils/tools'
 import { useSettingValue } from '@/store/setting/hook'
 import { useI18n } from '@/lang'

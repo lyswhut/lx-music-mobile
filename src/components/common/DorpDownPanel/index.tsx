@@ -1,8 +1,8 @@
 import React, { useRef, forwardRef } from 'react'
 // import { View } from 'react-native'
 
-import Panel, { PanelType } from './Panel'
-import Button, { BtnType } from '@/components/common/Button'
+import Panel, { type PanelType } from './Panel'
+import Button, { type BtnType } from '@/components/common/Button'
 
 
 export interface DorpDownPanelProps {

@@ -55,6 +55,7 @@ export default memo(({ value, label, onChanged, ...props }: InputItemProps) => {
       setText(newValue)
       textRef.current = newValue
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
   const handleSetSelectMode = (text: string) => {
     setText(text)

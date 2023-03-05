@@ -42,8 +42,8 @@ const Content = () => {
         <Text selectable style={styles.text} ><Text style={styles.bold}>5.</Text> 由于使用本软件产生的包括由于本协议或由于使用或无法使用本软件而引起的任何性质的任何直接、间接、特殊、偶然或结果性损害（包括但不限于因商誉损失、停工、计算机故障或故障引起的损害赔偿，或任何及所有其他商业损害或损失）由使用者负责。</Text>
         <Text selectable style={styles.text} ><Text style={styles.bold}>6.</Text> 本项目完全免费，且开源发布于 <Text onPress={openHomePage} style={textLinkStyle}>GitHub</Text> 面向全世界人用作对技术的学习交流，本软件不对项目内的技术可能存在违反当地法律法规的行为作保证，<Text style={styles.bold}>禁止在违反当地法律法规的情况下使用本软件</Text>，对于使用者在明知或不知当地法律法规不允许的情况下使用本软件所造成的任何违法违规行为由使用者承担，本软件不承担由此造成的任何直接、间接、特殊、偶然或结果性责任。</Text>
         <Text selectable style={styles.text} ><Text style={styles.bold}>*</Text> 若协议更新，恕不另行通知，可到开源地址查看。</Text>
-        <Text selectable style={styles.text} ><Text style={styles.bold}>*</Text> 本软件的初衷是帮助官方音乐平台简化数据后代为展示，帮助使用者根据歌曲名、艺术家等关键字快速地定位所需内容所在的音乐平台。</Text>
         <Text selectable style={styles.text} ><Text style={styles.bold}>*</Text> 音乐平台不易，建议到对应音乐平台支持正版资源。</Text>
+        <Text selectable style={styles.text} ><Text style={styles.bold}>*</Text> 本项目仅用于对技术可行性的探索及研究，不接受任何商业（包括但不限于广告等）合作及捐赠。</Text>
       </ScrollView>
     </View>
   )

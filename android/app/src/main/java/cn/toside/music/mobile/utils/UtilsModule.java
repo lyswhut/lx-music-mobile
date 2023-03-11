@@ -11,6 +11,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 
 import androidx.core.app.LocaleManagerCompat;
@@ -22,6 +23,7 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.UiThreadUtil;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableNativeArray;
 
@@ -275,5 +277,35 @@ public class UtilsModule extends ReactContextBaseJavaModule {
       promise.resolve(locale.toString());
     }
   }
+
+  // https://github.com/Anthonyzou/react-native-full-screen/blob/master/android/src/main/java/com/rn/full/screen/FullScreen.java
+  @ReactMethod
+  public void onFullScreen() {
+    UiThreadUtil.runOnUiThread(() -> {
+      Activity currentActivity = reactContext.getCurrentActivity();
+      if (currentActivity == null) return;
+      currentActivity.getWindow().getDecorView().setSystemUiVisibility(
+        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+          | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+          | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+          | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+          | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+          | View.SYSTEM_UI_FLAG_IMMERSIVE
+      );
+    });
+  }
+  @ReactMethod
+  public void offFullScreen() {
+    UiThreadUtil.runOnUiThread(() -> {
+      Activity currentActivity = reactContext.getCurrentActivity();
+      if (currentActivity == null) return;
+      currentActivity.getWindow().getDecorView().setSystemUiVisibility(
+        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+          | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+          | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+      );
+    });
+  }
+
 }
 

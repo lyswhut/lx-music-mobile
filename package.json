@@ -60,7 +60,7 @@
     "react-native-quick-base64": "^2.0.5",
     "react-native-quick-crypto": "github:lyswhut/react-native-quick-crypto#da0173c57db85052c053253945bc0ebfd1af1f56",
     "react-native-quick-md5": "^3.0.4",
-    "react-native-track-player": "github:lyswhut/react-native-track-player#38027954a5ac6e3d92961745e0a9633fc647f47a",
+    "react-native-track-player": "github:lyswhut/react-native-track-player#879d3dc6b7ad41f736943d7495be0ba87b4cf050",
     "react-native-vector-icons": "^9.2.0"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.0.0-beta.7",
+  "version": "1.0.0-beta.8",
   "versionCode": 53,
   "private": true,
   "scripts": {
@@ -51,7 +51,7 @@
     "lrc-file-parser": "^2.3.0",
     "pako": "^2.1.0",
     "react": "18.2.0",
-    "react-native": "0.71.3",
+    "react-native": "0.71.4",
     "react-native-background-timer": "^2.4.1",
     "react-native-exception-handler": "^2.10.10",
     "react-native-fs": "^2.20.0",
@@ -77,7 +77,7 @@
     "eslint-config-standard-with-typescript": "^34.0.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "metro-react-native-babel-preset": "0.73.7",
+    "metro-react-native-babel-preset": "0.73.8",
     "typescript": "^4.9.5"
   }
 }

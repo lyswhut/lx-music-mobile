@@ -50,7 +50,7 @@ export const getPicUrl = async({ musicInfo, listId, isRefresh, onToggleSource = 
   if (!otherSource.length) throw new Error('source not found')
   return await getOnlineOtherSourcePicUrl({ musicInfos: [...otherSource], onToggleSource, isRefresh }).then(({ url, musicInfo: targetMusicInfo, isFromCache }) => {
     if (listId) {
-      // musicInfo.meta.picUrl = url
+      musicInfo.meta.picUrl = url
       void updateListMusics([{ id: listId, musicInfo }])
     }
 

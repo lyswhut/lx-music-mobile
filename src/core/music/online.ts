@@ -52,7 +52,7 @@ export const getMusicUrl = async({ musicInfo, quality, isRefresh, allowToggleSou
 
   //   // return Promise.reject(new Error('该歌曲没有可播放的音频'))
   // }
-  const targetQuality = quality ?? getPlayQuality(settingState.setting['player.highQuality'], musicInfo)
+  const targetQuality = quality ?? getPlayQuality(settingState.setting['player.isPlayHighQuality'], musicInfo)
   const cachedUrl = await getStoreMusicUrl(musicInfo, targetQuality)
   if (cachedUrl && !isRefresh) return cachedUrl
 
@@ -74,7 +74,7 @@ export const getPicUrl = async({ musicInfo, listId, isRefresh, allowToggleSource
   return await handleGetOnlinePicUrl({ musicInfo, onToggleSource, isRefresh, allowToggleSource }).then(({ url, musicInfo: targetMusicInfo, isFromCache }) => {
     // picRequest = null
     if (listId) {
-      // musicInfo.meta.picUrl = url
+      musicInfo.meta.picUrl = url
       void updateListMusics([{ id: listId, musicInfo }])
     }
     // savePic({ musicInfo, url, listId })

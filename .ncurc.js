@@ -3,6 +3,7 @@ module.exports = {
   reject: [
     // 'metro-react-native-babel-preset',
     '@types/react-native',
+    'metro-react-native-babel-preset',
     'react-native',
     'react',
   ]
@@ -11,6 +12,7 @@ module.exports = {
   // filter: [
   //   'react-native',
   //   '@types/react-native',
-  //   'react'
+  //   'react',
+  //   'metro-react-native-babel-preset',
   // ],
 }

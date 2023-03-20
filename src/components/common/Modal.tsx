@@ -1,23 +1,23 @@
-import { createStyle } from '@/utils/tools'
+// import { createStyle } from '@/utils/tools'
 import React, { useImperativeHandle, forwardRef, useState, useMemo } from 'react'
 import { Modal, TouchableWithoutFeedback, View, type ModalProps as _ModalProps } from 'react-native'
 import StatusBar from './StatusBar'
 // import { useDimensions } from '@/utils/hooks'
 
-const styles = createStyle({
-  // container: {
-  //   flex: 1,
-  // },
-  mask: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    // width: '100%',
-    // height: '100%',
-  },
-})
+// const styles = createStyle({
+//   container: {
+//     flex: 1,
+//   },
+//   // mask: {
+//   //   position: 'absolute',
+//   //   top: 0,
+//   //   left: 0,
+//   //   bottom: 0,
+//   //   right: 0,
+//   //   // width: '100%',
+//   //   // height: '100%',
+//   // },
+// })
 
 export interface ModalProps extends Omit<_ModalProps, 'visible'> {
   onHide?: () => void
@@ -89,12 +89,13 @@ export default forwardRef<ModalType, ModalProps>(({
       {...props}
     >
       {/* <StatusBar /> */}
-      <View style={{ flex: 1, paddingTop: statusBarPadding ? StatusBar.currentHeight : 0 }}>
-        <TouchableWithoutFeedback style={styles.mask} onPress={handleBgClose}>
-          <View style={{ ...styles.mask, backgroundColor: bgColor }}></View>
-        </TouchableWithoutFeedback>
-        {memoChildren}
-      </View>
+      {/* <View style={{ flex: 1, paddingTop: statusBarPadding ? StatusBar.currentHeight : 0 }}> */}
+      <TouchableWithoutFeedback style={{ flex: 1, paddingTop: statusBarPadding ? StatusBar.currentHeight : 0 }} onPress={handleBgClose}>
+        <View style={{ flex: 1, backgroundColor: bgColor }}>
+          {memoChildren}
+        </View>
+      </TouchableWithoutFeedback>
+      {/* </View> */}
     </Modal>
   )
 })

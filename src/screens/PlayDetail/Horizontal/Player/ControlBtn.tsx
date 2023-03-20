@@ -7,7 +7,7 @@ import { playNext, playPrev, togglePlay } from '@/core/player/player'
 import { scaleSizeW } from '@/utils/pixelRatio'
 import { useIsPlay } from '@/store/player/hook'
 
-const WIDTH = scaleSizeW(50)
+const WIDTH = scaleSizeW(48)
 
 const PrevBtn = () => {
   const theme = useTheme()

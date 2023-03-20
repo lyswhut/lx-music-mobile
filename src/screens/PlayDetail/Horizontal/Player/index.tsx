@@ -25,7 +25,7 @@ const styles = createStyle({
   container: {
     flexShrink: 0,
     flexGrow: 0,
-    paddingLeft: 15,
+    // paddingLeft: 15,
     // paddingRight: 15,
   },
   controlBtn: {
@@ -33,6 +33,7 @@ const styles = createStyle({
     // alignItems: 'flex-end',
     justifyContent: 'space-between',
     paddingTop: 8,
+    paddingLeft: 5,
     // paddingBottom: 10,
   },
 })

@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
 import OnlineList, { type OnlineListType, type OnlineListProps } from '@/components/OnlineList'
-import { getListDetail, setListDetail, setListDetailInfo } from '@/core/songlist'
+import { clearListDetail, getListDetail, setListDetail, setListDetailInfo } from '@/core/songlist'
 import songlistState from '@/store/songlist/state'
 import { handlePlay } from './listAction'
 import Header, { type HeaderType } from './Header'
@@ -55,6 +55,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
             listRef.current?.setStatus(songlistState.listDetailInfo.maxPage == page ? 'end' : 'idle')
           })
         }).catch(() => {
+          if (songlistState.listDetailInfo.list.length && page == 1) clearListDetail()
           listRef.current?.setStatus('error')
         })
       }
@@ -83,6 +84,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
       listRef.current?.setList(result.list)
       listRef.current?.setStatus(songlistState.listDetailInfo.maxPage == page ? 'end' : 'idle')
     }).catch(() => {
+      if (songlistState.listDetailInfo.list.length && page == 1) clearListDetail()
       listRef.current?.setStatus('error')
     })
   }
@@ -95,6 +97,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
       listRef.current?.setList(result.list)
       listRef.current?.setStatus(songlistState.listDetailInfo.maxPage == page ? 'end' : 'idle')
     }).catch(() => {
+      if (songlistState.listDetailInfo.list.length && page == 1) clearListDetail()
       listRef.current?.setStatus('error')
     })
   }

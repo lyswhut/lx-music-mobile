@@ -49,6 +49,9 @@ export const search = async(text: string, page: number, sourceId: Source): Promi
     return ((musicSdk[sourceId]?.songList.search(text, page, listInfo.limit) as Promise<SearchResult>).then((data: SearchResult) => {
       if (key != listInfo.key) return []
       return setListInfo(data, page, text)
-    }) ?? Promise.reject(new Error('source not found: ' + sourceId)))
+    }) ?? Promise.reject(new Error('source not found: ' + sourceId))).catch((err: any) => {
+      if (listInfo.list.length && page == 1) clearListInfo(sourceId)
+      throw err
+    })
   }
 }

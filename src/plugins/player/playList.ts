@@ -219,14 +219,14 @@ const debounceUpdateMetaInfoTools = {
           if (!musicInfo) return
           // isDelayRun = false
           void fn(musicInfo)
-        }, 1200)
+        }, 1500)
       } else {
         isDelayRun = true
         void fn(musicInfo)
         BackgroundTimer.setTimeout(() => {
           // delayTimer = null
           isDelayRun = false
-        }, 1200)
+        }, 1000)
       }
     }
   },

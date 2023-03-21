@@ -7,7 +7,9 @@ import settingState from '@/store/setting/state'
 type Hook = (time: number, isPlayedStop: boolean) => void
 
 const timeoutTools = {
-  timeout: null as number | null,
+  bgTimeout: null as number | null,
+  timeout: null as NodeJS.Timer | null,
+  startTime: 0,
   time: -1,
   timeHooks: [] as Hook[],
   exit() {
@@ -18,14 +20,20 @@ const timeoutTools = {
       exitApp()
     }
   },
+  getTime() {
+    return Math.max(this.time - Math.round((performance.now() - this.startTime) / 1000), -1)
+  },
   callHooks() {
+    const time = this.getTime()
     for (const hook of this.timeHooks) {
-      hook(this.time, global.lx.isPlayedStop)
+      hook(time, global.lx.isPlayedStop)
     }
   },
   clearTimeout() {
-    if (!this.timeout) return
-    BackgroundTimer.clearInterval(this.timeout)
+    if (!this.bgTimeout) return
+    BackgroundTimer.clearTimeout(this.bgTimeout)
+    clearInterval(this.timeout as NodeJS.Timer)
+    this.bgTimeout = null
     this.timeout = null
     this.time = -1
     this.callHooks()
@@ -33,19 +41,18 @@ const timeoutTools = {
   start(time: number) {
     this.clearTimeout()
     this.time = time
-    this.timeout = BackgroundTimer.setInterval(() => {
-      if (this.time > 0) {
-        this.time--
-        this.callHooks()
-      } else {
-        this.clearTimeout()
-        this.exit()
-      }
+    this.startTime = performance.now()
+    this.bgTimeout = BackgroundTimer.setTimeout(() => {
+      this.clearTimeout()
+      this.exit()
+    }, time * 1000)
+    this.timeout = setInterval(() => {
+      this.callHooks()
     }, 1000)
   },
   addTimeHook(hook: Hook) {
     this.timeHooks.push(hook)
-    hook(this.time, global.lx.isPlayedStop)
+    hook(this.getTime(), global.lx.isPlayedStop)
   },
   removeTimeHook(hook: Hook) {
     this.timeHooks.splice(this.timeHooks.indexOf(hook), 1)

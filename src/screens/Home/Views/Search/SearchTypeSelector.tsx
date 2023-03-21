@@ -7,6 +7,7 @@ import { useI18n } from '@/lang'
 import Text from '@/components/common/Text'
 import { useTheme } from '@/store/theme/hook'
 import { getSearchSetting } from '@/utils/data'
+import { BorderWidths } from '@/theme'
 
 const SEARCH_TYPE_LIST = [
   'music',
@@ -38,7 +39,7 @@ export default () => {
       {
         list.map(t => (
           <TouchableOpacity style={styles.button} onPress={() => { handleTypeChange(t.id) }} key={t.id}>
-            <Text style={styles.buttonText} color={type == t.id ? theme['c-primary-font-active'] : theme['c-font']}>{t.label}</Text>
+            <Text style={{ ...styles.buttonText, borderBottomColor: type == t.id ? theme['c-primary-background-active'] : 'transparent' }} color={type == t.id ? theme['c-primary-font-active'] : theme['c-font']}>{t.label}</Text>
           </TouchableOpacity>
         ))
       }
@@ -59,6 +60,8 @@ const styles = createStyle({
     // height: 38,
     // lineHeight: 38,
     justifyContent: 'center',
+    paddingLeft: 8,
+    paddingRight: 8,
     // width: 80,
     // backgroundColor: 'rgba(0,0,0,0.1)',
   },
@@ -66,10 +69,12 @@ const styles = createStyle({
     // height: 38,
     // lineHeight: 38,
     textAlign: 'center',
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 2,
+    paddingRight: 2,
     // paddingTop: 10,
-    // paddingBottom: 10,
+    paddingTop: 2,
+    paddingBottom: 2,
+    borderBottomWidth: BorderWidths.normal3,
     // width: 80,
   },
 })

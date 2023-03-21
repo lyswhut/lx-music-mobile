@@ -35,7 +35,7 @@ export const styles = createStyle({
     paddingRight: 13,
   },
   button: {
-    height: 34,
+    height: 36,
     paddingLeft: 10,
     paddingRight: 10,
     marginRight: 10,

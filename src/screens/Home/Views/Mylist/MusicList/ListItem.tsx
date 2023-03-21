@@ -43,7 +43,7 @@ export default memo(({ item, index, activeIndex, onPress, onShowMenu, onLongPres
         {
           active
             ? <Icon style={styles.sn} name="play-outline" size={13} color={theme['c-primary-font']} />
-            : <Text style={styles.sn} size={14} color={theme['c-300']}>{index + 1}</Text>
+            : <Text style={styles.sn} size={13} color={theme['c-300']}>{index + 1}</Text>
         }
         <View style={styles.itemInfo}>
           {/* <View style={styles.listItemTitle}> */}

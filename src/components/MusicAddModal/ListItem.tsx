@@ -43,7 +43,7 @@ export const styles = createStyle({
     // backgroundColor: 'rgba(0,0,0,0.2)',
   },
   button: {
-    height: 34,
+    height: 36,
     paddingLeft: 10,
     paddingRight: 10,
     marginRight: 10,

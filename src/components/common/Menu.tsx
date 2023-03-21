@@ -9,7 +9,7 @@ import { useTheme } from '@/store/theme/hook'
 import Text from './Text'
 import { scaleSizeH, scaleSizeW } from '@/utils/pixelRatio'
 
-const menuItemHeight = scaleSizeH(38)
+const menuItemHeight = scaleSizeH(40)
 const menuItemWidth = scaleSizeW(100)
 
 export interface Position { w: number, h: number, x: number, y: number, menuWidth?: number, menuHeight?: number }

@@ -52,13 +52,13 @@
     "pako": "^2.1.0",
     "react": "18.2.0",
     "react-native": "0.71.4",
-    "react-native-background-timer": "^2.4.1",
+    "react-native-background-timer": "github:lyswhut/react-native-background-timer#88b1d05b2dcdc5af72bf365bf7ff00eec114d428",
     "react-native-exception-handler": "^2.10.10",
     "react-native-fs": "^2.20.0",
     "react-native-navigation": "^7.32.1",
     "react-native-pager-view": "^6.1.4",
     "react-native-quick-base64": "^2.0.5",
-    "react-native-quick-crypto": "github:lyswhut/react-native-quick-crypto#da0173c57db85052c053253945bc0ebfd1af1f56",
+    "react-native-quick-crypto": "github:lyswhut/react-native-quick-crypto#b4ea59238ded4fe9cd4d252a838ddfcb7bcd19d8",
     "react-native-quick-md5": "^3.0.4",
     "react-native-track-player": "github:lyswhut/react-native-track-player#879d3dc6b7ad41f736943d7495be0ba87b4cf050",
     "react-native-vector-icons": "^9.2.0"
@@ -78,6 +78,6 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "metro-react-native-babel-preset": "0.73.8",
-    "typescript": "^4.9.5"
+    "typescript": "^5.0.2"
   }
 }

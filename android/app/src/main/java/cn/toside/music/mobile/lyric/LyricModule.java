@@ -21,6 +21,8 @@ public class LyricModule extends ReactContextBaseJavaModule {
   boolean isShowTranslation = false;
   boolean isShowRoma = false;
 
+  private int listenerCount = 0;
+
   LyricModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
@@ -44,6 +46,23 @@ public class LyricModule extends ReactContextBaseJavaModule {
 //  public Map<String, Object> getConstants() {
 //    return constants;
 //  }
+
+  @ReactMethod
+  public void addListener(String eventName) {
+    if (listenerCount == 0) {
+      // Set up any upstream listeners or background tasks as necessary
+    }
+
+    listenerCount += 1;
+  }
+
+  @ReactMethod
+  public void removeListeners(Integer count) {
+    listenerCount -= count;
+    if (listenerCount == 0) {
+      // Remove upstream listeners, stop unnecessary background tasks
+    }
+  }
 
   @ReactMethod
   public void showLyric(ReadableMap data, Promise promise) {

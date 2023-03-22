@@ -44,9 +44,3 @@ export const readFile = async(filePath: string): Promise<string> => {
 export const getSystemLocales = async(): Promise<string> => {
   return UtilsModule.getSystemLocales()
 }
-export const onFullScreen = async() => {
-  UtilsModule.onFullScreen()
-}
-export const offFullScreen = async() => {
-  UtilsModule.offFullScreen()
-}

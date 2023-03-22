@@ -279,33 +279,33 @@ public class UtilsModule extends ReactContextBaseJavaModule {
   }
 
   // https://github.com/Anthonyzou/react-native-full-screen/blob/master/android/src/main/java/com/rn/full/screen/FullScreen.java
-  @ReactMethod
-  public void onFullScreen() {
-    UiThreadUtil.runOnUiThread(() -> {
-      Activity currentActivity = reactContext.getCurrentActivity();
-      if (currentActivity == null) return;
-      currentActivity.getWindow().getDecorView().setSystemUiVisibility(
-        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-          | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-          | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-          | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-          | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-          | View.SYSTEM_UI_FLAG_IMMERSIVE
-      );
-    });
-  }
-  @ReactMethod
-  public void offFullScreen() {
-    UiThreadUtil.runOnUiThread(() -> {
-      Activity currentActivity = reactContext.getCurrentActivity();
-      if (currentActivity == null) return;
-      currentActivity.getWindow().getDecorView().setSystemUiVisibility(
-        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-          | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-          | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-      );
-    });
-  }
+  //  @ReactMethod
+  //  public void onFullScreen() {
+  //    UiThreadUtil.runOnUiThread(() -> {
+  //      Activity currentActivity = reactContext.getCurrentActivity();
+  //      if (currentActivity == null) return;
+  //      currentActivity.getWindow().getDecorView().setSystemUiVisibility(
+  //        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+  //          | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+  //          | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+  //          | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+  //          | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+  //          | View.SYSTEM_UI_FLAG_IMMERSIVE
+  //      );
+  //    });
+  //  }
+  //  @ReactMethod
+  //  public void offFullScreen() {
+  //    UiThreadUtil.runOnUiThread(() -> {
+  //      Activity currentActivity = reactContext.getCurrentActivity();
+  //      if (currentActivity == null) return;
+  //      currentActivity.getWindow().getDecorView().setSystemUiVisibility(
+  //        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+  //          | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+  //          | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+  //      );
+  //    });
+  //  }
 
 }
 

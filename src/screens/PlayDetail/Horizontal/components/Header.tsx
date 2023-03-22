@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState } from 'react'
+import React, { memo, useRef } from 'react'
 
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
 
@@ -12,61 +12,15 @@ import Text from '@/components/common/Text'
 import { scaleSizeH } from '@/utils/pixelRatio'
 import { HEADER_HEIGHT as _HEADER_HEIGHT, NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 import commonState from '@/store/common/state'
-import { createStyle } from '@/utils/tools'
-import { useSettingValue } from '@/store/setting/hook'
-import Slider, { type SliderProps } from '@/components/common/Slider'
-import { updateSetting } from '@/core/common'
 import Popup, { type PopupType } from '@/components/common/Popup'
 import { useI18n } from '@/lang'
 import CommentBtn from './CommentBtn'
 import Btn from './Btn'
+import SettingVolume from '../../components/SettingVolume'
+import SettingPlaybackRate from '../../components/SettingPlaybackRate'
+import SettingLrcFontSize from '../../components/SettingLrcFontSize'
 
 const HEADER_HEIGHT = scaleSizeH(_HEADER_HEIGHT)
-
-const LrcFontSizeStyles = createStyle({
-  content: {
-    flexGrow: 0,
-    flexShrink: 1,
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    alignItems: 'center',
-    paddingLeft: 15,
-    paddingRight: 15,
-  },
-})
-const LrcFontSize = () => {
-  const theme = useTheme()
-  const lrcFontSize = useSettingValue('player.horizontal.style.lrcFontSize')
-  const [sliderSize, setSliderSize] = useState(lrcFontSize)
-  const [isSliding, setSliding] = useState(false)
-
-  const handleSlidingStart: SliderProps['onSlidingStart'] = value => {
-    setSliding(true)
-  }
-  const handleValueChange: SliderProps['onValueChange'] = value => {
-    setSliderSize(value)
-  }
-  const handleSlidingComplete: SliderProps['onSlidingComplete'] = value => {
-    if (lrcFontSize == value) return
-    updateSetting({ 'player.horizontal.style.lrcFontSize': value })
-    setSliding(false)
-  }
-
-  return (
-    <View style={LrcFontSizeStyles.content}>
-      <Text color={theme['c-font-label']}>{isSliding ? sliderSize : lrcFontSize}</Text>
-      <Slider
-        minimumValue={100}
-        maximumValue={300}
-        onSlidingComplete={handleSlidingComplete}
-        onValueChange={handleValueChange}
-        onSlidingStart={handleSlidingStart}
-        step={2}
-        value={lrcFontSize}
-      />
-    </View>
-  )
-}
 
 const Title = () => {
   const theme = useTheme()
@@ -104,10 +58,12 @@ export default memo(() => {
         </TouchableOpacity>
         <Title />
         <CommentBtn />
-        <Btn icon="font-size" onPress={showSetting} />
+        <Btn icon="slider" onPress={showSetting} />
       </View>
-      <Popup ref={popupRef} position="left" title={t('player_setting_lrc_font_size')}>
-        <LrcFontSize />
+      <Popup ref={popupRef} position="left" title={t('player_setting_title')}>
+        <SettingVolume />
+        <SettingLrcFontSize />
+        <SettingPlaybackRate />
       </Popup>
     </View>
   )

@@ -4,6 +4,7 @@ import {
   setLyric,
   play,
   pause,
+  setPlaybackRate,
   toggleTranslation,
   toggleRoma,
   toggleLock,
@@ -65,6 +66,7 @@ export const hideDesktopLyric = async() => {
 export const playDesktopLyric = play
 export const pauseDesktopLyric = pause
 export const setDesktopLyric = setLyric
+export const setDesktopLyricPlaybackRate = setPlaybackRate
 export const toggleDesktopLyricTranslation = toggleTranslation
 export const toggleDesktopLyricRoma = toggleRoma
 export const toggleDesktopLyricLock = toggleLock

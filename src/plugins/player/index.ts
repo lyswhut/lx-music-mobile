@@ -1,5 +1,5 @@
 import TrackPlayer from 'react-native-track-player'
-import { updateOptions } from './utils'
+import { updateOptions, setVolume, setPlaybackRate } from './utils'
 
 // const listenEvent = () => {
 //   TrackPlayer.addEventListener('playback-error', err => {
@@ -16,7 +16,12 @@ import { updateOptions } from './utils'
 //   })
 // }
 
-const initial = async({ cacheSize, isHandleAudioFocus }: { cacheSize: number, isHandleAudioFocus: boolean }) => {
+const initial = async({ volume, playRate, cacheSize, isHandleAudioFocus }: {
+  volume: number
+  playRate: number
+  cacheSize: number
+  isHandleAudioFocus: boolean
+}) => {
   if (global.lx.playerStatus.isIniting || global.lx.playerStatus.isInitialized) return
   global.lx.playerStatus.isIniting = true
   console.log('Cache Size', cacheSize * 1024)
@@ -30,6 +35,8 @@ const initial = async({ cacheSize, isHandleAudioFocus }: { cacheSize: number, is
   global.lx.playerStatus.isInitialized = true
   global.lx.playerStatus.isIniting = false
   await updateOptions()
+  await setVolume(volume)
+  await setPlaybackRate(playRate)
   // listenEvent()
 }
 
@@ -40,6 +47,8 @@ const isInitialized = () => global.lx.playerStatus.isInitialized
 export {
   initial,
   isInitialized,
+  setVolume,
+  setPlaybackRate,
 }
 
 export {

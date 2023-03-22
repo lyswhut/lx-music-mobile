@@ -1,5 +1,7 @@
 package cn.toside.music.mobile.lyric;
 
+import com.facebook.react.bridge.Promise;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,12 +27,13 @@ public class LyricPlayer {
   List<HashMap> lines = new ArrayList<>();
   HashMap tags = new HashMap();
   boolean isPlay = false;
+  int playbackRate = 1;
   int curLineNum = 0;
   int maxLine = 0;
   int offset = 150;
   int performanceTime = 0;
   int startPlayTime = 0;
-  int delay = 0;
+  // int delay = 0;
   Object tid = null;
   boolean tempPause = false;
   boolean tempPaused = false;
@@ -86,7 +89,7 @@ public class LyricPlayer {
   }
 
   private int getCurrentTime() {
-    return getNow() - this.performanceTime + startPlayTime;
+    return (getNow() - this.performanceTime) * this.playbackRate + startPlayTime;
   }
 
   private void initTag() {
@@ -294,7 +297,7 @@ public class LyricPlayer {
 
     if (driftTime >= 0 || curLineNum == 0) {
       HashMap nextLine = lines.get(curLineNum + 1);
-      delay = (int) nextLine.get("time") - (int) curLine.get("time") - driftTime;
+      int delay = ((int) nextLine.get("time") - (int) curLine.get("time") - driftTime) / this.playbackRate;
       // Log.d("Lyric", "delay: " + delay + "  driftTime: " + driftTime);
       if (delay > 0) {
         if (isPlay) {
@@ -308,14 +311,13 @@ public class LyricPlayer {
           }, delay);
         }
         onPlay(curLineNum);
-        return;
       } else {
         int newCurLineNum = this.findCurLineNum(currentTime, curLineNum + 1);
         if (newCurLineNum > curLineNum) curLineNum = newCurLineNum - 1;
         // Log.d("Lyric", "refresh--: " + curLineNum + "  newCurLineNum: " + newCurLineNum);
         refresh();
-        return;
       }
+      return;
     }
 
     curLineNum = this.findCurLineNum(currentTime, curLineNum) - 1;
@@ -327,6 +329,13 @@ public class LyricPlayer {
     this.lyric = lyric;
     this.extendedLyrics = extendedLyrics;
     init();
+  }
+
+  public void setPlaybackRate(int playbackRate) {
+    this.playbackRate = playbackRate;
+    if (this.lines.size() == 0) return;
+    if (!this.isPlay) return;
+    this.play(this.getCurrentTime());
   }
 
   public void onPlay(int lineNum) {}

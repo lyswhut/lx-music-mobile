@@ -2,6 +2,7 @@ import {
   play as lrcPlay,
   setLyric as lrcSetLyric,
   pause as lrcPause,
+  setPlaybackRate as lrcSetPlaybackRate,
   toggleTranslation as lrcToggleTranslation,
   toggleRoma as lrcToggleRoma,
   init as lrcInit,
@@ -10,6 +11,7 @@ import {
   playDesktopLyric,
   setDesktopLyric,
   pauseDesktopLyric,
+  setDesktopLyricPlaybackRate,
   toggleDesktopLyricTranslation,
   toggleDesktopLyricRoma,
 } from '@/core/desktopLyric'
@@ -56,6 +58,22 @@ export const pause = () => {
  */
 export const stop = () => {
   handleSetLyric('')
+}
+
+/**
+ * set playback rate
+ * @param playbackRate playback rate
+ */
+export const setPlaybackRate = async(playbackRate: number) => {
+  lrcSetPlaybackRate(playbackRate)
+  await setDesktopLyricPlaybackRate(playbackRate)
+  if (playerState.isPlay) {
+    setTimeout(() => {
+      void getPosition().then((position) => {
+        handlePlay(position * 1000)
+      })
+    })
+  }
 }
 
 /**

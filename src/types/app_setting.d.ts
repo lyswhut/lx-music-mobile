@@ -82,6 +82,16 @@ declare global {
       'player.isSavePlayTime': boolean
 
       /**
+       * 音量大小
+       */
+      'player.volume': number
+
+      /**
+       * 播放速率
+       */
+      'player.playbackRate': number
+
+      /**
        * 缓存大小设置 unit MB
        */
       'player.cacheSize': string

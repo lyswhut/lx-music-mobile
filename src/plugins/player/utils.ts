@@ -162,6 +162,8 @@ export const setStop = async() => {
 export const setPause = async() => TrackPlayer.pause()
 // export const skipToNext = () => TrackPlayer.skipToNext()
 export const setCurrentTime = async(time: number) => TrackPlayer.seekTo(time)
+export const setVolume = async(num: number) => TrackPlayer.setVolume(num)
+export const setPlaybackRate = async(num: number) => TrackPlayer.setRate(num)
 
 export const resetPlay = async() => Promise.all([setPause(), setCurrentTime(0)])
 

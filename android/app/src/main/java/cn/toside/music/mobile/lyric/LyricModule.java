@@ -20,6 +20,7 @@ public class LyricModule extends ReactContextBaseJavaModule {
 
   boolean isShowTranslation = false;
   boolean isShowRoma = false;
+  int playbackRate = 1;
 
   private int listenerCount = 0;
 
@@ -66,7 +67,7 @@ public class LyricModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void showLyric(ReadableMap data, Promise promise) {
-    if (lyric == null) lyric = new Lyric(reactContext, isShowTranslation, isShowRoma);
+    if (lyric == null) lyric = new Lyric(reactContext, isShowTranslation, isShowRoma, playbackRate);
     lyric.showLyric(Arguments.toBundle(data), promise);
   }
 
@@ -82,6 +83,13 @@ public class LyricModule extends ReactContextBaseJavaModule {
     // Log.d("Lyric", "set lyric: " + lyric);
     // Log.d("Lyric", "set lyric translation: " + translation);
     if (lyric != null) this.lyric.setLyric(lyric, translation, romaLyric);
+    promise.resolve(null);
+  }
+
+  @ReactMethod
+  public void setPlaybackRate(int playbackRate, Promise promise) {
+    this.playbackRate = playbackRate;
+    if (lyric != null) lyric.setPlaybackRate(playbackRate);
     promise.resolve(null);
   }
 

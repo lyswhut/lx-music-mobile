@@ -130,6 +130,11 @@ export const setLyric = async(lyric: string, translation: string, romalrc: strin
   return LyricModule.setLyric(lyric, translation || '', romalrc || '')
 }
 
+export const setPlaybackRate = async(rate: number): Promise<void> => {
+  // if (!isShowLyric) return Promise.resolve()
+  return LyricModule.setPlaybackRate(rate)
+}
+
 /**
  * toggle show translation
  * @param isShowTranslation is show translation

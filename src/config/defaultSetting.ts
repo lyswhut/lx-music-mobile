@@ -13,6 +13,8 @@ const defaultSetting: LX.AppSetting = {
   'player.togglePlayMethod': 'listLoop',
   'player.isPlayHighQuality': false,
   'player.isSavePlayTime': false,
+  'player.volume': 1,
+  'player.playbackRate': 1,
   'player.cacheSize': '1024',
   'player.timeoutExit': '',
   'player.timeoutExitPlayed': true,

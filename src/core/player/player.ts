@@ -153,6 +153,8 @@ const handlePlay = async() => {
   if (!isInitialized()) {
     await checkNotificationPermission()
     await playerInitial({
+      volume: settingState.setting['player.volume'],
+      playRate: settingState.setting['player.playbackRate'],
       cacheSize: settingState.setting['player.cacheSize'] ? parseInt(settingState.setting['player.cacheSize']) : 0,
       isHandleAudioFocus: settingState.setting['player.isHandleAudioFocus'],
     })

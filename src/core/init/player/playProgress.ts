@@ -8,8 +8,14 @@ import { savePlayInfo } from '@/utils/data'
 import playerState from '@/store/player/state'
 import settingState from '@/store/setting/state'
 
-
-const delaySavePlayInfo = throttle(savePlayInfo, 2000)
+const delaySavePlayInfo = throttle(() => {
+  void savePlayInfo({
+    time: playerState.progress.nowPlayTime,
+    maxTime: playerState.progress.maxPlayTime,
+    listId: playerState.playMusicInfo.listId as string,
+    index: playerState.playInfo.playIndex,
+  })
+}, 2000)
 
 export default () => {
   // const updateMusicInfo = useCommit('list', 'updateMusicInfo')
@@ -22,12 +28,7 @@ export default () => {
       setNowPlayTime(position)
 
       if (settingState.setting['player.isSavePlayTime'] && !playerState.playMusicInfo.isTempPlay) {
-        delaySavePlayInfo({
-          time: position,
-          maxTime: playerState.progress.maxPlayTime,
-          listId: playerState.playMusicInfo.listId as string,
-          index: playerState.playInfo.playIndex,
-        })
+        delaySavePlayInfo()
       }
     })
   }
@@ -58,7 +59,7 @@ export default () => {
     clearUpdateTimeout()
     updateTimeout = setInterval(() => {
       getCurrentTime()
-    }, 1000)
+    }, 1000 / settingState.setting['player.playbackRate'])
     getCurrentTime()
   }
 
@@ -110,7 +111,7 @@ export default () => {
     // setMaxplayTime(playProgress.maxPlayTime)
     handlePause()
     if (!playerState.playMusicInfo.isTempPlay) {
-      delaySavePlayInfo({
+      void savePlayInfo({
         time: playerState.progress.nowPlayTime,
         maxTime: playerState.progress.maxPlayTime,
         listId: playerState.playMusicInfo.listId as string,
@@ -140,6 +141,11 @@ export default () => {
   //   }
   // })
 
+  const handleConfigUpdated: typeof global.state_event.configUpdated = (keys, settings) => {
+    if (keys.includes('player.playbackRate')) startUpdateTimeout()
+  }
+
+
   global.app_event.on('play', handlePlay)
   global.app_event.on('pause', handlePause)
   global.app_event.on('stop', handleStop)
@@ -151,4 +157,5 @@ export default () => {
   // global.app_event.on('playerWaiting', handleWating)
   // global.app_event.on('playerEmptied', handleEmpied)
   global.app_event.on('musicToggled', handleSetPlayInfo)
+  global.state_event.on('configUpdated', handleConfigUpdated)
 }

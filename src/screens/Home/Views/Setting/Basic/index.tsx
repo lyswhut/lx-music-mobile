@@ -9,8 +9,8 @@ import FontSize from './FontSize'
 import ShareType from './ShareType'
 import IsAutoTheme from './IsAutoTheme'
 import IsStartupAutoPlay from './IsStartupAutoPlay'
+import IsAutoHidePlayBar from './IsAutoHidePlayBar'
 import DrawerLayoutPosition from './DrawerLayoutPosition'
-// import IsAutoHidePlayBar from './IsAutoHidePlayBar'
 import { useI18n } from '@/lang/i18n'
 
 export default memo(() => {
@@ -22,15 +22,13 @@ export default memo(() => {
       <Theme />
       <IsAutoTheme />
       <IsStartupAutoPlay />
+      <IsAutoHidePlayBar />
       <Source />
       <SourceName />
       <DrawerLayoutPosition />
       <Language />
       <FontSize />
       <ShareType />
-      {/*
-      <IsAutoHidePlayBar />
-       */}
     </Section>
   )
 })

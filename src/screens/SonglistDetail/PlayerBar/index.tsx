@@ -1,25 +1,24 @@
-import React, { memo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { View } from 'react-native'
-// import { useKeyboard } from '@/utils/hooks'
+import { useKeyboard } from '@/utils/hooks'
 
 import Pic from './Pic'
 import Title from './Title'
 import PlayInfo from './PlayInfo'
 import ControlBtn from './ControlBtn'
 import { createStyle } from '@/utils/tools'
-// import { useSettingValue } from '@/store/setting/hook'
+import { useSettingValue } from '@/store/setting/hook'
 import { useTheme } from '@/store/theme/hook'
 
 
 export default memo(() => {
   // const { onLayout, ...layout } = useLayout()
-  // const { keyboardShown } = useKeyboard()
+  const { keyboardShown } = useKeyboard()
   const theme = useTheme()
-  // const autoHidePlayBar = useSettingValue('common.autoHidePlayBar')
+  const autoHidePlayBar = useSettingValue('common.autoHidePlayBar')
 
   // console.log('render pb')
-
-  return (
+  const playerComponent = useMemo(() => (
     <View style={{ ...styles.container, backgroundColor: theme['c-content-background'] }}>
       <Pic />
       <View style={styles.center}>
@@ -33,7 +32,9 @@ export default memo(() => {
         <ControlBtn />
       </View>
     </View>
-  )
+  ), [theme])
+
+  return autoHidePlayBar && keyboardShown ? null : playerComponent
 })
 
 

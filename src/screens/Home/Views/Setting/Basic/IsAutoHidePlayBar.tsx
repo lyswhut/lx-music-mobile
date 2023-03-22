@@ -10,14 +10,14 @@ import CheckBoxItem from '../components/CheckBoxItem'
 
 export default memo(() => {
   const t = useI18n()
-  const startupAutoPlay = useSettingValue('player.startupAutoPlay')
-  const setStartupAutoPlay = (startupAutoPlay: boolean) => {
-    updateSetting({ 'player.startupAutoPlay': startupAutoPlay })
+  const autoHidePlayBar = useSettingValue('common.autoHidePlayBar')
+  const setAutoHidePlayBar = (autoHidePlayBar: boolean) => {
+    updateSetting({ 'common.autoHidePlayBar': autoHidePlayBar })
   }
 
   return (
     <View style={styles.content}>
-      <CheckBoxItem check={startupAutoPlay} label={t('setting_basic_startup_auto_play')} onChange={setStartupAutoPlay} />
+      <CheckBoxItem check={autoHidePlayBar} label={t('setting_basic_auto_hide_play_bar')} onChange={setAutoHidePlayBar} />
     </View>
   )
 })
@@ -26,6 +26,6 @@ export default memo(() => {
 const styles = createStyle({
   content: {
     marginTop: 5,
-    // marginBottom: 15,
+    marginBottom: 15,
   },
 })

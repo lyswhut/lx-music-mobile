@@ -9,7 +9,7 @@
  * @format
  */
 
-import React from 'react'
+import React, { forwardRef } from 'react'
 import {
   View,
   StyleSheet,
@@ -43,11 +43,13 @@ import type { ImageBackgroundProps as _ImageBackgroundProps } from 'react-native
  * ```
  */
 
-interface ImageBackgroundProps extends Omit<_ImageBackgroundProps, 'source'> {
+export type ImageBackgroundType = View
+
+export interface ImageBackgroundProps extends Omit<_ImageBackgroundProps, 'source'> {
   source?: _ImageBackgroundProps['source'] | null
 }
 
-export default ({
+export default forwardRef<View, ImageBackgroundProps>(({
   children,
   style,
   imageStyle,
@@ -55,12 +57,13 @@ export default ({
   importantForAccessibility,
   source,
   ...props
-}: ImageBackgroundProps) => {
+}, ref) => {
   const flattenedStyle = StyleSheet.flatten(style)
   return (
     <View
       accessibilityIgnoresInvertColors={true}
       importantForAccessibility={importantForAccessibility}
+      ref={ref}
       style={style}>
       {
         source == null ? null : (
@@ -90,4 +93,4 @@ export default ({
       {children}
     </View>
   )
-}
+})

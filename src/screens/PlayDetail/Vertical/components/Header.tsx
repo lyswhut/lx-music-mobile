@@ -59,7 +59,7 @@ export default memo(() => {
         </TouchableOpacity>
         <Title />
         <TouchableOpacity onPress={showSetting} style={{ ...styles.button, width: HEADER_HEIGHT }}>
-          <Icon name="slider" size={18} />
+          <Icon name="slider" size={19} />
         </TouchableOpacity>
       </View>
       <Popup ref={popupRef} title={t('player_setting_title')}>

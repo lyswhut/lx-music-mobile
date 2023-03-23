@@ -4,7 +4,7 @@ import { onDesktopLyricPositionChange, showDesktopLyric } from '@/core/desktopLy
 
 export default async(setting: LX.AppSetting) => {
   await initLyricPlayer()
-  setPlaybackRate(setting['player.playbackRate'])
+  void setPlaybackRate(setting['player.playbackRate'])
   toggleTranslation(setting['player.isShowLyricTranslation'])
   toggleRoma(setting['player.isShowLyricRoma'])
 

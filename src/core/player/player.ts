@@ -214,6 +214,7 @@ const handlePlay = async() => {
  * @param index 播放的歌曲位置
  */
 export const playList = async(listId: string, index: number) => {
+  await pause()
   setPlayListId(listId)
   setPlayMusicInfo(listId, getList(listId)[index])
   clearPlayedList()
@@ -237,6 +238,7 @@ export const playNext = async(isAutoToggle = false): Promise<void> => {
   if (playerState.tempPlayList.length) { // 如果稍后播放列表存在歌曲则直接播放改列表的歌曲
     const playMusicInfo = playerState.tempPlayList[0]
     removeTempPlayList(0)
+    await pause()
     setPlayMusicInfo(playMusicInfo.listId, playMusicInfo.musicInfo, playMusicInfo.isTempPlay)
     await handlePlay()
     return
@@ -275,6 +277,7 @@ export const playNext = async(isAutoToggle = false): Promise<void> => {
 
     if (index < playedList.length) {
       const playMusicInfo = playedList[index]
+      await pause()
       setPlayMusicInfo(playMusicInfo.listId, playMusicInfo.musicInfo, playMusicInfo.isTempPlay)
       await handlePlay()
       return
@@ -326,6 +329,7 @@ export const playNext = async(isAutoToggle = false): Promise<void> => {
     isTempPlay: false,
   }
 
+  await pause()
   setPlayMusicInfo(nextPlayMusicInfo.listId, nextPlayMusicInfo.musicInfo)
   await handlePlay()
 }
@@ -365,6 +369,7 @@ export const playPrev = async(isAutoToggle = false): Promise<void> => {
 
     if (index > -1) {
       const playMusicInfo = playedList[index]
+      await pause()
       setPlayMusicInfo(playMusicInfo.listId, playMusicInfo.musicInfo, playMusicInfo.isTempPlay)
       await handlePlay()
       return
@@ -416,6 +421,7 @@ export const playPrev = async(isAutoToggle = false): Promise<void> => {
     isTempPlay: false,
   }
 
+  await pause()
   setPlayMusicInfo(nextPlayMusicInfo.listId, nextPlayMusicInfo.musicInfo)
   await handlePlay()
 }

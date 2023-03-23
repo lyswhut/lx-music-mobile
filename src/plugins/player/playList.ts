@@ -45,7 +45,7 @@ const buildTracks = (musicInfo: LX.Player.PlayMusic, url: LX.Player.Track['url']
       artwork,
       userAgent: defaultUserAgent,
       musicId: mInfo.id,
-      original: { ...musicInfo },
+      // original: { ...musicInfo },
       duration,
     })
   }
@@ -57,7 +57,7 @@ const buildTracks = (musicInfo: LX.Player.PlayMusic, url: LX.Player.Track['url']
     album,
     artwork,
     musicId: mInfo.id,
-    original: { ...musicInfo },
+    // original: { ...musicInfo },
     duration: 0,
   })
   return track

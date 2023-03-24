@@ -12,6 +12,7 @@ import { setPlaybackRate, updateMetaData } from '@/plugins/player'
 import { setPlaybackRate as setLyricPlaybackRate } from '@/core/lyric'
 import ButtonPrimary from '@/components/common/ButtonPrimary'
 import playerState from '@/store/player/state'
+import settingState from '@/store/setting/state'
 
 
 const Volume = () => {
@@ -32,16 +33,17 @@ const Volume = () => {
   const handleSlidingComplete: SliderProps['onSlidingComplete'] = value => {
     setSliding(false)
     value = Math.trunc(value)
-    if (playbackRate == value) return
     const rate = value / 100
     void setLyricPlaybackRate(rate)
+    void updateMetaData(playerState.musicInfo, playerState.isPlay, true) // 更新通知栏的播放速率
+    if (playbackRate == value) return
     updateSetting({ 'player.playbackRate': rate })
-    void updateMetaData(playerState.musicInfo, playerState.isPlay, true)
   }
   const handleReset = () => {
+    if (settingState.setting['player.playbackRate'] == 1) return
     setSliderSize(100)
     void setPlaybackRate(1).then(() => {
-      void updateMetaData(playerState.musicInfo, playerState.isPlay, true)
+      void updateMetaData(playerState.musicInfo, playerState.isPlay, true) // 更新通知栏的播放速率
     })
     void setLyricPlaybackRate(1)
     updateSetting({ 'player.playbackRate': 1 })

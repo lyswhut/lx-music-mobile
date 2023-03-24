@@ -55,8 +55,8 @@ const styles = createStyle({
     flexShrink: 0,
     paddingLeft: '10%',
     paddingRight: '10%',
-    paddingTop: '6%',
-    paddingBottom: '6%',
+    paddingTop: '8.6%',
+    paddingBottom: '8.6%',
   },
   row: {
     flexDirection: 'row',

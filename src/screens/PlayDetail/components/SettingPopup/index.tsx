@@ -1,4 +1,5 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react'
+import { ScrollView, View } from 'react-native'
 import Popup, { type PopupType, type PopupProps } from '@/components/common/Popup'
 import { useI18n } from '@/lang'
 
@@ -36,10 +37,14 @@ export default forwardRef<SettingPopupType, SettingPopupProps>((props, ref) => {
     visible
       ? (
         <Popup ref={popupRef} title={t('play_detail_setting_title')} {...props}>
-          <SettingVolume />
-          <SettingPlaybackRate />
-          <SettingLrcFontSize />
-          <SettingLrcAlign />
+          <ScrollView>
+            <View onStartShouldSetResponder={() => true}>
+              <SettingVolume />
+              <SettingPlaybackRate />
+              <SettingLrcFontSize />
+              <SettingLrcAlign />
+            </View>
+          </ScrollView>
         </Popup>
         )
       : null

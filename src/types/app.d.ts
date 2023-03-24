@@ -4,6 +4,7 @@ import type { ListEventTypes } from '@/event/listEvent'
 import type { StateEventTypes } from '@/event/stateEvent'
 import type { I18n } from '@/lang/i18n'
 import type { Buffer as _Buffer } from 'buffer'
+import type { SettingScreenIds } from '@/screens/Home/Views/Setting'
 
 // interface Process {
 //   env: {
@@ -13,7 +14,7 @@ import type { Buffer as _Buffer } from 'buffer'
 //     app: string
 //   }
 // }
-interface Lx {
+interface GlobalData {
   fontSize: number
   gettingUrlId: string
 
@@ -35,6 +36,8 @@ interface Lx {
 
   jumpMyListPosition: boolean
 
+  settingActiveId: SettingScreenIds
+
   // windowInfo: {
   //   screenW: number
   //   screenH: number
@@ -50,7 +53,7 @@ interface Lx {
 
 declare global {
   var isDev: boolean
-  var lx: Lx
+  var lx: GlobalData
   var i18n: I18n
   var app_event: AppEventTypes
   var list_event: ListEventTypes

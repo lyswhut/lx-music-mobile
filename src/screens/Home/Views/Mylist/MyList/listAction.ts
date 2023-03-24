@@ -3,7 +3,7 @@ import { confirmDialog, handleReadFile, handleSaveFile, showImportTip, toast } f
 import syncSourceList from '@/core/syncSourceList'
 import { log } from '@/utils/log'
 import { filterFileName, filterMusicList, toNewMusicInfo } from '@/utils'
-import { handleImportListPart } from '@/screens/Home/Views/Setting/Backup/actions'
+import { handleImportListPart } from '@/screens/Home/Views/Setting/settings/Backup/actions'
 
 export const handleRemove = (listInfo: LX.List.UserListInfo) => {
   void confirmDialog({

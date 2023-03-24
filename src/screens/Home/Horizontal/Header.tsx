@@ -110,6 +110,7 @@ const styles = createStyle({
     paddingLeft: 5,
     alignItems: 'center',
     height: '100%',
+    // backgroundColor: 'rgba(0,0,0,0.1)',
   },
   btn: {
     // flex: 1,
@@ -126,7 +127,7 @@ const styles = createStyle({
     justifyContent: 'center',
   },
   leftTitle: {
-    paddingLeft: 14,
+    paddingLeft: 10,
     paddingRight: 16,
   },
   rightTitle: {

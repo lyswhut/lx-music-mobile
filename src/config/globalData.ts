@@ -53,6 +53,8 @@ global.lx = {
 
   jumpMyListPosition: false,
 
+  settingActiveId: 'basic',
+
   // syncKeyInfo: initValue as LX.Sync.KeyInfo,
 
   // windowInfo: {

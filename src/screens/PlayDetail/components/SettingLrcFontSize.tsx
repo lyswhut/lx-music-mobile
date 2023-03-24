@@ -31,9 +31,9 @@ const LrcFontSize = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{t('player_setting_lrc_font_size')}</Text>
+      <Text>{t('player_setting_lrc_font_size')}</Text>
       <View style={styles.content}>
-        <Text color={theme['c-font-label']}>{isSliding ? sliderSize : lrcFontSize}</Text>
+        <Text style={styles.label} color={theme['c-font-label']}>{isSliding ? sliderSize : lrcFontSize}</Text>
         <Slider
           minimumValue={100}
           maximumValue={300}

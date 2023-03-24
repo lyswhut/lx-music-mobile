@@ -7,8 +7,12 @@ export default createStyle({
     marginBottom: 15,
     alignItems: 'flex-start',
   },
-  title: {
+  // title: {
 
+  // },
+  label: {
+    width: 40,
+    textAlign: 'center',
   },
   content: {
     flexGrow: 0,

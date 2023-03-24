@@ -15,7 +15,7 @@ import ButtonPrimary from '@/components/common/ButtonPrimary'
 
 const Volume = () => {
   const theme = useTheme()
-  const playbackRate = useSettingValue('player.playbackRate') * 10
+  const playbackRate = useSettingValue('player.playbackRate') * 100
   const [sliderSize, setSliderSize] = useState(playbackRate)
   const [isSliding, setSliding] = useState(false)
   const t = useI18n()
@@ -26,18 +26,18 @@ const Volume = () => {
   const handleValueChange: SliderProps['onValueChange'] = value => {
     value = Math.trunc(value)
     setSliderSize(value)
-    void setPlaybackRate(parseFloat((value / 10).toFixed(1)))
+    void setPlaybackRate(parseFloat((value / 100).toFixed(2)))
   }
   const handleSlidingComplete: SliderProps['onSlidingComplete'] = value => {
     setSliding(false)
     value = Math.trunc(value)
     if (playbackRate == value) return
-    const rate = value / 10
+    const rate = value / 100
     void setLyricPlaybackRate(rate)
     updateSetting({ 'player.playbackRate': rate })
   }
   const handleReset = () => {
-    setSliderSize(10)
+    setSliderSize(100)
     void setPlaybackRate(1)
     void setLyricPlaybackRate(1)
     updateSetting({ 'player.playbackRate': 1 })
@@ -45,12 +45,12 @@ const Volume = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{t('player_setting_playback_rate')}</Text>
+      <Text>{t('player_setting_playback_rate')}</Text>
       <View style={styles.content}>
-        <Text color={theme['c-font-label']}>{`${((isSliding ? sliderSize : playbackRate) / 10).toFixed(1)}x`}</Text>
+        <Text style={styles.label} color={theme['c-font-label']}>{`${((isSliding ? sliderSize : playbackRate) / 100).toFixed(2)}x`}</Text>
         <Slider
-          minimumValue={5}
-          maximumValue={20}
+          minimumValue={60}
+          maximumValue={200}
           onSlidingComplete={handleSlidingComplete}
           onValueChange={handleValueChange}
           onSlidingStart={handleSlidingStart}

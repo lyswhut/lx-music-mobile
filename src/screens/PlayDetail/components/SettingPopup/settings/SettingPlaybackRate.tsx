@@ -8,9 +8,10 @@ import Slider, { type SliderProps } from '@/components/common/Slider'
 import { updateSetting } from '@/core/common'
 import { useI18n } from '@/lang'
 import styles from './style'
-import { setPlaybackRate } from '@/plugins/player'
+import { setPlaybackRate, updateMetaData } from '@/plugins/player'
 import { setPlaybackRate as setLyricPlaybackRate } from '@/core/lyric'
 import ButtonPrimary from '@/components/common/ButtonPrimary'
+import playerState from '@/store/player/state'
 
 
 const Volume = () => {
@@ -35,10 +36,13 @@ const Volume = () => {
     const rate = value / 100
     void setLyricPlaybackRate(rate)
     updateSetting({ 'player.playbackRate': rate })
+    void updateMetaData(playerState.musicInfo, playerState.isPlay, true)
   }
   const handleReset = () => {
     setSliderSize(100)
-    void setPlaybackRate(1)
+    void setPlaybackRate(1).then(() => {
+      void updateMetaData(playerState.musicInfo, playerState.isPlay, true)
+    })
     void setLyricPlaybackRate(1)
     updateSetting({ 'player.playbackRate': 1 })
   }

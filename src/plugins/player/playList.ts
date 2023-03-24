@@ -106,8 +106,8 @@ export const getCurrentTrack = async() => {
   return list[currentTrackIndex]
 }
 
-export const updateMetaData = async(musicInfo: LX.Player.MusicInfo, isPlay: boolean) => {
-  if (isPlay == isPlaying) {
+export const updateMetaData = async(musicInfo: LX.Player.MusicInfo, isPlay: boolean, force = false) => {
+  if (!force && isPlay == isPlaying) {
     const duration = await TrackPlayer.getDuration()
     // console.log('currentIsPlaying', prevDuration, duration)
     if (prevDuration != duration) {

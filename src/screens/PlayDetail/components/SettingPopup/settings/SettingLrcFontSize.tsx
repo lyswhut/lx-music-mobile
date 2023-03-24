@@ -12,7 +12,7 @@ import styles from './style'
 
 const LrcFontSize = () => {
   const theme = useTheme()
-  const lrcFontSize = useSettingValue('player.vertical.style.lrcFontSize')
+  const lrcFontSize = useSettingValue('playDetail.vertical.style.lrcFontSize')
   const [sliderSize, setSliderSize] = useState(lrcFontSize)
   const [isSliding, setSliding] = useState(false)
   const t = useI18n()
@@ -26,12 +26,12 @@ const LrcFontSize = () => {
   const handleSlidingComplete: SliderProps['onSlidingComplete'] = value => {
     setSliding(false)
     if (lrcFontSize == value) return
-    updateSetting({ 'player.vertical.style.lrcFontSize': value })
+    updateSetting({ 'playDetail.vertical.style.lrcFontSize': value })
   }
 
   return (
     <View style={styles.container}>
-      <Text>{t('player_setting_lrc_font_size')}</Text>
+      <Text>{t('play_detail_setting_lrc_font_size')}</Text>
       <View style={styles.content}>
         <Text style={styles.label} color={theme['c-font-label']}>{isSliding ? sliderSize : lrcFontSize}</Text>
         <Slider

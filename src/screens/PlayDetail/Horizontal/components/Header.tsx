@@ -4,21 +4,15 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native'
 
 import { Icon } from '@/components/common/Icon'
 import { pop } from '@/navigation'
-// import { AppColors } from '@/theme'
-// import commonState from '@/store/common/state'
 import { useTheme } from '@/store/theme/hook'
 import { usePlayerMusicInfo } from '@/store/player/hook'
 import Text from '@/components/common/Text'
 import { scaleSizeH } from '@/utils/pixelRatio'
 import { HEADER_HEIGHT as _HEADER_HEIGHT, NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 import commonState from '@/store/common/state'
-import Popup, { type PopupType } from '@/components/common/Popup'
-import { useI18n } from '@/lang'
 import CommentBtn from './CommentBtn'
 import Btn from './Btn'
-import SettingVolume from '../../components/SettingVolume'
-import SettingPlaybackRate from '../../components/SettingPlaybackRate'
-import SettingLrcFontSize from '../../components/SettingLrcFontSize'
+import SettingPopup, { type SettingPopupType } from '../../components/SettingPopup'
 
 const HEADER_HEIGHT = scaleSizeH(_HEADER_HEIGHT)
 
@@ -36,18 +30,13 @@ const Title = () => {
 }
 
 export default memo(() => {
-  const t = useI18n()
-  // const theme = useTheme()
-
-  // const [settingVisible, setSettingVisible] = useState(false)
-  const popupRef = useRef<PopupType>(null)
+  const popupRef = useRef<SettingPopupType>(null)
 
   const back = () => {
-    // navigation.goBack()
     void pop(commonState.componentIds.playDetail as string)
   }
   const showSetting = () => {
-    popupRef.current?.setVisible(true)
+    popupRef.current?.show()
   }
 
   return (
@@ -60,11 +49,7 @@ export default memo(() => {
         <CommentBtn />
         <Btn icon="slider" onPress={showSetting} />
       </View>
-      <Popup ref={popupRef} position="left" title={t('player_setting_title')}>
-        <SettingVolume />
-        <SettingLrcFontSize />
-        <SettingPlaybackRate />
-      </Popup>
+      <SettingPopup ref={popupRef} position="left" />
     </View>
   )
 })

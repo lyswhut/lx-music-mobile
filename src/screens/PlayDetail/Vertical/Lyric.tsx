@@ -59,21 +59,24 @@ const LrcLine = memo(({ line, lineNum, activeLine }: {
   activeLine: number
 }) => {
   const theme = useTheme()
-  const playerPortraitStyle = useSettingValue('player.vertical.style.lrcFontSize')
+  const playerPortraitStyle = useSettingValue('playDetail.vertical.style.lrcFontSize')
+  const textAlign = useSettingValue('playDetail.style.align')
   const lineHeight = scaleSizeH(setSpText(playerPortraitStyle) / 10 * 1.25)
 
   return (
     <View style={styles.line}>
       <Text style={{
         ...styles.lineText,
+        textAlign,
         lineHeight,
-      }} color={activeLine == lineNum ? theme['c-primary'] : theme['c-300']} size={playerPortraitStyle / 10}>{line.text}</Text>
+      }} color={activeLine == lineNum ? theme['c-primary'] : theme['c-350']} size={playerPortraitStyle / 10}>{line.text}</Text>
       {
         line.extendedLyrics.map((lrc, index) => {
           return (<Text style={{
             ...styles.lineTranslationText,
+            textAlign,
             lineHeight: lineHeight * 0.8,
-          }} key={index} color={activeLine == lineNum ? theme['c-primary-alpha-200'] : theme['c-300']} size={playerPortraitStyle / 10 * 0.8}>{lrc}</Text>)
+          }} key={index} color={activeLine == lineNum ? theme['c-primary-alpha-200'] : theme['c-350']} size={playerPortraitStyle / 10 * 0.8}>{lrc}</Text>)
         })
       }
     </View>
@@ -192,7 +195,7 @@ export default () => {
       ListHeaderComponent={spaceComponent}
       ListFooterComponent={spaceComponent}
       onScrollBeginDrag={handleScrollBeginDrag}
-      fadingEdgeLength={200}
+      fadingEdgeLength={100}
       initialNumToRender={Math.max(line + 10, 10)}
       onScrollToIndexFailed={handleScrollToIndexFailed}
     />
@@ -202,8 +205,8 @@ export default () => {
 const styles = createStyle({
   container: {
     flex: 1,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
     // backgroundColor: 'rgba(0,0,0,0.1)',
   },
   space: {

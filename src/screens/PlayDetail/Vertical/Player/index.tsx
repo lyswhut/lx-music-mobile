@@ -12,15 +12,14 @@ import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 export default memo(() => {
   return (
     <View style={styles.container} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_player}>
-      <View style={{ ...styles.info }} >
-        {/* <Title /> */}
-        <MoreBtn />
-      </View>
       <View style={styles.status}>
         <PlayInfo />
       </View>
       <View style={styles.control}>
         <ControlBtn />
+      </View>
+      <View style={{ ...styles.info }} >
+        <MoreBtn />
       </View>
     </View>
   )
@@ -38,10 +37,11 @@ const styles = createStyle({
   },
   info: {
     flexDirection: 'row',
-    paddingBottom: 10,
+    paddingBottom: 5,
     justifyContent: 'flex-end',
   },
   status: {
+    marginTop: 10,
     flexDirection: 'column',
     flexGrow: 1,
     flexShrink: 1,
@@ -55,8 +55,8 @@ const styles = createStyle({
     flexShrink: 0,
     paddingLeft: '10%',
     paddingRight: '10%',
-    paddingTop: '9.5%',
-    paddingBottom: '8%',
+    paddingTop: '6%',
+    paddingBottom: '6%',
   },
   row: {
     flexDirection: 'row',

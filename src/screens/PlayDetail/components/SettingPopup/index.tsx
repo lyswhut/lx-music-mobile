@@ -1,0 +1,47 @@
+import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react'
+import Popup, { type PopupType, type PopupProps } from '@/components/common/Popup'
+import { useI18n } from '@/lang'
+
+import SettingVolume from './settings/SettingVolume'
+import SettingPlaybackRate from './settings/SettingPlaybackRate'
+import SettingLrcFontSize from './settings/SettingLrcFontSize'
+import SettingLrcAlign from './settings/SettingLrcAlign'
+
+export type SettingPopupProps = Omit<PopupProps, 'children'>
+
+export interface SettingPopupType {
+  show: () => void
+}
+
+export default forwardRef<SettingPopupType, SettingPopupProps>((props, ref) => {
+  const [visible, setVisible] = useState(false)
+  const popupRef = useRef<PopupType>(null)
+  // console.log('render import export')
+  const t = useI18n()
+
+  useImperativeHandle(ref, () => ({
+    show() {
+      if (visible) popupRef.current?.setVisible(true)
+      else {
+        setVisible(true)
+        requestAnimationFrame(() => {
+          popupRef.current?.setVisible(true)
+        })
+      }
+    },
+  }))
+
+
+  return (
+    visible
+      ? (
+        <Popup ref={popupRef} title={t('play_detail_setting_title')} {...props}>
+          <SettingVolume />
+          <SettingPlaybackRate />
+          <SettingLrcFontSize />
+          <SettingLrcAlign />
+        </Popup>
+        )
+      : null
+  )
+})

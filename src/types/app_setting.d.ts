@@ -132,14 +132,29 @@ declare global {
       'player.isS2t': boolean
 
       /**
+       * 播放详情页-是否缩放当前播放的歌词行
+       */
+      // 'playDetail.isZoomActiveLrc': boolean
+
+      /**
+       * 播放详情页-是否允许通过歌词调整播放进度
+       */
+      // 'playDetail.isShowLyricProgressSetting': boolean
+
+      /**
+       * 播放详情页-歌词对齐方式
+       */
+      'playDetail.style.align': 'center' | 'left' | 'right'
+
+      /**
        * 竖屏歌词字体大小
        */
-      'player.vertical.style.lrcFontSize': number
+      'playDetail.vertical.style.lrcFontSize': number
 
       /**
        * 横屏歌词字体大小
        */
-      'player.horizontal.style.lrcFontSize': number
+      'playDetail.horizontal.style.lrcFontSize': number
 
       /**
        * 是否启用桌面歌词

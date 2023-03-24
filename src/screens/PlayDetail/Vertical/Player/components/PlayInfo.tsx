@@ -22,7 +22,6 @@ const PlayTimeMax = memo(({ timeStr }: { timeStr: string }) => {
 })
 
 export default () => {
-  const theme = useTheme()
   const { maxPlayTimeStr, nowPlayTimeStr, progress, maxPlayTime } = useProgress()
   // console.log('render playInfo')
 
@@ -30,15 +29,11 @@ export default () => {
     <>
       <View style={styles.progress}><Progress progress={progress} duration={maxPlayTime} /></View>
       <View style={styles.info}>
-        {/* <MusicName /> */}
+        <PlayTimeCurrent timeStr={nowPlayTimeStr} />
         <View style={styles.status} >
           <Status />
         </View>
-        <View style={{ flexGrow: 0, flexShrink: 0, flexDirection: 'row' }} >
-          <PlayTimeCurrent timeStr={nowPlayTimeStr} />
-          <Text color={theme['c-500']}> / </Text>
-          <PlayTimeMax timeStr={maxPlayTimeStr} />
-        </View>
+        <PlayTimeMax timeStr={maxPlayTimeStr} />
       </View>
     </>
   )
@@ -61,6 +56,7 @@ const styles = createStyle({
   status: {
     flexGrow: 1,
     flexShrink: 1,
-    paddingRight: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
 })

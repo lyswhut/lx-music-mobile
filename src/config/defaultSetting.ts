@@ -23,8 +23,12 @@ const defaultSetting: LX.AppSetting = {
   'player.isShowLyricRoma': false,
   'player.isShowNotificationImage': true,
   'player.isS2t': false,
-  'player.vertical.style.lrcFontSize': 160,
-  'player.horizontal.style.lrcFontSize': 180,
+
+  // 'playDetail.isZoomActiveLrc': false,
+  // 'playDetail.isShowLyricProgressSetting': false,
+  'playDetail.style.align': 'center',
+  'playDetail.vertical.style.lrcFontSize': 176,
+  'playDetail.horizontal.style.lrcFontSize': 180,
 
   'desktopLyric.enable': false,
   'desktopLyric.isLock': false,

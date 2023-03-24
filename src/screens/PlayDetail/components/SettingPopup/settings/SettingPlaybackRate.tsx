@@ -8,13 +8,15 @@ import Slider, { type SliderProps } from '@/components/common/Slider'
 import { updateSetting } from '@/core/common'
 import { useI18n } from '@/lang'
 import styles from './style'
-import { setVolume } from '@/plugins/player'
+import { setPlaybackRate } from '@/plugins/player'
+import { setPlaybackRate as setLyricPlaybackRate } from '@/core/lyric'
+import ButtonPrimary from '@/components/common/ButtonPrimary'
 
 
 const Volume = () => {
   const theme = useTheme()
-  const volume = useSettingValue('player.volume') * 100
-  const [sliderSize, setSliderSize] = useState(volume)
+  const playbackRate = useSettingValue('player.playbackRate') * 100
+  const [sliderSize, setSliderSize] = useState(playbackRate)
   const [isSliding, setSliding] = useState(false)
   const t = useI18n()
 
@@ -24,30 +26,39 @@ const Volume = () => {
   const handleValueChange: SliderProps['onValueChange'] = value => {
     value = Math.trunc(value)
     setSliderSize(value)
-    void setVolume(value / 100)
+    void setPlaybackRate(parseFloat((value / 100).toFixed(2)))
   }
   const handleSlidingComplete: SliderProps['onSlidingComplete'] = value => {
     setSliding(false)
     value = Math.trunc(value)
-    if (volume == value) return
-    updateSetting({ 'player.volume': value / 100 })
+    if (playbackRate == value) return
+    const rate = value / 100
+    void setLyricPlaybackRate(rate)
+    updateSetting({ 'player.playbackRate': rate })
+  }
+  const handleReset = () => {
+    setSliderSize(100)
+    void setPlaybackRate(1)
+    void setLyricPlaybackRate(1)
+    updateSetting({ 'player.playbackRate': 1 })
   }
 
   return (
     <View style={styles.container}>
-      <Text>{t('player_setting_volume')}</Text>
+      <Text>{t('play_detail_setting_playback_rate')}</Text>
       <View style={styles.content}>
-        <Text style={styles.label} color={theme['c-font-label']}>{isSliding ? sliderSize : volume}</Text>
+        <Text style={styles.label} color={theme['c-font-label']}>{`${((isSliding ? sliderSize : playbackRate) / 100).toFixed(2)}x`}</Text>
         <Slider
-          minimumValue={0}
-          maximumValue={100}
+          minimumValue={60}
+          maximumValue={200}
           onSlidingComplete={handleSlidingComplete}
           onValueChange={handleValueChange}
           onSlidingStart={handleSlidingStart}
           step={1}
-          value={volume}
+          value={playbackRate}
         />
       </View>
+      <ButtonPrimary onPress={handleReset}>{t('play_detail_setting_playback_rate_reset')}</ButtonPrimary>
     </View>
   )
 }

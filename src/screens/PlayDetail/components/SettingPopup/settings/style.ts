@@ -21,4 +21,11 @@ export default createStyle({
     flexWrap: 'nowrap',
     alignItems: 'center',
   },
+  list: {
+    flexGrow: 0,
+    flexShrink: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingTop: 5,
+  },
 })

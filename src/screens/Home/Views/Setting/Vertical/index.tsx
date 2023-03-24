@@ -9,6 +9,7 @@ import { COMPONENT_IDS } from '@/config/constant'
 import DrawerLayoutFixed from '@/components/common/DrawerLayoutFixed'
 import { scaleSizeW } from '@/utils/pixelRatio'
 import { createStyle } from '@/utils/tools'
+import { useTheme } from '@/store/theme/hook'
 
 const MAX_WIDTH = scaleSizeW(300)
 
@@ -17,6 +18,7 @@ const Content = () => {
   const headerRef = useRef<HeaderType>(null)
   const mainRef = useRef<MainType>(null)
   const drawerLayoutPosition = useSettingValue('common.drawerLayoutPosition')
+  const theme = useTheme()
 
   const handleChangeId = useCallback((id: SettingScreenIds) => {
     drawer.current?.closeDrawer()
@@ -40,6 +42,7 @@ const Content = () => {
       // drawerWidth={width}
       drawerPosition={drawerLayoutPosition}
       renderNavigationView={navigationView}
+      drawerBackgroundColor={theme['c-content-background']}
       style={{ elevation: 1 }}
     >
       <Header ref={headerRef} onShowNavBar={() => drawer.current?.openDrawer()} />

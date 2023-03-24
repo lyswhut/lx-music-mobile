@@ -49,7 +49,7 @@ export default memo(() => {
         <CommentBtn />
         <Btn icon="slider" onPress={showSetting} />
       </View>
-      <SettingPopup ref={popupRef} position="left" />
+      <SettingPopup ref={popupRef} position="left" direction="horizontal" />
     </View>
   )
 })

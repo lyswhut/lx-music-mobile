@@ -51,7 +51,7 @@ export default memo(() => {
           <Icon name="slider" size={19} />
         </TouchableOpacity>
       </View>
-      <SettingPopup ref={popupRef} />
+      <SettingPopup ref={popupRef} direction="vertical" />
     </View>
   )
 })

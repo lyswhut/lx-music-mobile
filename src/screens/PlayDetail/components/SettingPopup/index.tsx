@@ -8,13 +8,15 @@ import SettingPlaybackRate from './settings/SettingPlaybackRate'
 import SettingLrcFontSize from './settings/SettingLrcFontSize'
 import SettingLrcAlign from './settings/SettingLrcAlign'
 
-export type SettingPopupProps = Omit<PopupProps, 'children'>
+export interface SettingPopupProps extends Omit<PopupProps, 'children'> {
+  direction: 'vertical' | 'horizontal'
+}
 
 export interface SettingPopupType {
   show: () => void
 }
 
-export default forwardRef<SettingPopupType, SettingPopupProps>((props, ref) => {
+export default forwardRef<SettingPopupType, SettingPopupProps>(({ direction, ...props }, ref) => {
   const [visible, setVisible] = useState(false)
   const popupRef = useRef<PopupType>(null)
   // console.log('render import export')
@@ -41,7 +43,7 @@ export default forwardRef<SettingPopupType, SettingPopupProps>((props, ref) => {
             <View onStartShouldSetResponder={() => true}>
               <SettingVolume />
               <SettingPlaybackRate />
-              <SettingLrcFontSize />
+              <SettingLrcFontSize direction={direction} />
               <SettingLrcAlign />
             </View>
           </ScrollView>

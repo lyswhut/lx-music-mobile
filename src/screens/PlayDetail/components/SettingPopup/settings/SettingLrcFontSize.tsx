@@ -10,9 +10,12 @@ import { useI18n } from '@/lang'
 import styles from './style'
 
 
-const LrcFontSize = () => {
+const LrcFontSize = ({ direction }: {
+  direction: 'horizontal' | 'vertical'
+}) => {
   const theme = useTheme()
-  const lrcFontSize = useSettingValue('playDetail.vertical.style.lrcFontSize')
+  const settingKey = direction == 'horizontal' ? 'playDetail.horizontal.style.lrcFontSize' : 'playDetail.vertical.style.lrcFontSize'
+  const lrcFontSize = useSettingValue(settingKey)
   const [sliderSize, setSliderSize] = useState(lrcFontSize)
   const [isSliding, setSliding] = useState(false)
   const t = useI18n()
@@ -26,7 +29,7 @@ const LrcFontSize = () => {
   const handleSlidingComplete: SliderProps['onSlidingComplete'] = value => {
     setSliding(false)
     if (lrcFontSize == value) return
-    updateSetting({ 'playDetail.vertical.style.lrcFontSize': value })
+    updateSetting({ [settingKey]: value })
   }
 
   return (

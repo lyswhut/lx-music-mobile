@@ -7,7 +7,7 @@ import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import { useSettingValue } from '@/store/setting/hook'
 import Text from '@/components/common/Text'
-import { scaleSizeH, setSpText } from '@/utils/pixelRatio'
+import { setSpText } from '@/utils/pixelRatio'
 // import { screenkeepAwake } from '@/utils/nativeModules/utils'
 // import { log } from '@/utils/log'
 // import { toast } from '@/utils/tools'
@@ -61,7 +61,7 @@ const LrcLine = memo(({ line, lineNum, activeLine }: {
   const theme = useTheme()
   const playerPortraitStyle = useSettingValue('playDetail.vertical.style.lrcFontSize')
   const textAlign = useSettingValue('playDetail.style.align')
-  const lineHeight = scaleSizeH(setSpText(playerPortraitStyle) / 10 * 1.25)
+  const lineHeight = setSpText(playerPortraitStyle / 10) * 1.25
 
   return (
     <View style={styles.line}>
@@ -213,8 +213,8 @@ const styles = createStyle({
     paddingTop: '80%',
   },
   line: {
-    paddingTop: 8,
-    paddingBottom: 8,
+    paddingTop: 10,
+    paddingBottom: 10,
     // opacity: 0,
   },
   lineText: {

@@ -29,7 +29,7 @@ public class Lyric extends LyricPlayer {
   String translationText = "";
   String romaLyricText = "";
 
-  Lyric(ReactApplicationContext reactContext, boolean isShowTranslation, boolean isShowRoma, int playbackRate) {
+  Lyric(ReactApplicationContext reactContext, boolean isShowTranslation, boolean isShowRoma, float playbackRate) {
     this.reactAppContext = reactContext;
     this.isShowTranslation = isShowTranslation;
     this.isShowRoma = isShowRoma;

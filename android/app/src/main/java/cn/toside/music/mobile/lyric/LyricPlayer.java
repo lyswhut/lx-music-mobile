@@ -27,7 +27,7 @@ public class LyricPlayer {
   List<HashMap> lines = new ArrayList<>();
   HashMap tags = new HashMap();
   boolean isPlay = false;
-  int playbackRate = 1;
+  float playbackRate = 1;
   int curLineNum = 0;
   int maxLine = 0;
   int offset = 150;
@@ -89,7 +89,7 @@ public class LyricPlayer {
   }
 
   private int getCurrentTime() {
-    return (getNow() - this.performanceTime) * this.playbackRate + startPlayTime;
+    return (int)((getNow() - this.performanceTime) * this.playbackRate) + startPlayTime;
   }
 
   private void initTag() {
@@ -297,7 +297,7 @@ public class LyricPlayer {
 
     if (driftTime >= 0 || curLineNum == 0) {
       HashMap nextLine = lines.get(curLineNum + 1);
-      int delay = ((int) nextLine.get("time") - (int) curLine.get("time") - driftTime) / this.playbackRate;
+      int delay = (int)(((int)nextLine.get("time") - (int)curLine.get("time") - driftTime) / this.playbackRate);
       // Log.d("Lyric", "delay: " + delay + "  driftTime: " + driftTime);
       if (delay > 0) {
         if (isPlay) {
@@ -331,7 +331,7 @@ public class LyricPlayer {
     init();
   }
 
-  public void setPlaybackRate(int playbackRate) {
+  public void setPlaybackRate(float playbackRate) {
     this.playbackRate = playbackRate;
     if (this.lines.size() == 0) return;
     if (!this.isPlay) return;

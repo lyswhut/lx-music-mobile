@@ -20,7 +20,7 @@ public class LyricModule extends ReactContextBaseJavaModule {
 
   boolean isShowTranslation = false;
   boolean isShowRoma = false;
-  int playbackRate = 1;
+  float playbackRate = 1;
 
   private int listenerCount = 0;
 
@@ -87,7 +87,7 @@ public class LyricModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void setPlaybackRate(int playbackRate, Promise promise) {
+  public void setPlaybackRate(float playbackRate, Promise promise) {
     this.playbackRate = playbackRate;
     if (lyric != null) lyric.setPlaybackRate(playbackRate);
     promise.resolve(null);

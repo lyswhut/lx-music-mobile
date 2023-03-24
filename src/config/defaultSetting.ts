@@ -8,6 +8,7 @@ const defaultSetting: LX.AppSetting = {
   'common.isAgreePact': false,
   'common.autoHidePlayBar': true,
   'common.drawerLayoutPosition': 'left',
+  'common.showBackBtn': false,
 
   'player.startupAutoPlay': false,
   'player.togglePlayMethod': 'listLoop',

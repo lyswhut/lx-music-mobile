@@ -10,6 +10,7 @@ import ShareType from './ShareType'
 import IsAutoTheme from './IsAutoTheme'
 import IsStartupAutoPlay from './IsStartupAutoPlay'
 import IsAutoHidePlayBar from './IsAutoHidePlayBar'
+import IsShowBackBtn from './IsShowBackBtn'
 import DrawerLayoutPosition from './DrawerLayoutPosition'
 import { useI18n } from '@/lang/i18n'
 
@@ -22,6 +23,7 @@ export default memo(() => {
       <Theme />
       <IsAutoTheme />
       <IsStartupAutoPlay />
+      <IsShowBackBtn />
       <IsAutoHidePlayBar />
       <Source />
       <SourceName />

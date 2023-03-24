@@ -3,12 +3,13 @@ import { ScrollView, StatusBar, TouchableOpacity, View } from 'react-native'
 import { useNavActiveId } from '@/store/common/hook'
 import { useTheme } from '@/store/theme/hook'
 import { Icon } from '@/components/common/Icon'
-import { createStyle } from '@/utils/tools'
+import { confirmDialog, createStyle, exitApp as backHome } from '@/utils/tools'
 import { NAV_MENUS } from '@/config/constant'
 import type { InitState } from '@/store/common/state'
 // import commonState from '@/store/common/state'
 import { exitApp, setNavActiveId } from '@/core/common'
 import { BorderWidths } from '@/theme'
+import { useSettingValue } from '@/store/setting/hook'
 
 const NAV_WIDTH = 68
 
@@ -74,7 +75,7 @@ const Header = () => {
   )
 }
 
-type IdType = InitState['navActiveId'] | 'nav_exit'
+type IdType = InitState['navActiveId'] | 'nav_exit' | 'back_home'
 
 const MenuItem = ({ id, icon, onPress }: {
   id: IdType
@@ -103,11 +104,22 @@ const MenuItem = ({ id, icon, onPress }: {
 export default memo(() => {
   const theme = useTheme()
   // console.log('render drawer nav')
+  const showBackBtn = useSettingValue('common.showBackBtn')
 
   const handlePress = (id: IdType) => {
-    if (id == 'nav_exit') {
-      exitApp()
-      return
+    switch (id) {
+      case 'nav_exit':
+        void confirmDialog({
+          message: global.i18n.t('exit_app_tip'),
+          confirmButtonText: global.i18n.t('list_remove_tip_button'),
+        }).then(isExit => {
+          if (!isExit) return
+          exitApp()
+        })
+        return
+      case 'back_home':
+        backHome()
+        return
     }
 
     global.app_event.changeMenuVisible(false)
@@ -122,6 +134,9 @@ export default memo(() => {
           {NAV_MENUS.map(menu => <MenuItem key={menu.id} id={menu.id} icon={menu.icon} onPress={handlePress} />)}
         </View>
       </ScrollView>
+      {
+        showBackBtn ? <MenuItem id="back_home" icon="back-2" onPress={handlePress} /> : null
+      }
       <MenuItem id="nav_exit" icon="exit2" onPress={handlePress} />
     </View>
   )

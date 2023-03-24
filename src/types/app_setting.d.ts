@@ -47,6 +47,11 @@ declare global {
       'common.drawerLayoutPosition': 'left' | 'right'
 
       /**
+       * 是否显示返回按钮
+       */
+      'common.showBackBtn': boolean
+
+      /**
        * 主题id
        */
       'theme.id': string

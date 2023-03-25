@@ -1,35 +1,98 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react'
-import type { SettingScreenIds } from '../Main'
+import React, { memo, useCallback, useState } from 'react'
+import { View, TouchableOpacity, ScrollView } from 'react-native'
 
-import NavList from '../NavList'
-
-export interface NavListTypeProps {
-  onChangeId: (id: SettingScreenIds) => void
-}
-export interface NavListTypeType {
-  show: () => void
-}
+import { useTheme } from '@/store/theme/hook'
+import { createStyle } from '@/utils/tools'
+import Text from '@/components/common/Text'
+import { SETTING_SCREENS, type SettingScreenIds } from '../Main'
+import { useI18n } from '@/lang'
+import { BorderRadius, BorderWidths } from '@/theme'
 
 
-export default forwardRef<NavListTypeType, NavListTypeProps>(({ onChangeId }, ref) => {
-  const [visible, setVisible] = useState(false)
+const ListItem = memo(({ id, activeId, onPress }: {
+  onPress: (item: SettingScreenIds) => void
+  activeId: string
+  id: SettingScreenIds
+}) => {
+  const theme = useTheme()
+  const t = useI18n()
 
-  useImperativeHandle(ref, () => {
-    let isInited = false
-    return {
-      show() {
-        if (isInited) return
-        requestAnimationFrame(() => {
-          setVisible(true)
-        })
-        isInited = true
-      },
-    }
-  })
+  const active = activeId == id
+
+  const handlePress = () => {
+    onPress(id)
+  }
 
   return (
-    visible
-      ? <NavList onChangeId={onChangeId} />
-      : null
+    <View style={{ ...styles.listItem, backgroundColor: active ? theme['c-primary-background-active'] : 'transparent' }}>
+      <TouchableOpacity style={styles.listName} onPress={handlePress}>
+        <Text numberOfLines={1} size={16} color={active ? theme['c-primary-font'] : theme['c-font']}>{t(`setting_${id}`)}</Text>
+      </TouchableOpacity>
+    </View>
   )
+}, (prevProps, nextProps) => {
+  return !!(prevProps.id === nextProps.id &&
+    prevProps.activeId != nextProps.id &&
+    nextProps.activeId != nextProps.id
+  )
+})
+
+
+export default ({ onChangeId }: {
+  onChangeId: (id: SettingScreenIds) => void
+}) => {
+  const [activeId, setActiveId] = useState(global.lx.settingActiveId)
+  const theme = useTheme()
+
+  const handleChangeId = useCallback((id: SettingScreenIds) => {
+    onChangeId(id)
+    setActiveId(id)
+    global.lx.settingActiveId = id
+  }, [])
+
+  return (
+    <ScrollView style={{ ...styles.container, borderBottomColor: theme['c-border-background'] }} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'always'}>
+      {
+        SETTING_SCREENS.map(id => <ListItem id={id} activeId={activeId} onPress={handleChangeId} />)
+      }
+    </ScrollView>
+  )
+}
+
+
+const styles = createStyle({
+  container: {
+    height: '20%',
+    flexGrow: 0,
+    flexShrink: 0,
+    borderBottomWidth: BorderWidths.normal,
+  },
+  contentContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 5,
+    // backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  // listContainer: {
+  //   // borderBottomWidth: BorderWidths.normal2,
+  // },
+
+  listItem: {
+    width: '33.33%',
+    height: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 8,
+    borderRadius: BorderRadius.normal,
+    marginBottom: 5,
+  },
+  listName: {
+    // justifyContent: 'center',
+    alignItems: 'center',
+    flexGrow: 1,
+    flexShrink: 1,
+    // paddingLeft: 5,
+    // backgroundColor: 'rgba(0,0,0,0.1)',
+  },
 })

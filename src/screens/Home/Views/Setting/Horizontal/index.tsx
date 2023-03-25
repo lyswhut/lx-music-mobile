@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { ScrollView, View } from 'react-native'
 import NavList from './NavList'
-import Main, { type MainType } from './Main'
+import Main, { type MainType } from '../Main'
 import { createStyle } from '@/utils/tools'
 import { BorderWidths } from '@/theme'
 import { useTheme } from '@/store/theme/hook'

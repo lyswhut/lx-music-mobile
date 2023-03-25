@@ -256,7 +256,7 @@
   "setting_search": "搜索设置",
   "setting_search_show_history_search": "显示历史搜索记录",
   "setting_search_show_hot_search": "显示热门搜索",
-  "setting_sync": "同步",
+  "setting_sync": "数据同步",
   "setting_sync_address": "本机IP地址：{address}",
   "setting_sync_code_blocked_ip": "当前设备的IP已被服务端封禁！",
   "setting_sync_code_fail": "连接码无效",

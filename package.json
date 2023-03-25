@@ -1,6 +1,6 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.0.0-beta.16",
+  "version": "1.0.0-beta.17",
   "versionCode": 53,
   "private": true,
   "scripts": {
@@ -56,7 +56,7 @@
     "react-native-exception-handler": "^2.10.10",
     "react-native-fs": "^2.20.0",
     "react-native-navigation": "^7.32.1",
-    "react-native-pager-view": "^6.1.4",
+    "react-native-pager-view": "^6.2.0",
     "react-native-quick-base64": "^2.0.5",
     "react-native-quick-crypto": "github:lyswhut/react-native-quick-crypto#b4ea59238ded4fe9cd4d252a838ddfcb7bcd19d8",
     "react-native-quick-md5": "^3.0.4",
@@ -69,7 +69,7 @@
     "@babel/preset-env": "^7.20.2",
     "@babel/runtime": "^7.21.0",
     "@tsconfig/react-native": "^2.0.3",
-    "@types/react": "^18.0.28",
+    "@types/react": "^18.0.29",
     "@types/react-native": "^0.70.11",
     "@types/react-native-background-timer": "^2.0.0",
     "@types/react-native-vector-icons": "^6.4.13",

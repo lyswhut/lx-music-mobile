@@ -51,9 +51,9 @@ export default ({ onChangeId }: {
   }, [])
 
   return (
-    <ScrollView style={{ ...styles.container, borderBottomColor: theme['c-border-background'] }} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'always'}>
+    <ScrollView style={{ ...styles.container, borderTopColor: theme['c-border-background'] }} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'always'}>
       {
-        SETTING_SCREENS.map(id => <ListItem id={id} activeId={activeId} onPress={handleChangeId} />)
+        SETTING_SCREENS.map(id => <ListItem key={id} id={id} activeId={activeId} onPress={handleChangeId} />)
       }
     </ScrollView>
   )
@@ -62,15 +62,15 @@ export default ({ onChangeId }: {
 
 const styles = createStyle({
   container: {
-    height: '20%',
+    height: 100,
     flexGrow: 0,
     flexShrink: 0,
-    borderBottomWidth: BorderWidths.normal,
+    borderTopWidth: BorderWidths.normal,
   },
   contentContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: 5,
+    padding: 5,
     // backgroundColor: 'rgba(0, 0, 0, 0.1)',
   },
   // listContainer: {
@@ -79,11 +79,11 @@ const styles = createStyle({
 
   listItem: {
     width: '33.33%',
-    height: 'auto',
+    // height: 'auto',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 5,
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderRadius: BorderRadius.normal,
     marginBottom: 5,
   },

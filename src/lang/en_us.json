@@ -272,6 +272,7 @@
   "setting_sync_port_tip": "Please enter the synchronization service port number",
   "setting_sync_status": "Status: {status}",
   "setting_sync_status_enabled": "Connected",
+  "setting_theme": "theme settings",
   "setting_version": "Software Update",
   "setting_version_show_ver_modal": "Open the update window 🚀",
   "share_card_title_music": "Share {name} to...",

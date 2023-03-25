@@ -272,6 +272,7 @@
   "setting_sync_port_tip": "请输入同步服务端口号",
   "setting_sync_status": "状态：{status}",
   "setting_sync_status_enabled": "已连接",
+  "setting_theme": "主题设置",
   "setting_version": "软件更新",
   "setting_version_show_ver_modal": "打开更新窗口 🚀",
   "share_card_title_music": "将 {name} 分享到...",

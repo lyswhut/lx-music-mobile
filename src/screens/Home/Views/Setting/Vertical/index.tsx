@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react'
 import { ScrollView, View, type DrawerLayoutAndroid } from 'react-native'
 // import { getWindowSise, onDimensionChange } from '@/utils/tools'
-import NavList from '../NavList'
+import NavList, { type NavListTypeType } from './NavList'
 import Header, { type HeaderType } from './Header'
 import Main, { type SettingScreenIds, type MainType } from '../Main'
 import { useSettingValue } from '@/store/setting/hook'
@@ -15,10 +15,16 @@ const MAX_WIDTH = scaleSizeW(300)
 
 const Content = () => {
   const drawer = useRef<DrawerLayoutAndroid>(null)
+  const navListRef = useRef<NavListTypeType>(null)
   const headerRef = useRef<HeaderType>(null)
   const mainRef = useRef<MainType>(null)
   const drawerLayoutPosition = useSettingValue('common.drawerLayoutPosition')
   const theme = useTheme()
+
+  const handleShowDrawer = useCallback(() => {
+    drawer.current?.openDrawer()
+    navListRef.current?.show()
+  }, [])
 
   const handleChangeId = useCallback((id: SettingScreenIds) => {
     drawer.current?.closeDrawer()
@@ -28,7 +34,7 @@ const Content = () => {
 
   const navigationView = () => (
     <View style={styles.nav}>
-      <NavList onChangeId={handleChangeId} />
+      <NavList ref={navListRef} onChangeId={handleChangeId} />
     </View>
   )
   // console.log('render drawer content')
@@ -45,7 +51,7 @@ const Content = () => {
       drawerBackgroundColor={theme['c-content-background']}
       style={{ elevation: 1 }}
     >
-      <Header ref={headerRef} onShowNavBar={() => drawer.current?.openDrawer()} />
+      <Header ref={headerRef} onShowNavBar={handleShowDrawer} />
       <ScrollView contentContainerStyle={styles.main} keyboardShouldPersistTaps={'always'}>
         <Main ref={mainRef} />
       </ScrollView>

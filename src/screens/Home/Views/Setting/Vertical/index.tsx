@@ -46,10 +46,8 @@ const Content = () => {
       style={{ elevation: 1 }}
     >
       <Header ref={headerRef} onShowNavBar={() => drawer.current?.openDrawer()} />
-      <ScrollView keyboardShouldPersistTaps={'always'}>
-        <View style={styles.main}>
-          <Main ref={mainRef} />
-        </View>
+      <ScrollView contentContainerStyle={styles.main} keyboardShouldPersistTaps={'always'}>
+        <Main ref={mainRef} />
       </ScrollView>
       {/* <View style={styles.container}>
       </View> */}
@@ -67,7 +65,6 @@ const styles = createStyle({
     paddingRight: 15,
     paddingTop: 15,
     paddingBottom: 15,
-    flex: 0,
   },
 })
 

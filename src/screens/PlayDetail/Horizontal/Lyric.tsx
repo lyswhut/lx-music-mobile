@@ -21,9 +21,10 @@ const LrcLine = memo(({ line, lineNum, activeLine }: {
   activeLine: number
 }) => {
   const theme = useTheme()
-  const playerPortraitStyle = useSettingValue('playDetail.horizontal.style.lrcFontSize')
+  const lrcFontSize = useSettingValue('playDetail.horizontal.style.lrcFontSize')
   const textAlign = useSettingValue('playDetail.style.align')
-  const lineHeight = setSpText(playerPortraitStyle / 10) * 1.25
+  const size = lrcFontSize / 10
+  const lineHeight = setSpText(size) * 1.25
 
   return (
     <View style={styles.line}>
@@ -31,14 +32,14 @@ const LrcLine = memo(({ line, lineNum, activeLine }: {
         ...styles.lineText,
         textAlign,
         lineHeight,
-      }} color={activeLine == lineNum ? theme['c-primary'] : theme['c-350']} size={playerPortraitStyle / 10}>{line.text}</Text>
+      }} textBreakStrategy="simple" color={activeLine == lineNum ? theme['c-primary'] : theme['c-350']} size={size}>{line.text}</Text>
       {
         line.extendedLyrics.map((lrc, index) => {
           return (<Text style={{
             ...styles.lineTranslationText,
             textAlign,
             lineHeight: lineHeight * 0.8,
-          }} key={index} color={activeLine == lineNum ? theme['c-primary-alpha-200'] : theme['c-350']} size={playerPortraitStyle / 10 * 0.8}>{lrc}</Text>)
+          }} textBreakStrategy="simple" key={index} color={activeLine == lineNum ? theme['c-primary-alpha-200'] : theme['c-350']} size={size * 0.8}>{lrc}</Text>)
         })
       }
     </View>
@@ -86,6 +87,11 @@ export default () => {
 
   const handleScrollBeginDrag = () => {
     isPauseScrollRef.current = true
+    if (scrollTimoutRef.current) clearTimeout(scrollTimoutRef.current)
+  }
+
+  const onScrollEndDrag = () => {
+    if (!isPauseScrollRef.current) return
     if (scrollTimoutRef.current) clearTimeout(scrollTimoutRef.current)
     scrollTimoutRef.current = setTimeout(() => {
       scrollTimoutRef.current = null
@@ -157,6 +163,7 @@ export default () => {
       ListHeaderComponent={spaceComponent}
       ListFooterComponent={spaceComponent}
       onScrollBeginDrag={handleScrollBeginDrag}
+      onScrollEndDrag={onScrollEndDrag}
       fadingEdgeLength={100}
       initialNumToRender={Math.max(line + 10, 10)}
       onScrollToIndexFailed={handleScrollToIndexFailed}

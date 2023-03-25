@@ -9,6 +9,7 @@ const defaultSetting: LX.AppSetting = {
   'common.autoHidePlayBar': true,
   'common.drawerLayoutPosition': 'left',
   'common.showBackBtn': false,
+  'common.showExitBtn': true,
 
   'player.startupAutoPlay': false,
   'player.togglePlayMethod': 'listLoop',

@@ -99,6 +99,7 @@ export default memo(() => {
   const theme = useTheme()
   // console.log('render drawer nav')
   const showBackBtn = useSettingValue('common.showBackBtn')
+  const showExitBtn = useSettingValue('common.showExitBtn')
 
   const handlePress = (id: IdType) => {
     switch (id) {
@@ -131,9 +132,11 @@ export default memo(() => {
       </ScrollView>
 
       {
-        showBackBtn ? <MenuItem id="back_home" icon="back-2" onPress={handlePress} /> : null
+        showBackBtn ? <MenuItem id="back_home" icon="home" onPress={handlePress} /> : null
       }
-      <MenuItem id="nav_exit" icon="exit2" onPress={handlePress} />
+      {
+        showExitBtn ? <MenuItem id="nav_exit" icon="exit2" onPress={handlePress} /> : null
+      }
     </View>
   )
 })

@@ -190,6 +190,7 @@
   "setting_basic_share_type_system": "Share using the system",
   "setting_basic_show_animation": "Show switching animation",
   "setting_basic_show_back_btn": "Show back to desktop button",
+  "setting_basic_show_exit_btn": "Show exit app button",
   "setting_basic_source": "Music source",
   "setting_basic_source_direct": "Direct API",
   "setting_basic_source_temp": "Temporary API (some features not available; workaround if Test API unavailable)",

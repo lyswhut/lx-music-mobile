@@ -52,6 +52,11 @@ declare global {
       'common.showBackBtn': boolean
 
       /**
+       * 是否显示退出按钮
+       */
+      'common.showExitBtn': boolean
+
+      /**
        * 主题id
        */
       'theme.id': string

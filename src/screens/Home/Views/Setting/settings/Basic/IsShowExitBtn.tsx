@@ -10,14 +10,14 @@ import CheckBoxItem from '../../components/CheckBoxItem'
 
 export default memo(() => {
   const t = useI18n()
-  const showBackBtn = useSettingValue('common.showBackBtn')
-  const setShowBackBtn = (showBackBtn: boolean) => {
-    updateSetting({ 'common.showBackBtn': showBackBtn })
+  const showExitBtn = useSettingValue('common.showExitBtn')
+  const setShowExitBtn = (showExitBtn: boolean) => {
+    updateSetting({ 'common.showExitBtn': showExitBtn })
   }
 
   return (
     <View style={styles.content}>
-      <CheckBoxItem check={showBackBtn} label={t('setting_basic_show_back_btn')} onChange={setShowBackBtn} />
+      <CheckBoxItem check={showExitBtn} label={t('setting_basic_show_exit_btn')} onChange={setShowExitBtn} />
     </View>
   )
 })

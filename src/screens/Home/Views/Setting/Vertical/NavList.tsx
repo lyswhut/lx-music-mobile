@@ -26,7 +26,7 @@ const ListItem = memo(({ id, activeId, onPress }: {
   return (
     <View style={{ ...styles.listItem, backgroundColor: active ? theme['c-primary-background-active'] : 'transparent' }}>
       <TouchableOpacity style={styles.listName} onPress={handlePress}>
-        <Text numberOfLines={1} size={16} color={active ? theme['c-primary-font'] : theme['c-font']}>{t(`setting_${id}`)}</Text>
+        <Text numberOfLines={1} color={active ? theme['c-primary-font'] : theme['c-font']}>{t(`setting_${id}`)}</Text>
       </TouchableOpacity>
     </View>
   )
@@ -62,10 +62,11 @@ export default ({ onChangeId }: {
 
 const styles = createStyle({
   container: {
-    height: 100,
+    height: 96,
     flexGrow: 0,
     flexShrink: 0,
     borderTopWidth: BorderWidths.normal,
+    opacity: 0.7,
   },
   contentContainer: {
     flexDirection: 'row',
@@ -79,19 +80,20 @@ const styles = createStyle({
 
   listItem: {
     width: '33.33%',
+    height: 40,
     // height: 'auto',
-    flexDirection: 'row',
-    alignItems: 'center',
+    // flexDirection: 'row',
+    // alignItems: 'center',
     paddingHorizontal: 5,
-    paddingVertical: 10,
+    // paddingVertical: 10,
     borderRadius: BorderRadius.normal,
     marginBottom: 5,
+    // backgroundColor: 'rgba(0,0,0,0.1)',
   },
   listName: {
-    // justifyContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
-    flexGrow: 1,
-    flexShrink: 1,
+    flex: 1,
     // paddingLeft: 5,
     // backgroundColor: 'rgba(0,0,0,0.1)',
   },

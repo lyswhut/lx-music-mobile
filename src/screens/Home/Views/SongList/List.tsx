@@ -29,7 +29,7 @@ export default forwardRef<ListType, {}>((props, ref) => {
           if (isUnmountedRef.current) return
           requestAnimationFrame(() => {
             listRef.current?.setList(result.list)
-            listRef.current?.setStatus(songlistState.listInfo.maxPage >= page ? 'end' : 'idle')
+            listRef.current?.setStatus(songlistState.listInfo.maxPage <= page ? 'end' : 'idle')
           })
         }).catch(() => {
           if (songlistState.listInfo.list.length && page == 1) clearList()
@@ -54,7 +54,7 @@ export default forwardRef<ListType, {}>((props, ref) => {
       const result = setList(info, songlistState.listInfo.tagId, songlistState.listInfo.sortId, page)
       if (isUnmountedRef.current) return
       listRef.current?.setList(result.list)
-      listRef.current?.setStatus(songlistState.listInfo.maxPage >= page ? 'end' : 'idle')
+      listRef.current?.setStatus(songlistState.listInfo.maxPage <= page ? 'end' : 'idle')
     }).catch(() => {
       if (songlistState.listInfo.list.length && page == 1) clearList()
       listRef.current?.setStatus('error')
@@ -67,7 +67,7 @@ export default forwardRef<ListType, {}>((props, ref) => {
       const result = setList(info, songlistState.listInfo.tagId, songlistState.listInfo.sortId, page)
       if (isUnmountedRef.current) return
       listRef.current?.setList(result.list)
-      listRef.current?.setStatus(songlistState.listInfo.maxPage >= page ? 'end' : 'idle')
+      listRef.current?.setStatus(songlistState.listInfo.maxPage <= page ? 'end' : 'idle')
     }).catch(() => {
       if (songlistState.listInfo.list.length && page == 1) clearList()
       listRef.current?.setStatus('error')

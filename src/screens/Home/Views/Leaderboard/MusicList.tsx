@@ -34,7 +34,7 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
           if (isUnmountedRef.current) return
           requestAnimationFrame(() => {
             listRef.current?.setList(result.list)
-            listRef.current?.setStatus(boardState.listDetailInfo.maxPage >= page ? 'end' : 'idle')
+            listRef.current?.setStatus(boardState.listDetailInfo.maxPage <= page ? 'end' : 'idle')
           })
         }).catch(() => {
           if (boardState.listDetailInfo.list.length && page == 1) clearListDetail()
@@ -64,7 +64,7 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
       const result = setListDetail(listDetail, boardState.listDetailInfo.id, page)
       if (isUnmountedRef.current) return
       listRef.current?.setList(result.list)
-      listRef.current?.setStatus(boardState.listDetailInfo.maxPage >= page ? 'end' : 'idle')
+      listRef.current?.setStatus(boardState.listDetailInfo.maxPage <= page ? 'end' : 'idle')
     }).catch(() => {
       if (boardState.listDetailInfo.list.length && page == 1) clearListDetail()
       listRef.current?.setStatus('error')
@@ -77,7 +77,7 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
       const result = setListDetail(listDetail, boardState.listDetailInfo.id, page)
       if (isUnmountedRef.current) return
       listRef.current?.setList(result.list)
-      listRef.current?.setStatus(boardState.listDetailInfo.maxPage >= page ? 'end' : 'idle')
+      listRef.current?.setStatus(boardState.listDetailInfo.maxPage <= page ? 'end' : 'idle')
     }).catch(() => {
       if (boardState.listDetailInfo.list.length && page == 1) clearListDetail()
       listRef.current?.setStatus('error')

@@ -6,6 +6,12 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [1.0.1](https://github.com/lyswhut/lx-music-mobile/compare/v1.0.0...v1.0.1) - 2023-03-26
+
+### 修复
+
+- 修复在线列表翻页问题
+
 ## [1.0.0](https://github.com/lyswhut/lx-music-mobile/compare/v0.15.5...v1.0.0) - 2023-03-26
 
 从v1.0.0起，我们发布了一个独立版的[数据同步服务](https://github.com/lyswhut/lx-music-sync-server#readme)，如果你有服务器，可以将其部署到服务器上作为私人多端同步服务使用，详情看该项目说明

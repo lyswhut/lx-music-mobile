@@ -52,7 +52,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
               imgUrl: songlistState.selectListInfo.img ?? listDetailInfo.info.img,
             })
             listRef.current?.setList(result.list)
-            listRef.current?.setStatus(songlistState.listDetailInfo.maxPage >= page ? 'end' : 'idle')
+            listRef.current?.setStatus(songlistState.listDetailInfo.maxPage <= page ? 'end' : 'idle')
           })
         }).catch(() => {
           if (songlistState.listDetailInfo.list.length && page == 1) clearListDetail()
@@ -82,7 +82,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
       const result = setListDetail(listDetail, songlistState.listDetailInfo.id, page)
       if (isUnmountedRef.current) return
       listRef.current?.setList(result.list)
-      listRef.current?.setStatus(songlistState.listDetailInfo.maxPage >= page ? 'end' : 'idle')
+      listRef.current?.setStatus(songlistState.listDetailInfo.maxPage <= page ? 'end' : 'idle')
     }).catch(() => {
       if (songlistState.listDetailInfo.list.length && page == 1) clearListDetail()
       listRef.current?.setStatus('error')
@@ -95,7 +95,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
       const result = setListDetail(listDetail, songlistState.listDetailInfo.id, page)
       if (isUnmountedRef.current) return
       listRef.current?.setList(result.list)
-      listRef.current?.setStatus(songlistState.listDetailInfo.maxPage >= page ? 'end' : 'idle')
+      listRef.current?.setStatus(songlistState.listDetailInfo.maxPage <= page ? 'end' : 'idle')
     }).catch(() => {
       if (songlistState.listDetailInfo.list.length && page == 1) clearListDetail()
       listRef.current?.setStatus('error')

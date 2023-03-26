@@ -6,6 +6,17 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [1.0.2](https://github.com/lyswhut/lx-music-mobile/compare/v1.0.1...v1.0.2) - 2023-03-26
+
+### 优化
+
+- 竖屏下的首页允许滑动切换页面（恢复v0.x.x的切页操作）
+- 优化更新语言、主题设置时的流畅度
+
+### 其他
+
+- 启用新架构
+
 ## [1.0.1](https://github.com/lyswhut/lx-music-mobile/compare/v1.0.0...v1.0.1) - 2023-03-26
 
 ### 修复

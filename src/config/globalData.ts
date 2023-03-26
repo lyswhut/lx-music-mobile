@@ -55,6 +55,8 @@ global.lx = {
 
   settingActiveId: 'basic',
 
+  homePagerIdle: true,
+
   // syncKeyInfo: initValue as LX.Sync.KeyInfo,
 
   // windowInfo: {

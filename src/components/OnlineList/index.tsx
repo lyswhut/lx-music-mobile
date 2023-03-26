@@ -15,6 +15,7 @@ export interface OnlineListProps {
   onPlayList?: ListProps['onPlayList']
   progressViewOffset?: ListProps['progressViewOffset']
   ListHeaderComponent?: ListProps['ListHeaderComponent']
+  checkHomePagerIdle?: boolean
 }
 export interface OnlineListType {
   setList: (list: LX.Music.MusicInfoOnline[], showSource?: boolean) => void
@@ -27,6 +28,7 @@ export default forwardRef<OnlineListType, OnlineListProps>(({
   onPlayList,
   progressViewOffset,
   ListHeaderComponent,
+  checkHomePagerIdle = false,
 }, ref) => {
   const listRef = useRef<ListType>(null)
   const multipleModeBarRef = useRef<MultipleModeBarType>(null)
@@ -86,6 +88,7 @@ export default forwardRef<OnlineListType, OnlineListProps>(({
           onPlayList={onPlayList}
           progressViewOffset={progressViewOffset}
           ListHeaderComponent={ListHeaderComponent}
+          checkHomePagerIdle={checkHomePagerIdle}
         />
         <MultipleModeBar
           ref={multipleModeBarRef}

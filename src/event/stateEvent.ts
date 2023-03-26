@@ -3,6 +3,7 @@ import type { InitState as CommonState } from '@/store/common/state'
 import type { InitState as ListState } from '@/store/list/state'
 import type { InitState as PlayerState } from '@/store/player/state'
 import type { InitState as VersionState } from '@/store/version/state'
+import { type I18n } from '@/lang'
 
 
 // {
@@ -17,6 +18,10 @@ import type { InitState as VersionState } from '@/store/version/state'
 export class StateEvent extends Event {
   configUpdated(keys: Array<keyof LX.AppSetting>, setting: Partial<LX.AppSetting>) {
     this.emit('configUpdated', keys, setting)
+  }
+
+  languageChanged(locale: I18n['locale']) {
+    this.emit('languageChanged', locale)
   }
 
   fontSizeUpdated(size: number) {

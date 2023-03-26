@@ -40,7 +40,10 @@ export const updateSetting = (setting: Partial<LX.AppSetting>) => {
 
 export const setLanguage = (locale: Parameters<typeof applyLanguage>[0]) => {
   updateSetting({ 'common.langId': locale })
-  applyLanguage(locale)
+  global.state_event.languageChanged(locale)
+  requestAnimationFrame(() => {
+    applyLanguage(locale)
+  })
 }
 
 

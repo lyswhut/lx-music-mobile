@@ -1,21 +1,24 @@
 import React, { useEffect, useRef } from 'react'
-import { type DrawerLayoutAndroid } from 'react-native'
 import settingState from '@/store/setting/state'
 import MusicList from './MusicList'
 import MyList from './MyList'
 import { useTheme } from '@/store/theme/hook'
-import DrawerLayoutFixed from '@/components/common/DrawerLayoutFixed'
+import DrawerLayoutFixed, { type DrawerLayoutFixedType } from '@/components/common/DrawerLayoutFixed'
 import { COMPONENT_IDS } from '@/config/constant'
 import { scaleSizeW } from '@/utils/pixelRatio'
+import type { InitState as CommonState } from '@/store/common/state'
 
 const MAX_WIDTH = scaleSizeW(400)
 
 export default () => {
-  const drawer = useRef<DrawerLayoutAndroid>(null)
+  const drawer = useRef<DrawerLayoutFixedType>(null)
   const theme = useTheme()
   // const [width, setWidth] = useState(0)
 
   useEffect(() => {
+    const handleFixDrawer = (id: CommonState['navActiveId']) => {
+      if (id == 'nav_love') drawer.current?.fixWidth()
+    }
     const changeVisible = (visible: boolean) => {
       if (visible) {
         requestAnimationFrame(() => {
@@ -25,8 +28,10 @@ export default () => {
         drawer.current?.closeDrawer()
       }
     }
+
     // setWidth(getWindowSise().width * 0.82)
 
+    global.app_event.on('homeNavPagerChanged', handleFixDrawer)
     global.app_event.on('changeLoveListVisible', changeVisible)
 
     // 就放旋转屏幕后的宽度没有更新的问题
@@ -38,8 +43,9 @@ export default () => {
     // })
 
     return () => {
+      global.app_event.off('homeNavPagerChanged', handleFixDrawer)
       global.app_event.off('changeLoveListVisible', changeVisible)
-      // changeEvent.remove()
+    // changeEvent.remove()
     }
   }, [])
 

@@ -212,11 +212,16 @@ const List = forwardRef<ListType, ListProps>(({ onShowMenu, onMuiltSelectMode, o
   }
 
   const handlePress = (item: LX.Music.MusicInfo, index: number) => {
-    if (isMultiSelectModeRef.current) {
-      handleSelect(item, index)
-    } else {
-      handlePlay(index)
-    }
+    // console.log(global.lx.homePagerIdle)
+    requestAnimationFrame(() => {
+      // console.log(global.lx.homePagerIdle)
+      if (!global.lx.homePagerIdle) return
+      if (isMultiSelectModeRef.current) {
+        handleSelect(item, index)
+      } else {
+        handlePlay(index)
+      }
+    })
   }
 
   const handleLongPress = (item: LX.Music.MusicInfo, index: number) => {

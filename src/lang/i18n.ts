@@ -40,7 +40,7 @@ const hookTools = {
 }
 
 const useI18n = () => {
-  const [locale, updateLocale] = useState(i18n.locale)
+  const [locale, updateLocale] = useState(i18n?.locale ?? 'en_us')
   // console.log('hook run')
   useEffect(() => {
     const hook: Hook = (locale) => {

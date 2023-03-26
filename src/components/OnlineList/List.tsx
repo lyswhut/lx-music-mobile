@@ -24,6 +24,7 @@ export interface ListProps {
   onPlayList?: (index: number) => void
   progressViewOffset?: number
   ListHeaderComponent?: FlatListType['ListEmptyComponent']
+  checkHomePagerIdle: boolean
 }
 export interface ListType {
   setList: (list: LX.Music.MusicInfoOnline[], showSource?: boolean) => void
@@ -46,6 +47,7 @@ const List = forwardRef<ListType, ListProps>(({
   onPlayList,
   progressViewOffset,
   ListHeaderComponent,
+  checkHomePagerIdle,
 }, ref) => {
   // const t = useI18n()
   const theme = useTheme()
@@ -139,16 +141,19 @@ const List = forwardRef<ListType, ListProps>(({
   }
 
   const handlePress = (item: LX.Music.MusicInfoOnline, index: number) => {
-    if (isMultiSelectModeRef.current) {
-      handleSelect(item, index)
-    } else {
-      if (settingState.setting['list.isClickPlayList'] && onPlayList != null) {
-        onPlayList(index)
+    requestAnimationFrame(() => {
+      if (checkHomePagerIdle && !global.lx.homePagerIdle) return
+      if (isMultiSelectModeRef.current) {
+        handleSelect(item, index)
       } else {
-        // console.log(currentList[index])
-        handlePlay(currentList[index])
+        if (settingState.setting['list.isClickPlayList'] && onPlayList != null) {
+          onPlayList(index)
+        } else {
+          // console.log(currentList[index])
+          handlePlay(currentList[index])
+        }
       }
-    }
+    })
   }
 
   const handleLongPress = (item: LX.Music.MusicInfoOnline, index: number) => {

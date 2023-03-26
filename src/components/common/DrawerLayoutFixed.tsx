@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useRef, useState } from 'react'
+import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
 import { DrawerLayoutAndroid, type DrawerLayoutAndroidProps, View, type LayoutChangeEvent } from 'react-native'
 // import { getWindowSise } from '@/utils/tools'
 import { usePageVisible } from '@/store/common/hook'
@@ -10,18 +10,43 @@ interface Props extends DrawerLayoutAndroidProps {
   widthPercentageMax?: number
 }
 
-const DrawerLayoutFixed = forwardRef<DrawerLayoutAndroid, Props>(({ visibleNavNames, widthPercentage, widthPercentageMax, children, ...props }, ref) => {
+export interface DrawerLayoutFixedType {
+  openDrawer: () => void
+  closeDrawer: () => void
+  fixWidth: () => void
+}
+
+const DrawerLayoutFixed = forwardRef<DrawerLayoutFixedType, Props>(({ visibleNavNames, widthPercentage, widthPercentageMax, children, ...props }, ref) => {
+  const drawerLayoutRef = useRef<DrawerLayoutAndroid>(null)
   const [w, setW] = useState<number | string>('100%')
   const [drawerWidth, setDrawerWidth] = useState(0)
   const changedRef = useRef({ width: 0, changed: false })
 
-  // 修复 DrawerLayoutAndroid 在导航到其他屏幕再返回后无法打开的问题
-  usePageVisible(visibleNavNames, useCallback((visible) => {
-    if (!visible || !changedRef.current.width) return
+  const fixDrawerWidth = useCallback(() => {
+    if (!changedRef.current.width) return
     changedRef.current.changed = true
     // console.log('usePageVisible', visible, changedRef.current.width)
     setW(changedRef.current.width - 1)
-  }, []))
+  }, [])
+
+  // 修复 DrawerLayoutAndroid 在导航到其他屏幕再返回后无法打开的问题
+  usePageVisible(visibleNavNames, useCallback((visible) => {
+    if (!visible || !changedRef.current.width) return
+    fixDrawerWidth()
+  }, [fixDrawerWidth]))
+
+  useImperativeHandle(ref, () => ({
+    openDrawer() {
+      drawerLayoutRef.current?.openDrawer()
+    },
+    closeDrawer() {
+      drawerLayoutRef.current?.closeDrawer()
+    },
+    fixWidth() {
+      fixDrawerWidth()
+    },
+  }), [fixDrawerWidth])
+
 
   const handleLayout = useCallback((e: LayoutChangeEvent) => {
     // console.log('handleLayout', e.nativeEvent.layout.width, changedRef.current.width)
@@ -51,7 +76,7 @@ const DrawerLayoutFixed = forwardRef<DrawerLayoutAndroid, Props>(({ visibleNavNa
       style={{ width: w, flex: 1 }}
     >
       <DrawerLayoutAndroid
-        ref={ref}
+        ref={drawerLayoutRef}
         keyboardDismissMode="on-drag"
         drawerWidth={drawerWidth}
         {...props}

@@ -4,7 +4,7 @@ import Aside from './Aside'
 import PlayerBar from '../components/PlayerBar'
 import StatusBar from '@/components/common/StatusBar'
 import Header from './Header'
-import Main from '../components/Main'
+import Main from './Main'
 import { createStyle } from '@/utils/tools'
 
 const styles = createStyle({

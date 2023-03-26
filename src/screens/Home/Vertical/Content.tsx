@@ -1,18 +1,17 @@
 import React, { useEffect, useRef } from 'react'
-import { type DrawerLayoutAndroid } from 'react-native'
 // import { getWindowSise, onDimensionChange } from '@/utils/tools'
 import DrawerNav from './DrawerNav'
 import Header from './Header'
-import Main from '../components/Main'
+import Main from './Main'
 import { useSettingValue } from '@/store/setting/hook'
 import { COMPONENT_IDS } from '@/config/constant'
-import DrawerLayoutFixed from '@/components/common/DrawerLayoutFixed'
+import DrawerLayoutFixed, { type DrawerLayoutFixedType } from '@/components/common/DrawerLayoutFixed'
 import { scaleSizeW } from '@/utils/pixelRatio'
 
 const MAX_WIDTH = scaleSizeW(300)
 
 const Content = () => {
-  const drawer = useRef<DrawerLayoutAndroid>(null)
+  const drawer = useRef<DrawerLayoutFixedType>(null)
   const drawerLayoutPosition = useSettingValue('common.drawerLayoutPosition')
 
   useEffect(() => {

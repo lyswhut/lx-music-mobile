@@ -1,7 +1,7 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.0.0-beta.17",
-  "versionCode": 53,
+  "version": "1.0.0",
+  "versionCode": 54,
   "private": true,
   "scripts": {
     "dev": "react-native run-android --active-arch-only",
@@ -74,6 +74,7 @@
     "@types/react-native-background-timer": "^2.0.0",
     "@types/react-native-vector-icons": "^6.4.13",
     "babel-plugin-module-resolver": "^5.0.0",
+    "changelog-parser": "^3.0.1",
     "eslint-config-standard-with-typescript": "^34.0.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",

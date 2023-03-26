@@ -32,21 +32,23 @@ const handleSortList = (list: LX.Music.MusicInfoOnline[], keyword: string) => {
 
 const setLists = (results: SearchResult[], page: number, text: string): LX.Music.MusicInfoOnline[] => {
   let pages = []
-  let total = 0
-  // let limit = 0
+  let totals = []
+  let limit = 0
   let list = [] as LX.Music.MusicInfoOnline[]
   for (const source of results) {
     state.maxPages[source.source] = source.allPage
+    limit = Math.max(source.limit, limit)
     if (source.allPage < page) continue
     arrPush(list, source.list)
     pages.push(source.allPage)
-    total += source.total
-    // limit = Math.max(source.limit, limit)
+    totals.push(source.total)
   }
   list = handleSortList(list.map(s => toNewMusicInfo(s) as LX.Music.MusicInfoOnline), text)
   let listInfo = state.listInfos.all
-  listInfo.maxPage = Math.max(...pages)
-  listInfo.total = total
+  listInfo.maxPage = Math.max(0, ...pages)
+  const total = Math.max(0, ...totals)
+  if (page == 1 || (total && list.length)) listInfo.total = total
+  else listInfo.total = limit * page
   // listInfo.limit = limit
   listInfo.page = page
   listInfo.list = deduplicationList(page > 1 ? [...listInfo.list, ...list] : list)
@@ -60,7 +62,8 @@ const setList = (datas: SearchResult, page: number, text: string): LX.Music.Musi
   let listInfo = state.listInfos[datas.source] as ListInfo
   const list = datas.list.map(s => toNewMusicInfo(s) as LX.Music.MusicInfoOnline)
   listInfo.list = deduplicationList(page == 1 ? list : [...listInfo.list, ...list])
-  listInfo.total = datas.total
+  if (page == 1 || (datas.total && datas.list.length)) listInfo.total = datas.total
+  else listInfo.total = datas.limit * page
   listInfo.maxPage = datas.allPage
   listInfo.page = page
   listInfo.limit = datas.limit

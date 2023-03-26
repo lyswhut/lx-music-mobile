@@ -12,7 +12,8 @@ export default {
     state.listDetailInfo.list = page == 1 ? [...result.list] : [...state.listDetailInfo.list, ...result.list]
     state.listDetailInfo.id = id
     state.listDetailInfo.source = result.source
-    state.listDetailInfo.total = result.total
+    if (page == 1 || (result.total && result.list.length)) state.listDetailInfo.total = result.total
+    else state.listDetailInfo.total = result.limit * page
     state.listDetailInfo.limit = result.limit
     state.listDetailInfo.page = page
     state.listDetailInfo.maxPage = Math.ceil(result.total / result.limit)

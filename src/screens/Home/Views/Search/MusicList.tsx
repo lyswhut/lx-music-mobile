@@ -35,7 +35,7 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
           if (isUnmountedRef.current) return
           requestAnimationFrame(() => {
             listRef.current?.setList(list, source == 'all')
-            listRef.current?.setStatus(searchMusicState.listInfos[searchMusicState.source]!.maxPage == page ? 'end' : 'idle')
+            listRef.current?.setStatus(searchMusicState.listInfos[searchMusicState.source]!.maxPage >= page ? 'end' : 'idle')
           })
         }).catch(() => {
           listRef.current?.setStatus('error')
@@ -59,7 +59,7 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
       // const result = setListInfo(listDetail, searchMusicState.listDetailInfo.id, page)
       if (isUnmountedRef.current) return
       listRef.current?.setList(list, searchInfoRef.current.source == 'all')
-      listRef.current?.setStatus(searchMusicState.listInfos[searchInfoRef.current.source]!.maxPage == page ? 'end' : 'idle')
+      listRef.current?.setStatus(searchMusicState.listInfos[searchInfoRef.current.source]!.maxPage >= page ? 'end' : 'idle')
     }).catch(() => {
       listRef.current?.setStatus('error')
     })
@@ -72,7 +72,7 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
       // const result = setListInfo(listDetail, searchMusicState.listDetailInfo.id, page)
       if (isUnmountedRef.current) return
       listRef.current?.setList(list, searchInfoRef.current.source == 'all')
-      listRef.current?.setStatus(info.maxPage == page ? 'end' : 'idle')
+      listRef.current?.setStatus(info.maxPage >= page ? 'end' : 'idle')
     }).catch(() => {
       listRef.current?.setStatus('error')
     })

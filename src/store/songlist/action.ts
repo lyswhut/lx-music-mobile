@@ -12,7 +12,8 @@ export default {
   },
   setList(result: ListInfo, tagId: string, sortId: string, page: number) {
     state.listInfo.list = page == 1 ? [...result.list] : [...state.listInfo.list, ...result.list]
-    state.listInfo.total = result.total
+    if (page == 1 || (result.total && result.list.length)) state.listInfo.total = result.total
+    else state.listInfo.total = result.limit * page
     state.listInfo.limit = result.limit
     state.listInfo.page = page
     state.listInfo.source = result.source
@@ -37,7 +38,8 @@ export default {
     state.listDetailInfo.list = page == 1 ? [...result.list] : [...state.listDetailInfo.list, ...result.list]
     state.listDetailInfo.id = id
     state.listDetailInfo.source = result.source
-    state.listDetailInfo.total = result.total
+    if (page == 1 || (result.total && result.list.length)) state.listDetailInfo.total = result.total
+    else state.listDetailInfo.total = result.limit * page
     state.listDetailInfo.limit = result.limit
     state.listDetailInfo.page = page
     state.listDetailInfo.info = { ...result.info }

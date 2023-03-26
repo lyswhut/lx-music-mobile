@@ -48,6 +48,7 @@ export default {
   },
   addHistoryWord(word: string) {
     let index = state.historyList.indexOf(word)
+    if (index == 0) return
     if (index > -1) state.historyList.splice(index, 1)
     if (state.historyList.length >= 15) state.historyList.splice(14, state.historyList.length - 14)
     state.historyList.unshift(word)

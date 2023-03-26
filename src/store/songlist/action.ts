@@ -19,7 +19,7 @@ export default {
     state.listInfo.source = result.source
     state.listInfo.tagId = tagId
     state.listInfo.sortId = sortId
-    state.listInfo.maxPage = Math.ceil(result.total / result.limit)
+    state.listInfo.maxPage = Math.ceil(state.listInfo.total / result.limit)
 
     return state.listInfo
   },
@@ -43,7 +43,7 @@ export default {
     state.listDetailInfo.limit = result.limit
     state.listDetailInfo.page = page
     state.listDetailInfo.info = { ...result.info }
-    state.listInfo.maxPage = Math.ceil(result.total / result.limit)
+    state.listDetailInfo.maxPage = Math.ceil(state.listDetailInfo.total / result.limit)
 
     return state.listDetailInfo
   },

@@ -6,6 +6,12 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [1.0.3](https://github.com/lyswhut/lx-music-mobile/compare/v1.0.2...v1.0.3) - 2023-03-26
+
+### 修复
+
+- 修复歌单详情页内歌曲最多只加载30首的问题
+
 ## [1.0.2](https://github.com/lyswhut/lx-music-mobile/compare/v1.0.1...v1.0.2) - 2023-03-26
 
 ### 优化

@@ -63,6 +63,7 @@ const defaultSetting: LX.AppSetting = {
   'theme.id': 'blue_plus',
   'theme.lightId': 'green',
   'theme.darkId': 'black',
+  'theme.hideBgDark': false,
 }
 
 

@@ -55,7 +55,9 @@ export const buildActiveThemeColors = (theme: LX.Theme): LX.ActiveTheme => {
     }
   } else {
     const extInfo = (theme as LocalTheme).config.extInfo
-    if (extInfo['bg-image']) bgImg = BG_IMAGES[extInfo['bg-image']]
+    if (extInfo['bg-image']) {
+      if (theme.id != 'black' || !settingState.setting['theme.hideBgDark']) bgImg = BG_IMAGES[extInfo['bg-image']]
+    }
   }
 
   theme.config.extInfo = { ...theme.config.extInfo }

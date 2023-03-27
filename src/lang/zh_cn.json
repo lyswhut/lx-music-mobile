@@ -203,6 +203,7 @@
   "setting_basic_startup_auto_play": "启动后自动播放音乐",
   "setting_basic_theme": "主题颜色",
   "setting_basic_theme_auto_theme": "跟随系统亮、暗模式切换主题",
+  "setting_basic_theme_hide_bg_dark": "隐藏黑色主题背景",
   "setting_list": "列表设置",
   "setting_list_add_music_location_type": "添加歌曲到列表时的位置",
   "setting_list_add_music_location_type_bottom": "底部",

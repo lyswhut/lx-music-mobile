@@ -72,6 +72,11 @@ declare global {
       'theme.darkId': string
 
       /**
+       * 隐藏黑色主题背景
+       */
+      'theme.hideBgDark': boolean
+
+      /**
            * 启动时自动播放歌曲
            */
       'player.startupAutoPlay': boolean

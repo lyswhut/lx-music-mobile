@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useMemo, useState } from 'react'
+import React, { forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 import songlistState, { type SortInfo, type Source } from '@/store/songlist/state'
 import { useI18n } from '@/lang'
@@ -20,9 +20,11 @@ export default forwardRef<SortTabType, SortTabProps>(({ onSortChange }, ref) => 
   const [activeId, setActiveId] = useState<SortInfo['id']>('')
   const t = useI18n()
   const theme = useTheme()
+  const scrollViewRef = useRef<ScrollView>(null)
 
   useImperativeHandle(ref, () => ({
     setSource(source, activeTab) {
+      scrollViewRef.current?.scrollTo({ x: 0 })
       setSortList(songlistState.sortList[source] as SortInfo[])
       setActiveId(activeTab)
     },
@@ -38,7 +40,7 @@ export default forwardRef<SortTabType, SortTabProps>(({ onSortChange }, ref) => 
   }
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps={'always'} horizontal={true}>
+    <ScrollView ref={scrollViewRef} style={styles.container} keyboardShouldPersistTaps={'always'} horizontal>
       {
         sorts.map(s => (
           <TouchableOpacity style={styles.button} onPress={() => { handleSortChange(s.id) }} key={s.id}>

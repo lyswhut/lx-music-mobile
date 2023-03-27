@@ -51,7 +51,7 @@ export default ({ onChangeId }: {
   }, [])
 
   return (
-    <ScrollView style={{ ...styles.container, borderTopColor: theme['c-border-background'] }} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'always'}>
+    <ScrollView horizontal style={{ ...styles.container, borderBottomColor: theme['c-border-background'] }} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'always'}>
       {
         SETTING_SCREENS.map(id => <ListItem key={id} id={id} activeId={activeId} onPress={handleChangeId} />)
       }
@@ -62,15 +62,15 @@ export default ({ onChangeId }: {
 
 const styles = createStyle({
   container: {
-    height: 96,
+    height: 50,
     flexGrow: 0,
     flexShrink: 0,
-    borderTopWidth: BorderWidths.normal,
+    borderBottomWidth: BorderWidths.normal,
     opacity: 0.7,
   },
   contentContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
     padding: 5,
     // backgroundColor: 'rgba(0, 0, 0, 0.1)',
   },
@@ -79,8 +79,10 @@ const styles = createStyle({
   // },
 
   listItem: {
-    width: '33.33%',
+    // width: '33.33%',
     height: 40,
+    paddingLeft: 15,
+    paddingRight: 15,
     // height: 'auto',
     // flexDirection: 'row',
     // alignItems: 'center',

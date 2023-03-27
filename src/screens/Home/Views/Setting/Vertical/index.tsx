@@ -20,10 +20,10 @@ const Content = () => {
 
   return (
     <View style={styles.container}>
+      <NavList onChangeId={handleChangeId} />
       <ScrollView contentContainerStyle={styles.main} keyboardShouldPersistTaps={'always'}>
         <Main ref={mainRef} />
       </ScrollView>
-      <NavList onChangeId={handleChangeId} />
     </View>
   )
 }

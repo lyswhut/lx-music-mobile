@@ -46,7 +46,6 @@ export default forwardRef<TipListType, TipListProps>(({ onSearch }, ref) => {
     searchTipListRef.current?.setHeight(height)
     setSearchText(keyword)
     if (keyword) {
-      visibleListRef.current = true
       setTipListInfo(keyword, searchState.temp_source)
       debounceTipSearch(keyword, searchState.temp_source, (list) => {
         if (keyword != searchState.tipListInfo.text) return

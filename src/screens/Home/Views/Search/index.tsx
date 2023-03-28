@@ -28,6 +28,7 @@ export default () => {
   const listRef = useRef<ListType>(null)
   const layoutHeightRef = useRef<number>(0)
   const searchInfo = useRef<SearchInfo>({ temp_source: 'kw', source: 'kw', searchType: 'music' })
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     void getSearchSetting().then(info => {
@@ -74,16 +75,24 @@ export default () => {
       searchTipListRef.current?.search(text, layoutHeightRef.current)
     }, 500)
   }
-  const handleSearch: HeaderBarProps['onSearch'] = (text) => {
-    searchTipListRef.current?.search(text, layoutHeightRef.current)
+  const handleHideTipList = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
+    }
     searchTipListRef.current?.hide()
+  }
+  const handleSearch: HeaderBarProps['onSearch'] = (text) => {
+    handleHideTipList()
+    searchTipListRef.current?.search(text, layoutHeightRef.current)
     headerBarRef.current?.setText(text)
     headerBarRef.current?.blur()
     void addHistoryWord(text)
     listRef.current?.loadList(text, searchInfo.current.source, searchInfo.current.searchType)
   }
   const handleShowTipList: HeaderBarProps['onShowTipList'] = () => {
-    setTimeout(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    timeoutRef.current = setTimeout(() => {
       searchTipListRef.current?.show(layoutHeightRef.current)
     }, 500)
   }
@@ -95,7 +104,7 @@ export default () => {
         onSourceChange={handleSourceChange}
         onTempSearch={handleTempSearch}
         onSearch={handleSearch}
-        onHideTipList={() => searchTipListRef.current?.hide()}
+        onHideTipList={handleHideTipList}
         onShowTipList={handleShowTipList}
       />
       <View style={styles.content} onLayout={handleLayout}>

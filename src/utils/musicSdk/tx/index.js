@@ -18,7 +18,7 @@ const tx = {
   },
   getLyric(songInfo) {
     // let singer = songInfo.singer.indexOf('、') > -1 ? songInfo.singer.split('、')[0] : songInfo.singer
-    return lyric.getLyric(songInfo)
+    return lyric.getLyric(songInfo.songmid)
   },
   getPic(songInfo) {
     return apis('tx').getPic(songInfo)

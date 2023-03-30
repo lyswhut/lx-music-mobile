@@ -5,23 +5,22 @@ import { Icon } from '@/components/common/Icon'
 import { pop } from '@/navigation'
 // import { AppColors } from '@/theme'
 import StatusBar from '@/components/common/StatusBar'
-import { useComponentIds } from '@/store/common/hook'
 import { useI18n } from '@/lang'
 import { createStyle } from '@/utils/tools'
 import Text from '@/components/common/Text'
 import { HEADER_HEIGHT as _HEADER_HEIGHT } from '@/config/constant'
 import { scaleSizeH } from '@/utils/pixelRatio'
+import commonState from '@/store/common/state'
 
 const HEADER_HEIGHT = scaleSizeH(_HEADER_HEIGHT)
 
 export default memo(({ musicInfo }: {
   musicInfo: LX.Music.MusicInfo
 }) => {
-  const componentIds = useComponentIds()
   const t = useI18n()
 
   const back = () => {
-    void pop(componentIds.comment as string)
+    void pop(commonState.componentIds.comment as string)
   }
 
   return (

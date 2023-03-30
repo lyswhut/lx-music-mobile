@@ -1,14 +1,12 @@
 import React from 'react'
 import Btn from './Btn'
-import { useComponentIds } from '@/store/common/hook'
 import { navigations } from '@/navigation'
+import commonState from '@/store/common/state'
 
 
 export default () => {
-  const componentIds = useComponentIds()
-
   const handleShowCommentScreen = () => {
-    navigations.pushCommentScreen(componentIds.playDetail as string)
+    navigations.pushCommentScreen(commonState.componentIds.playDetail as string)
   }
 
   return <Btn icon="comment" onPress={handleShowCommentScreen} />

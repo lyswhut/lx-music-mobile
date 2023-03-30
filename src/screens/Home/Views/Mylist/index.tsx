@@ -31,7 +31,7 @@ export default () => {
 
     // setWidth(getWindowSise().width * 0.82)
 
-    global.app_event.on('homeNavPagerChanged', handleFixDrawer)
+    global.state_event.on('navActiveIdUpdated', handleFixDrawer)
     global.app_event.on('changeLoveListVisible', changeVisible)
 
     // 就放旋转屏幕后的宽度没有更新的问题
@@ -43,7 +43,7 @@ export default () => {
     // })
 
     return () => {
-      global.app_event.off('homeNavPagerChanged', handleFixDrawer)
+      global.state_event.off('navActiveIdUpdated', handleFixDrawer)
       global.app_event.off('changeLoveListVisible', changeVisible)
     // changeEvent.remove()
     }

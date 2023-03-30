@@ -106,8 +106,8 @@ export class StateEvent extends Event {
     this.emit('componentIdsUpdated', ids)
   }
 
-  navActiveIdUpdated(index: CommonState['navActiveId']) {
-    this.emit('navActiveIdUpdated', index)
+  navActiveIdUpdated(id: CommonState['navActiveId']) {
+    this.emit('navActiveIdUpdated', id)
   }
 
   sourceNamesUpdated(names: CommonState['sourceNames']) {

@@ -67,7 +67,7 @@ const getMusicPlayUrl = async(musicInfo: LX.Music.MusicInfo | LX.Download.ListIt
   // this.musicInfo.url = await getMusicPlayUrl(targetSong, type)
   setStatusText(global.i18n.t('player__geting_url'))
 
-  // const type = getPlayType(settingState.setting['player.highQuality'], musicInfo)
+  // const type = getPlayType(settingState.setting['player.isPlayHighQuality'], musicInfo)
 
   return getMusicUrl({
     musicInfo,

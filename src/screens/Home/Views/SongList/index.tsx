@@ -27,12 +27,12 @@ export default () => {
       drawer.current?.closeDrawer()
     }
 
-    global.app_event.on('homeNavPagerChanged', handleFixDrawer)
+    global.state_event.on('navActiveIdUpdated', handleFixDrawer)
     global.app_event.on('showSonglistTagList', handleShow)
     global.app_event.on('hideSonglistTagList', handleHide)
 
     return () => {
-      global.app_event.off('homeNavPagerChanged', handleFixDrawer)
+      global.state_event.off('navActiveIdUpdated', handleFixDrawer)
       global.app_event.off('showSonglistTagList', handleShow)
       global.app_event.off('hideSonglistTagList', handleHide)
     }

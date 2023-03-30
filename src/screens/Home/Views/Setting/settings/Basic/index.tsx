@@ -1,5 +1,6 @@
 import React, { memo } from 'react'
 
+import Theme from '../Theme'
 import Section from '../../components/Section'
 import Source from './Source'
 import SourceName from './SourceName'
@@ -23,12 +24,13 @@ export default memo(() => {
       <IsShowBackBtn />
       <IsShowExitBtn />
       <IsAutoHidePlayBar />
-      <Source />
-      <SourceName />
+      <Theme />
       <DrawerLayoutPosition />
       <Language />
       <FontSize />
       <ShareType />
+      <Source />
+      <SourceName />
     </Section>
   )
 })

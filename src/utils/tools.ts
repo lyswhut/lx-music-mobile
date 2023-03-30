@@ -395,6 +395,7 @@ export const trasformeStyle = <T extends Style>(styles: T): T => {
       case 'paddingLeft':
       case 'paddingRight':
       case 'paddingHorizontal':
+      case 'gap':
         newStyle[p] = scaleSizeW(v)
         break
       case 'padding':

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { View } from 'react-native'
+import { InteractionManager, View } from 'react-native'
 import Search from '../Views/Search'
 import SongList from '../Views/SongList'
 import Mylist from '../Views/Mylist'
@@ -16,7 +16,13 @@ const SearchPage = () => {
   const component = useMemo(() => <Search />, [])
   useEffect(() => {
     const handleNavIdUpdate = (id: CommonState['navActiveId']) => {
-      if (id == 'nav_search') setVisible(true)
+      if (id == 'nav_search') {
+        requestAnimationFrame(() => {
+          void InteractionManager.runAfterInteractions(() => {
+            setVisible(true)
+          })
+        })
+      }
     }
     const handleHide = () => {
       setVisible(false)
@@ -39,7 +45,13 @@ const SongListPage = () => {
   const component = useMemo(() => <SongList />, [])
   useEffect(() => {
     const handleNavIdUpdate = (id: CommonState['navActiveId']) => {
-      if (id == 'nav_songlist') setVisible(true)
+      if (id == 'nav_songlist') {
+        requestAnimationFrame(() => {
+          void InteractionManager.runAfterInteractions(() => {
+            setVisible(true)
+          })
+        })
+      }
     }
     const handleHide = () => {
       setVisible(false)
@@ -63,7 +75,13 @@ const LeaderboardPage = () => {
   const component = useMemo(() => <Leaderboard />, [])
   useEffect(() => {
     const handleNavIdUpdate = (id: CommonState['navActiveId']) => {
-      if (id == 'nav_top') setVisible(true)
+      if (id == 'nav_top') {
+        requestAnimationFrame(() => {
+          void InteractionManager.runAfterInteractions(() => {
+            setVisible(true)
+          })
+        })
+      }
     }
     const handleHide = () => {
       setVisible(false)
@@ -86,7 +104,13 @@ const MylistPage = () => {
   const component = useMemo(() => <Mylist />, [])
   useEffect(() => {
     const handleNavIdUpdate = (id: CommonState['navActiveId']) => {
-      if (id == 'nav_love') setVisible(true)
+      if (id == 'nav_love') {
+        requestAnimationFrame(() => {
+          void InteractionManager.runAfterInteractions(() => {
+            setVisible(true)
+          })
+        })
+      }
     }
     const handleHide = () => {
       setVisible(false)
@@ -109,7 +133,13 @@ const SettingPage = () => {
   const component = useMemo(() => <Setting />, [])
   useEffect(() => {
     const handleNavIdUpdate = (id: CommonState['navActiveId']) => {
-      if (id == 'nav_setting') setVisible(true)
+      if (id == 'nav_setting') {
+        requestAnimationFrame(() => {
+          void InteractionManager.runAfterInteractions(() => {
+            setVisible(true)
+          })
+        })
+      }
     }
     global.state_event.on('navActiveIdUpdated', handleNavIdUpdate)
 
@@ -162,7 +192,6 @@ const Main = () => {
     if (activeIndexRef.current != viewMap[commonState.navActiveId]) {
       setNavActiveId(indexMap[activeIndexRef.current])
     }
-    global.app_event.homeNavPagerChanged(indexMap[activeIndexRef.current])
   }, [])
 
   const onPageScrollStateChanged = useCallback(({ nativeEvent }: PageScrollStateChangedNativeEvent) => {

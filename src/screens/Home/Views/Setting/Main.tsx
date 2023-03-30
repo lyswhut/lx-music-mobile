@@ -2,7 +2,6 @@ import React, { forwardRef, useImperativeHandle, useMemo, useState } from 'react
 import { InteractionManager } from 'react-native'
 
 import Basic from './settings/Basic'
-import Theme from './settings/Theme'
 import Player from './settings/Player'
 import LyricDesktop from './settings/LyricDesktop'
 import Search from './settings/Search'
@@ -15,7 +14,6 @@ import About from './settings/About'
 
 export const SETTING_SCREENS = [
   'basic',
-  'theme',
   'player',
   'lyric_desktop',
   'search',
@@ -51,7 +49,6 @@ const Main = forwardRef<MainType, {}>((props, ref) => {
 
   const component = useMemo(() => {
     switch (id) {
-      case 'theme': return <Theme />
       case 'player': return <Player />
       case 'lyric_desktop': return <LyricDesktop />
       case 'search': return <Search />

@@ -1,6 +1,6 @@
 import { setNavActiveId } from '@/core/common'
 import Event from './Event'
-import commonState, { type InitState as CommonState } from '@/store/common/state'
+import commonState from '@/store/common/state'
 import { type Source as SonglistSource } from '@/store/songlist/state'
 import { type SearchType } from '@/store/search/state'
 
@@ -160,10 +160,6 @@ export class AppEvent extends Event {
 
   changeMenuVisible(visible: boolean) {
     this.emit('changeMenuVisible', visible)
-  }
-
-  homeNavPagerChanged(id: CommonState['navActiveId']) {
-    this.emit('homeNavPagerChanged', id)
   }
 
   /**

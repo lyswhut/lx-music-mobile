@@ -14,10 +14,12 @@ import ButtonPrimary from '@/components/common/ButtonPrimary'
 import playerState from '@/store/player/state'
 import settingState from '@/store/setting/state'
 
+const MIN_VALUE = 60
+const MAX_VALUE = 200
 
 const Volume = () => {
   const theme = useTheme()
-  const playbackRate = useSettingValue('player.playbackRate') * 100
+  const playbackRate = Math.trunc(useSettingValue('player.playbackRate') * 100)
   const [sliderSize, setSliderSize] = useState(playbackRate)
   const [isSliding, setSliding] = useState(false)
   const t = useI18n()
@@ -55,8 +57,8 @@ const Volume = () => {
       <View style={styles.content}>
         <Text style={styles.label} color={theme['c-font-label']}>{`${((isSliding ? sliderSize : playbackRate) / 100).toFixed(2)}x`}</Text>
         <Slider
-          minimumValue={60}
-          maximumValue={200}
+          minimumValue={MIN_VALUE}
+          maximumValue={MAX_VALUE}
           onSlidingComplete={handleSlidingComplete}
           onValueChange={handleValueChange}
           onSlidingStart={handleSlidingStart}

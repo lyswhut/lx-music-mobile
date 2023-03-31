@@ -13,7 +13,7 @@ import { setVolume } from '@/plugins/player'
 
 const Volume = () => {
   const theme = useTheme()
-  const volume = useSettingValue('player.volume') * 100
+  const volume = Math.trunc(useSettingValue('player.volume') * 100)
   const [sliderSize, setSliderSize] = useState(volume)
   const [isSliding, setSliding] = useState(false)
   const t = useI18n()

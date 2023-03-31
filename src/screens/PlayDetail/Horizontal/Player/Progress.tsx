@@ -36,7 +36,7 @@ const Progress = ({ progress, duration }: {
   // const { progress } = usePlayTimeBuffer()
   const theme = useTheme()
   // console.log(progress)
-  const progressStr = `${progress * 100}%`
+  const progressStr = `${Math.trunc(progress * 100)}%`
 
   const progressDotStyle = useMemo(() => {
     return {

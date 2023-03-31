@@ -17,6 +17,11 @@ export type SliderProps = Pick<_SliderProps,
 export default memo(({ value, minimumValue, maximumValue, onSlidingStart, onSlidingComplete, onValueChange, step }: SliderProps) => {
   const theme = useTheme()
 
+  const handleValueChange = (value: number) => {
+    // 修复当value小于等于minimumValue时，首次调用会传入0的问题
+    if (onValueChange && minimumValue != null) onValueChange(Math.max(value, minimumValue))
+  }
+
   return (
     <Slider
       value={value}
@@ -28,7 +33,7 @@ export default memo(({ value, minimumValue, maximumValue, onSlidingStart, onSlid
       thumbTintColor={theme['c-primary']}
       onSlidingStart={onSlidingStart}
       onSlidingComplete={onSlidingComplete}
-      onValueChange={onValueChange}
+      onValueChange={handleValueChange}
       step={step}
     />
   )

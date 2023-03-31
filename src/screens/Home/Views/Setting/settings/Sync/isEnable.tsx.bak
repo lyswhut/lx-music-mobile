@@ -46,7 +46,7 @@ const HostInput = ({ setHost, host, disabled }: {
       label={t('setting_sync_host_label')}
       onChanged={setHostAddress}
       keyboardType="number-pad"
-      placeholder={t('setting_sync_host_tip')} />
+      placeholder={t('setting_sync_host_value_tip')} />
   )
 }
 

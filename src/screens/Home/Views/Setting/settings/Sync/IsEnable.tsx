@@ -32,11 +32,16 @@ const HostInput = memo(({ setHost, host, disabled }: {
   }, [host])
 
   const setHostAddress = useCallback((value: string, callback: (host: string) => void) => {
-    let hostAddress = addressRxp.test(value) ? value.trim() : ''
+    let hostAddress: string
+    if (addressRxp.test(value)) hostAddress = value.trim()
+    else {
+      hostAddress = ''
+      if (value) toast(t('setting_sync_host_value_error_tip'), 'long')
+    }
     callback(hostAddress)
     if (host == hostAddress) return
     setHost(hostAddress)
-  }, [host, setHost])
+  }, [host, setHost, t])
 
   return (
     <InputItem
@@ -44,8 +49,9 @@ const HostInput = memo(({ setHost, host, disabled }: {
       value={hostAddress}
       label={t('setting_sync_host_label')}
       onChanged={setHostAddress}
-      keyboardType="number-pad"
-      placeholder={t('setting_sync_host_tip')} />
+      inputMode="url"
+      // keyboardType="url"
+      placeholder={t('setting_sync_host_value_tip')} />
   )
 })
 

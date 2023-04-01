@@ -6,6 +6,29 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [1.0.4](https://github.com/lyswhut/lx-music-mobile/compare/v1.0.3...v1.0.4) - 2023-04-01
+
+### 新增
+
+- 隐藏黑色主题背景设置，默认关闭，可以去设置-主题设置更改
+
+### 优化
+
+- 添加歌单分类、排行榜激活指示器
+- 调整设置界面竖屏下的UI布局
+
+### 修复
+
+- 修复歌单排序列表滚动重置问题
+- 修复搜索提示列表的显示时机问题
+- 就放tx源歌词获取失败的问题
+- 修复将播放速率调整为0.6后，再次打开设置面板将会导致app崩溃的问题
+- 修复播放详情页设置面板当前音量显示格式问题
+
+### 其他
+
+- 升级 React Native 到 v0.71.5
+
 ## [1.0.3](https://github.com/lyswhut/lx-music-mobile/compare/v1.0.2...v1.0.3) - 2023-03-26
 
 ### 修复

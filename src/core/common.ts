@@ -14,6 +14,7 @@ import { saveData } from '@/plugins/storage'
 import { throttle } from '@/utils/common'
 import { saveFontSize, saveViewPrevState } from '@/utils/data'
 import { showPactModal as handleShowPactModal } from '@/navigation'
+import { hideLyric } from '@/utils/nativeModules/lyricDesktop'
 
 
 const throttleSaveSetting = throttle(() => {
@@ -54,6 +55,7 @@ export const exitApp = () => {
   Promise.all([
     hideDesktopLyric(),
     destroyPlayer(),
+    hideLyric(),
   ]).finally(() => {
     isDestroying = false
     utilExitApp()

@@ -126,8 +126,8 @@ export const updateMetaData = async(musicInfo: LX.Player.MusicInfo, isPlay: bool
   }
 }
 
-export const playMusic = async(musicInfo: LX.Player.PlayMusic, url: string, time: number) => {
-  // console.log(tracks, time)
+const handlePlayMusic = async(musicInfo: LX.Player.PlayMusic, url: string, time: number) => {
+// console.log(tracks, time)
   const tracks = buildTracks(musicInfo, url)
   const track = tracks[0]
   // await updateMusicInfo(track)
@@ -144,8 +144,8 @@ export const playMusic = async(musicInfo: LX.Player.PlayMusic, url: string, time
         // let startupAutoPlay = settingState.setting['player.startupAutoPlay']
         global.lx.restorePlayInfo = null
 
-        // TODO startupAutoPlay
-        // if (startupAutoPlay) store.dispatch(playerAction.playMusic())
+      // TODO startupAutoPlay
+      // if (startupAutoPlay) store.dispatch(playerAction.playMusic())
       } else {
         await TrackPlayer.play()
       }
@@ -161,6 +161,15 @@ export const playMusic = async(musicInfo: LX.Player.PlayMusic, url: string, time
   if (queue.length > 2) {
     void TrackPlayer.remove(Array(queue.length - 2).fill(null).map((_, i) => i)).then(() => list.splice(0, list.length - 2))
   }
+}
+let playPromise = Promise.resolve()
+let actionId = Math.random()
+export const playMusic = (musicInfo: LX.Player.PlayMusic, url: string, time: number) => {
+  const id = actionId = Math.random()
+  playPromise.finally(() => {
+    if (id != actionId) return
+    playPromise = handlePlayMusic(musicInfo, url, time)
+  })
 }
 
 // let musicId = null

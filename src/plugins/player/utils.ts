@@ -145,7 +145,7 @@ const playMusic = ((fn: (musicInfo: LX.Player.PlayMusic, url: string, time: numb
     }
   }
 })((musicInfo, url, time) => {
-  void handlePlayMusic(musicInfo, url, time)
+  handlePlayMusic(musicInfo, url, time)
 })
 
 export const setResource = (musicInfo: LX.Player.PlayMusic, url: string, duration?: number) => {

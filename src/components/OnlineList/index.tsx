@@ -18,7 +18,7 @@ export interface OnlineListProps {
   checkHomePagerIdle?: boolean
 }
 export interface OnlineListType {
-  setList: (list: LX.Music.MusicInfoOnline[], showSource?: boolean) => void
+  setList: (list: LX.Music.MusicInfoOnline[], isAppend?: boolean, showSource?: boolean) => void
   setStatus: (val: Status) => void
 }
 
@@ -38,8 +38,9 @@ export default forwardRef<OnlineListType, OnlineListProps>(({
   // const loadingMaskRef = useRef<LoadingMaskType>(null)
 
   useImperativeHandle(ref, () => ({
-    setList(list, showSource) {
-      listRef.current?.setList(list, showSource)
+    setList(list, isAppend = false, showSource = false) {
+      listRef.current?.setList(list, isAppend, showSource)
+      multipleModeBarRef.current?.setIsSelectAll(false)
     },
     setStatus(val) {
       listRef.current?.setStatus(val)

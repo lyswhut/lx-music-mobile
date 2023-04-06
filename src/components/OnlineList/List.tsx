@@ -27,7 +27,7 @@ export interface ListProps {
   checkHomePagerIdle: boolean
 }
 export interface ListType {
-  setList: (list: LX.Music.MusicInfoOnline[], showSource?: boolean) => void
+  setList: (list: LX.Music.MusicInfoOnline[], isAppend: boolean, showSource: boolean) => void
   setIsMultiSelectMode: (isMultiSelectMode: boolean) => void
   setSelectMode: (mode: SelectMode) => void
   selectAll: (isAll: boolean) => void
@@ -65,9 +65,10 @@ const List = forwardRef<ListType, ListProps>(({
   // console.log('render music list')
 
   useImperativeHandle(ref, () => ({
-    setList(list, showSource = false) {
+    setList(list, isAppend, showSource) {
       setList(list)
       setShowSource(showSource)
+      if (!isAppend && selectedListRef.current.length) setSelectedList(selectedListRef.current = [])
     },
     setIsMultiSelectMode(isMultiSelectMode) {
       isMultiSelectModeRef.current = isMultiSelectMode

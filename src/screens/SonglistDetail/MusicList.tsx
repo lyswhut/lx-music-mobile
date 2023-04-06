@@ -94,7 +94,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
     getListDetail(songlistState.listDetailInfo.id, songlistState.listDetailInfo.source, page).then((listDetail) => {
       const result = setListDetail(listDetail, songlistState.listDetailInfo.id, page)
       if (isUnmountedRef.current) return
-      listRef.current?.setList(result.list)
+      listRef.current?.setList(result.list, true)
       listRef.current?.setStatus(songlistState.listDetailInfo.maxPage <= page ? 'end' : 'idle')
     }).catch(() => {
       if (songlistState.listDetailInfo.list.length && page == 1) clearListDetail()

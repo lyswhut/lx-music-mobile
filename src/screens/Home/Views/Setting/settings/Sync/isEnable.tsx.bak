@@ -1,0 +1,240 @@
+import React, { memo, useState, useEffect, useRef } from 'react'
+import { View } from 'react-native'
+
+import CheckBoxItem from '../../components/CheckBoxItem'
+import ConfirmAlert, { ConfirmAlertType } from '@/components/common/ConfirmAlert'
+import Input from '@/components/common/Input'
+import { connect, disconnect, SYNC_CODE } from '@/plugins/sync'
+import InputItem from '../../components/InputItem'
+import { getWIFIIPV4Address } from '@/utils/nativeModules/utils'
+import { createStyle, toast } from '@/utils/tools'
+import { useI18n } from '@/lang'
+import { updateSetting } from '@/core/common'
+import { addSyncHostHistory, getSyncHost, setSyncHost } from '@/utils/data'
+import { setSpText } from '@/utils/pixelRatio'
+import { setSyncMessage } from '@/core/sync'
+import { useSettingValue } from '@/store/setting/hook'
+import { useTheme } from '@/store/theme/hook'
+import { useStatus } from '@/store/sync/hook'
+import Text from '@/components/common/Text'
+
+const addressRxp = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/
+const portRxp = /(\d+)/
+
+const HostInput = ({ setHost, host, disabled }: {
+  setHost: (host: string) => void
+  host: string
+  disabled?: boolean
+}) => {
+  const t = useI18n()
+
+  const hostAddress = useMemo(() => {
+    return addressRxp.test(host) ? RegExp.$1 : ''
+  }, [host])
+
+  const setHostAddress = useCallback((value: string, callback: (host: string) => void) => {
+    let hostAddress = addressRxp.test(value) ? RegExp.$1 : ''
+    callback(hostAddress)
+    if (host == hostAddress) return
+    setHost(hostAddress)
+  }, [host, setHost])
+
+  return (
+    <InputItem
+      editable={!disabled}
+      value={hostAddress}
+      label={t('setting_sync_host_label')}
+      onChanged={setHostAddress}
+      keyboardType="number-pad"
+      placeholder={t('setting_sync_host_value_tip')} />
+  )
+}
+
+const PortInput = ({ setPort, port, disabled }: {
+  setPort: (port: string) => void
+  port: string
+  disabled?: boolean
+}) => {
+  const t = useI18n()
+
+  const portNum = useMemo(() => {
+    return portRxp.test(port) ? RegExp.$1 : ''
+  }, [port])
+
+  const setPortAddress = useCallback((value: string, callback: (port: string) => void) => {
+    let portNum = portRxp.test(value) ? RegExp.$1 : ''
+    callback(portNum)
+    if (port == portNum) return
+    setPort(portNum)
+  }, [port, setPort])
+
+  return (
+    <InputItem
+      editable={!disabled}
+      value={portNum}
+      label={t('setting_sync_port_label')}
+      onChanged={setPortAddress}
+      keyboardType="number-pad"
+      placeholder={t('setting_sync_port_tip')} />
+  )
+}
+
+const Status = () => {
+  const t = useI18n()
+  const syncStatus = useStatus()
+  const status = `${syncStatus.message ? syncStatus.message : syncStatus.status ? t('setting_sync_status_enabled') : t('sync_status_disabled')}`
+
+  return <Text style={styles.text} size={13}>{t('setting_sync_status', { status })}</Text>
+}
+
+export default memo(({ isWaiting, setIsWaiting }: {
+  hostInfo: { host: string, port: string }
+  isWaiting: boolean
+  setHostInfo: (hostInfo: { host: string, port: string }) => void
+  setIsWaiting: (isWaiting: boolean) => void
+}) => {
+  const t = useI18n()
+  const setIsEnableSync = (enable: boolean) => {
+    updateSetting({ 'sync.enable': enable })
+  }
+  const isEnableSync = useSettingValue('sync.enable')
+  const isUnmountedRef = useRef(true)
+  const theme = useTheme()
+  const [address, setAddress] = useState('')
+  const [authCode, setAuthCode] = useState('')
+  const confirmAlertRef = useRef<ConfirmAlertType>(null)
+
+  useEffect(() => {
+    isUnmountedRef.current = false
+    void getSyncHost().then(hostInfo => {
+      if (isUnmountedRef.current) return
+      setHostInfo(hostInfo)
+    })
+    void getWIFIIPV4Address().then(address => {
+      if (isUnmountedRef.current) return
+      setAddress(address)
+    })
+
+    return () => {
+      isUnmountedRef.current = true
+    }
+  }, [])
+
+  useEffect(() => {
+    switch (syncStatus.message) {
+      case SYNC_CODE.authFailed:
+        toast(t('setting_sync_code_fail'))
+      case SYNC_CODE.missingAuthCode:
+        confirmAlertRef.current?.setVisible(true)
+        break
+      default:
+        break
+    }
+  }, [syncStatus.message, t])
+
+  const handleSetEnableSync = (enable: boolean) => {
+    setIsEnableSync(enable)
+
+    if (enable) void addSyncHostHistory(hostInfo.host, hostInfo.port)
+
+    global.lx.isSyncEnableing = true
+    setIsWaiting(true)
+    ;(enable ? connect() : disconnect()).finally(() => {
+      global.lx.isSyncEnableing = false
+      setIsWaiting(false)
+    })
+  }
+
+
+  const setHost = (host: string) => {
+    if (host == hostInfo.host) return
+    const newHostInfo = { ...hostInfo, host }
+    void setSyncHost(newHostInfo)
+    setHostInfo(newHostInfo)
+  }
+  const setPort = (port: string) => {
+    if (port == hostInfo.host) return
+    const newHostInfo = { ...hostInfo, port }
+    void setSyncHost(newHostInfo)
+    setHostInfo(newHostInfo)
+  }
+
+  const handleCancelSetCode = () => {
+    setSyncMessage('')
+    confirmAlertRef.current?.setVisible(false)
+  }
+  const handleSetCode = () => {
+    const code = authCode.trim()
+    if (code.length != 6) return
+    void connect(code)
+    setAuthCode('')
+    confirmAlertRef.current?.setVisible(false)
+  }
+
+  return (
+    <>
+      <View style={{ marginTop: 5 }}>
+        <CheckBoxItem disabled={isWaiting || !port || !host} check={isEnableSync} label={t('setting_sync_enbale')} onChange={handleSetEnableSync} />
+        <Text style={{ ...styles.text, marginTop: setSpText(5) }} size={13}>{t('setting_sync_address', { address })}</Text>
+        <Status />
+      </View>
+      <View style={{ marginTop: setSpText(10) }} >
+        <HostInput setHost={setHost} host={hostInfo.host} disabled={isWaiting || isEnableSync} />
+        <PortInput setPort={setPort} port={hostInfo.port} disabled={isWaiting || isEnableSync} />
+      </View>
+      <ConfirmAlert
+        onCancel={handleCancelSetCode}
+        onConfirm={handleSetCode}
+        ref={confirmAlertRef}
+        >
+        <View style={styles.authCodeContent}>
+          <Text style={{ marginBottom: setSpText(5) }}>{t('setting_sync_code_label')}</Text>
+          <Input
+            placeholder={t('setting_sync_code_input_tip')}
+            value={authCode}
+            onChangeText={setAuthCode}
+            style={{ ...styles.authCodeInput, backgroundColor: theme['c-primary-background'] }}
+          />
+        </View>
+      </ConfirmAlert>
+    </>
+  )
+})
+
+
+const styles = createStyle({
+  authCodeContent: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexDirection: 'column',
+  },
+  authCodeInput: {
+    flexGrow: 1,
+    flexShrink: 1,
+    minWidth: 240,
+    borderRadius: 4,
+    paddingTop: 2,
+    paddingBottom: 2,
+    fontSize: 14,
+  },
+  text: {
+    marginLeft: 25,
+  },
+
+  // tagTypeList: {
+  //   flexDirection: 'row',
+  //   flexWrap: 'wrap',
+  // },
+  // tagButton: {
+  //   // marginRight: 10,
+  //   borderRadius: 4,
+  //   marginRight: 10,
+  //   marginBottom: 10,
+  // },
+  // tagButtonText: {
+  //   paddingLeft: 12,
+  //   paddingRight: 12,
+  //   paddingTop: 8,
+  //   paddingBottom: 8,
+  // },
+})

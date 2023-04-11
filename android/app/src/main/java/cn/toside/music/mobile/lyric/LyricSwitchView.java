@@ -27,10 +27,13 @@ public final class LyricSwitchView extends TextSwitcher {
   // private final boolean isSingleLine;
   private boolean isShowAnima;
 
+  private boolean isSingleLine;
+
   public LyricSwitchView(Context context, boolean isSingleLine, boolean isShowAnima) {
     super(context);
     // this.isSingleLine = isSingleLine;
     this.isShowAnima = isShowAnima;
+    this.isSingleLine = isSingleLine;
 
     if (isSingleLine) {
       viewArray = new ArrayList<>(2);
@@ -38,9 +41,9 @@ public final class LyricSwitchView extends TextSwitcher {
       textView2 = new LyricTextView(context);
       viewArray.add(textView);
       viewArray.add(textView2);
-      for (TextView v : viewArray) {
-        v.setShadowLayer(0.1f, 0, 0, Color.BLACK);
-      }
+//      for (TextView v : viewArray) {
+//        v.setShadowLayer(0.1f, 0, 0, Color.BLACK);
+//      }
     } else {
       viewArray = new ArrayList<>(2);
       textView = new TextView(context);
@@ -48,7 +51,7 @@ public final class LyricSwitchView extends TextSwitcher {
       viewArray.add(textView);
       viewArray.add(textView2);
       for (TextView v : viewArray) {
-        v.setShadowLayer(0.2f, 0, 0, Color.BLACK);
+//        v.setShadowLayer(0.2f, 0, 0, Color.BLACK);
         v.setEllipsize(TextUtils.TruncateAt.END);
       }
     }
@@ -147,6 +150,16 @@ public final class LyricSwitchView extends TextSwitcher {
 
   public void setTextColor(int i) {
     for (TextView v : viewArray) v.setTextColor(i);
+  }
+
+  public void setShadowColor(int i) {
+    float radius;
+    if (isSingleLine) {
+      radius = 0.1f;
+    } else {
+      radius = 0.2f;
+    }
+    for (TextView v : viewArray) v.setShadowLayer(radius, 0, 0, i);
   }
 
   public void setSourceText(CharSequence str) {

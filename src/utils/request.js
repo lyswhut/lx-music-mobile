@@ -1,9 +1,8 @@
 // import needle from 'needle'
 // import progress from 'request-progress'
 import BackgroundTimer from 'react-native-background-timer'
-import { debugRequest } from './env'
 import { requestMsg } from './message'
-import { bHh } from './music/options'
+import { bHh } from './musicSdk/options'
 import { deflateRaw } from 'pako'
 
 const defaultHeaders = {
@@ -56,7 +55,7 @@ export const httpGet = (url, options, callback) => {
   requestObj.request.then(resp => {
     callback(null, resp, resp.body)
   }).catch(err => {
-    debugRequest && console.log(JSON.stringify(err))
+    // debugRequest && console.log(JSON.stringify(err))
     callback(err, null, null)
   })
 
@@ -154,21 +153,34 @@ const handleRequestData = async(url, {
   }
 }
 
+// https://stackoverflow.com/a/64945178
+const blobToBuffer = (blob) => {
+  return new Promise((resolve, reject) => {
+    const reader = new global.FileReader()
+    reader.onerror = reject
+    reader.onload = () => {
+      const data = reader.result.slice(reader.result.indexOf('base64,') + 7)
+      resolve(Buffer.from(data, 'base64'))
+    }
+    reader.readAsDataURL(blob)
+  })
+}
+
 const fetchData = (url, { timeout = 15000, ...options }) => {
   console.log('---start---', url)
 
   const controller = new global.AbortController()
-  const id = BackgroundTimer.setTimeout(() => controller.abort(), timeout)
+  let id = BackgroundTimer.setTimeout(() => {
+    id = null
+    controller.abort()
+  }, timeout)
 
   return {
     request: handleRequestData(url, options).then(options => {
       return global.fetch(url, {
         ...options,
         signal: controller.signal,
-      }).then(response => {
-        BackgroundTimer.clearTimeout(id)
-        return response
-      }).then(resp => resp.text().then(text => {
+      }).then(resp => (options.binary ? resp.blob() : resp.text()).then(text => {
         // console.log(options, headers, text)
         return {
           headers: resp.headers.map,
@@ -178,14 +190,23 @@ const fetchData = (url, { timeout = 15000, ...options }) => {
           ok: resp.ok,
         }
       })).then(resp => {
-        try {
-          resp.body = JSON.parse(resp.body)
-        } catch (_) {
+        if (options.binary) {
+          return blobToBuffer(resp.body).then(buffer => {
+            resp.body = buffer
+            return resp
+          })
+        } else {
+          try {
+            resp.body = JSON.parse(resp.body)
+          } catch {}
+          return resp
         }
-        return resp
       }).catch(err => {
         // console.log(err, err.code, err.message)
         return Promise.reject(err)
+      }).finally(() => {
+        if (id == null) return
+        BackgroundTimer.clearTimeout(id)
       })
     }),
     abort() {

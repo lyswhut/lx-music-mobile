@@ -34,37 +34,25 @@
 使用常见问题请转至：[常见问题](https://lyswhut.github.io/lx-music-doc/mobile/faq)<br>
 桌面版项目地址：<https://github.com/lyswhut/lx-music-desktop>
 
-### 源代码使用方式
+目前本项目的原始发布地址只有**GitHub**及**蓝奏网盘**，其他渠道均为第三方转载发布，与本项目无关！
 
-#### 项目环境准备
+#### 数据同步服务
 
-1. **安装Node.js环境（如已安装请跳过）:** 下载[Node.js](https://nodejs.org/en/)安装结束后，打开命令行输入`node -v`将会输出Node.js的版本号即表示已安装完成
-2. **拉取代码:** 克隆本仓库代码
-3. **安装依赖:** 在项目根目录打开命令行，执行命令：`npm install`，若此命令执行的过程中报错可以尝试百度报错内容找解决方法，或在此处贴出报错日志一起讨论解决
-4. 使用Android Studio打开项目根目录下的`android`文件夹，加载一遍`gradle`
+从v1.0.0起，我们发布了一个独立版的[数据同步服务](https://github.com/lyswhut/lx-music-sync-server#readme)，如果你有服务器，可以将其部署到服务器上作为私人多端同步服务使用，详情看该项目说明
 
-#### 项目启动步骤
+### 贡献代码
 
-1. 启动模拟器或连接真实设备
-2. **启动开发服务器:** 在项目根目录打开命令行，执行命令：`npm run ar`，若开发服务器意外停止了，可以执行`npm start`重新启动
-3. **开发:** 修改项目下的JS即可实时看到修改后的效果
+本项目欢迎PR，但为了PR能顺利合并，需要注意以下几点：
 
-#### Native开发
+- 对于添加新功能的PR，建议在PR前先创建issue说明，以确认该功能是否确实需要
+- 对于修复Bug PR，请提供修复前后的说明及重现方式
+- 其他类型的PR则适当附上说明
 
-使用Android Studio打开项目根目录下的`android`文件夹，即可在Android Studio内进行安卓代码的开发与调试
+贡献代码步骤：
 
-#### 构建安装包
-
-首先生成安卓签名文件，然后将你的签名文件放在`android/app/`，然后在`android/`新建`keystore.properties`文件，填入你的签名信息：
-
-```properties
-storeFile=
-storePassword=
-keyAlias=
-keyPassword=
-```
-
-最后在`android/`执行命令`./gradlew assembleRelease`，构建的安装包在`android/app/build/outputs/apk/release/`
+1. 参照[源码使用方法](https://lyswhut.github.io/lx-music-doc/mobile/use-source-code)设置开发环境
+2. 克隆本仓库代码并切换到`dev`分支开发
+3. 提交PR
 
 <!--
 ### UI界面
@@ -87,4 +75,5 @@ keyPassword=
 若你使用了本项目，将代表你接受以上协议。
 
 音乐平台不易，请尊重版权，支持正版。<br>
+本项目仅用于对技术可行性的探索及研究，不接受任何商业（包括但不限于广告等）合作及捐赠。<br>
 若对此有疑问请 mail to: lyswhut+qq.com (请将`+`替换成`@`)

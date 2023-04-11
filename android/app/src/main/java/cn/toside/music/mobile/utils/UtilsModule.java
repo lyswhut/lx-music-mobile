@@ -11,20 +11,25 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 
+import androidx.core.app.LocaleManagerCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.os.LocaleListCompat;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.UiThreadUtil;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableNativeArray;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class UtilsModule extends ReactContextBaseJavaModule {
@@ -232,5 +237,75 @@ public class UtilsModule extends ReactContextBaseJavaModule {
     shareIntent.putExtra(Intent.EXTRA_SUBJECT, title);
     Objects.requireNonNull(reactContext.getCurrentActivity()).startActivity(Intent.createChooser(shareIntent, shareTitle));
   }
+
+  @ReactMethod
+  public void getStringFromFile(String filePath, Promise promise) {
+    TaskRunner taskRunner = new TaskRunner();
+    try {
+      taskRunner.executeAsync(new Utils.ReadStringFromFile(filePath), promise::resolve);
+    } catch (RuntimeException err) {
+      promise.reject("-2", err.getMessage());
+    }
+  }
+
+  @ReactMethod
+  public void writeStringToFile(String filePath, String dataStr, Promise promise) {
+    TaskRunner taskRunner = new TaskRunner();
+    try {
+      taskRunner.executeAsync(new Utils.WriteStringToFile(filePath, dataStr), promise::resolve);
+    } catch (RuntimeException err) {
+      promise.reject("-2", err.getMessage());
+    }
+  }
+
+  // https://stackoverflow.com/questions/73463341/in-per-app-language-how-to-get-app-locale-in-api-33-if-system-locale-is-diffe
+  @ReactMethod
+  public void getSystemLocales(Promise promise) {
+    Locale locale = null;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      LocaleListCompat list = LocaleManagerCompat.getSystemLocales(reactContext);
+      if (list.size() > 0) {
+        locale = list.get(0);
+
+      } else promise.resolve(null);
+    } else {
+      locale = Locale.getDefault();
+    }
+    if (locale == null) {
+      promise.resolve("");
+    } else {
+      promise.resolve(locale.toString());
+    }
+  }
+
+  // https://github.com/Anthonyzou/react-native-full-screen/blob/master/android/src/main/java/com/rn/full/screen/FullScreen.java
+  //  @ReactMethod
+  //  public void onFullScreen() {
+  //    UiThreadUtil.runOnUiThread(() -> {
+  //      Activity currentActivity = reactContext.getCurrentActivity();
+  //      if (currentActivity == null) return;
+  //      currentActivity.getWindow().getDecorView().setSystemUiVisibility(
+  //        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+  //          | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+  //          | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+  //          | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+  //          | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+  //          | View.SYSTEM_UI_FLAG_IMMERSIVE
+  //      );
+  //    });
+  //  }
+  //  @ReactMethod
+  //  public void offFullScreen() {
+  //    UiThreadUtil.runOnUiThread(() -> {
+  //      Activity currentActivity = reactContext.getCurrentActivity();
+  //      if (currentActivity == null) return;
+  //      currentActivity.getWindow().getDecorView().setSystemUiVisibility(
+  //        View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+  //          | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+  //          | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+  //      );
+  //    });
+  //  }
+
 }
 

@@ -20,6 +20,9 @@ public class LyricModule extends ReactContextBaseJavaModule {
 
   boolean isShowTranslation = false;
   boolean isShowRoma = false;
+  float playbackRate = 1;
+
+  private int listenerCount = 0;
 
   LyricModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -46,8 +49,25 @@ public class LyricModule extends ReactContextBaseJavaModule {
 //  }
 
   @ReactMethod
+  public void addListener(String eventName) {
+    if (listenerCount == 0) {
+      // Set up any upstream listeners or background tasks as necessary
+    }
+
+    listenerCount += 1;
+  }
+
+  @ReactMethod
+  public void removeListeners(Integer count) {
+    listenerCount -= count;
+    if (listenerCount == 0) {
+      // Remove upstream listeners, stop unnecessary background tasks
+    }
+  }
+
+  @ReactMethod
   public void showLyric(ReadableMap data, Promise promise) {
-    if (lyric == null) lyric = new Lyric(reactContext, isShowTranslation, isShowRoma);
+    if (lyric == null) lyric = new Lyric(reactContext, isShowTranslation, isShowRoma, playbackRate);
     lyric.showLyric(Arguments.toBundle(data), promise);
   }
 
@@ -63,6 +83,13 @@ public class LyricModule extends ReactContextBaseJavaModule {
     // Log.d("Lyric", "set lyric: " + lyric);
     // Log.d("Lyric", "set lyric translation: " + translation);
     if (lyric != null) this.lyric.setLyric(lyric, translation, romaLyric);
+    promise.resolve(null);
+  }
+
+  @ReactMethod
+  public void setPlaybackRate(float playbackRate, Promise promise) {
+    this.playbackRate = playbackRate;
+    if (lyric != null) lyric.setPlaybackRate(playbackRate);
     promise.resolve(null);
   }
 
@@ -107,8 +134,8 @@ public class LyricModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void setColor(String themeColor, Promise promise) {
-    if (lyric != null) lyric.setColor(themeColor);
+  public void setColor(String unplayColor, String playedColor, String shadowColor, Promise promise) {
+    if (lyric != null) lyric.setPlayedColor(unplayColor, playedColor, shadowColor);
     promise.resolve(null);
   }
 

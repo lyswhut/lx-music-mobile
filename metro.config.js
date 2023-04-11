@@ -16,9 +16,9 @@ module.exports = {
   },
   resolver: {
     extraNodeModules: {
-      console: require.resolve('console-browserify'),
-      crypto: require.resolve('react-native-crypto'),
+      crypto: require.resolve('react-native-quick-crypto'),
       stream: require.resolve('stream-browserify'),
+      buffer: require.resolve('@craftzdog/react-native-buffer'),
     },
   },
 }

@@ -29,10 +29,11 @@ public class Lyric extends LyricPlayer {
   String translationText = "";
   String romaLyricText = "";
 
-  Lyric(ReactApplicationContext reactContext, boolean isShowTranslation, boolean isShowRoma) {
+  Lyric(ReactApplicationContext reactContext, boolean isShowTranslation, boolean isShowRoma, float playbackRate) {
     this.reactAppContext = reactContext;
     this.isShowTranslation = isShowTranslation;
     this.isShowRoma = isShowRoma;
+    this.playbackRate = playbackRate;
     registerScreenBroadcastReceiver();
   }
 
@@ -196,8 +197,8 @@ public class Lyric extends LyricPlayer {
     refreshLyric();
   }
 
-  public void setColor(String color) {
-    lyricView.setColor(color);
+  public void setPlayedColor(String unplayColor, String playedColor, String shadowColor) {
+    lyricView.setColor(unplayColor, playedColor, shadowColor);
   }
 
   public void setAlpha(float alpha) { lyricView.setAlpha(alpha); }

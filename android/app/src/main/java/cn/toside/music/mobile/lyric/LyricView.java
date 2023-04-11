@@ -23,6 +23,8 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.WritableMap;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cn.toside.music.mobile.R;
 
@@ -51,7 +53,9 @@ public class LyricView extends Activity implements View.OnTouchListener {
   private boolean isLock = false;
   private boolean isSingleLine = false;
   private boolean isShowToggleAnima = false;
-  private String themeColor = "#07c556";
+  private String unplayColor = "rgba(255, 255, 255, 1)";
+  private String playedColor = "rgba(7, 197, 86, 1)";
+  private String shadowColor = "rgba(0, 0, 0, 0.15)";
   // private String lastText = "LX Music ^-^";
   private String textX = "LEFT";
   private String textY = "TOP";
@@ -204,7 +208,9 @@ public class LyricView extends Activity implements View.OnTouchListener {
     isLock = options.getBoolean("isLock", isLock);
     isSingleLine = options.getBoolean("isSingleLine", isSingleLine);
     isShowToggleAnima = options.getBoolean("isShowToggleAnima", isShowToggleAnima);
-    themeColor = options.getString("themeColor", themeColor);
+    unplayColor = options.getString("unplayColor", unplayColor);
+    playedColor = options.getString("playedColor", playedColor);
+    shadowColor = options.getString("shadowColor", shadowColor);
     prevViewPercentageX = (float) options.getDouble("lyricViewX", 0f) / 100f;
     prevViewPercentageY = (float) options.getDouble("lyricViewY", 0f) / 100f;
     textX = options.getString("textX", textX);
@@ -225,13 +231,28 @@ public class LyricView extends Activity implements View.OnTouchListener {
     }
     listenOrientationEvent();
   }
+  public static int parseColor(String input) {
+    if (input.startsWith("#")) return Color.parseColor(input);
+    Pattern c = Pattern.compile("rgba? *\\( *(\\d+), *(\\d+), *(\\d+)(?:, *([\\d.]+))? *\\)");
+    Matcher m = c.matcher(input);
+    if (m.matches()) {
+      int red = Integer.parseInt(m.group(1));
+      int green = Integer.parseInt(m.group(2));
+      int blue = Integer.parseInt(m.group(3));
+      float a = 1;
+      if (m.group(4) != null) a = Float.parseFloat(m.group(4));
+      return Color.argb((int) (a * 255), red, green, blue);
+    }
+    return Color.parseColor("#000000");
+  }
 
   private void createTextView() {
     textView = new LyricSwitchView(reactContext, isSingleLine, isShowToggleAnima);
     textView.setText("");
     textView.setText(currentLyric);
 
-    textView.setTextColor(Color.parseColor(themeColor));
+    textView.setTextColor(parseColor(playedColor));
+    textView.setShadowColor(parseColor(shadowColor));
     textView.setAlpha(alpha);
     textView.setTextSize(textSize);
     // Log.d("Lyric", "alpha: " + alpha + " text size: " + textSize);
@@ -248,7 +269,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
       case "RIGHT":
         textPositionX = Gravity.END;
         break;
-      case "left":
+      case "Left":
       default:
         textPositionX = Gravity.START;
         break;
@@ -489,10 +510,13 @@ public class LyricView extends Activity implements View.OnTouchListener {
     windowManager.updateViewLayout(textView, layoutParams);
   }
 
-  public void setColor(String color) {
-    themeColor = color;
+  public void setColor(String unplayColor, String playedColor, String shadowColor) {
+    this.unplayColor = unplayColor;
+    this.playedColor = playedColor;
+    this.shadowColor = shadowColor;
     if (textView == null) return;
-    textView.setTextColor(Color.parseColor(color));
+    textView.setTextColor(parseColor(playedColor));
+    textView.setShadowColor(parseColor(shadowColor));
     // windowManager.updateViewLayout(textView, layoutParams);
   }
 
@@ -510,7 +534,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
       case "RIGHT":
         textPositionX = Gravity.END;
         break;
-      case "left":
+      case "LEFT":
       default:
         textPositionX = Gravity.START;
         break;

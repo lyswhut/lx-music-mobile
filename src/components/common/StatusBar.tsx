@@ -9,5 +9,6 @@ const StatusBar = function() {
 }
 
 StatusBar.currentHeight = RNStatusBar.currentHeight ?? 0
+StatusBar.setBarStyle = RNStatusBar.setBarStyle
 
 export default StatusBar

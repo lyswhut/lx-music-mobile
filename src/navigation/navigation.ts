@@ -11,10 +11,10 @@ import {
 
 import themeState from '@/store/theme/state'
 import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
+import { getStatusBarStyle } from './utils'
 
 // const store = getStore()
 // const getTheme = () => getter('common', 'theme')(store.getState())
-const getStatusBarStyle = (isDark: boolean) => isDark ? 'light' : 'dark'
 
 export async function pushHomeScreen() {
   /*
@@ -71,10 +71,10 @@ export async function pushHomeScreen() {
               },
               navigationBar: {
                 // visible: false,
-                backgroundColor: theme.isDark ? '#000' : '#fff',
+                backgroundColor: theme['c-content-background'],
               },
               layout: {
-                // componentBackgroundColor: theme.isDark ? '#000' : '#fff',
+                componentBackgroundColor: theme['c-content-background'],
               },
             },
           },
@@ -134,12 +134,12 @@ export function pushPlayDetailScreen(componentId: string) {
             style: getStatusBarStyle(theme.isDark),
             backgroundColor: 'transparent',
           },
-          navigationBar: {
-            // visible: false,
-            backgroundColor: theme.isDark ? '#000' : '#fff',
-          },
+          // navigationBar: {
+          //   // visible: false,
+          //   backgroundColor: theme['c-content-background'],
+          // },
           layout: {
-            componentBackgroundColor: theme.isDark ? '#000' : '#fff',
+            componentBackgroundColor: theme['c-content-background'],
           },
           animations: {
             push: {
@@ -227,12 +227,12 @@ export function pushSonglistDetailScreen(componentId: string, id: string) {
             style: getStatusBarStyle(theme.isDark),
             backgroundColor: 'transparent',
           },
-          navigationBar: {
-            // visible: false,
-            backgroundColor: theme.isDark ? '#000' : '#fff',
-          },
+          // navigationBar: {
+          //   // visible: false,
+          //   backgroundColor: theme['c-content-background'],
+          // },
           layout: {
-            componentBackgroundColor: theme.isDark ? '#000' : '#fff',
+            componentBackgroundColor: theme['c-content-background'],
           },
           animations: {
             push: {
@@ -360,12 +360,12 @@ export function pushCommentScreen(componentId: string) {
             style: getStatusBarStyle(theme.isDark),
             backgroundColor: 'transparent',
           },
-          navigationBar: {
-            // visible: false,
-            backgroundColor: theme.isDark ? '#000' : '#fff',
-          },
+          // navigationBar: {
+          //   // visible: false,
+          //   backgroundColor: theme['c-content-background'],
+          // },
           layout: {
-            componentBackgroundColor: theme.isDark ? '#000' : '#fff',
+            componentBackgroundColor: theme['c-content-background'],
           },
           animations: {
             push: {
@@ -446,10 +446,10 @@ export function pushCommentScreen(componentId: string) {
 //           },
 //           navigationBar: {
 //             // visible: false,
-//             backgroundColor: theme.isDark ? '#000' : '#fff',
+//             backgroundColor: theme['c-content-background'],
 //           },
 //           layout: {
-//             componentBackgroundColor: theme.isDark ? '#000' : '#fff',
+//             componentBackgroundColor: theme['c-content-background'],
 //           },
 //           animations: {
 //             push: {

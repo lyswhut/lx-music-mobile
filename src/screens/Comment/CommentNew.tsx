@@ -44,9 +44,9 @@ export default ({ musicInfo, onUpdateTotal }: {
     }
   }
 
-  const updateLastCommentInfo = (lastCommentInfo: LX.Comment.LastCommentInfo) => {
-    if (!lastCommentInfo) {
-      listInfo.current.lastCommentInfo = lastCommentInfo
+  const updateLastCommentInfo = (commentInfo: LX.Comment.LastCommentInfo) => {
+    if (commentInfo) {
+      listInfo.current.lastCommentInfo = commentInfo
     } else {
       listInfo.current.lastCommentInfo = defaultCommentInfo
     }

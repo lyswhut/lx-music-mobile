@@ -21,16 +21,17 @@ export interface CommentInfo {
   page: number
   limit: number
   maxPage: number
+  lastCommentInfo: LX.Comment.LastCommentInfo
 }
 
-export const getNewComment = async(musicInfo: LX.Music.MusicInfoOnline, page: number, limit: number, retryNum = 0): Promise<CommentInfo> => {
+export const getNewComment = async(musicInfo: LX.Music.MusicInfoOnline, page: number, limit: number, lastCommentInfo: LX.Comment.LastCommentInfo, retryNum = 0): Promise<CommentInfo> => {
   let resp
   try {
-    resp = await (music[musicInfo.source].comment.getComment(toOldMusicInfo(musicInfo), page, limit) as Promise<CommentInfo>)
+    resp = await (music[musicInfo.source].comment.getComment(toOldMusicInfo(musicInfo), page, limit, lastCommentInfo) as Promise<CommentInfo>)
   } catch (error: any) {
     console.log(error.message)
     if (error.message == '取消请求' || ++retryNum > 2) throw error
-    resp = await getNewComment(musicInfo, page, limit, retryNum)
+    resp = await getNewComment(musicInfo, page, limit, lastCommentInfo, retryNum)
   }
   return resp
 }

@@ -3,6 +3,7 @@ import { filterList, getNewComment } from './utils'
 import music from '@/utils/musicSdk'
 import List, { type ListType } from './components/List'
 const limit = 15
+const defaultCommentInfo: LX.Comment.LastCommentInfo = { id: '' }
 
 export default ({ musicInfo, onUpdateTotal }: {
   musicInfo: LX.Music.MusicInfoOnline
@@ -10,11 +11,11 @@ export default ({ musicInfo, onUpdateTotal }: {
 }) => {
   // const [isLoading, setIsLoading] = useState(false)
   const listRef = useRef<ListType>(null)
-  const listInfo = useRef({ page: 1, total: 0, maxPage: 1, isEnd: false, isLoading: false, isLoadError: false })
-  const handleGetComment = async(musicInfo: LX.Music.MusicInfoOnline, page: number) => {
+  const listInfo = useRef({ page: 1, total: 0, maxPage: 1, isEnd: false, isLoading: false, isLoadError: false, lastCommentInfo: defaultCommentInfo })
+  const handleGetComment = async(musicInfo: LX.Music.MusicInfoOnline, page: number, lastCommentInfo: LX.Comment.LastCommentInfo) => {
     // setIsLoading(true)
     listInfo.current.isLoading = true
-    return getNewComment(musicInfo, page, limit).then(commentInfo => {
+    return getNewComment(musicInfo, page, limit, lastCommentInfo).then(commentInfo => {
       listInfo.current.page = page
       listInfo.current.isLoading = false
       // setIsLoading(false)
@@ -32,6 +33,7 @@ export default ({ musicInfo, onUpdateTotal }: {
       throw err
     })
   }
+
   const updateStatus = () => {
     if (listInfo.current.isLoadError) {
       listRef.current?.setStatus('error')
@@ -41,25 +43,37 @@ export default ({ musicInfo, onUpdateTotal }: {
       listRef.current?.setStatus('idle')
     }
   }
+
+  const updateLastCommentInfo = (lastCommentInfo: LX.Comment.LastCommentInfo) => {
+    if (!lastCommentInfo) {
+      listInfo.current.lastCommentInfo = lastCommentInfo
+    } else {
+      listInfo.current.lastCommentInfo = defaultCommentInfo
+    }
+  }
+
   const handleListLoadMore = () => {
     console.log('load')
     if (listInfo.current.isLoading || listInfo.current.isEnd) return
     const list = listRef.current?.getList() ?? []
     const page = list.length ? listInfo.current.page + 1 : 1
     listRef.current?.setStatus('loading')
-    void handleGetComment(musicInfo, page).then(({ comments }) => {
+    let lastCommentInfo = listInfo.current.lastCommentInfo
+    void handleGetComment(musicInfo, page, lastCommentInfo).then(({ comments, lastCommentInfo }) => {
       let isEnd = page >= listInfo.current.maxPage
       if (listInfo.current.isEnd != isEnd) listInfo.current.isEnd = isEnd
+      updateLastCommentInfo(lastCommentInfo)
       listRef.current?.setList(filterList([...listRef.current.getList(), ...comments]))
     }).finally(updateStatus)
   }
 
   const handleListRefresh = () => {
     listRef.current?.setStatus('refreshing')
-    void handleGetComment(musicInfo, 1).then(({ comments, maxPage, total }) => {
+    void handleGetComment(musicInfo, 1, defaultCommentInfo).then(({ comments, maxPage, total, lastCommentInfo }) => {
       listInfo.current.total = total
       listInfo.current.maxPage = maxPage
       onUpdateTotal(total)
+      updateLastCommentInfo(lastCommentInfo)
       let isEnd = maxPage === 1
       if (listInfo.current.isEnd != isEnd) listInfo.current.isEnd = isEnd
       listRef.current?.setList(filterList(comments))
@@ -74,12 +88,14 @@ export default ({ musicInfo, onUpdateTotal }: {
     listInfo.current.isEnd = false
     listInfo.current.isLoading = false
     listInfo.current.isLoadError = false
+    listInfo.current.lastCommentInfo = defaultCommentInfo
     listRef.current?.setList([])
     listRef.current?.setStatus('loading')
-    void handleGetComment(musicInfo, 1).then(({ comments, maxPage, total }) => {
+    void handleGetComment(musicInfo, 1, defaultCommentInfo).then(({ comments, maxPage, total, lastCommentInfo }) => {
       listInfo.current.total = total
       listInfo.current.maxPage = maxPage
       onUpdateTotal(total)
+      updateLastCommentInfo(lastCommentInfo)
       let isEnd = maxPage === 1
       if (listInfo.current.isEnd != isEnd) listInfo.current.isEnd = isEnd
       setTimeout(() => {

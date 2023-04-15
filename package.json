@@ -58,7 +58,6 @@
     "react-native-navigation": "^7.32.1",
     "react-native-pager-view": "^6.2.0",
     "react-native-quick-base64": "^2.0.5",
-    "react-native-quick-crypto": "github:lyswhut/react-native-quick-crypto#b4ea59238ded4fe9cd4d252a838ddfcb7bcd19d8",
     "react-native-quick-md5": "^3.0.4",
     "react-native-track-player": "github:lyswhut/react-native-track-player#879d3dc6b7ad41f736943d7495be0ba87b4cf050",
     "react-native-vector-icons": "^9.2.0"

@@ -36,6 +36,8 @@ const handleInit = async() => {
 initNavigation(async() => {
   await handleInit()
   if (!isInited) return
+  // import('@/utils/nativeModules/cryptoTest')
+
   await navigations.pushHomeScreen().then(() => {
     handlePushedHomeScreen()
   }).catch((err: any) => {

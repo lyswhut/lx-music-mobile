@@ -1,4 +1,4 @@
-import crypto from 'crypto'
+import { stringMd5 } from 'react-native-quick-md5'
 
 /**
  * 获取音乐音质
@@ -18,4 +18,4 @@ export const getMusicType = (info, type) => {
   return '128k'
 }
 
-export const toMD5 = str => crypto.createHash('md5').update(str).digest('hex')
+export const toMD5 = str => stringMd5(str)

@@ -11,6 +11,7 @@ import com.facebook.soloader.SoLoader;
 import java.util.List;
 
 import cn.toside.music.mobile.cache.CachePackage;
+import cn.toside.music.mobile.crypto.CryptoPackage;
 import cn.toside.music.mobile.gzip.GzipPackage;
 import cn.toside.music.mobile.lyric.LyricPackage;
 import cn.toside.music.mobile.utils.UtilsPackage;
@@ -34,6 +35,7 @@ public class MainApplication extends NavigationApplication {
           packages.add(new GzipPackage());
           packages.add(new LyricPackage());
           packages.add(new UtilsPackage());
+          packages.add(new CryptoPackage());
           return packages;
         }
 

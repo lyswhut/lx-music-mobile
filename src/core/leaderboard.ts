@@ -11,8 +11,8 @@ import musicSdk from '@/utils/musicSdk'
  */
 export const setListDetailInfo = (id: string) => {
   clearListDetail()
-  const [source, bangId] = id.split('__') as [LX.OnlineSource, string]
-  leaderboardActions.setListDetailInfo(source, bangId)
+  const [source] = id.split('__') as [LX.OnlineSource, string]
+  leaderboardActions.setListDetailInfo(source, id)
 }
 export const setListDetail = (result: ListDetailInfo, id: string, page: number) => {
   return leaderboardActions.setListDetail(result, id, page)

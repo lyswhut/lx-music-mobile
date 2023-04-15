@@ -15,7 +15,7 @@ export const aesEncrypt = (text: string, b64Key: string) => {
 export const aesDecrypt = (text: string, b64Key: string) => {
   // const decipher = createDecipheriv('aes-128-ecb', Buffer.from(key, 'base64'), '')
   // return Buffer.concat([decipher.update(Buffer.from(text, 'base64')), decipher.final()]).toString()
-  return aesDecryptSync(btoa(text), b64Key, '', AES_MODE.ECB_128_NoPadding)
+  return aesDecryptSync(text, b64Key, '', AES_MODE.ECB_128_NoPadding)
 }
 
 export const rsaEncrypt = (buffer: Buffer, key: string): string => {

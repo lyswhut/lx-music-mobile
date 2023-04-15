@@ -73,5 +73,3 @@ declare global {
   }
   // var process: Process
 }
-
-export {}

@@ -14,7 +14,7 @@ buildscript {
         ndkVersion = "23.1.7779620"
     }
     repositories {
-        maven { url 'https://maven.aliyun.com/repository/google' }
+        google()
         mavenCentral()
     }
     dependencies {

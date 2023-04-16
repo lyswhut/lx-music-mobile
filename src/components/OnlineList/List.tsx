@@ -165,11 +165,7 @@ const List = forwardRef<ListType, ListProps>(({
   }
 
   const handleLoadMore = () => {
-    switch (status) {
-      case 'end':
-      case 'loading':
-      case 'refreshing': return
-    }
+    if (status != 'idle') return
     onLoadMore()
   }
 

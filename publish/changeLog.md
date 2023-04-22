@@ -9,7 +9,9 @@
 - 修复mg搜索不显示时长的问题（@Folltoshe）
 - 修复mg评论加载失败的问题（@Folltoshe）
 - 修复在Android 5.1下报错的问题
+- 修复对存在错误时间标签的歌词的解析
 
 ### 其他
 
 - 更新kg、tx、wy等平台排行榜列表
+- 更新react native到v0.71.7

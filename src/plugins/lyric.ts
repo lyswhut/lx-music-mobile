@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import Lyric from 'lrc-file-parser'
+import Lyric, { type Lines } from 'lrc-file-parser'
 // import { getStore, subscribe } from '@/store'
-type Lines = Parameters<ConstructorParameters<typeof Lyric>[0]['onSetLyric']>['0']
 export type Line = Lines[number]
 type PlayHook = (line: number, text: string) => void
 type SetLyricHook = (lines: Lines) => void

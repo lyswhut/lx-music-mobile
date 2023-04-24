@@ -12,7 +12,7 @@ export default createStyle({
 
   // },
   label: {
-    width: 40,
+    width: 50,
     textAlign: 'center',
   },
   content: {

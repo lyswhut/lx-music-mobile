@@ -48,7 +48,7 @@
     "@react-native-community/checkbox": "^0.5.15",
     "@react-native-community/slider": "^4.4.2",
     "iconv-lite": "^0.6.3",
-    "lrc-file-parser": "^2.3.2",
+    "lrc-file-parser": "^2.4.1",
     "pako": "^2.1.0",
     "react": "18.2.0",
     "react-native": "0.71.7",

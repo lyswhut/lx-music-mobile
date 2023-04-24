@@ -26,7 +26,8 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
           listRef.current?.setList(listDetailInfo.list)
           headerRef.current?.setInfo({
             name: (songlistState.selectListInfo.name || listDetailInfo.info.name) ?? '',
-            desc: songlistState.selectListInfo.desc ?? listDetailInfo.desc ?? '',
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+            desc: songlistState.selectListInfo.desc || listDetailInfo.info.desc || '',
             playCount: (songlistState.selectListInfo.play_count ?? listDetailInfo.info.play_count) ?? '',
             imgUrl: songlistState.selectListInfo.img ?? listDetailInfo.info.img,
           })
@@ -37,7 +38,8 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
         setListDetailInfo(songlistState.selectListInfo.source, songlistState.selectListInfo.id)
         headerRef.current?.setInfo({
           name: (songlistState.selectListInfo.name || listDetailInfo.info.name) ?? '',
-          desc: songlistState.selectListInfo.desc ?? listDetailInfo.desc ?? '',
+          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+          desc: songlistState.selectListInfo.desc || listDetailInfo.info.desc || '',
           playCount: (songlistState.selectListInfo.play_count ?? listDetailInfo.info.play_count) ?? '',
           imgUrl: songlistState.selectListInfo.img ?? listDetailInfo.info.img,
         })
@@ -47,7 +49,8 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
           requestAnimationFrame(() => {
             headerRef.current?.setInfo({
               name: (songlistState.selectListInfo.name || listDetailInfo.info.name) ?? '',
-              desc: songlistState.selectListInfo.desc ?? listDetailInfo.desc ?? '',
+              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+              desc: songlistState.selectListInfo.desc || listDetailInfo.info.desc || '',
               playCount: (songlistState.selectListInfo.play_count ?? listDetailInfo.info.play_count) ?? '',
               imgUrl: songlistState.selectListInfo.img ?? listDetailInfo.info.img,
             })

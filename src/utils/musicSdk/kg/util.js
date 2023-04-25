@@ -1,4 +1,5 @@
-import { inflate } from 'zlib'
+import pako from 'pako'
+import { Buffer } from 'buffer'
 import { toMD5 } from '../utils'
 import { httpFetch } from '../../request'
 
@@ -10,10 +11,12 @@ export const decodeLyric = str => new Promise((resolve, reject) => {
   for (let i = 0, len = buf_str.length; i < len; i++) {
     buf_str[i] = buf_str[i] ^ enc_key[i % 16]
   }
-  inflate(buf_str, (err, result) => {
-    if (err) return reject(err)
-    resolve(result.toString())
-  })
+  const result = pako.inflate(buf_str, { to: 'string' })
+  resolve(result)
+  // (err, result) => {
+  //   if (err) return reject(err)
+  //   resolve(result.toString())
+  // }
 })
 // s.content[0].lyricContent.forEach(([str]) => {
 //   console.log(str)

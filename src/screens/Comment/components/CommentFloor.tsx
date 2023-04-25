@@ -11,6 +11,7 @@ import ScaledImage from '@/components/common/ScaledImage'
 import { useLayout } from '@/utils/hooks'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const defaultUser = require('@/resources/images/defaultUser.jpg')
+import { useI18n } from '@/lang'
 
 const GAP = 12
 const avatarWidth = scaleSizeW(36)
@@ -20,6 +21,7 @@ const CommentFloor = memo(({ comment, isLast }: {
   comment: Comment
   isLast?: boolean
 }) => {
+  const t = useI18n()
   const theme = useTheme()
   const [isAvatarError, setIsAvatarError] = useState(false)
   const { onLayout, width } = useLayout()
@@ -74,7 +76,7 @@ const CommentFloor = memo(({ comment, isLast }: {
               </Text>
               <View style={styles.metaInfo}>
                 <Text numberOfLines={1} size={12} color={theme['c-450']}>{comment.timeStr}</Text>
-                { comment.location ? <Text numberOfLines={1} style={styles.location} size={12} color={theme['c-450']}>{comment.location}</Text> : null }
+                { comment.location ? <Text numberOfLines={1} style={styles.location} size={12} color={theme['c-450']}>{t('comment__location', { location: comment.location })}</Text> : null }
               </View>
             </View>
             {likedCount}

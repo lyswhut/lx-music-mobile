@@ -19,6 +19,7 @@
   "comment_tab_hot": "热门 {total}",
   "comment_tab_new": "最新 {total}",
   "comment_title": "{name} - {singer} 的评论",
+  "comment__location": "来自 {location}",
   "confirm": "确认",
   "confirm_button_text": "是的",
   "confirm_tip": "再确认一下，你真的要这样做吗？",

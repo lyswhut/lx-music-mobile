@@ -19,6 +19,7 @@
   "comment_tab_hot": "Hot {total}",
   "comment_tab_new": "New {total}",
   "comment_title": "{name}-{singer}'s comment",
+  "comment__location": "From {location}",
   "confirm": "Confirm",
   "confirm_button_text": "Yes",
   "confirm_tip": "Just to double check, do you really want to do this?",

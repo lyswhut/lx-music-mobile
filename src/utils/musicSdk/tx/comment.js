@@ -152,7 +152,7 @@ export default {
     // console.log(body, statusCode)
 
     const comment = body.req.data.CommentList
-    lastCommentInfo.commentId = comment.commentlist.slice(-1)[0].SeqNo
+    lastCommentInfo.commentId = comment.Comments.slice(-1)[0].SeqNo
 
     return {
       source: 'tx',

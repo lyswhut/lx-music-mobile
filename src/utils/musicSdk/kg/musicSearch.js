@@ -1,3 +1,4 @@
+import { Alert } from 'react-native'
 import { decodeName, formatPlayTime, sizeFormate } from '../../index'
 import { signatureParams, createHttpFetch } from './util'
 
@@ -73,7 +74,7 @@ export default {
 
     return list
   },
-  async search(str, page = 1, limit, retryNum = 0) {
+  search(str, page = 1, limit, retryNum = 0) {
     if (++retryNum > 3) return Promise.reject(new Error('try max num'))
     if (limit == null) limit = this.limit
 

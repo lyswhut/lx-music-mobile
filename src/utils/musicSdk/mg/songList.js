@@ -8,7 +8,7 @@ export default {
   _requestObj_tags: null,
   _requestObj_list: null,
   limit_list: 10,
-  limit_song: 30,
+  limit_song: 50,
   successCode: '000000',
   cachedDetailInfo: {},
   cachedUrl: {},
@@ -16,13 +16,11 @@ export default {
     {
       name: '推荐',
       id: '15127315',
-      tid: 'recommend',
       // id: '1',
     },
     {
       name: '最新',
       id: '15127272',
-      tid: 'new',
       // id: '2',
     },
   ],
@@ -127,10 +125,10 @@ export default {
         Referer: link,
       },
     })
-    const { url: location, statusCode } = await requestObj_listDetailLink.promise
+    const { headers: { location }, statusCode } = await requestObj_listDetailLink.promise
     // console.log(body, location)
     if (statusCode > 400) return this.getDetailUrl(link, page, ++retryNum)
-    if (location.split('?')[0] != link.split('?')[0]) {
+    if (location) {
       this.cachedUrl[link] = location
       return this.getListDetail(location, page)
     }

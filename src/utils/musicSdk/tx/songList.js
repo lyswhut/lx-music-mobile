@@ -1,5 +1,5 @@
 import { httpFetch } from '../../request'
-import { decodeName, formatPlayTime, sizeFormate, dateFormat } from '../../index'
+import { decodeName, formatPlayTime, sizeFormate, dateFormat, getSingerName } from '../../index'
 
 export default {
   _requestObj_tags: null,
@@ -11,12 +11,10 @@ export default {
   sortList: [
     {
       name: '最热',
-      tid: 'hot',
       id: 5,
     },
     {
       name: '最新',
-      tid: 'new',
       id: 2,
     },
   ],
@@ -120,7 +118,7 @@ export default {
     this._requestObj_list = httpFetch(
       this.getListUrl(sortId, tagId, page),
     )
-    // console.log(this.getListUrl(sortId, tagId, page))
+    console.log(this.getListUrl(sortId, tagId, page))
     return this._requestObj_list.promise.then(({ body }) => {
       if (body.code !== this.successCode) return this.getList(sortId, tagId, page, ++tryNum)
       return tagId ? this.filterList2(body.playlist.data, page) : this.filterList(body.playlist.data, page)
@@ -182,10 +180,10 @@ export default {
     if (retryNum > 2) return Promise.reject(new Error('link try max num'))
 
     const requestObj_listDetailLink = httpFetch(link)
-    const { url, statusCode } = await requestObj_listDetailLink.promise
+    const { headers: { location }, statusCode } = await requestObj_listDetailLink.promise
     // console.log(headers)
     if (statusCode > 400) return this.handleParseId(link, ++retryNum)
-    return url
+    return location == null ? link : location
   },
 
   async getListId(id) {
@@ -234,13 +232,6 @@ export default {
       },
     }
   },
-  getSinger(singers) {
-    let arr = []
-    singers.forEach(singer => {
-      arr.push(singer.name)
-    })
-    return arr.join('、')
-  },
   filterListDetail(rawList) {
     // console.log(rawList)
     return rawList.map(item => {
@@ -276,7 +267,7 @@ export default {
       }
       // types.reverse()
       return {
-        singer: this.getSinger(item.singer),
+        singer: getSingerName(item.singer, 'name'),
         name: item.name,
         albumName: item.album.name,
         albumId: item.album.mid,

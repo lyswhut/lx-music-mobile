@@ -7,7 +7,7 @@ export interface InitState {
   searchText: string
   tipListInfo: {
     text: string
-    source: 'kw'
+    source: LX.OnlineSource
     list: string[]
   }
   historyList: string[]

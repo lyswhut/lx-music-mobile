@@ -20,7 +20,7 @@ type SourceSelectorType = _SourceSelectorType<Sources>
 
 export interface HeaderBarProps {
   onSourceChange: SourceSelectorProps['onSourceChange']
-  onTempSearch: SearchInputProps['onChangeText']
+  onTipSearch: SearchInputProps['onChangeText']
   onSearch: SearchInputProps['onSubmit']
   onHideTipList: SearchInputProps['onBlur']
   onShowTipList: SearchInputProps['onTouchStart']
@@ -33,7 +33,7 @@ export interface HeaderBarType {
 }
 
 
-export default forwardRef<HeaderBarType, HeaderBarProps>(({ onSourceChange, onTempSearch, onSearch, onHideTipList, onShowTipList }, ref) => {
+export default forwardRef<HeaderBarType, HeaderBarProps>(({ onSourceChange, onTipSearch, onSearch, onHideTipList, onShowTipList }, ref) => {
   const sourceSelectorRef = useRef<SourceSelectorType>(null)
   const searchInputRef = useRef<SearchInputType>(null)
   const theme = useTheme()
@@ -58,7 +58,7 @@ export default forwardRef<HeaderBarType, HeaderBarProps>(({ onSourceChange, onTe
       </View>
       <SearchInput
         ref={searchInputRef}
-        onChangeText={onTempSearch}
+        onChangeText={onTipSearch}
         onSubmit={onSearch}
         onBlur={onHideTipList}
         onTouchStart={onShowTipList}

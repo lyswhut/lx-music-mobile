@@ -11,9 +11,9 @@ import { debounce } from '@/utils'
 
 export const ITEM_HEIGHT = scaleSizeH(36)
 
-export const debounceTipSearch = debounce((keyword: string, source: SearchState['temp_source'], callback: (list: string[]) => void) => {
+export const debounceTipSearch = debounce((keyword: string, source: LX.OnlineSource, callback: (list: string[]) => void) => {
   // console.log(reslutList)
-  void musicSdk[source].tempSearch.search(keyword).then(callback)
+  void musicSdk[source].tipSearch.search(keyword).then(callback)
 }, 200)
 
 
@@ -24,7 +24,7 @@ interface TipListProps {
   onSearch: (keyword: string) => void
 }
 export interface TipListType {
-  search: (keyword: string, height: number) => void
+  search: (keyword: string, height: number, source: LX.OnlineSource) => void
   show: (height: number) => void
   hide: () => void
 }
@@ -42,19 +42,19 @@ export default forwardRef<TipListType, TipListProps>(({ onSearch }, ref) => {
     }
   }, [])
 
-  const handleSearch = (keyword: string, height: number) => {
+  const handleSearch = (keyword: string, height: number, source: LX.OnlineSource) => {
     searchTipListRef.current?.setHeight(height)
     setSearchText(keyword)
     if (keyword) {
-      setTipListInfo(keyword, searchState.temp_source)
-      debounceTipSearch(keyword, searchState.temp_source, (list) => {
+      setTipListInfo(keyword, source)
+      debounceTipSearch(keyword, source, (list) => {
         if (keyword != searchState.tipListInfo.text) return
         setTipList(list)
         if (!visibleListRef.current || isUnmountedRef.current) return
         searchTipListRef.current?.setList(list)
       })
     } else {
-      setTipListInfo(keyword, searchState.temp_source)
+      setTipListInfo(keyword, source)
       setTipList([])
       searchTipListRef.current?.setList([])
     }
@@ -69,12 +69,12 @@ export default forwardRef<TipListType, TipListProps>(({ onSearch }, ref) => {
   }
 
   useImperativeHandle(ref, () => ({
-    search(keyword, height) {
-      if (visible) handleSearch(keyword, height)
+    search(keyword, height, source) {
+      if (visible) handleSearch(keyword, height, source)
       else {
         setVisible(true)
         requestAnimationFrame(() => {
-          handleSearch(keyword, height)
+          handleSearch(keyword, height, source)
         })
       }
     },

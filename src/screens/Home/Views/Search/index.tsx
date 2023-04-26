@@ -70,9 +70,11 @@ export default () => {
     void saveSearchSetting({ source })
     listRef.current?.loadList(searchState.searchText, source, searchInfo.current.searchType)
   }
-  const handleTempSearch: HeaderBarProps['onTempSearch'] = (text) => {
+  const handleTipSearch: HeaderBarProps['onTipSearch'] = (text) => {
     setTimeout(() => {
-      searchTipListRef.current?.search(text, layoutHeightRef.current)
+      let source = searchInfo.current.source
+      if (source === 'all') source = searchInfo.current.temp_source
+      searchTipListRef.current?.search(text, layoutHeightRef.current, source)
     }, 500)
   }
   const handleHideTipList = () => {
@@ -84,7 +86,9 @@ export default () => {
   }
   const handleSearch: HeaderBarProps['onSearch'] = (text) => {
     handleHideTipList()
-    searchTipListRef.current?.search(text, layoutHeightRef.current)
+    let source = searchInfo.current.source
+    if (source === 'all') source = searchInfo.current.temp_source
+    searchTipListRef.current?.search(text, layoutHeightRef.current, source)
     headerBarRef.current?.setText(text)
     headerBarRef.current?.blur()
     void addHistoryWord(text)
@@ -102,7 +106,7 @@ export default () => {
       <HeaderBar
         ref={headerBarRef}
         onSourceChange={handleSourceChange}
-        onTempSearch={handleTempSearch}
+        onTipSearch={handleTipSearch}
         onSearch={handleSearch}
         onHideTipList={handleHideTipList}
         onShowTipList={handleShowTipList}

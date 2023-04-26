@@ -5,7 +5,7 @@
 
 import { weapi, linuxapi } from './utils/crypto'
 import { httpFetch } from '../../request'
-import { formatPlayTime, sizeFormate, dateFormat } from '../../index'
+import { formatPlayTime, sizeFormate, dateFormat, getSingerName } from '../../index'
 import musicDetailApi from './musicDetail'
 import { eapiRequest } from './utils/index'
 
@@ -20,12 +20,10 @@ export default {
   sortList: [
     {
       name: '最热',
-      tid: 'hot',
       id: 'hot',
     },
     // {
     //   name: '最新',
-    //   tid: 'new',
     //   id: 'new',
     // },
   ],
@@ -42,21 +40,15 @@ export default {
     if (num > 10000) return parseInt(num / 1000) / 10 + '万'
     return num
   },
-  getSinger(singers) {
-    let arr = []
-    singers?.forEach(singer => {
-      arr.push(singer.name)
-    })
-    return arr.join('、')
-  },
 
   async handleParseId(link, retryNum = 0) {
     if (retryNum > 2) throw new Error('link try max num')
 
     const requestObj_listDetailLink = httpFetch(link)
-    const { url, statusCode } = await requestObj_listDetailLink.promise
+    const { headers: { location }, statusCode } = await requestObj_listDetailLink.promise
     // console.log(headers)
     if (statusCode > 400) return this.handleParseId(link, ++retryNum)
+    const url = location == null ? link : location
     return this.regExps.listDetailLink.test(url)
       ? url.replace(this.regExps.listDetailLink, '$1')
       : url.replace(this.regExps.listDetailLink2, '$1')
@@ -93,7 +85,6 @@ export default {
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36',
         Cookie: this.cookie,
       },
-      cache: 'default',
       form: linuxapi({
         method: 'POST',
         url: 'https://music.163.com/api/v3/playlist/detail',
@@ -200,7 +191,7 @@ export default {
         })
       } else {
         list.push({
-          singer: this.getSinger(item.ar),
+          singer: getSingerName(item.ar, 'name'),
           name: item.name ?? '',
           albumName: item.al?.name,
           albumId: item.al?.id,
@@ -234,7 +225,7 @@ export default {
       }),
     })
     return this._requestObj_list.promise.then(({ body }) => {
-      // console.log(JSON.stringify(body))
+      console.log(body)
       if (body.code !== this.successCode) return this.getList(sortId, tagId, page, ++tryNum)
       return {
         list: this.filterList(body.playlists),

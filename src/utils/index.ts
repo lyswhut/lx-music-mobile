@@ -1,4 +1,4 @@
-import { dateFormat } from './common'
+import { dateFormat, decodeName } from './common'
 
 export { tranditionalize as langS2T } from '@/utils/simplify-chinese-main'
 
@@ -179,4 +179,20 @@ export const dateFormat2 = (time: number): string => {
   } else {
     return dateFormat(time)
   }
+}
+
+/**
+ * 获取歌手
+ * @param singers 歌手数组
+ * @param obj 读取的数据
+ * @param join 插入的字符
+ */
+export const getSingerName = (singers: [], obj = 'name', join = '、') => {
+  const singer: string[] = []
+  singers.forEach(item => {
+    let name  = item[obj]
+    if (!name) return
+    singer.push(name)
+  })
+  return decodeName(singer.join(join))
 }

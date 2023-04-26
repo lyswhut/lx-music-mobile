@@ -33,7 +33,7 @@ export default {
           hash: item.FileHash,
         }
       }
-      if (item.HQ) {
+      if (item.HQ != undefined) {
         let size = sizeFormate(item.HQ.FileSize)
         types.push({ type: '320k', size, hash: item.HQ.Hash })
         _types['320k'] = {
@@ -41,7 +41,7 @@ export default {
           hash: item.HQ.Hash,
         }
       }
-      if (item.SQ) {
+      if (item.SQ != undefined) {
         let size = sizeFormate(item.SQ.FileSize)
         types.push({ type: 'flac', size, hash: item.SQ.Hash })
         _types.flac = {
@@ -49,7 +49,7 @@ export default {
           hash: item.SQ.Hash,
         }
       }
-      if (item.Res) {
+      if (item.Res != undefined) {
         let size = sizeFormate(item.Res.FileSize)
         types.push({ type: 'flac24bit', size, hash: item.Res.Hash })
         _types.flac24bit = {
@@ -82,7 +82,7 @@ export default {
     const rawList = []
     rawData.forEach(item => {
       rawList.push(item)
-      if (item.Grp) item.Grp.forEach(e => rawList.push(e))
+      item.Grp.forEach(e => rawList.push(e))
     })
 
     return this.filterList(rawList)

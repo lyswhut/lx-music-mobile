@@ -110,7 +110,7 @@ export default {
     // })
     if (this._requestObj) this._requestObj.cancelHttp()
     const songId = await this.getSongId(mInfo)
-    if (this.lastCommentInfo.songId != songId) this.lastCommentInfo = { songId, commentId: '' }
+    if (this.lastCommentInfo.songId != songId || page === 1) this.lastCommentInfo = { songId, commentId: '' }
 
     const _requestObj = httpFetch('https://u.y.qq.com/cgi-bin/musicu.fcg', {
       method: 'POST',

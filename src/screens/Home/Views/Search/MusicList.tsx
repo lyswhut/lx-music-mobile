@@ -20,10 +20,10 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
   useImperativeHandle(ref, () => ({
     async loadList(text, source) {
       // const listDetailInfo = searchMusicState.listDetailInfo
-      listRef.current?.setList([], source == 'all')
+      listRef.current?.setList([], false, source == 'all')
       if (searchMusicState.searchText == text && searchMusicState.source == source && searchMusicState.listInfos[searchMusicState.source]!.list.length) {
         requestAnimationFrame(() => {
-          listRef.current?.setList(searchMusicState.listInfos[searchMusicState.source]!.list, source == 'all')
+          listRef.current?.setList(searchMusicState.listInfos[searchMusicState.source]!.list, false, source == 'all')
         })
       } else {
         listRef.current?.setStatus('loading')
@@ -34,7 +34,7 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
           // const result = setListInfo(listDetail, id, page)
           if (isUnmountedRef.current) return
           requestAnimationFrame(() => {
-            listRef.current?.setList(list, source == 'all')
+            listRef.current?.setList(list, false, source == 'all')
             listRef.current?.setStatus(searchMusicState.listInfos[searchMusicState.source]!.maxPage <= page ? 'end' : 'idle')
           })
         }).catch(() => {
@@ -58,7 +58,7 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
     search(searchInfoRef.current.text, page, searchInfoRef.current.source).then((list) => {
       // const result = setListInfo(listDetail, searchMusicState.listDetailInfo.id, page)
       if (isUnmountedRef.current) return
-      listRef.current?.setList(list, searchInfoRef.current.source == 'all')
+      listRef.current?.setList(list, false, searchInfoRef.current.source == 'all')
       listRef.current?.setStatus(searchMusicState.listInfos[searchInfoRef.current.source]!.maxPage <= page ? 'end' : 'idle')
     }).catch(() => {
       listRef.current?.setStatus('error')

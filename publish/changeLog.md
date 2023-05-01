@@ -2,6 +2,7 @@
 
 - 增加kg歌单歌曲flac24bit显示（@helloplhm-qwq）
 - 增加tx源热门评论图片显示（@Folltoshe）
+- 支持wy热门评论翻页
 
 ### 修复
 

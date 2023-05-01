@@ -1,5 +1,5 @@
 import { httpFetch } from '../../request'
-import { decodeName, formatPlayTime, sizeFormate, dateFormat } from '../../index'
+import { decodeName, formatPlayTime, sizeFormate, dateFormat, formatPlayCount } from '../../index'
 import infSign from './vendors/infSign.min'
 import { signatureParams } from './util'
 
@@ -57,17 +57,17 @@ export default {
     // https://www.kugou.com/yy/special/single/1067062.html
     listDetailLink: /^.+\/(\d+)\.html(?:\?.*|&.*$|#.*$|$)/,
   },
-  async getGlobalSpecialId(specialId) {
-    return httpFetch(`http://mobilecdnbj.kugou.com/api/v5/special/info?specialid=${specialId}`, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; HLK-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.102 Mobile Safari/537.36 EdgA/104.0.1293.70',
-      },
-    }).promise.then(({ body }) => {
-      // console.log(body)
-      if (!body.data.global_specialid) Promise.reject(new Error('Failed to get global collection id.'))
-      return body.data.global_specialid
-    })
-  },
+  // async getGlobalSpecialId(specialId) {
+  //   return httpFetch(`http://mobilecdnbj.kugou.com/api/v5/special/info?specialid=${specialId}`, {
+  //     headers: {
+  //       'User-Agent': 'Mozilla/5.0 (Linux; Android 10; HLK-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.102 Mobile Safari/537.36 EdgA/104.0.1293.70',
+  //     },
+  //   }).promise.then(({ body }) => {
+  //     // console.log(body)
+  //     if (!body.data.global_specialid) Promise.reject(new Error('Failed to get global collection id.'))
+  //     return body.data.global_specialid
+  //   })
+  // },
   // async getListInfoBySpecialId(special_id, retry = 0) {
   //   if (++retry > 2) throw new Error('failed')
   //   return httpFetch(`https://m.kugou.com/plist/list/${special_id}/?json=true`, {
@@ -140,7 +140,7 @@ export default {
         img: pic,
         desc,
         // author: body.result.info.userinfo.username,
-        // play_count: this.formatPlayCount(body.result.listen_num),
+        // play_count: formatPlayCount(body.result.listen_num),
       },
     }
 
@@ -160,7 +160,7 @@ export default {
     //     img: listInfo.image,
     //     desc: listInfo.intro,
     //     author: listInfo.author,
-    //     play_count: this.formatPlayCount(listInfo.playcount),
+    //     play_count: formatPlayCount(listInfo.playcount),
     //   },
     // }
   },
@@ -177,15 +177,6 @@ export default {
     return `http://www2.kugou.kugou.com/yueku/v9/special/single/${id}-5-9999.html`
   },
 
-  /**
-   * 格式化播放数量
-   * @param {*} num
-   */
-  formatPlayCount(num) {
-    if (num > 100000000) return parseInt(num / 10000000) / 10 + '亿'
-    if (num > 10000) return parseInt(num / 1000) / 10 + '万'
-    return num
-  },
   filterInfoHotTag(rawData) {
     const result = []
     if (rawData.status !== 1) return result
@@ -257,7 +248,7 @@ export default {
   },
   filterList(rawData) {
     return rawData.map(item => ({
-      play_count: item.total_play_count || this.formatPlayCount(item.play_count),
+      play_count: item.total_play_count || formatPlayCount(item.play_count),
       id: 'id_' + item.specialid,
       author: item.nickname,
       name: item.specialname,
@@ -380,7 +371,7 @@ export default {
         img: (info.img_size && info.img_size.replace('{size}', 240)) || info.img,
         // desc: body.result.info.list_desc,
         author: info.username,
-        // play_count: this.formatPlayCount(info.count),
+        // play_count: formatPlayCount(info.count),
       },
     }
   },
@@ -408,7 +399,7 @@ export default {
         img: songInfo.info.img,
         // desc: body.result.info.list_desc,
         author: songInfo.info.username,
-        // play_count: this.formatPlayCount(info.count),
+        // play_count: formatPlayCount(info.count),
       },
     }
   },
@@ -452,7 +443,7 @@ export default {
         img: listInfo.pic && listInfo.pic.replace('{size}', 240),
         // desc: body.result.info.list_desc,
         author: listInfo.list_create_username,
-        // play_count: this.formatPlayCount(listInfo.count),
+        // play_count: formatPlayCount(listInfo.count),
       },
     }
   },
@@ -503,7 +494,7 @@ export default {
         img: info.imgurl && info.imgurl.replace('{size}', 240),
         desc: info.intro,
         author: info.nickname,
-        play_count: this.formatPlayCount(info.playcount),
+        play_count: formatPlayCount(info.playcount),
       },
     }
   },
@@ -554,7 +545,7 @@ export default {
         img: listInfo.imgurl && listInfo.imgurl.replace('{size}', 240),
         // desc: body.result.info.list_desc,
         author: listInfo.nickname,
-        // play_count: this.formatPlayCount(info.count),
+        // play_count: formatPlayCount(info.count),
       },
     }
   },
@@ -575,7 +566,7 @@ export default {
         img: listInfo.imgurl && listInfo.imgurl.replace('{size}', 240),
         // desc: body.result.info.list_desc,
         author: listInfo.nickname,
-        // play_count: this.formatPlayCount(info.count),
+        // play_count: formatPlayCount(info.count),
       },
     }
   },
@@ -911,7 +902,7 @@ export default {
         return {
           list: body.data.info.map(item => {
             return {
-              play_count: this.formatPlayCount(item.playcount),
+              play_count: formatPlayCount(item.playcount),
               id: 'id_' + item.specialid,
               author: item.nickname,
               name: item.specialname,

@@ -70,7 +70,7 @@ export default () => {
     void saveSearchSetting({ source })
     listRef.current?.loadList(searchState.searchText, source, searchInfo.current.searchType)
   }
-  const handleTempSearch: HeaderBarProps['onTempSearch'] = (text) => {
+  const handleTipSearch: HeaderBarProps['onTipSearch'] = (text) => {
     setTimeout(() => {
       searchTipListRef.current?.search(text, layoutHeightRef.current)
     }, 500)
@@ -102,7 +102,7 @@ export default () => {
       <HeaderBar
         ref={headerBarRef}
         onSourceChange={handleSourceChange}
-        onTempSearch={handleTempSearch}
+        onTipSearch={handleTipSearch}
         onSearch={handleSearch}
         onHideTipList={handleHideTipList}
         onShowTipList={handleShowTipList}

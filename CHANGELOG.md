@@ -6,6 +6,31 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [1.0.5](https://github.com/lyswhut/lx-music-mobile/compare/v1.0.4...v1.0.5) - 2023-05-01
+
+### 优化
+
+- 增加kg歌单歌曲flac24bit显示（@helloplhm-qwq）
+- 增加tx源热门评论图片显示（@Folltoshe）
+- 支持wy热门评论翻页
+- 微调排行榜列表宽度及字体大小
+
+### 修复
+
+- 修复wy我喜欢列表使用token的方式导入，现在移动端可以使用token的方式导入我喜欢列表的音乐了，这意味着从PC端同步过来的歌单也可以在移动端上更新
+- 修复在线列表的多选问题
+- 修复mg搜索不显示时长的问题（@Folltoshe）
+- 修复mg评论加载失败的问题（@Folltoshe）
+- 修复在Android 5.1下报错的问题
+- 修复对存在错误时间标签的歌词的解析
+- 修复聚合搜索时未显示源名称的问题
+- 修复更改音源的列表歌曲颜色的实时更新问题
+
+### 其他
+
+- 更新kg、tx、wy等平台排行榜列表
+- 更新react native到v0.71.7
+
 ## [1.0.4](https://github.com/lyswhut/lx-music-mobile/compare/v1.0.3...v1.0.4) - 2023-04-01
 
 ### 新增

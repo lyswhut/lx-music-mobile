@@ -86,6 +86,7 @@ const styles = createStyle({
     flexDirection: 'column',
     width: '26%',
     maxWidth: 180,
+    minWidth: 110,
     flexGrow: 0,
     flexShrink: 0,
     borderRightWidth: BorderWidths.normal,

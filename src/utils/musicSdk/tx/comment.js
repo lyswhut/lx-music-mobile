@@ -77,6 +77,7 @@ const promises = new Map()
 export default {
   _requestObj: null,
   _requestObj2: null,
+  lastCommentInfo: { songId: '', commentId: '' },
   async getSongId({ songId, songmid }) {
     if (songId) return songId
     if (songIdMap.has(songmid)) return songIdMap.get(songmid)
@@ -89,38 +90,76 @@ export default {
     return info.songId
   },
   async getComment(mInfo, page = 1, limit = 20) {
+    // const _requestObj = httpFetch('http://c.y.qq.com/base/fcgi-bin/fcg_global_comment_h5.fcg', {
+    //   method: 'POST',
+    //   headers: {
+    //     'User-Agent': 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)',
+    //   },
+    //   form: {
+    //     uin: '0',
+    //     format: 'json',
+    //     cid: '205360772',
+    //     reqtype: '2',
+    //     biztype: '1',
+    //     topid: songId,
+    //     cmd: '8',
+    //     needmusiccrit: '1',
+    //     pagenum: page - 1,
+    //     pagesize: limit,
+    //   },
+    // })
     if (this._requestObj) this._requestObj.cancelHttp()
     const songId = await this.getSongId(mInfo)
+    if (this.lastCommentInfo.songId != songId) this.lastCommentInfo = { songId, commentId: '' }
 
-    const _requestObj = httpFetch('http://c.y.qq.com/base/fcgi-bin/fcg_global_comment_h5.fcg', {
+    const _requestObj = httpFetch('https://u.y.qq.com/cgi-bin/musicu.fcg', {
       method: 'POST',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)',
+      body: {
+        comm: {
+          cv: 4747474,
+          ct: 24,
+          format: 'json',
+          inCharset: 'utf-8',
+          outCharset: 'utf-8',
+          notice: 0,
+          platform: 'yqq.json',
+          needNewCode: 1,
+          uin: 0,
+        },
+        req: {
+          module: 'music.globalComment.CommentRead',
+          method: 'GetNewCommentList',
+          param: {
+            BizType: 1,
+            BizId: String(songId),
+            LastCommentSeqNo: this.lastCommentInfo.commentId,
+            PageSize: limit,
+            PageNum: page - 1,
+            WithHot: 0,
+            PicEnable: 1,
+          },
+        },
       },
-      form: {
-        uin: '0',
-        format: 'json',
-        cid: '205360772',
-        reqtype: '2',
-        biztype: '1',
-        topid: songId,
-        cmd: '8',
-        needmusiccrit: '1',
-        pagenum: page - 1,
-        pagesize: limit,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.0.0',
+        referer: 'https://y.qq.com/',
+        origin: 'https://y.qq.com',
       },
     })
     const { body, statusCode } = await _requestObj.promise
-    if (statusCode != 200 || body.code !== 0) throw new Error('获取评论失败')
-    // console.log(body, statusCode)
-    const comment = body.comment
+    if (statusCode != 200 || body.code !== 0 || body.req.code !== 0) throw new Error('获取评论失败')
+    // console.log(body, statusCode)slice(-1)
+    const comment = body.req.data.CommentList
+    const lastCommentId = comment.Comments.slice(-1)[0].SeqNo
+    this.lastCommentInfo = { songId, commentId: lastCommentId }
+
     return {
       source: 'tx',
-      comments: this.filterNewComment(comment.commentlist),
-      total: comment.commenttotal,
+      comments: this.filterComment(comment.Comments),
+      total: comment.Total,
       page,
       limit,
-      maxPage: Math.ceil(comment.commenttotal / limit) || 1,
+      maxPage: Math.ceil(comment.Total / limit) || 1,
     }
   },
   async getHotComment(mInfo, page = 1, limit = 20) {
@@ -186,54 +225,54 @@ export default {
     const comment = body.req.data.CommentList
     return {
       source: 'tx',
-      comments: this.filterHotComment(comment.Comments),
+      comments: this.filterComment(comment.Comments),
       total: comment.Total,
       page,
       limit,
       maxPage: Math.ceil(comment.Total / limit) || 1,
     }
   },
-  filterNewComment(rawList) {
-    return rawList.map(item => {
-      let time = this.formatTime(item.time)
-      let timeStr = time ? dateFormat2(time) : null
-      if (item.middlecommentcontent) {
-        let firstItem = item.middlecommentcontent[0]
-        firstItem.avatarurl = item.avatarurl
-        firstItem.praisenum = item.praisenum
-        item.avatarurl = null
-        item.praisenum = null
-        item.middlecommentcontent.reverse()
-      }
-      return {
-        id: `${item.rootcommentid}_${item.commentid}`,
-        rootId: item.rootcommentid,
-        text: item.rootcommentcontent ? this.replaceEmoji(item.rootcommentcontent).replace(/\\n/g, '\n') : '',
-        time: item.rootcommentid == item.commentid ? time : null,
-        timeStr: item.rootcommentid == item.commentid ? timeStr : null,
-        userName: item.rootcommentnick ? item.rootcommentnick.substring(1) : '',
-        avatar: item.avatarurl,
-        userId: item.encrypt_rootcommentuin,
-        likedCount: item.praisenum,
-        reply: item.middlecommentcontent
-          ? item.middlecommentcontent.map(c => {
-            // let index = c.subcommentid.lastIndexOf('_')
-            return {
-              id: `sub_${item.rootcommentid}_${c.subcommentid}`,
-              text: this.replaceEmoji(c.subcommentcontent).replace(/\\n/g, '\n'),
-              time: c.subcommentid == item.commentid ? time : null,
-              timeStr: c.subcommentid == item.commentid ? timeStr : null,
-              userName: c.replynick.substring(1),
-              avatar: c.avatarurl,
-              userId: c.encrypt_replyuin,
-              likedCount: c.praisenum,
-            }
-          })
-          : [],
-      }
-    })
-  },
-  filterHotComment(rawList) {
+  // filterNewComment(rawList) {
+  //   return rawList.map(item => {
+  //     let time = this.formatTime(item.time)
+  //     let timeStr = time ? dateFormat2(time) : null
+  //     if (item.middlecommentcontent) {
+  //       let firstItem = item.middlecommentcontent[0]
+  //       firstItem.avatarurl = item.avatarurl
+  //       firstItem.praisenum = item.praisenum
+  //       item.avatarurl = null
+  //       item.praisenum = null
+  //       item.middlecommentcontent.reverse()
+  //     }
+  //     return {
+  //       id: `${item.rootcommentid}_${item.commentid}`,
+  //       rootId: item.rootcommentid,
+  //       text: item.rootcommentcontent ? this.replaceEmoji(item.rootcommentcontent).replace(/\\n/g, '\n') : '',
+  //       time: item.rootcommentid == item.commentid ? time : null,
+  //       timeStr: item.rootcommentid == item.commentid ? timeStr : null,
+  //       userName: item.rootcommentnick ? item.rootcommentnick.substring(1) : '',
+  //       avatar: item.avatarurl,
+  //       userId: item.encrypt_rootcommentuin,
+  //       likedCount: item.praisenum,
+  //       reply: item.middlecommentcontent
+  //         ? item.middlecommentcontent.map(c => {
+  //           // let index = c.subcommentid.lastIndexOf('_')
+  //           return {
+  //             id: `sub_${item.rootcommentid}_${c.subcommentid}`,
+  //             text: this.replaceEmoji(c.subcommentcontent).replace(/\\n/g, '\n'),
+  //             time: c.subcommentid == item.commentid ? time : null,
+  //             timeStr: c.subcommentid == item.commentid ? timeStr : null,
+  //             userName: c.replynick.substring(1),
+  //             avatar: c.avatarurl,
+  //             userId: c.encrypt_replyuin,
+  //             likedCount: c.praisenum,
+  //           }
+  //         })
+  //         : [],
+  //     }
+  //   })
+  // },
+  filterComment(rawList) {
     return rawList.map(item => {
       return {
         id: `${item.SeqNo}_${item.CmId}`,

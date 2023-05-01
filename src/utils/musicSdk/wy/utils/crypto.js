@@ -32,7 +32,7 @@ export const weapi = object => {
   const text = JSON.stringify(object)
   const secretKey = String(Math.random()).substring(2, 18)
   return {
-    params: aesEncrypt(btoa(aesEncrypt(btoa(text), AES_MODE.CBC_128_PKCS7Padding, presetKey, iv)), AES_MODE.CBC_128_PKCS7Padding, btoa(secretKey), iv),
+    params: aesEncrypt(btoa(aesEncrypt(Buffer.from(text).toString('base64'), AES_MODE.CBC_128_PKCS7Padding, presetKey, iv)), AES_MODE.CBC_128_PKCS7Padding, btoa(secretKey), iv),
     encSecKey: rsaEncrypt(Buffer.from(secretKey).reverse(), publicKey).toString('hex'),
   }
 }
@@ -40,7 +40,7 @@ export const weapi = object => {
 export const linuxapi = object => {
   const text = JSON.stringify(object)
   return {
-    eparams: Buffer.from(aesEncrypt(btoa(text), AES_MODE.ECB_128_NoPadding, linuxapiKey, ''), 'base64').toString('hex').toUpperCase(),
+    eparams: Buffer.from(aesEncrypt(Buffer.from(text).toString('base64'), AES_MODE.ECB_128_NoPadding, linuxapiKey, ''), 'base64').toString('hex').toUpperCase(),
   }
 }
 

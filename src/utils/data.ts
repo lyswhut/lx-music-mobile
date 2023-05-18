@@ -227,12 +227,19 @@ export const saveViewPrevState = (state: { id: NAV_ID_Type }) => {
 }
 
 
+const idFixRxp = /\.0$/
 /**
  * 获取用户列表
  */
 export const getUserLists = async(): Promise<LX.List.UserListInfo[]> => {
-  const list = await getData<LX.List.UserListInfo[]>(userListKey)
-  return list ?? []
+  const list = await getData<LX.List.UserListInfo[]>(userListKey) ?? []
+  for (const info of list) {
+    // 兼容v2.3.0之前版本PC端插入数字类型的ID导致其意外在末尾追加 .0 的问题
+    if (info.sourceListId?.endsWith('.0')) {
+      info.sourceListId = info.sourceListId.replace(idFixRxp, '')
+    }
+  }
+  return list
 }
 
 /**

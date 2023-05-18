@@ -7,17 +7,19 @@ import syncSourceList from '@/core/syncSourceList'
 import { confirmDialog, toast } from '@/utils/tools'
 import { type Source } from '@/store/songlist/state'
 
+const getListId = (id: string, source: LX.OnlineSource) => `${source}__${id}`
 
-export const handlePlay = async(listId: string, source: Source, list?: LX.Music.MusicInfoOnline[], index = 0) => {
+export const handlePlay = async(id: string, source: Source, list?: LX.Music.MusicInfoOnline[], index = 0) => {
+  const listId = getListId(id, source)
   let isPlayingList = false
   // console.log(list)
-  if (!list?.length) list = (await getListDetail(listId, source, 1)).list
+  if (!list?.length) list = (await getListDetail(id, source, 1)).list
   if (list?.length) {
     await setTempList(listId, [...list])
     void playList(LIST_IDS.TEMP, index)
     isPlayingList = true
   }
-  const fullList = await getListDetailAll(source, listId)
+  const fullList = await getListDetailAll(source, id)
   if (!fullList.length) return
   if (isPlayingList) {
     if (listState.tempListMeta.id == listId) {
@@ -29,7 +31,9 @@ export const handlePlay = async(listId: string, source: Source, list?: LX.Music.
   }
 }
 
-export const handleCollect = async(listId: string, source: Source, name: string) => {
+export const handleCollect = async(id: string, source: Source, name: string) => {
+  const listId = getListId(id, source)
+
   const targetList = listState.userList.find(l => l.id == listId)
   if (targetList) {
     const confirm = await confirmDialog({
@@ -42,13 +46,13 @@ export const handleCollect = async(listId: string, source: Source, name: string)
     return
   }
 
-  const list = await getListDetailAll(source, listId)
+  const list = await getListDetailAll(source, id)
   await createList({
     name,
     id: listId,
     list,
     source,
-    sourceListId: listId,
+    sourceListId: id,
   })
   toast(global.i18n.t('collect_success'))
 }

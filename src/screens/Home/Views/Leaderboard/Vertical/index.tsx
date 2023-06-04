@@ -19,7 +19,7 @@ import { handleCollect, handlePlay } from '../listAction'
 import boardState from '@/store/leaderboard/state'
 
 
-const MAX_WIDTH = scaleSizeW(180)
+const MAX_WIDTH = scaleSizeW(200)
 
 export default () => {
   const drawer = useRef<DrawerLayoutFixedType>(null)

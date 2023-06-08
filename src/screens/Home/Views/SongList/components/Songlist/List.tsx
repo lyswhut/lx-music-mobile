@@ -58,7 +58,7 @@ export default forwardRef<ListType, ListProps>(({ onRefresh, onLoadMore, onOpenD
     <ListItem
       item={item}
       index={index}
-      width={itemWidth}
+      width={rowInfo.width}
       showSource={showSource}
       onPress={onOpenDetail}
     />
@@ -103,20 +103,30 @@ export default forwardRef<ListType, ListProps>(({ onRefresh, onLoadMore, onOpenD
   //   let itemWidth = Math.max(Math.trunc(width * 0.125), MAX_WIDTH)
   //   // if (itemWidth < )
   // }, [width])
-  const itemWidth = useMemo(() => {
-    let w = width * 0.9 - GAP
-    let n = width / (MIN_WIDTH + GAP)
-    if (n > 10) n = 10
-    return Math.floor(w / n)
-  }, [width])
+  // const computedItemWidth = useMemo(() => {
+  //   let w = width - GAP
+  //   let n = width / (MIN_WIDTH + GAP)
+  //   if (n > 10) n = 10
+  //   return Math.floor(w / n)
+  // }, [width])
   // console.log(Math.trunc(width * 0.125), itemWidth)
   // console.log(itemWidth, MIN_WIDTH, GAP, width)
-  const rowNum = useMemo(() => Math.max(Math.floor(width / itemWidth), 2), [itemWidth, width])
+  const rowInfo = useMemo(() => {
+    let w = width - GAP
+    let n = width / (MIN_WIDTH + GAP)
+    if (n > 10) n = 10
+    let computedItemWidth = Math.floor(w / n)
+    const num = Math.max(Math.floor(width / computedItemWidth), 2)
+    return {
+      num,
+      width: (width - GAP) / num,
+    }
+  }, [width])
   // console.log(rowNum)
   const list = useMemo(() => {
     const list = [...currentList]
-    let whiteItemNum = (list.length % rowNum)
-    if (whiteItemNum > 0) whiteItemNum = rowNum - whiteItemNum
+    let whiteItemNum = (list.length % rowInfo.num)
+    if (whiteItemNum > 0) whiteItemNum = rowInfo.num - whiteItemNum
     for (let i = 0; i < whiteItemNum; i++) {
       list.push({
         id: `white__${i}`,
@@ -130,7 +140,7 @@ export default forwardRef<ListType, ListProps>(({ onRefresh, onLoadMore, onOpenD
       })
     }
     return list
-  }, [currentList, rowNum])
+  }, [currentList, rowInfo])
   // console.log(listInfo.list.map((item) => item.id))
 
   return (
@@ -140,11 +150,11 @@ export default forwardRef<ListType, ListProps>(({ onRefresh, onLoadMore, onOpenD
           ? null
           : (
               <FlatList
-                key={String(rowNum)}
+                key={String(rowInfo.num)}
                 ref={flatListRef}
                 style={styles.list}
                 columnWrapperStyle={{ justifyContent: 'space-evenly' }}
-                numColumns={rowNum}
+                numColumns={rowInfo.num}
                 data={list}
                 maxToRenderPerBatch={4}
                 // updateCellsBatchingPeriod={80}

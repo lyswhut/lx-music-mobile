@@ -15,18 +15,19 @@ export interface SelectInfo {
 }
 const initSelectInfo = { selectedList: [], listId: '', isMove: false }
 
-// export interface MusicMultiAddModalProps {
-//   onRename: (listInfo: LX.List.UserListInfo) => void
-//   onImport: (listInfo: LX.List.MyListInfo, index: number) => void
-//   onExport: (listInfo: LX.List.MyListInfo, index: number) => void
-//   onSync: (listInfo: LX.List.UserListInfo) => void
-//   onRemove: (listInfo: LX.List.UserListInfo) => void
-// }
+export interface MusicMultiAddModalProps {
+  onAdded?: () => void
+  // onRename: (listInfo: LX.List.UserListInfo) => void
+  // onImport: (listInfo: LX.List.MyListInfo, index: number) => void
+  // onExport: (listInfo: LX.List.MyListInfo, index: number) => void
+  // onSync: (listInfo: LX.List.UserListInfo) => void
+  // onRemove: (listInfo: LX.List.UserListInfo) => void
+}
 export interface MusicMultiAddModalType {
   show: (info: SelectInfo) => void
 }
 
-export default forwardRef<MusicMultiAddModalType, {}>((props, ref) => {
+export default forwardRef<MusicMultiAddModalType, MusicMultiAddModalProps>(({ onAdded }, ref) => {
   const t = useI18n()
   const dialogRef = useRef<DialogType>(null)
   const [selectInfo, setSelectInfo] = useState<SelectInfo>(initSelectInfo)
@@ -54,6 +55,7 @@ export default forwardRef<MusicMultiAddModalType, {}>((props, ref) => {
         [...selectInfo.selectedList],
         settingState.setting['list.addMusicLocationType'],
       ).then(() => {
+        onAdded?.()
         toast(t('list_edit_action_tip_move_success'))
       }).catch(() => {
         toast(t('list_edit_action_tip_move_failed'))
@@ -63,6 +65,7 @@ export default forwardRef<MusicMultiAddModalType, {}>((props, ref) => {
         [...selectInfo.selectedList],
         settingState.setting['list.addMusicLocationType'],
       ).then(() => {
+        onAdded?.()
         toast(t('list_edit_action_tip_add_success'))
       }).catch(() => {
         toast(t('list_edit_action_tip_add_failed'))

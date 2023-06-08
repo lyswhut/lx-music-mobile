@@ -1,62 +1,13 @@
-import React, { useEffect, useRef } from 'react'
-import { View } from 'react-native'
-import { createStyle } from '@/utils/tools'
-
-import LeftBar, { type LeftBarType, type LeftBarProps } from './LeftBar'
-import MusicList, { type MusicListType } from './MusicList'
-import { getLeaderboardSetting, saveLeaderboardSetting } from '@/utils/data'
-// import { BorderWidths } from '@/theme'
-// import { useTheme } from '@/store/theme/hook'
-
+import { useDimensions } from '@/utils/hooks'
+import React from 'react'
+import Vertical from './Vertical'
+import Horizontal from './Horizontal'
+// import { AppColors } from '@/theme'
 
 export default () => {
-  const leftBarRef = useRef<LeftBarType>(null)
-  const musicListRef = useRef<MusicListType>(null)
-  const isUnmountedRef = useRef(false)
-  // const theme = useTheme()
+  const { window } = useDimensions()
 
-  const handleChangeBound: LeftBarProps['onChangeList'] = (source, id) => {
-    musicListRef.current?.loadList(source, id)
-    void saveLeaderboardSetting({
-      source,
-      boardId: id,
-    })
-  }
-
-  useEffect(() => {
-    isUnmountedRef.current = false
-    void getLeaderboardSetting().then(({ source, boardId }) => {
-      leftBarRef.current?.setBound(source, boardId)
-      musicListRef.current?.loadList(source, boardId)
-    })
-
-    return () => {
-      isUnmountedRef.current = true
-    }
-  }, [])
-
-
-  return (
-    <View style={styles.container}>
-      <LeftBar
-        ref={leftBarRef}
-        onChangeList={handleChangeBound}
-      />
-      <MusicList
-        ref={musicListRef}
-      />
-    </View>
-  )
+  return window.height > window.width
+    ? <Vertical />
+    : <Horizontal />
 }
-
-const styles = createStyle({
-  container: {
-    width: '100%',
-    flex: 1,
-    flexDirection: 'row',
-    // borderTopWidth: BorderWidths.normal,
-  },
-  content: {
-    flex: 1,
-  },
-})

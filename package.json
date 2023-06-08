@@ -1,6 +1,6 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.0.6",
+  "version": "1.0.7-beta.1",
   "versionCode": 60,
   "private": true,
   "scripts": {
@@ -51,33 +51,33 @@
     "lrc-file-parser": "^2.4.1",
     "pako": "^2.1.0",
     "react": "18.2.0",
-    "react-native": "0.71.7",
+    "react-native": "0.71.8",
     "react-native-background-timer": "github:lyswhut/react-native-background-timer#88b1d05b2dcdc5af72bf365bf7ff00eec114d428",
     "react-native-exception-handler": "^2.10.10",
     "react-native-fs": "^2.20.0",
-    "react-native-navigation": "^7.32.1",
+    "react-native-navigation": "^7.33.2",
     "react-native-pager-view": "^6.2.0",
-    "react-native-quick-base64": "^2.0.5",
-    "react-native-quick-md5": "^3.0.4",
+    "react-native-quick-base64": "^2.0.6",
+    "react-native-quick-md5": "^3.0.5",
     "react-native-track-player": "github:lyswhut/react-native-track-player#879d3dc6b7ad41f736943d7495be0ba87b4cf050",
     "react-native-vector-icons": "^9.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.5",
+    "@babel/core": "^7.22.1",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
-    "@babel/preset-env": "^7.21.5",
-    "@babel/runtime": "^7.21.5",
-    "@tsconfig/react-native": "^3.0.0",
-    "@types/react": "^18.2.0",
-    "@types/react-native": "^0.70.13",
+    "@babel/preset-env": "^7.22.4",
+    "@babel/runtime": "^7.22.3",
+    "@tsconfig/react-native": "^3.0.2",
+    "@types/react": "^18.2.8",
+    "@types/react-native": "^0.70.14",
     "@types/react-native-background-timer": "^2.0.0",
     "@types/react-native-vector-icons": "^6.4.13",
     "babel-plugin-module-resolver": "^5.0.0",
     "changelog-parser": "^3.0.1",
-    "eslint-config-standard-with-typescript": "^34.0.1",
+    "eslint-config-standard-with-typescript": "^35.0.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "metro-react-native-babel-preset": "0.73.9",
-    "typescript": "^5.0.4"
+    "typescript": "^5.1.3"
   }
 }

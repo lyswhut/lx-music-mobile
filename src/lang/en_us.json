@@ -89,6 +89,7 @@
   "list_update_success": "{name} updated successfully",
   "load_failed": "Ah, loading failed 😥",
   "loading": "Loading...",
+  "location": "From {location}",
   "lyric__load_error": "Failed to get lyrics",
   "move_to": "Move to...",
   "name": "Name: {name}",

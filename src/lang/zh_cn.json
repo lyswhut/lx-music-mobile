@@ -89,6 +89,7 @@
   "list_update_success": "{name} 更新成功",
   "load_failed": "啊 加载失败了 😥",
   "loading": "加载中...",
+  "location": "来自{location}",
   "lyric__load_error": "歌词获取失败",
   "move_to": "移动到...",
   "name": "歌曲名：{name}",

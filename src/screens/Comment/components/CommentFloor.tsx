@@ -9,6 +9,7 @@ import Text from '@/components/common/Text'
 import { scaleSizeH, scaleSizeW } from '@/utils/pixelRatio'
 import ScaledImage from '@/components/common/ScaledImage'
 import { useLayout } from '@/utils/hooks'
+import { useI18n } from '@/lang'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const defaultUser = require('@/resources/images/defaultUser.jpg')
 
@@ -23,6 +24,7 @@ const CommentFloor = memo(({ comment, isLast }: {
   const theme = useTheme()
   const [isAvatarError, setIsAvatarError] = useState(false)
   const { onLayout, width } = useLayout()
+  const t = useI18n()
 
   const handleAvatarError = useCallback(() => {
     setIsAvatarError(true)
@@ -74,7 +76,7 @@ const CommentFloor = memo(({ comment, isLast }: {
               </Text>
               <View style={styles.metaInfo}>
                 <Text numberOfLines={1} size={12} color={theme['c-450']}>{comment.timeStr}</Text>
-                { comment.location ? <Text numberOfLines={1} style={styles.location} size={12} color={theme['c-450']}>{comment.location}</Text> : null }
+                { comment.location ? <Text numberOfLines={1} style={styles.location} size={12} color={theme['c-450']}>{t('location', { location: comment.location })}</Text> : null }
               </View>
             </View>
             {likedCount}

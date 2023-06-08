@@ -148,7 +148,7 @@ export default {
     })
     const { body, statusCode } = await _requestObj.promise
     if (statusCode != 200 || body.code !== 0 || body.req.code !== 0) throw new Error('获取评论失败')
-    // console.log(body, statusCode)slice(-1)
+
     const comment = body.req.data.CommentList
     const lastCommentId = comment.Comments.slice(-1)[0].SeqNo
     this.lastCommentInfo = { songId, commentId: lastCommentId }
@@ -220,9 +220,10 @@ export default {
       },
     })
     const { body, statusCode } = await _requestObj2.promise
-    // console.log('body', body)
+
     if (statusCode != 200 || body.code !== 0 || body.req.code !== 0) throw new Error('获取热门评论失败')
     const comment = body.req.data.CommentList
+
     return {
       source: 'tx',
       comments: this.filterComment(comment.Comments),
@@ -232,7 +233,7 @@ export default {
       maxPage: Math.ceil(comment.Total / limit) || 1,
     }
   },
-  // filterNewComment(rawList) {
+  // filterComment(rawList) {
   //   return rawList.map(item => {
   //     let time = this.formatTime(item.time)
   //     let timeStr = time ? dateFormat2(time) : null

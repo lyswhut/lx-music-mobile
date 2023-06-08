@@ -31,20 +31,6 @@ export default () => {
   const boundInfo = useRef<{ source: LX.OnlineSource, id: string | null }>({ source: 'kw', id: null })
   // const [width, setWidth] = useState(0)
 
-  useEffect(() => {
-    const handleFixDrawer = (id: CommonState['navActiveId']) => {
-      if (id == 'nav_top') drawer.current?.fixWidth()
-    }
-    // setWidth(getWindowSise().width * 0.82)
-
-    global.state_event.on('navActiveIdUpdated', handleFixDrawer)
-
-    return () => {
-      global.state_event.off('navActiveIdUpdated', handleFixDrawer)
-    // changeEvent.remove()
-    }
-  }, [])
-
   const handleBoundChange = (source: LX.OnlineSource, id: string) => {
     musicListRef.current?.loadList(source, id)
     void saveLeaderboardSetting({
@@ -108,8 +94,16 @@ export default () => {
 
 
   useEffect(() => {
+    const handleFixDrawer = (id: CommonState['navActiveId']) => {
+      if (id == 'nav_top') drawer.current?.fixWidth()
+    }
+    global.state_event.on('navActiveIdUpdated', handleFixDrawer)
+
+
     isUnmountedRef.current = false
     void getLeaderboardSetting().then(({ source, boardId }) => {
+      boundInfo.current.source = source
+      boundInfo.current.id = boardId
       void getBoardsList(source).then(list => {
         const bound = list.find(l => l.id == boardId)
         boardsListRef.current?.setList(list, boardId)
@@ -119,6 +113,7 @@ export default () => {
     })
 
     return () => {
+      global.state_event.off('navActiveIdUpdated', handleFixDrawer)
       isUnmountedRef.current = true
     }
   }, [])

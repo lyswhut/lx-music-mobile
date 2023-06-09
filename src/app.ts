@@ -1,5 +1,6 @@
 import '@/utils/errorHandle'
 import { init as initLog } from '@/utils/log'
+import { bootLog, getBootLog } from '@/utils/bootLog'
 import '@/config/globalData'
 import { init as initNavigation, navigations } from '@/navigation'
 import { getFontSize } from '@/utils/data'
@@ -10,15 +11,24 @@ console.log('starting app...')
 let isInited = false
 let handlePushedHomeScreen: () => void
 
+const tryGetBootLog = () => {
+  try {
+    return getBootLog()
+  } catch (err) {
+    return 'Get boot log failed.'
+  }
+}
+
 const handleInit = async() => {
   if (isInited) return
   void initLog()
   global.lx.fontSize = await getFontSize()
+  bootLog('Font size setting loaded.')
   const { default: init } = await import('@/core/init')
   try {
     handlePushedHomeScreen = await init()
   } catch (err: any) {
-    Alert.alert('初始化失败 (Init Failed)', err.stack ?? err.message, [
+    Alert.alert('初始化失败 (Init Failed)', `Boot Log:\n${tryGetBootLog()}\n\n${(err.stack ?? err.message) as string}`, [
       {
         text: 'Exit',
         onPress() {

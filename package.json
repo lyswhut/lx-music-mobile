@@ -1,6 +1,6 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.0.7-beta.2",
+  "version": "1.0.7-beta.3",
   "versionCode": 60,
   "private": true,
   "scripts": {
@@ -68,7 +68,7 @@
     "@babel/preset-env": "^7.22.5",
     "@babel/runtime": "^7.22.5",
     "@tsconfig/react-native": "^3.0.2",
-    "@types/react": "^18.2.9",
+    "@types/react": "^18.2.10",
     "@types/react-native": "^0.70.14",
     "@types/react-native-background-timer": "^2.0.0",
     "@types/react-native-vector-icons": "^6.4.13",

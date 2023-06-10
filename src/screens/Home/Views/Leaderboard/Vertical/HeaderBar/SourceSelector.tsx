@@ -6,7 +6,7 @@ import SourceSelector, {
   type SourceSelectorType as _SourceSelectorType,
   type SourceSelectorProps as _SourceSelectorProps,
 } from '@/components/SourceSelector'
-import songlistState, { type Source, type InitState } from '@/store/leaderboard/state'
+import leaderboardState, { type Source, type InitState } from '@/store/leaderboard/state'
 
 type Sources = Readonly<InitState['sources']>
 type SourceSelectorCommonProps = _SourceSelectorProps<Sources>
@@ -26,13 +26,13 @@ export default forwardRef<SourceSelectorType, SourceSelectorProps>(({ style, onS
 
   useImperativeHandle(ref, () => ({
     setSource(source) {
-      sourceSelectorRef.current?.setSourceList(songlistState.sources, source)
+      sourceSelectorRef.current?.setSourceList(leaderboardState.sources, source)
     },
   }), [])
 
 
   return (
-    <View style={StyleSheet.compose<ViewStyle>(styles.selector, style)}>
+    <View style={StyleSheet.compose<ViewStyle, ViewStyle, ViewStyle>(styles.selector, style)}>
       <SourceSelector ref={sourceSelectorRef} onSourceChange={onSourceChange} center />
     </View>
   )

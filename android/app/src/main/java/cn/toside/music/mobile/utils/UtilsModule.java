@@ -52,6 +52,7 @@ public class UtilsModule extends ReactContextBaseJavaModule {
 
     // https://stackoverflow.com/questions/6330200/how-to-quit-android-application-programmatically
     Activity currentActivity = reactContext.getCurrentActivity();
+    Log.d("Utils", "Exit app...");
     if (currentActivity == null) {
       Log.d("Utils", "killProcess");
       android.os.Process.killProcess(android.os.Process.myPid());

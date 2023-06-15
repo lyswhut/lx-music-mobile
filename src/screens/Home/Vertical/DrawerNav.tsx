@@ -109,7 +109,7 @@ export default memo(() => {
           confirmButtonText: global.i18n.t('list_remove_tip_button'),
         }).then(isExit => {
           if (!isExit) return
-          exitApp()
+          exitApp('Exit Btn')
         })
         return
       case 'back_home':

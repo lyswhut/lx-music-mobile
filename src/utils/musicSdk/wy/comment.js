@@ -162,7 +162,7 @@ export default {
       form: weapi({
         rid: id,
         limit,
-        offset: limit * page,
+        offset: limit * (page - 1),
         beforeTime: Date.now().toString(),
       }),
     })

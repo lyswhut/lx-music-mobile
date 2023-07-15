@@ -11,6 +11,7 @@
 - 修复tx热门评论昵称被错误切割的问题 (By: @helloplhm-qwq, @Folltoshe)
 - 修复wy源热搜词失效的问题（@Folltoshe）
 - 修复mg歌单搜索歌单播放数量显示问题
+- 修复搜索提示功能失效的问题（@Folltoshe）
 
 ### 其他
 

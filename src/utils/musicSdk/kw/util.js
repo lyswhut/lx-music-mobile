@@ -61,8 +61,6 @@ export const matchToken = headers => {
 //   })
 // })
 
-export const decodeLyric = base64Data => rendererInvoke(WIN_MAIN_RENDERER_EVENT_NAME.handle_kw_decode_lyric, base64Data)
-
 // export const tokenRequest = async(url, options = {}) => {
 //   let token = kw_token.token
 //   if (!token) token = await getToken()

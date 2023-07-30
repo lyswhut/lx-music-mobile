@@ -153,13 +153,14 @@ public final class LyricSwitchView extends TextSwitcher {
   }
 
   public void setShadowColor(int i) {
-    float radius;
-    if (isSingleLine) {
-      radius = 0.1f;
-    } else {
-      radius = 0.2f;
-    }
-    for (TextView v : viewArray) v.setShadowLayer(radius, 0, 0, i);
+    // float radius;
+    // if (isSingleLine) {
+    //   radius = 1.2f;
+    // } else {
+    //   radius = 2f;
+    // }
+    // https://stackoverflow.com/a/28367917
+    for (TextView v : viewArray) v.setShadowLayer(1.6f, 1.5f, 1.3f, i);
   }
 
   public void setSourceText(CharSequence str) {

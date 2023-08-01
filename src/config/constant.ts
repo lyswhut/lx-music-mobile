@@ -118,8 +118,8 @@ export const DEFAULT_SETTING = {
   },
 
   songList: {
-    source: 'kg' as LX.OnlineSource,
-    sortId: '5',
+    source: 'kw' as LX.OnlineSource,
+    sortId: 'new',
     tagName: '',
     tagId: '',
   },

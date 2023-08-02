@@ -73,21 +73,23 @@ export default forwardRef<ListSearchBarType, ListSearchBarProps>(({ onSearch, on
     // console.log('show List')
     setVisible(true)
     setAnimatPlayed(false)
-    animTranslateY.setValue(-20)
+    requestAnimationFrame(() => {
+      animTranslateY.setValue(-20)
 
-    Animated.parallel([
-      Animated.timing(animFade, {
-        toValue: 0.92,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-      Animated.timing(animTranslateY, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      setAnimatPlayed(true)
+      Animated.parallel([
+        Animated.timing(animFade, {
+          toValue: 0.92,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(animTranslateY, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        setAnimatPlayed(true)
+      })
     })
   }, [animFade, animTranslateY])
 

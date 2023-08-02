@@ -22,4 +22,4 @@
 
 ### 其他
 
-- 更新 React native 到 v0.71.11
+- 更新 React native 到 v0.72.3

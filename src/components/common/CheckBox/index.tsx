@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { View, TouchableOpacity } from 'react-native'
-import CheckBox from '@react-native-community/checkbox'
+import CheckBox from './Checkbox'
 
 import { createStyle } from '@/utils/tools'
 import { scaleSizeH, scaleSizeW } from '@/utils/pixelRatio'
 import { useTheme } from '@/store/theme/hook'
-import Text from './Text'
+import Text from '../Text'
 
 export interface CheckBoxProps {
   check: boolean
@@ -55,13 +55,13 @@ export default ({ check, label, children, onChange, disabled = false, need = fal
     disabled
       ? (
           <View style={contentStyle}>
-            <CheckBox style={styles.checkbox} value={check} disabled={true} tintColors={disabledTintColors} />
+            <CheckBox status={check ? 'checked' : 'unchecked'} disabled={true} tintColors={disabledTintColors} />
             <View style={labelStyle}>{label ? <Text style={styles.name} color={theme['c-500']}>{label}</Text> : children}</View>
           </View>
         )
       : (
           <View style={contentStyle}>
-            <CheckBox value={check} disabled={isDisabled} onValueChange={onChange} tintColors={tintColors} scale={1} />
+            <CheckBox status={check ? 'checked' : 'unchecked'} disabled={isDisabled} onPress={handleLabelPress} tintColors={tintColors} />
             <TouchableOpacity style={labelStyle} activeOpacity={0.3} onPress={handleLabelPress}>
               {label ? <Text style={styles.name}>{label}</Text> : children}
             </TouchableOpacity>

@@ -1,10 +1,10 @@
 import React, { memo } from 'react'
-import { StyleSheet, View, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 
 import Section from '../components/Section'
 // import Button from './components/Button'
 
-import { openUrl } from '@/utils/tools'
+import { createStyle, openUrl } from '@/utils/tools'
 // import { showPactModal } from '@/navigation'
 import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'
@@ -85,10 +85,10 @@ export default memo(() => {
         <Text style={styles.text}>注意：<Text style={styles.boldText}>为免满人，无事勿加，入群先看群公告</Text></Text>
       </View>
       <View style={styles.part}>
-        <Text style={styles.text}>目前本项目的原始发布地址只有 <Text style={styles.boldText}>GitHub</Text> 及 <Text style={styles.boldText}>蓝奏网盘</Text>，其他渠道均为第三方转载发布，可信度请自行鉴别。</Text>
-        <Text style={styles.text}>本项目无微信公众号之类的官方账号，也未在小米、华为、vivo等应用商店发布应用，商店内的“洛雪音乐xx”相关的应用属于假冒应用，谨防被骗。</Text>
-        <Text style={styles.text}>本软件完全无广告且无引流（如需要加群、关注公众号之类才能使用或者升级）的行为，若你使用过程中遇到广告或者引流的信息，则表明你当前运行的软件是第三方修改版。</Text>
-        <Text style={styles.text}>若在升级新版本时提示 <Text style={styles.boldText}>签名不一致</Text>，则表明你手机上的旧版本或者将要安装的新版本中有一方是第三方修改版。</Text>
+        <Text style={styles.text}>目前本项目的原始发布地址只有<Text style={styles.boldText}>GitHub</Text>及<Text style={styles.boldText}>蓝奏网盘</Text>，其他渠道均为第三方转载发布，可信度请自行鉴别。</Text>
+        <Text style={styles.text}>本项目无微信公众号之类的官方账号，也未在小米、华为、vivo等应用商店发布同名应用，谨防被骗。</Text>
+        <Text style={styles.text}>若你使用过程中遇到<Text style={styles.boldText}>广告</Text>或者<Text style={styles.boldText}>引流</Text>（如需要加群、关注公众号之类才能使用或者升级）的信息，则表明你当前运行的软件是第三方修改版。</Text>
+        <Text style={styles.text}>若在升级新版本时提示<Text style={styles.boldText}>签名不一致</Text>，则表明你手机上的旧版本或者将要安装的新版本中有一方是第三方修改版。</Text>
       </View>
       <View style={styles.part}>
         <Text style={styles.text}>由于软件开发的初衷仅是为了对新技术的学习与研究，因此软件直至停止维护都将会一直保持纯净。</Text>
@@ -107,7 +107,7 @@ export default memo(() => {
   )
 })
 
-const styles = StyleSheet.create({
+const styles = createStyle({
   part: {
     marginLeft: 15,
     marginRight: 15,

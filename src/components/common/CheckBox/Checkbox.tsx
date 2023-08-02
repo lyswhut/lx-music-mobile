@@ -34,7 +34,7 @@ export interface Props {
 }
 
 const ANIMATION_DURATION = 200
-const WIDTH = scaleSizeW(36)
+const WIDTH = scaleSizeW(32)
 
 /**
  * Checkboxes allow the selection of multiple options from a set.

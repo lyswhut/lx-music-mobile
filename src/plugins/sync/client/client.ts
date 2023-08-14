@@ -1,13 +1,15 @@
 import { encryptMsg, decryptMsg } from './utils'
-import * as modules from './modules'
+import { modules, callObj } from './modules'
 // import { action as commonAction } from '@/store/modules/common'
 // import { getStore } from '@/store'
-import registerSyncListHandler from './syncList'
+// import registerSyncListHandler from './syncList'
 import log from '../log'
 import { SYNC_CLOSE_CODE, SYNC_CODE } from '@/config/constant'
 import { aesEncrypt } from '../utils'
 import { setSyncStatus } from '@/core/sync'
 import { dateFormat } from '@/utils/common'
+import { createMsg2call } from 'message2call'
+import { toast } from '@/utils/tools'
 
 let status: LX.Sync.Status = {
   status: false,
@@ -26,8 +28,14 @@ export const sendSyncMessage = (message: string) => {
 }
 
 const handleConnection = (socket: LX.Sync.Socket) => {
-  for (const moduleInit of Object.values(modules)) {
-    moduleInit(socket)
+  for (const { registerEvent } of Object.values(modules)) {
+    registerEvent(socket)
+  }
+}
+
+const handleDisconnection = () => {
+  for (const { unregisterEvent } of Object.values(modules)) {
+    unregisterEvent()
   }
 }
 
@@ -118,47 +126,75 @@ const heartbeatTools = {
 let client: LX.Sync.Socket | null
 // let listSyncPromise: Promise<void>
 export const connect = (urlInfo: LX.Sync.UrlInfo, keyInfo: LX.Sync.KeyInfo) => {
-  client = new WebSocket(`${urlInfo.wsProtocol}//${urlInfo.hostPath}?i=${encodeURIComponent(keyInfo.clientId)}&t=${encodeURIComponent(aesEncrypt(SYNC_CODE.msgConnect, keyInfo.key))}`) as LX.Sync.Socket
+  client = new WebSocket(`${urlInfo.wsProtocol}//${urlInfo.hostPath}/socket?i=${encodeURIComponent(keyInfo.clientId)}&t=${encodeURIComponent(aesEncrypt(SYNC_CODE.msgConnect, keyInfo.key))}`) as LX.Sync.Socket
   client.data = {
     keyInfo,
     urlInfo,
   }
   heartbeatTools.connect(client)
 
-  // listSyncPromise = registerSyncListHandler(socket)
-  let events: Partial<{ [K in keyof LX.Sync.ActionSyncSendType]: Array<(data: LX.Sync.ActionSyncSendType[K]) => (void | Promise<void>)> }> = {}
   let closeEvents: Array<(err: Error) => (void | Promise<void>)> = []
+
+  const message2read = createMsg2call({
+    funcsObj: {
+      ...callObj,
+      list_sync_finished() {
+        log.info('sync list success')
+        toast('Sync successfully')
+        client!.isReady = true
+        handleConnection(client as LX.Sync.Socket)
+        sendSyncStatus({
+          status: true,
+          message: '',
+        })
+        heartbeatTools.failedNum = 0
+      },
+    },
+    timeout: 120 * 1000,
+    sendMessage(data) {
+      void encryptMsg(keyInfo, JSON.stringify(data)).then((data) => {
+        client?.send(data)
+      }).catch((err) => {
+        log.error('encrypt msg error: ', err)
+        client?.close(SYNC_CLOSE_CODE.failed)
+      })
+    },
+    onCallBeforeParams(rawArgs) {
+      return [client, ...rawArgs]
+    },
+    onError(error, path, groupName) {
+      const name = groupName ?? ''
+      log.error(`sync call ${name} ${path.join('.')} error:`, error)
+      if (groupName == null) return
+      client?.close(SYNC_CLOSE_CODE.failed)
+      sendSyncStatus({
+        status: false,
+        message: error.message,
+      })
+    },
+  })
+
+  client.remoteSyncList = message2read.createSyncRemote('list')
+
   client.addEventListener('message', ({ data }) => {
     if (data == 'ping') return
     if (typeof data === 'string') {
-      let syncData: LX.Sync.ActionSync
-      try {
-        syncData = JSON.parse(decryptMsg(keyInfo, data))
-      } catch {
-        return
-      }
-      const handlers = events[syncData.action]
-      if (handlers) {
-        // @ts-expect-error
-        for (const handler of handlers) void handler(syncData.data)
-      }
+      void decryptMsg(keyInfo, data).then((data) => {
+        let syncData: LX.Sync.ServerActions
+        try {
+          syncData = JSON.parse(data)
+        } catch (err) {
+          log.error('parse msg error: ', err)
+          client?.close(SYNC_CLOSE_CODE.failed)
+          return
+        }
+        message2read.onMessage(syncData)
+      }).catch((error) => {
+        log.error('decrypt msg error: ', error)
+        client?.close(SYNC_CLOSE_CODE.failed)
+      })
     }
   })
-  client.onRemoteEvent = function(eventName, handler) {
-    let eventArr = events[eventName]
-    if (!eventArr) events[eventName] = eventArr = []
-    // let eventArr = events.get(eventName)
-    // if (!eventArr) events.set(eventName, eventArr = [])
-    eventArr.push(handler)
-
-    return () => {
-      eventArr!.splice(eventArr!.indexOf(handler), 1)
-    }
-  }
-  client.sendData = function(eventName, data, callback) {
-    client?.send(encryptMsg(keyInfo, JSON.stringify({ action: eventName, data })))
-    callback?.()
-  }
   client.onClose = function(handler: typeof closeEvents[number]) {
     closeEvents.push(handler)
     return () => {
@@ -166,6 +202,7 @@ export const connect = (urlInfo: LX.Sync.UrlInfo, keyInfo: LX.Sync.KeyInfo) => {
     }
   }
 
+  const initMessage = 'Wait syncing...'
   client.addEventListener('open', () => {
     log.info('connect')
     // const store = getStore()
@@ -173,39 +210,14 @@ export const connect = (urlInfo: LX.Sync.UrlInfo, keyInfo: LX.Sync.KeyInfo) => {
     client!.isReady = false
     sendSyncStatus({
       status: false,
-      message: 'Wait syncing...',
-    })
-    void registerSyncListHandler(client as LX.Sync.Socket).then(() => {
-      log.info('sync list success')
-      handleConnection(client as LX.Sync.Socket)
-      log.info('register list sync service success')
-      client!.isReady = true
-      sendSyncStatus({
-        status: true,
-        message: '',
-      })
-      heartbeatTools.failedNum = 0
-    }).catch(err => {
-      if (err.message == 'closed') {
-        sendSyncStatus({
-          status: false,
-          message: '',
-        })
-      } else {
-        console.log(err)
-        log.r_error(err.stack)
-        sendSyncStatus({
-          status: false,
-          message: err.message,
-        })
-      }
+      message: initMessage,
     })
   })
   client.addEventListener('close', ({ code }) => {
     const err = new Error('closed')
     for (const handler of closeEvents) void handler(err)
+    handleDisconnection()
     closeEvents = []
-    events = {}
     switch (code) {
       case SYNC_CLOSE_CODE.normal:
       // case SYNC_CLOSE_CODE.failed:
@@ -213,6 +225,15 @@ export const connect = (urlInfo: LX.Sync.UrlInfo, keyInfo: LX.Sync.KeyInfo) => {
           status: false,
           message: '',
         })
+        break
+      case SYNC_CLOSE_CODE.failed:
+        if (!status.message || status.message == initMessage) {
+          sendSyncStatus({
+            status: false,
+            message: 'failed',
+          })
+        }
+        break
     }
   })
   client.addEventListener('error', ({ message }) => {

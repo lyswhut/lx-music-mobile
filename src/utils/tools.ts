@@ -2,7 +2,7 @@ import { Platform, ToastAndroid, BackHandler, Linking, Dimensions, Alert, Appear
 // import ExtraDimensions from 'react-native-extra-dimensions-android'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { storageDataPrefix } from '@/config/constant'
-import { gzip, ungzip } from '@/utils/nativeModules/gzip'
+import { gzipFile, unGzipFile } from '@/utils/nativeModules/gzip'
 import { temporaryDirectoryPath, unlink } from '@/utils/fs'
 import { getSystemLocales, isNotificationsEnabled, openNotificationPermissionActivity, readFile, shareText, writeFile } from '@/utils/nativeModules/utils'
 import musicSdk from '@/utils/musicSdk'
@@ -146,7 +146,7 @@ export const handleSaveFile = async(path: string, data: any) => {
   // const buffer = gzip(data)
   const tempFilePath = `${temporaryDirectoryPath}/tempFile.json`
   await writeFile(tempFilePath, JSON.stringify(data))
-  await gzip(tempFilePath, path)
+  await gzipFile(tempFilePath, path)
   await unlink(tempFilePath)
 }
 export const handleReadFile = async<T = unknown>(path: string): Promise<T> => {
@@ -156,7 +156,7 @@ export const handleReadFile = async<T = unknown>(path: string): Promise<T> => {
     data = await readFile(path)
   } else {
     const tempFilePath = `${temporaryDirectoryPath}/tempFile.json`
-    await ungzip(path, tempFilePath)
+    await unGzipFile(path, tempFilePath)
     data = await readFile(tempFilePath)
     await unlink(tempFilePath)
   }

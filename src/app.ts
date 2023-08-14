@@ -64,3 +64,20 @@ initNavigation(async() => {
   })
 })
 
+// const createProxy = () => {
+//   return new Proxy(function() {}, {
+//     get: (_target, prop, receiver) => {
+//       let propName = prop.toString()
+//       console.log('proxy get', propName)
+//       return createProxy()
+//     },
+//     // eslint-disable-next-line @typescript-eslint/promise-function-async
+//     apply: (target, thisArg, argumentsList) => {
+//       console.log('proxy apply')
+//       return '56'
+//     },
+
+//   })
+// }
+// const proxy = createProxy()
+// console.log(proxy.aaa())

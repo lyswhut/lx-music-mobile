@@ -1,4 +1,4 @@
-import TrackPlayer, { Capability, Event, State } from 'react-native-track-player'
+import TrackPlayer, { Capability, Event, RepeatMode, State } from 'react-native-track-player'
 import BackgroundTimer from 'react-native-background-timer'
 import { playMusic as handlePlayMusic } from './playList'
 // import { PlayerMusicInfo } from '@/store/modules/player/playInfo'
@@ -159,6 +159,8 @@ export const setStop = async() => {
   await TrackPlayer.stop()
   if (!isEmpty()) await TrackPlayer.skipToNext()
 }
+export const setLoop = async(loop: boolean) => TrackPlayer.setRepeatMode(loop ? RepeatMode.Off : RepeatMode.Track)
+
 export const setPause = async() => TrackPlayer.pause()
 // export const skipToNext = () => TrackPlayer.skipToNext()
 export const setCurrentTime = async(time: number) => TrackPlayer.seekTo(time)

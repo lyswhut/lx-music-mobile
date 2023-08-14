@@ -4,6 +4,7 @@ import { SYNC_CODE } from '@/config/constant'
 import log from '../log'
 import { aesDecrypt, aesEncrypt, rsaDecrypt } from '../utils'
 import { getDeviceName } from '@/utils/nativeModules/utils'
+import { toMD5 } from '@/utils/tools'
 
 const hello = async(urlInfo: LX.Sync.UrlInfo) => request(`${urlInfo.httpProtocol}//${urlInfo.hostPath}/hello`)
   .then(({ text }) => text == SYNC_CODE.helloMsg)
@@ -25,7 +26,7 @@ const getServerId = async(urlInfo: LX.Sync.UrlInfo) => request(`${urlInfo.httpPr
   })
 
 const codeAuth = async(urlInfo: LX.Sync.UrlInfo, serverId: string, authCode: string) => {
-  let key = ''.padStart(16, Buffer.from(authCode).toString('hex'))
+  let key = toMD5(authCode).substring(0, 16)
   // const iv = Buffer.from(key.split('').reverse().join('')).toString('base64')
   key = Buffer.from(key).toString('base64')
   let { publicKey, privateKey } = await generateRsaKey()

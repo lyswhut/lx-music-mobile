@@ -1,4 +1,5 @@
 // import { generateKeyPair } from 'crypto'
+import { gzipStringToBase64, unGzipFromBase64 } from '@/utils/nativeModules/gzip'
 import BackgroundTimer from 'react-native-background-timer'
 
 export const request = async(url: string, { timeout = 10000, ...options }: RequestInit & { timeout?: number } = {}) => {
@@ -68,14 +69,18 @@ export { generateRsaKey } from '@/utils/nativeModules/crypto'
 // })
 
 
-export const encryptMsg = (keyInfo: LX.Sync.KeyInfo, msg: string): string => {
-  return msg
+export const encryptMsg = async(keyInfo: LX.Sync.KeyInfo, msg: string): Promise<string> => {
+  return msg.length > 1024
+    ? 'cg_' + await gzipStringToBase64(msg)
+    : msg
   // if (!keyInfo) return ''
   // return aesEncrypt(msg, keyInfo.key, keyInfo.iv)
 }
 
-export const decryptMsg = (keyInfo: LX.Sync.KeyInfo, enMsg: string): string => {
-  return enMsg
+export const decryptMsg = async(keyInfo: LX.Sync.KeyInfo, enMsg: string): Promise<string> => {
+  return enMsg.substring(0, 3) == 'cg_'
+    ? unGzipFromBase64(enMsg.replace('cg_', ''))
+    : enMsg
   // if (!keyInfo) return ''
   // let msg = ''
   // try {

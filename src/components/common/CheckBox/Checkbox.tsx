@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 
 import { Icon } from '../Icon'
+import { createStyle } from '@/utils/tools'
 import { scaleSizeW } from '@/utils/pixelRatio'
 
 export interface Props {
@@ -34,7 +35,7 @@ export interface Props {
 }
 
 const ANIMATION_DURATION = 200
-const WIDTH = scaleSizeW(32)
+const PADDING = scaleSizeW(4)
 
 /**
  * Checkboxes allow the selection of multiple options from a set.
@@ -85,7 +86,7 @@ const Checkbox = ({
       accessibilityRole="checkbox"
       accessibilityState={{ disabled, checked }}
       accessibilityLiveRegion="polite"
-      style={styles.container}
+      style={{ ...styles.container, padding: PADDING }}
     >
       <Icon
         allowFontScaling={false}
@@ -109,10 +110,8 @@ const Checkbox = ({
 
 Checkbox.displayName = 'Checkbox'
 
-const styles = StyleSheet.create({
+const styles = createStyle({
   container: {
-    width: WIDTH,
-    height: WIDTH,
     alignItems: 'center',
     justifyContent: 'center',
     // backgroundColor: 'rgba(0, 0, 0, 0.2)',

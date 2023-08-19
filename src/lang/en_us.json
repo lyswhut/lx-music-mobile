@@ -212,6 +212,8 @@
   "setting_list_add_music_location_type_bottom": "Bottom",
   "setting_list_add_music_location_type_top": "Top",
   "setting_list_click_action": "When you click a song in the list, it will automatically switch to the current list for playback (only valid for playlists and leaderboards)",
+  "setting_list_show interval": "Show song duration",
+  "setting_list_show_album_name": "Show song album name",
   "setting_lyric_dektop_permission_tip": "The desktop lyrics function needs to be granted the permission of LX Music to display the floating window in the system permission setting before it can be used. Do you go to the relevant interface to grant this permission?",
   "setting_lyric_desktop": "Desktop lyrics",
   "setting_lyric_desktop_enable": "Show desktop lyrics",

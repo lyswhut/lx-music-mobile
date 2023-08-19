@@ -267,6 +267,16 @@ declare global {
       'list.isShowSource': boolean
 
       /**
+       * 是否显示歌曲专辑名
+       */
+      'list.isShowAlbumName': boolean
+
+      /**
+       * 是否显示歌曲时长
+       */
+      'list.isShowInterval': boolean
+
+      /**
        * 是否自动恢复列表滚动位置（仅对我的列表有效）
        */
       'list.isSaveScrollLocation': boolean

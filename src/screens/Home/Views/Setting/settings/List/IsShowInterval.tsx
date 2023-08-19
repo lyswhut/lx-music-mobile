@@ -10,14 +10,14 @@ import CheckBoxItem from '../../components/CheckBoxItem'
 
 export default memo(() => {
   const t = useI18n()
-  const isClickPlayList = useSettingValue('list.isClickPlayList')
-  const setClickPlayList = (isClickPlayList: boolean) => {
-    updateSetting({ 'list.isClickPlayList': isClickPlayList })
+  const isShowInterval = useSettingValue('list.isShowInterval')
+  const setShowInterval = (isShowInterval: boolean) => {
+    updateSetting({ 'list.isShowInterval': isShowInterval })
   }
 
   return (
     <View style={styles.content}>
-      <CheckBoxItem check={isClickPlayList} onChange={setClickPlayList} label={t('setting_list_click_action')} />
+      <CheckBoxItem check={isShowInterval} onChange={setShowInterval} label={t('setting_list_show interval')} />
     </View>
   )
 })
@@ -26,7 +26,7 @@ export default memo(() => {
 const styles = createStyle({
   content: {
     marginTop: 5,
-    // marginBottom: 15,
+    marginBottom: 15,
   },
 })
 

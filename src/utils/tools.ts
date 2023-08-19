@@ -423,4 +423,22 @@ export const createStyle = <T extends StyleSheet.NamedStyles<T>>(styles: T | Sty
   return StyleSheet.create(newStyle as StyleSheet.NamedStyles<T>)
 }
 
+export interface RowInfo {
+  rowNum: number | undefined
+  rowWidth: `${number}%`
+}
+
+export type RowInfoType = 'full' | 'medium'
+
+export const getRowInfo = (type: RowInfoType = 'full'): RowInfo => {
+  const win = Dimensions.get('window')
+  let isMultiRow = win.width > win.height
+  if (type == 'medium' && win.width / win.height < 1.8) isMultiRow = false
+  // console.log('getRowInfo')
+  return {
+    rowNum: isMultiRow ? 2 : undefined,
+    rowWidth: isMultiRow ? '50%' : '100%',
+  }
+}
+
 export const toMD5 = stringMd5

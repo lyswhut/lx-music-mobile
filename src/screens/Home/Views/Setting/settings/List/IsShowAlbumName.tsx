@@ -10,14 +10,14 @@ import CheckBoxItem from '../../components/CheckBoxItem'
 
 export default memo(() => {
   const t = useI18n()
-  const isClickPlayList = useSettingValue('list.isClickPlayList')
-  const setClickPlayList = (isClickPlayList: boolean) => {
-    updateSetting({ 'list.isClickPlayList': isClickPlayList })
+  const isShowAlbumName = useSettingValue('list.isShowAlbumName')
+  const setShowAlbumName = (isShowAlbumName: boolean) => {
+    updateSetting({ 'list.isShowAlbumName': isShowAlbumName })
   }
 
   return (
     <View style={styles.content}>
-      <CheckBoxItem check={isClickPlayList} onChange={setClickPlayList} label={t('setting_list_click_action')} />
+      <CheckBoxItem check={isShowAlbumName} onChange={setShowAlbumName} label={t('setting_list_show_album_name')} />
     </View>
   )
 })

@@ -8,11 +8,12 @@ import { getListPosition, getListPrevSelectId, saveListPosition } from '@/utils/
 // import { useMusicList } from '@/store/list/hook'
 import { getListMusics, setActiveList } from '@/core/list'
 import ListItem, { ITEM_HEIGHT } from './ListItem'
-import { createStyle } from '@/utils/tools'
+import { createStyle, getRowInfo } from '@/utils/tools'
 import { usePlayInfo, usePlayMusicInfo } from '@/store/player/hook'
 import type { Position } from './ListMenu'
 import type { SelectMode } from './MultipleModeBar'
 import { useActiveListId } from '@/store/list/hook'
+import { useSettingValue } from '@/store/setting/hook'
 
 type FlatListType = FlatListProps<LX.Music.MusicInfo>
 
@@ -54,6 +55,9 @@ const List = forwardRef<ListType, ListProps>(({ onShowMenu, onMuiltSelectMode, o
   const selectedListRef = useRef<LX.List.ListMusics>([])
   const currentListIdRef = useRef('')
   const waitJumpListPositionRef = useRef(false)
+  const rowInfo = useRef(getRowInfo())
+  const isShowAlbumName = useSettingValue('list.isShowAlbumName')
+  const isShowInterval = useSettingValue('list.isShowInterval')
   // console.log('render music list')
 
   useImperativeHandle(ref, () => ({
@@ -84,7 +88,7 @@ const List = forwardRef<ListType, ListProps>(({ onShowMenu, onMuiltSelectMode, o
       void getListMusics(listState.activeListId).then((list) => {
         const index = list.findIndex(m => m.id == info.id)
         if (index < 0) return
-        flatListRef.current?.scrollToIndex({ index, viewPosition: 0.3, animated: true })
+        flatListRef.current?.scrollToIndex({ index: Math.floor(index / (rowInfo.current.rowNum ?? 1)), viewPosition: 0.3, animated: true })
       })
     },
   }))
@@ -110,7 +114,7 @@ const List = forwardRef<ListType, ListProps>(({ onShowMenu, onMuiltSelectMode, o
                 waitJumpListPositionRef.current = false
                 if (playerState.playMusicInfo.listId == id && playerState.playInfo.playIndex > -1) {
                   try {
-                    flatListRef.current?.scrollToIndex({ index: playerState.playInfo.playIndex, viewPosition: 0.3, animated: false })
+                    flatListRef.current?.scrollToIndex({ index: Math.floor(playerState.playInfo.playIndex / (rowInfo.current.rowNum ?? 1)), viewPosition: 0.3, animated: false })
                     return
                   } catch {}
                 }
@@ -143,7 +147,7 @@ const List = forwardRef<ListType, ListProps>(({ onShowMenu, onMuiltSelectMode, o
           if (isUpdateingList) waitJumpListPositionRef.current = true
           else {
             try {
-              flatListRef.current?.scrollToIndex({ index: playerState.playInfo.playIndex, viewPosition: 0.3, animated: true })
+              flatListRef.current?.scrollToIndex({ index: Math.floor(playerState.playInfo.playIndex / (rowInfo.current.rowNum ?? 1)), viewPosition: 0.3, animated: true })
             } catch {}
           }
         }
@@ -249,6 +253,9 @@ const List = forwardRef<ListType, ListProps>(({ onShowMenu, onMuiltSelectMode, o
       onLongPress={handleLongPress}
       onShowMenu={onShowMenu}
       selectedList={selectedList}
+      rowInfo={rowInfo.current}
+      isShowAlbumName={isShowAlbumName}
+      isShowInterval={isShowInterval}
     />
   )
   const getkey: FlatListType['keyExtractor'] = item => item.id
@@ -263,6 +270,8 @@ const List = forwardRef<ListType, ListProps>(({ onShowMenu, onMuiltSelectMode, o
       style={styles.list}
       data={currentList}
       maxToRenderPerBatch={4}
+      numColumns={rowInfo.current.rowNum}
+      horizontal={false}
       // updateCellsBatchingPeriod={80}
       windowSize={8}
       removeClippedSubviews={true}

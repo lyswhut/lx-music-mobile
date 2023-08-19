@@ -53,6 +53,8 @@ const defaultSetting: LX.AppSetting = {
 
   'list.isClickPlayList': false,
   'list.isShowSource': true,
+  'list.isShowAlbumName': false,
+  'list.isShowInterval': true,
   'list.isSaveScrollLocation': true,
   'list.addMusicLocationType': 'top',
 

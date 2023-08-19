@@ -212,6 +212,8 @@
   "setting_list_add_music_location_type_bottom": "底部",
   "setting_list_add_music_location_type_top": "顶部",
   "setting_list_click_action": "点击列表里的歌曲时自动切换到当前列表播放（仅对歌单、排行榜有效）",
+  "setting_list_show interval": "显示歌曲时长",
+  "setting_list_show_album_name": "显示歌曲专辑名",
   "setting_lyric_dektop_permission_tip": "桌面歌词功能需要在系统权限设置中授予LX Music显示悬浮窗口的权限才能使用，是否去相关界面授予此权限？",
   "setting_lyric_desktop": "桌面歌词",
   "setting_lyric_desktop_enable": "显示桌面歌词",

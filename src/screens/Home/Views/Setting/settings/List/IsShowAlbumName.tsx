@@ -12,7 +12,9 @@ export default memo(() => {
   const t = useI18n()
   const isShowAlbumName = useSettingValue('list.isShowAlbumName')
   const setShowAlbumName = (isShowAlbumName: boolean) => {
-    updateSetting({ 'list.isShowAlbumName': isShowAlbumName })
+    requestAnimationFrame(() => {
+      updateSetting({ 'list.isShowAlbumName': isShowAlbumName })
+    })
   }
 
   return (

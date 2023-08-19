@@ -12,7 +12,9 @@ export default memo(() => {
   const t = useI18n()
   const isShowInterval = useSettingValue('list.isShowInterval')
   const setShowInterval = (isShowInterval: boolean) => {
-    updateSetting({ 'list.isShowInterval': isShowInterval })
+    requestAnimationFrame(() => {
+      updateSetting({ 'list.isShowInterval': isShowInterval })
+    })
   }
 
   return (

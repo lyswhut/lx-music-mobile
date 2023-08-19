@@ -64,7 +64,7 @@ export default memo(({ item, index, activeIndex, onPress, onShowMenu, onLongPres
         </View>
         {
           isShowInterval ? (
-            <Text size={12} color={active ? theme['c-primary-alpha-200'] : theme['c-300']} numberOfLines={1}>{item.interval}</Text>
+            <Text size={12} color={active ? theme['c-primary-alpha-400'] : theme['c-250']} numberOfLines={1}>{item.interval}</Text>
           ) : null
         }
       </TouchableOpacity>
@@ -78,9 +78,9 @@ export default memo(({ item, index, activeIndex, onPress, onShowMenu, onLongPres
 }, (prevProps, nextProps) => {
   return !!(prevProps.item === nextProps.item &&
     prevProps.index === nextProps.index &&
+    prevProps.isShowAlbumName === nextProps.isShowAlbumName &&
+    prevProps.isShowInterval === nextProps.isShowInterval &&
     prevProps.activeIndex != nextProps.index &&
-    prevProps.isShowAlbumName != nextProps.isShowAlbumName &&
-    prevProps.isShowInterval != nextProps.isShowInterval &&
     nextProps.activeIndex != nextProps.index &&
     nextProps.selectedList.includes(nextProps.item) == prevProps.selectedList.includes(nextProps.item)
   )

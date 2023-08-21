@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useMemo, forwardRef, useImperativeHandle } from 'react'
+import { useState, useRef, useCallback, useMemo, forwardRef, useImperativeHandle } from 'react'
 import { Animated, View, TouchableOpacity } from 'react-native'
 
 import Text from '@/components/common/Text'

@@ -1,4 +1,3 @@
-import React from 'react'
 import { TouchableOpacity } from 'react-native'
 import { navigations } from '@/navigation'
 import { usePlayerMusicInfo } from '@/store/player/hook'

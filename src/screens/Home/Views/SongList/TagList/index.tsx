@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { InteractionManager } from 'react-native'
 
 import { type Source } from '@/store/songlist/state'

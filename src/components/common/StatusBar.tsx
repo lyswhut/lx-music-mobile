@@ -1,5 +1,4 @@
 import { useTheme } from '@/store/theme/hook'
-import React from 'react'
 import { StatusBar as RNStatusBar } from 'react-native'
 
 const StatusBar = function() {

@@ -1,4 +1,3 @@
-import React from 'react'
 import { View } from 'react-native'
 import { useTheme } from '@/store/theme/hook'
 import { createStyle } from '@/utils/tools'

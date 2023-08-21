@@ -166,7 +166,7 @@ let playPromise = Promise.resolve()
 let actionId = Math.random()
 export const playMusic = (musicInfo: LX.Player.PlayMusic, url: string, time: number) => {
   const id = actionId = Math.random()
-  playPromise.finally(() => {
+  void playPromise.finally(() => {
     if (id != actionId) return
     playPromise = handlePlayMusic(musicInfo, url, time)
   })

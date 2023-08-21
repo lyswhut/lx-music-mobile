@@ -1,4 +1,4 @@
-import React, { useImperativeHandle, forwardRef, useMemo, useRef } from 'react'
+import { useImperativeHandle, forwardRef, useMemo, useRef } from 'react'
 import { View, TouchableHighlight } from 'react-native'
 
 import Modal, { type ModalType } from './Modal'

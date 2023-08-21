@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState } from 'react'
+import { memo, useRef, useState } from 'react'
 import { View, TouchableOpacity, FlatList, type FlatListProps } from 'react-native'
 
 import { Icon } from '@/components/common/Icon'

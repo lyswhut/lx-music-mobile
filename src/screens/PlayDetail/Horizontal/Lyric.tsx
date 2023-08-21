@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useEffect, useRef } from 'react'
+import { memo, useMemo, useEffect, useRef } from 'react'
 import { View, FlatList, type FlatListProps } from 'react-native'
 // import { useLayout } from '@/utils/hooks'
 import { type Line, useLrcPlay, useLrcSet } from '@/plugins/lyric'

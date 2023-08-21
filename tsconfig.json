@@ -20,5 +20,5 @@
       // "@utils": ["src/utils"],
     }
   },
-  "exclude": ["node_modules", "build", "dist", ".eslintrc.js"]
+  "exclude": ["node_modules", "build", "dist"]
 }

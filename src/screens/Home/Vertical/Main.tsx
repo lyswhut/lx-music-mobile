@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { InteractionManager, View } from 'react-native'
 import Search from '../Views/Search'
 import SongList from '../Views/SongList'

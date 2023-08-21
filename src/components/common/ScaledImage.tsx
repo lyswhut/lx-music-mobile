@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Image, StyleSheet, type ImageProps } from 'react-native'
 
 export interface ScaledImageProps extends Pick<ImageProps, 'style'> {

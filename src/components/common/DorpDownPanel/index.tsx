@@ -1,4 +1,4 @@
-import React, { useRef, forwardRef } from 'react'
+import { useRef, forwardRef } from 'react'
 // import { View } from 'react-native'
 
 import Panel, { type PanelType } from './Panel'

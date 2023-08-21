@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { View, TouchableOpacity, ScrollView } from 'react-native'
 
 import { useTheme } from '@/store/theme/hook'
@@ -48,6 +48,7 @@ export default ({ onChangeId }: {
     onChangeId(id)
     setActiveId(id)
     global.lx.settingActiveId = id
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

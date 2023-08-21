@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 
 import Section from '../../components/Section'
 import IsShowHotSearch from './IsShowHotSearch'

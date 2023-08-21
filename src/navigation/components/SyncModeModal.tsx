@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { View, ScrollView } from 'react-native'
 
 import Button from '@/components/common/Button'

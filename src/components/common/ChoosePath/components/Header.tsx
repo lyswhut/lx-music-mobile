@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react'
+import { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import Input, { type InputType } from '@/components/common/Input'
 import Text from '@/components/common/Text'

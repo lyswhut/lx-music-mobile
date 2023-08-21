@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState, useCallback, useImperativeHandle, forwardRef } from 'react'
+import { memo, useRef, useState, useCallback, useImperativeHandle, forwardRef } from 'react'
 import { View, TouchableOpacity, ScrollView } from 'react-native'
 // import { gzip, ungzip } from 'pako'
 import { Icon } from '@/components/common/Icon'

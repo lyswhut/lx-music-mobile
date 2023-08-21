@@ -1,5 +1,5 @@
 // import { createStyle } from '@/utils/tools'
-import React, { useImperativeHandle, forwardRef, useState, useMemo } from 'react'
+import { useImperativeHandle, forwardRef, useState, useMemo } from 'react'
 import { Modal, TouchableWithoutFeedback, View, type ModalProps as _ModalProps } from 'react-native'
 import StatusBar from './StatusBar'
 // import { useDimensions } from '@/utils/hooks'

@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from 'react'
+import { memo, useState, useEffect } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import Section from '../components/Section'

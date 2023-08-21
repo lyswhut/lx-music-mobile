@@ -53,7 +53,7 @@ export const exitApp = (reason: string) => {
   console.log('Handle Exit App, Reason: ' + reason)
   if (isDestroying) return
   isDestroying = true
-  Promise.all([
+  void Promise.all([
     hideDesktopLyric(),
     destroyPlayer(),
     hideLyric(),

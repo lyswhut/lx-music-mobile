@@ -1,5 +1,5 @@
 
-import React, { memo } from 'react'
+import { memo } from 'react'
 
 import Slider, { type SliderProps } from '@react-native-community/slider'
 import { useTheme } from '@/store/theme/hook'

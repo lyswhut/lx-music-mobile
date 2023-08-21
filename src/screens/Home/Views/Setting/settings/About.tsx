@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 
 import Section from '../components/Section'

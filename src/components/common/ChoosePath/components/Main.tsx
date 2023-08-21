@@ -1,7 +1,7 @@
 import { useI18n } from '@/lang'
 import { useTheme } from '@/store/theme/hook'
 import { createStyle } from '@/utils/tools'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { View, FlatList } from 'react-native'
 
 import ListItem, { type PathItem } from './ListItem'

@@ -1,4 +1,3 @@
-import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { useGetter } from '@/store'
 import { Navigation } from 'react-native-navigation'

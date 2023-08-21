@@ -1,5 +1,5 @@
 import { playList } from '@/core/player/player'
-import React, { useMemo, useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react'
+import { useMemo, useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { FlatList, type NativeScrollEvent, type NativeSyntheticEvent, InteractionManager, type FlatListProps } from 'react-native'
 
 import listState from '@/store/list/state'

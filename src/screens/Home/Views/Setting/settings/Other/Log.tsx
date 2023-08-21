@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState, useEffect } from 'react'
+import { memo, useRef, useState, useEffect } from 'react'
 import { View } from 'react-native'
 import { getLogs, clearLogs } from '@/utils/log'
 // import { gzip, ungzip } from 'pako'

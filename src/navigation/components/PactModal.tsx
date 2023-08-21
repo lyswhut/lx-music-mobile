@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { View, ScrollView, Alert } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 

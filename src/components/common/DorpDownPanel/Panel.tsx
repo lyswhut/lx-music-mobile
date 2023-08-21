@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useImperativeHandle, forwardRef, useState } from 'react'
+import { useMemo, useRef, useImperativeHandle, forwardRef, useState } from 'react'
 import { View, TouchableWithoutFeedback } from 'react-native'
 import { useDimensions } from '@/utils/hooks'
 

@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import { memo, useState } from 'react'
 import { View, Image, StyleSheet } from 'react-native'
 // import { useLayout } from '@/utils/hooks'
 import { useTheme } from '@/store/theme/hook'

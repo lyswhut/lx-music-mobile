@@ -1,4 +1,3 @@
-import React from 'react'
 import Btn from './Btn'
 import { navigations } from '@/navigation'
 import commonState from '@/store/common/state'

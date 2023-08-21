@@ -1,4 +1,3 @@
-import React from 'react'
 import { Text, type TextProps as _TextProps, StyleSheet } from 'react-native'
 import { useTheme } from '@/store/theme/hook'
 import { setSpText } from '@/utils/pixelRatio'

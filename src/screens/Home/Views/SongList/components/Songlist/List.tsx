@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo, forwardRef, useImperativeHandle } from 'react'
+import { useRef, useState, useMemo, forwardRef, useImperativeHandle } from 'react'
 import { FlatList, View, RefreshControl, type FlatListProps } from 'react-native'
 
 import ListItem from './ListItem'

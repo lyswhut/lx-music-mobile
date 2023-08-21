@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import CheckBox from './Checkbox'
 

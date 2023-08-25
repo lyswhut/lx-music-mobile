@@ -8,6 +8,7 @@ import { useTheme } from '@/store/theme/hook'
 import { useSettingValue } from '@/store/setting/hook'
 import Text from '@/components/common/Text'
 import { setSpText } from '@/utils/pixelRatio'
+import playerState from '@/store/player/state'
 // import { screenkeepAwake } from '@/utils/nativeModules/utils'
 // import { log } from '@/utils/log'
 // import { toast } from '@/utils/tools'
@@ -98,6 +99,7 @@ export default () => {
     scrollTimoutRef.current = setTimeout(() => {
       scrollTimoutRef.current = null
       isPauseScrollRef.current = false
+      if (!playerState.isPlay) return
       handleScrollToActive()
     }, 3000)
   }

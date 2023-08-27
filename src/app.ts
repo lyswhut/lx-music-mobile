@@ -9,7 +9,7 @@ import { exitApp } from './utils/nativeModules/utils'
 
 console.log('starting app...')
 let isInited = false
-let handlePushedHomeScreen: () => void
+let handlePushedHomeScreen: () => void | Promise<void>
 
 const tryGetBootLog = () => {
   try {
@@ -49,7 +49,7 @@ initNavigation(async() => {
   // import('@/utils/nativeModules/cryptoTest')
 
   await navigations.pushHomeScreen().then(() => {
-    handlePushedHomeScreen()
+    void handlePushedHomeScreen()
   }).catch((err: any) => {
     Alert.alert('Error', err.message, [
       {

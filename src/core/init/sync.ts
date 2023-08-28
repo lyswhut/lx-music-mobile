@@ -1,6 +1,5 @@
 import { connectServer } from '@/plugins/sync'
 import { updateSetting } from '@/core/common'
-// import { SYNC_CODE } from '@/config/constant'
 import { getSyncHost } from '@/plugins/sync/data'
 
 

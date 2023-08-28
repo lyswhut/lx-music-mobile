@@ -1,8 +1,10 @@
+// 这个文件导出的方法将暴露给服务端调用，第一个参数固定为当前 socket 对象
 import { handleRemoteListAction, getLocalListData, setLocalListData } from '../../../utils'
 import log from '../../../log'
 // import { SYNC_CLOSE_CODE } from '@/config/constant'
 import { removeSyncModeEvent, selectSyncMode } from '@/core/sync'
 import { toMD5 } from '@/utils/tools'
+import { registerEvent, unregisterEvent } from './localEvent'
 
 const logInfo = (eventName: string, success = false) => {
   log.info(`[${eventName}]${eventName.replace('list:sync:list_sync_', '').replace(/_/g, ' ')}${success ? ' success' : ''}`)
@@ -11,8 +13,8 @@ const logInfo = (eventName: string, success = false) => {
 //   log.error(`[${eventName}]${eventName.replace('list:sync:list_sync_', '').replace(/_/g, ' ')} error: ${err.message}`)
 // }
 
-export const onListSyncAction = async(socket: LX.Sync.Socket, action: LX.Sync.ActionList) => {
-  if (!socket.isReady) return
+export const onListSyncAction = async(socket: LX.Sync.Socket, action: LX.Sync.List.ActionList) => {
+  if (!socket.moduleReadys?.list) return
   await handleRemoteListAction(action)
 }
 
@@ -34,9 +36,18 @@ export const list_sync_get_list_data = async(socket: LX.Sync.Socket) => {
   return getLocalListData()
 }
 
-export const list_sync_set_list_data = async(socket: LX.Sync.Socket, data: LX.Sync.ListData) => {
+export const list_sync_set_list_data = async(socket: LX.Sync.Socket, data: LX.Sync.List.ListData) => {
   logInfo('list:sync:list_sync_set_list_data')
   await setLocalListData(data)
+}
+
+export const list_sync_finished = async(socket: LX.Sync.Socket) => {
+  logInfo('list:sync:finished')
+  socket.moduleReadys.list = true
+  registerEvent(socket)
+  socket.onClose(() => {
+    unregisterEvent()
+  })
 }
 
 
@@ -64,7 +75,7 @@ export const list_sync_set_list_data = async(socket: LX.Sync.Socket, data: LX.Sy
 //   }))
 //   listenEvents.push(socket.onRemoteEvent('list:sync:list_sync_get_sync_mode', async() => {
 //     logInfo('list:sync:list_sync_get_sync_mode')
-//     let mode: LX.Sync.Mode
+//     let mode: LX.Sync.List.SyncMode
 //     try {
 //       mode = await selectSyncMode(socket.data.keyInfo.serverName)
 //     } catch (err: unknown) {

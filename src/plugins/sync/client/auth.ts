@@ -1,10 +1,10 @@
 import { request, generateRsaKey } from './utils'
 import { getSyncAuthKey, setSyncAuthKey } from '../data'
-import { SYNC_CODE } from '@/config/constant'
 import log from '../log'
 import { aesDecrypt, aesEncrypt, rsaDecrypt } from '../utils'
 import { getDeviceName } from '@/utils/nativeModules/utils'
 import { toMD5 } from '@/utils/tools'
+import { SYNC_CODE } from '../constants'
 
 const hello = async(urlInfo: LX.Sync.UrlInfo) => request(`${urlInfo.httpProtocol}//${urlInfo.hostPath}/hello`)
   .then(({ text }) => text == SYNC_CODE.helloMsg)

@@ -28,7 +28,7 @@ const ModeModal = ({ componentId }: { componentId: string }) => {
     setSyncModeComponentId(componentId)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  const handleSelectMode = (mode: LX.Sync.Mode) => {
+  const handleSelectMode = (mode: LX.Sync.List.SyncMode) => {
     if (mode.startsWith('overwrite') && isOverwrite) mode += '_full'
     global.app_event.selectSyncMode(mode)
   }

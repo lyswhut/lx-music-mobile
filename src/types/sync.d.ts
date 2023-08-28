@@ -12,27 +12,20 @@ declare global {
         serverName: string
       }
 
-      type ListData = Omit<LX.List.ListDataFull, 'tempList'>
-
-      type Mode = 'merge_local_remote'
-      | 'merge_remote_local'
-      | 'overwrite_local_remote'
-      | 'overwrite_remote_local'
-      | 'overwrite_local_remote_full'
-      | 'overwrite_remote_local_full'
-      // | 'none'
-      | 'cancel'
-
       interface Socket extends WebSocket {
         isReady: boolean
         data: {
           keyInfo: KeyInfo
           urlInfo: UrlInfo
         }
+        moduleReadys: {
+          list: boolean
+        }
 
         onClose: (handler: (err: Error) => (void | Promise<void>)) => () => void
 
-        remoteSyncList: LX.Sync.ServerActions
+        remote: LX.Sync.ServerSyncActions
+        remoteQueueList: LX.Sync.ServerSyncListActions
       }
 
 
@@ -42,6 +35,12 @@ declare global {
         hostPath: string
         href: string
       }
+
+      type ServerType = 'desktop-app' | 'server'
+      interface EnabledFeatures {
+        list: boolean
+      }
+      type SupportedFeatures = Partial<{ [k in keyof EnabledFeatures]: number }>
     }
   }
 }

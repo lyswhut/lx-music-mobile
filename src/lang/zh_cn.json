@@ -322,7 +322,7 @@
   "sync__mode_merge_tip_desc": "将两边的列表合并到一起，相同的歌曲将被去掉（去掉的是被合并者的歌曲），不同的歌曲将被添加。",
   "sync__mode_other_label": "其他",
   "sync__mode_other_tip": "其他: ",
-  "sync__mode_other_tip_desc": "“取消同步”将直接断开双方的连接。",
+  "sync__mode_other_tip_desc": "“取消同步”将不使用列表同步功能。",
   "sync__mode_overwrite": "完全覆盖",
   "sync__mode_overwrite_btn_cancel": "取消同步",
   "sync__mode_overwrite_btn_local_remote": "本机列表 覆盖 远程列表",

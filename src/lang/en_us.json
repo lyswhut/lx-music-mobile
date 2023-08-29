@@ -322,7 +322,7 @@
   "sync__mode_merge_tip_desc": "Merge the lists on both sides together, the same songs will be removed (removed is the merged song), and different songs will be added.",
   "sync__mode_other_label": "Other",
   "sync__mode_other_tip": "Other: ",
-  "sync__mode_other_tip_desc": "\"Cancel Sync\" will directly disconnect the two parties.",
+  "sync__mode_other_tip_desc": "\"Cancel Sync\" will not use list sync.",
   "sync__mode_overwrite": "Full coverage",
   "sync__mode_overwrite_btn_cancel": "Cancel sync",
   "sync__mode_overwrite_btn_local_remote": "Local list override remote list",

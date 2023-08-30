@@ -69,6 +69,7 @@ export const saveUserTheme = async(themes: LX.Theme[]) => {
 
 
 const initPosition = async() => {
+  // eslint-disable-next-line require-atomic-updates
   listPosition ??= await getData(listScrollPositionKey) ?? {}
 }
 export const getListPosition = async(id: string): Promise<number> => {
@@ -100,6 +101,7 @@ const saveListPrevSelectIdThrottle = throttle(() => {
   void saveData(listPrevSelectIdKey, listPrevSelectId)
 }, 200)
 export const getListPrevSelectId = async() => {
+  // eslint-disable-next-line require-atomic-updates
   listPrevSelectId ??= await getData(listPrevSelectIdKey) ?? LIST_IDS.DEFAULT
   return listPrevSelectId || LIST_IDS.DEFAULT
 }
@@ -113,6 +115,7 @@ const saveListUpdateInfoThrottle = throttle(() => {
 }, 1000)
 
 const initListUpdateInfo = async() => {
+  // eslint-disable-next-line require-atomic-updates
   listUpdateInfo ??= await getData(listUpdateInfoKey) ?? {}
 }
 export const getListUpdateInfo = async() => {
@@ -169,6 +172,7 @@ export const saveIgnoreVersion = (version: string | null) => {
 }
 // 获取忽略更新的版本号
 export const getIgnoreVersion = async() => {
+  // eslint-disable-next-line require-atomic-updates
   if (ignoreVersion === undefined) ignoreVersion = (await getData<string | null>(ignoreVersionKey)) ?? null
   return ignoreVersion
 }
@@ -184,12 +188,14 @@ export const saveIgnoreVersionFailTipTime = (time: number | null) => {
 }
 // 获取忽略更新的版本号
 export const getIgnoreVersionFailTipTime = async() => {
+  // eslint-disable-next-line require-atomic-updates
   if (ignoreVersionFailTipTime === undefined) ignoreVersionFailTipTime = (await getData<number | null>(ignoreVersionFailTipTimeKey))
   return ignoreVersionFailTipTime ?? 0
 }
 
 
 export const getSearchSetting = async() => {
+  // eslint-disable-next-line require-atomic-updates
   searchSetting ??= await getData(searchSettingKey) ?? { ...DEFAULT_SETTING.search }
   return { ...searchSetting }
 }
@@ -206,16 +212,18 @@ export const saveSearchSetting = async(setting: Partial<typeof DEFAULT_SETTING['
 }
 
 export const getSearchHistory = async() => {
+  // eslint-disable-next-line require-atomic-updates
   searchHistoryList ??= await getData(searchHistoryListKey) ?? []
   return [...searchHistoryList]
 }
 export const saveSearchHistory = async(historyList: typeof searchHistoryList) => {
-  if (!searchHistoryList) await getSearchHistory()
+  // if (!searchHistoryList) await getSearchHistory()
   searchHistoryList = historyList
   saveSearchHistoryThrottle()
 }
 
 export const getSongListSetting = async() => {
+  // eslint-disable-next-line require-atomic-updates
   songListSetting ??= await getData(songListSettingKey) ?? { ...DEFAULT_SETTING.songList }
   return { ...songListSetting }
 }
@@ -226,6 +234,7 @@ export const saveSongListSetting = async(setting: Partial<typeof DEFAULT_SETTING
 }
 
 export const getLeaderboardSetting = async() => {
+  // eslint-disable-next-line require-atomic-updates
   leaderboardSetting ??= await getData(leaderboardSettingKey) ?? { ...DEFAULT_SETTING.leaderboard }
   return { ...leaderboardSetting }
 }
@@ -236,7 +245,7 @@ export const saveLeaderboardSetting = async(setting: Partial<typeof DEFAULT_SETT
 }
 
 export const getViewPrevState = async() => {
-  return await getData<{ id: NAV_ID_Type }>(viewPrevStateKey) ?? { ...DEFAULT_SETTING.viewPrevState }
+  return (await getData<{ id: NAV_ID_Type }>(viewPrevStateKey)) ?? { ...DEFAULT_SETTING.viewPrevState }
 }
 export const saveViewPrevState = (state: { id: NAV_ID_Type }) => {
   saveViewPrevStateThrottle(state)
@@ -397,6 +406,7 @@ export const setSyncAuthKey = async(serverId: string, info: LX.Sync.KeyInfo) => 
 let syncHostInfo: string
 export const getSyncHost = async() => {
   if (syncHostInfo === undefined) {
+    // eslint-disable-next-line require-atomic-updates
     syncHostInfo = await getData(syncHostPrefix) ?? ''
 
     // 清空1.0.0之前版本的同步主机
@@ -414,6 +424,7 @@ export const setSyncHost = async(host: string) => {
 let syncHostHistory: string[]
 export const getSyncHostHistory = async() => {
   if (syncHostHistory === undefined) {
+    // eslint-disable-next-line require-atomic-updates
     syncHostHistory = await getData(syncHostHistoryPrefix) ?? []
 
     // 清空1.0.0之前版本的同步历史

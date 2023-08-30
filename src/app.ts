@@ -40,7 +40,7 @@ const handleInit = async() => {
     })
     return
   }
-  isInited = true
+  isInited ||= true
 }
 
 initNavigation(async() => {

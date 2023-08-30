@@ -57,7 +57,7 @@ export default async() => {
 
   // syncSetting()
 
-  isInited = true
+  isInited ||= true
 
   return handlePushedHomeScreen
 }

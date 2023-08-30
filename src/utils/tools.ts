@@ -19,7 +19,7 @@ export const getDeviceLanguage = async() => {
   //     NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
   //   : await getSystemLocales()
   // deviceLanguage = typeof deviceLanguage === 'string' ? deviceLanguage.substring(0, 5).toLocaleLowerCase() : ''
-  return await getSystemLocales()
+  return getSystemLocales()
 }
 
 

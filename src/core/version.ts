@@ -2,7 +2,7 @@ import { compareVer } from '@/utils'
 import { downloadNewVersion, getVersionInfo } from '@/utils/version'
 import versionActions from '@/store/version/action'
 import versionState, { type InitState } from '@/store/version/state'
-import { getIgnoreVersion, saveIgnoreVersion } from '@/utils/data'
+import { getIgnoreVersion, getIgnoreVersionFailTipTime, saveIgnoreVersion, saveIgnoreVersionFailTipTime } from '@/utils/data'
 import { showVersionModal } from '@/navigation'
 import { Navigation } from 'react-native-navigation'
 
@@ -40,21 +40,26 @@ export const checkUpdate = async() => {
   //   desc: '- 更新xxx\n- 修复xxx123的萨达修复xxx123的萨达修复xxx123的萨达修复xxx123的萨达修复xxx123的萨达',
   //   history: [{ version: '1.8.0', desc: '- 更新xxx22\n- 修复xxx22' }, { version: '1.7.0', desc: '- 更新xxx22\n- 修复xxx22' }],
   // }
-  if (versionInfo.version == '0.0.0') {
+  if (versionInfo.newVersion.version == '0.0.0') {
     versionInfo.isUnknown = true
     versionInfo.status = 'error'
   } else {
     versionInfo.status = 'idle'
-  }
-  versionInfo.isUnknown = false
-  if (compareVer(versionInfo.version, versionInfo.newVersion.version) != -1) {
-    versionInfo.isLatest = true
+    versionInfo.isUnknown = false
+    if (compareVer(versionInfo.version, versionInfo.newVersion.version) != -1) {
+      versionInfo.isLatest = true
+    }
   }
 
   versionActions.setVersionInfo(versionInfo)
 
   if (!versionInfo.isLatest) {
-    if (versionInfo.newVersion.version != await getIgnoreVersion()) {
+    if (versionInfo.isUnknown) {
+      const time = await getIgnoreVersionFailTipTime()
+      if (Date.now() - time < 7 * 86400000) return
+      saveIgnoreVersionFailTipTime(Date.now())
+      showModal()
+    } else if (versionInfo.newVersion.version != await getIgnoreVersion()) {
       showModal()
     }
   }

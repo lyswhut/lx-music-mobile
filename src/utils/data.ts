@@ -15,6 +15,7 @@ const viewPrevStateKey = storageDataPrefix.viewPrevState
 const listScrollPositionKey = storageDataPrefix.listScrollPosition
 const listUpdateInfoKey = storageDataPrefix.listUpdateInfo
 const ignoreVersionKey = storageDataPrefix.ignoreVersion
+const ignoreVersionFailTipTimeKey = storageDataPrefix.ignoreVersionFailTipTimeKey
 const searchSettingKey = storageDataPrefix.searchSetting
 const searchHistoryListKey = storageDataPrefix.searchHistoryList
 const songListSettingKey = storageDataPrefix.songListSetting
@@ -170,6 +171,21 @@ export const saveIgnoreVersion = (version: string | null) => {
 export const getIgnoreVersion = async() => {
   if (ignoreVersion === undefined) ignoreVersion = (await getData<string | null>(ignoreVersionKey)) ?? null
   return ignoreVersion
+}
+
+let ignoreVersionFailTipTime: number | null
+export const saveIgnoreVersionFailTipTime = (time: number | null) => {
+  ignoreVersionFailTipTime = time
+  if (time == null) {
+    void removeData(ignoreVersionFailTipTimeKey)
+  } else {
+    void saveData(ignoreVersionFailTipTimeKey, time)
+  }
+}
+// 获取忽略更新的版本号
+export const getIgnoreVersionFailTipTime = async() => {
+  if (ignoreVersionFailTipTime === undefined) ignoreVersionFailTipTime = (await getData<number | null>(ignoreVersionFailTipTimeKey))
+  return ignoreVersionFailTipTime ?? 0
 }
 
 

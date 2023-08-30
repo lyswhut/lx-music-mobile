@@ -186,6 +186,7 @@ const fetchData = (url, { timeout = 15000, ...options }) => {
           headers: resp.headers.map,
           body: text,
           statusCode: resp.status,
+          statusMessage: resp.statusText,
           url: resp.url,
           ok: resp.ok,
         }

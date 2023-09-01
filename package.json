@@ -1,6 +1,6 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.1.0-beta.2",
+  "version": "1.1.0-beta.3",
   "versionCode": 60,
   "private": true,
   "scripts": {
@@ -57,7 +57,7 @@
     "react-native-exception-handler": "^2.10.10",
     "react-native-fs": "^2.20.0",
     "react-native-navigation": "^7.37.0",
-    "react-native-pager-view": "^6.2.0",
+    "react-native-pager-view": "^6.2.1",
     "react-native-quick-base64": "^2.0.7",
     "react-native-quick-md5": "^3.0.5",
     "react-native-track-player": "github:lyswhut/react-native-track-player#f1570980d8fc6b7fc9917a26becd0c292890b7a2",
@@ -67,7 +67,7 @@
     "@babel/core": "^7.22.11",
     "@babel/eslint-parser": "^7.22.11",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
-    "@babel/preset-env": "^7.22.10",
+    "@babel/preset-env": "^7.22.14",
     "@babel/runtime": "^7.22.11",
     "@react-native/metro-config": "^0.72.11",
     "@tsconfig/react-native": "^3.0.2",

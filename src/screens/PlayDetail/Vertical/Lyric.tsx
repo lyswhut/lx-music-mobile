@@ -6,7 +6,7 @@ import { createStyle } from '@/utils/tools'
 // import { useComponentIds } from '@/store/common/hook'
 import { useTheme } from '@/store/theme/hook'
 import { useSettingValue } from '@/store/setting/hook'
-import Text from '@/components/common/Text'
+import { AnimatedColorText } from '@/components/common/Text'
 import { setSpText } from '@/utils/pixelRatio'
 import playerState from '@/store/player/state'
 // import { screenkeepAwake } from '@/utils/nativeModules/utils'
@@ -65,22 +65,34 @@ const LrcLine = memo(({ line, lineNum, activeLine }: {
   const size = lrcFontSize / 10
   const lineHeight = setSpText(size) * 1.25
 
+  const colors = useMemo(() => {
+    const active = activeLine == lineNum
+    return active ? [
+      theme['c-primary'],
+      theme['c-primary-alpha-200'],
+    ] : [
+      theme['c-350'],
+      theme['c-300'],
+    ]
+  }, [activeLine, lineNum, theme])
+
+
   // textBreakStrategy="simple" 用于解决某些设备上字体被截断的问题
   // https://stackoverflow.com/a/72822360
   return (
     <View style={styles.line}>
-      <Text style={{
+      <AnimatedColorText style={{
         ...styles.lineText,
         textAlign,
         lineHeight,
-      }} textBreakStrategy="simple" color={activeLine == lineNum ? theme['c-primary'] : theme['c-350']} size={size}>{line.text}</Text>
+      }} textBreakStrategy="simple" color={colors[0]} size={size}>{line.text}</AnimatedColorText>
       {
         line.extendedLyrics.map((lrc, index) => {
-          return (<Text style={{
+          return (<AnimatedColorText style={{
             ...styles.lineTranslationText,
             textAlign,
             lineHeight: lineHeight * 0.8,
-          }} textBreakStrategy="simple" key={index} color={activeLine == lineNum ? theme['c-primary-alpha-200'] : theme['c-350']} size={size * 0.8}>{lrc}</Text>)
+          }} textBreakStrategy="simple" key={index} color={colors[1]} size={size * 0.8}>{lrc}</AnimatedColorText>)
         })
       }
     </View>
@@ -98,6 +110,7 @@ export default () => {
   const flatListRef = useRef<FlatList>(null)
   const isPauseScrollRef = useRef(true)
   const scrollTimoutRef = useRef<NodeJS.Timeout | null>(null)
+  const delayScrollTimeout = useRef<NodeJS.Timeout | null>(null)
   const lineRef = useRef(0)
   const isFirstSetLrc = useRef(true)
   // useLock()
@@ -128,7 +141,14 @@ export default () => {
 
   const handleScrollBeginDrag = () => {
     isPauseScrollRef.current = true
-    if (scrollTimoutRef.current) clearTimeout(scrollTimoutRef.current)
+    if (delayScrollTimeout.current) {
+      clearTimeout(delayScrollTimeout.current)
+      delayScrollTimeout.current = null
+    }
+    if (scrollTimoutRef.current) {
+      clearTimeout(scrollTimoutRef.current)
+      scrollTimoutRef.current = null
+    }
   }
 
   const onScrollEndDrag = () => {
@@ -145,6 +165,10 @@ export default () => {
 
   useEffect(() => {
     return () => {
+      if (delayScrollTimeout.current) {
+        clearTimeout(delayScrollTimeout.current)
+        delayScrollTimeout.current = null
+      }
       if (scrollTimoutRef.current) {
         clearTimeout(scrollTimoutRef.current)
         scrollTimoutRef.current = null
@@ -173,7 +197,10 @@ export default () => {
   useEffect(() => {
     lineRef.current = line
     if (!flatListRef.current || isPauseScrollRef.current) return
-    handleScrollToActive()
+    delayScrollTimeout.current = setTimeout(() => {
+      delayScrollTimeout.current = null
+      handleScrollToActive()
+    }, 300)
   }, [line])
 
   const handleScrollToIndexFailed: FlatListType['onScrollToIndexFailed'] = (info) => {

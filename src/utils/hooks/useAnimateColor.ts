@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Animated } from 'react-native'
 
 
-const ANIMATION_DURATION = 200
+const ANIMATION_DURATION = 800
 
 export const useAnimateColor = (color: string) => {
   const anim = useMemo(() => new Animated.Value(0), [color])

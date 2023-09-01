@@ -161,7 +161,7 @@ export default () => {
     delayScrollTimeout.current = setTimeout(() => {
       delayScrollTimeout.current = null
       handleScrollToActive()
-    }, 300)
+    }, 600)
   }, [line])
 
   const handleScrollToIndexFailed: FlatListType['onScrollToIndexFailed'] = (info) => {

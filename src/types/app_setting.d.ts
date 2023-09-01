@@ -172,6 +172,11 @@ declare global {
       'playDetail.horizontal.style.lrcFontSize': number
 
       /**
+       * 播放详情页-是否允许通过歌词调整播放进度
+       */
+      'playDetail.isShowLyricProgressSetting': boolean
+
+      /**
        * 是否启用桌面歌词
        */
       'desktopLyric.enable': boolean

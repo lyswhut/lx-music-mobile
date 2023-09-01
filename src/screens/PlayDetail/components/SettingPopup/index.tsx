@@ -3,6 +3,7 @@ import { ScrollView, View } from 'react-native'
 import Popup, { type PopupType, type PopupProps } from '@/components/common/Popup'
 import { useI18n } from '@/lang'
 
+import SettingLyricProgress from './settings/SettingLyricProgress'
 import SettingVolume from './settings/SettingVolume'
 import SettingPlaybackRate from './settings/SettingPlaybackRate'
 import SettingLrcFontSize from './settings/SettingLrcFontSize'
@@ -41,6 +42,7 @@ export default forwardRef<SettingPopupType, SettingPopupProps>(({ direction, ...
         <Popup ref={popupRef} title={t('play_detail_setting_title')} {...props}>
           <ScrollView>
             <View onStartShouldSetResponder={() => true}>
+              <SettingLyricProgress />
               <SettingVolume />
               <SettingPlaybackRate />
               <SettingLrcFontSize direction={direction} />

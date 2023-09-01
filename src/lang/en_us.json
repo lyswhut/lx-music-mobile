@@ -115,6 +115,7 @@
   "play_detail_setting_lrc_font_size": "Lyric font size",
   "play_detail_setting_playback_rate": "Playback rate",
   "play_detail_setting_playback_rate_reset": "reset",
+  "play_detail_setting_show_lyric_progress_setting": "Allows to adjust playback progress by lyrics",
   "play_detail_setting_title": "Player settings",
   "play_detail_setting_volume": "Volume",
   "play_detail_todo_tip": "What do you want? No, this function has not been implemented yet 😛, But you can try to locate the currently playing song by long pressing (only valid for playing songs in \"My List\")",

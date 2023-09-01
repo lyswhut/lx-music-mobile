@@ -259,6 +259,14 @@ export default () => {
     }, 600)
   }, [line])
 
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      playLineRef.current?.updateLayoutInfo(listLayoutInfoRef.current)
+      playLineRef.current?.updateLyricLines(lyricLines)
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isShowLyricProgressSetting])
+
   const handleScrollToIndexFailed: FlatListType['onScrollToIndexFailed'] = (info) => {
     void wait().then(() => {
       handleScrollToActive(info.index)
@@ -322,7 +330,7 @@ const styles = createStyle({
     // backgroundColor: 'rgba(0,0,0,0.1)',
   },
   space: {
-    paddingTop: '80%',
+    paddingTop: '100%',
   },
   line: {
     paddingTop: 10,

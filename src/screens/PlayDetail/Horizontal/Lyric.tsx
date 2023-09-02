@@ -103,10 +103,6 @@ export default () => {
     if (index < 0) return
     if (flatListRef.current) {
       // console.log('handleScrollToActive', index)
-      if (scrollCancelRef.current) {
-        scrollCancelRef.current()
-        scrollCancelRef.current = null
-      }
       if (scrollInfoRef.current && lineRef.current.line - lineRef.current.prevLine == 1) {
         let offset = listLayoutInfoRef.current.spaceHeight
         for (let line = 0; line < index; line++) {
@@ -118,6 +114,10 @@ export default () => {
           })
         } catch {}
       } else {
+        if (scrollCancelRef.current) {
+          scrollCancelRef.current()
+          scrollCancelRef.current = null
+        }
         try {
           flatListRef.current.scrollToIndex({
             index,

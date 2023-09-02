@@ -24,8 +24,9 @@ export default () => {
 
   const getCurrentTime = () => {
     void getPosition().then(position => {
-      if (!position || !playerState.isPlay) return
+      if (!position) return
       setNowPlayTime(position)
+      if (!playerState.isPlay) return
 
       if (settingState.setting['player.isSavePlayTime'] && !playerState.playMusicInfo.isTempPlay) {
         delaySavePlayInfo()

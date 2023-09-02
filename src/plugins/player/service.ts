@@ -120,6 +120,8 @@ const registerPlaybackService = async() => {
     if (isEmpty()) {
       // console.log('====TEMP PAUSE====')
       await TrackPlayer.pause()
+      global.app_event.playerPause()
+      global.app_event.pause()
       global.app_event.playerEnded()
       global.app_event.playerEmptied()
       // if (retryTrack) {

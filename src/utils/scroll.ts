@@ -59,13 +59,13 @@ const handleScrollY = (element: ScrollElement<FlatList<any>>, info: NativeSynthe
 
   const animateScroll = () => {
     element.lx_scrollTimeout = undefined
-    if (element.lx_scrollNextParams && currentTime > duration * 0.75) {
-      const [_element, info, to, duration, fn] = element.lx_scrollNextParams
-      info.contentOffset.y = val
-      clean()
-      handleScrollY(_element, info, to, duration, fn)
-      return
-    }
+    // if (element.lx_scrollNextParams && currentTime > duration * 0.75) {
+    //   const [_element, info, _to, duration, fn] = element.lx_scrollNextParams
+    //   if (to > _to && info.contentOffset.y < val) info.contentOffset.y = val
+    //   clean()
+    //   handleScrollY(_element, info, _to, duration, fn)
+    //   return
+    // }
     // if (element.lx_scrollLockKey != key) {
     //   if (element.lx_scrollNextParams) {
     //     // element.lx_scrollNextParams[1].contentOffset.y = val
@@ -99,10 +99,11 @@ const handleScrollY = (element: ScrollElement<FlatList<any>>, info: NativeSynthe
       element.lx_scrollTimeout = setTimeout(animateScroll, increment)
     } else {
       if (element.lx_scrollNextParams) {
-        const [_element, to, duration, fn] = element.lx_scrollNextParams
+        const [_element, info, _to, duration, fn] = element.lx_scrollNextParams
+        if (to > _to && info.contentOffset.y < val) info.contentOffset.y = val
         info.contentOffset.y = val
         clean()
-        handleScrollY(_element, to, duration, fn)
+        handleScrollY(_element, info, _to, duration, fn)
       } else {
         clean()
         fn()

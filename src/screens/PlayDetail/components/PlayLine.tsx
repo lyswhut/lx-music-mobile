@@ -84,7 +84,7 @@ export default forwardRef<PlayLineType, PlayLineProps>(({ onPlayLine }, ref) => 
     <Animated.View style={{ ...styles.playLine, opacity: opsAnim }}>
       <Text style={styles.label} color={theme['c-primary-font']} size={13}>{timeLabel}</Text>
       <View style={styles.lineContent}>
-        <View style={{ ...styles.line, borderBottomColor: theme['c-primary-alpha-500'] }} />
+        <View style={{ ...styles.line, borderBottomColor: theme['c-primary-alpha-700'] }} />
         <TouchableOpacity style={styles.button} onPress={handlePlayLine}>
           <Icon name="play" color={theme['c-button-font']} size={18} />
         </TouchableOpacity>

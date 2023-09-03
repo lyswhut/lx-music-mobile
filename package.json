@@ -53,14 +53,14 @@
     "pako": "^2.1.0",
     "react": "18.2.0",
     "react-native": "0.72.4",
-    "react-native-background-timer": "github:lyswhut/react-native-background-timer#88b1d05b2dcdc5af72bf365bf7ff00eec114d428",
+    "react-native-background-timer": "github:lyswhut/react-native-background-timer#bfeb1f27635a7f3919dbfe95b3e08ca34bb95e68",
     "react-native-exception-handler": "^2.10.10",
     "react-native-fs": "^2.20.0",
     "react-native-navigation": "^7.37.0",
     "react-native-pager-view": "^6.2.1",
     "react-native-quick-base64": "^2.0.7",
     "react-native-quick-md5": "^3.0.5",
-    "react-native-track-player": "github:lyswhut/react-native-track-player#d8902b99551fcccf27c9896cdb571c7153e580f7",
+    "react-native-track-player": "github:lyswhut/react-native-track-player#45aa27463844ee836b31322f987ff3981acf8c59",
     "react-native-vector-icons": "^10.0.0"
   },
   "devDependencies": {

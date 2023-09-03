@@ -1,14 +1,14 @@
 import { updateListMusics } from '@/core/list'
 import { setMaxplayTime, setNowPlayTime } from '@/core/player/progress'
 import { setCurrentTime, getDuration, getPosition } from '@/plugins/player'
-import { formatPlayTime2, throttle } from '@/utils/common'
+import { formatPlayTime2 } from '@/utils/common'
 import { savePlayInfo } from '@/utils/data'
-// import { throttleBackgroundTimer } from '@/utils/tools'
-// import BackgroundTimer from 'react-native-background-timer'
+import { throttleBackgroundTimer } from '@/utils/tools'
+import BackgroundTimer from 'react-native-background-timer'
 import playerState from '@/store/player/state'
 import settingState from '@/store/setting/state'
 
-const delaySavePlayInfo = throttle(() => {
+const delaySavePlayInfo = throttleBackgroundTimer(() => {
   void savePlayInfo({
     time: playerState.progress.nowPlayTime,
     maxTime: playerState.progress.maxPlayTime,
@@ -20,7 +20,7 @@ const delaySavePlayInfo = throttle(() => {
 export default () => {
   // const updateMusicInfo = useCommit('list', 'updateMusicInfo')
 
-  let updateTimeout: NodeJS.Timer | null = null
+  let updateTimeout: number | null = null
 
   const getCurrentTime = () => {
     void getPosition().then(position => {
@@ -53,12 +53,12 @@ export default () => {
 
   const clearUpdateTimeout = () => {
     if (!updateTimeout) return
-    clearInterval(updateTimeout)
+    BackgroundTimer.clearInterval(updateTimeout)
     updateTimeout = null
   }
   const startUpdateTimeout = () => {
     clearUpdateTimeout()
-    updateTimeout = setInterval(() => {
+    updateTimeout = BackgroundTimer.setInterval(() => {
       getCurrentTime()
     }, 1000 / settingState.setting['player.playbackRate'])
     getCurrentTime()

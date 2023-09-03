@@ -148,8 +148,9 @@ export default () => {
         for (let line = 0; line < index; line++) {
           offset += listLayoutInfoRef.current.lineHeights[line]
         }
+        offset += (listLayoutInfoRef.current.lineHeights[line] ?? 0) / 2
         try {
-          scrollCancelRef.current = scrollTo(flatListRef.current, scrollInfoRef.current, offset - scrollInfoRef.current.layoutMeasurement.height * 0.36, 300, () => {
+          scrollCancelRef.current = scrollTo(flatListRef.current, scrollInfoRef.current, offset - scrollInfoRef.current.layoutMeasurement.height * 0.42, 300, () => {
             scrollCancelRef.current = null
           })
         } catch {}
@@ -162,7 +163,7 @@ export default () => {
           flatListRef.current.scrollToIndex({
             index,
             animated: true,
-            viewPosition: 0.4,
+            viewPosition: 0.42,
           })
         } catch {}
       }

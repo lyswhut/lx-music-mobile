@@ -21,6 +21,7 @@ const defaultSetting: LX.AppSetting = {
   'player.timeoutExit': '',
   'player.timeoutExitPlayed': true,
   'player.isHandleAudioFocus': true,
+  'player.isEnableAudioOffload': true,
   'player.isShowLyricTranslation': false,
   'player.isShowLyricRoma': false,
   'player.isShowNotificationImage': true,

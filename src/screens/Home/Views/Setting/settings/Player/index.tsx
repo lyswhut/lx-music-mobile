@@ -4,6 +4,7 @@ import Section from '../../components/Section'
 import IsSavePlayTime from './IsSavePlayTime'
 import IsPlayHighQuality from './IsPlayHighQuality'
 import IsHandleAudioFocus from './IsHandleAudioFocus'
+import IsEnableAudioOffload from './IsEnableAudioOffload'
 import IsShowNotificationImage from './IsShowNotificationImage'
 import IsShowLyricTranslation from './IsShowLyricTranslation'
 import IsShowLyricRoma from './IsShowLyricRoma'
@@ -20,6 +21,7 @@ export default memo(() => {
       <IsSavePlayTime />
       <IsPlayHighQuality />
       <IsHandleAudioFocus />
+      <IsEnableAudioOffload />
       <IsShowNotificationImage />
       <IsShowLyricTranslation />
       <IsShowLyricRoma />

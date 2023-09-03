@@ -247,6 +247,7 @@
   "setting_other_log_sync_log": "记录同步日志",
   "setting_other_log_tip_clean_success": "日志清理完成",
   "setting_other_log_tip_null": "日志是空的哦~",
+  "setting_play_audio_offload": "启用音频卸载（可节省耗电量，如果可用）",
   "setting_play_cache_size": "最大缓存大小（MB）",
   "setting_play_cache_size_no_cache": "禁用缓存",
   "setting_play_cache_size_save_tip": "缓存设置完毕，重启应用后生效",

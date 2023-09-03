@@ -33,6 +33,7 @@ export default memo(() => {
   }
 
   const handleTipsCancel = () => {
+    updateSetting({ 'desktopLyric.enable': false })
     toast(t('disagree_tip'), 'long')
   }
   const handleTipsConfirm = () => {

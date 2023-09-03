@@ -7,6 +7,7 @@ import { throttleBackgroundTimer } from '@/utils/tools'
 import BackgroundTimer from 'react-native-background-timer'
 import playerState from '@/store/player/state'
 import settingState from '@/store/setting/state'
+import { onScreenStateChange } from '@/utils/nativeModules/utils'
 
 const delaySavePlayInfo = throttleBackgroundTimer(() => {
   void savePlayInfo({
@@ -22,13 +23,15 @@ export default () => {
 
   let updateTimeout: number | null = null
 
+  let isScreenOn = true
+
   const getCurrentTime = () => {
     void getPosition().then(position => {
       if (!position) return
       setNowPlayTime(position)
       if (!playerState.isPlay) return
 
-      if (settingState.setting['player.isSavePlayTime'] && !playerState.playMusicInfo.isTempPlay) {
+      if (settingState.setting['player.isSavePlayTime'] && !playerState.playMusicInfo.isTempPlay && isScreenOn) {
         delaySavePlayInfo()
       }
     })
@@ -57,6 +60,7 @@ export default () => {
     updateTimeout = null
   }
   const startUpdateTimeout = () => {
+    if (!isScreenOn) return
     clearUpdateTimeout()
     updateTimeout = BackgroundTimer.setInterval(() => {
       getCurrentTime()
@@ -146,6 +150,13 @@ export default () => {
     if (keys.includes('player.playbackRate')) startUpdateTimeout()
   }
 
+  const handleScreenStateChanged: Parameters<typeof onScreenStateChange>[0] = (state) => {
+    isScreenOn = state == 'ON'
+    if (isScreenOn) {
+      if (playerState.isPlay) startUpdateTimeout()
+    } else clearUpdateTimeout()
+  }
+
 
   global.app_event.on('play', handlePlay)
   global.app_event.on('pause', handlePause)
@@ -159,4 +170,6 @@ export default () => {
   // global.app_event.on('playerEmptied', handleEmpied)
   global.app_event.on('musicToggled', handleSetPlayInfo)
   global.state_event.on('configUpdated', handleConfigUpdated)
+
+  onScreenStateChange(handleScreenStateChanged)
 }

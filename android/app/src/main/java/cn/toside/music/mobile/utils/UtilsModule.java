@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -19,12 +21,14 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.os.LocaleListCompat;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.UiThreadUtil;
 import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 
 import java.io.File;
@@ -35,14 +39,48 @@ import java.util.Objects;
 public class UtilsModule extends ReactContextBaseJavaModule {
   private final ReactApplicationContext reactContext;
 
+  UtilsEvent utilsEvent;
+
   UtilsModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
+    utilsEvent = new UtilsEvent(reactContext);
+    registerScreenBroadcastReceiver();
   }
 
   @Override
   public String getName() {
     return "UtilsModule";
+  }
+
+  private void registerScreenBroadcastReceiver() {
+    final IntentFilter theFilter = new IntentFilter();
+    /** System Defined Broadcast */
+    theFilter.addAction(Intent.ACTION_SCREEN_ON);
+    theFilter.addAction(Intent.ACTION_SCREEN_OFF);
+
+    BroadcastReceiver screenOnOffReceiver = new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+        String strAction = intent.getAction();
+
+        WritableMap params = Arguments.createMap();
+
+        switch (Objects.requireNonNull(strAction)) {
+          case Intent.ACTION_SCREEN_OFF:
+
+            params.putString("state", "OFF");
+            utilsEvent.sendEvent(utilsEvent.SCREEN_STATE, params);
+            break;
+          case Intent.ACTION_SCREEN_ON:
+            params.putString("state", "ON");
+            utilsEvent.sendEvent(utilsEvent.SCREEN_STATE, params);
+            break;
+        }
+      }
+    };
+
+    reactContext.registerReceiver(screenOnOffReceiver, theFilter);
   }
 
   @ReactMethod

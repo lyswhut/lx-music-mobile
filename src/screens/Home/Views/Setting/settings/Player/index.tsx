@@ -5,6 +5,7 @@ import IsSavePlayTime from './IsSavePlayTime'
 import IsPlayHighQuality from './IsPlayHighQuality'
 import IsHandleAudioFocus from './IsHandleAudioFocus'
 import IsEnableAudioOffload from './IsEnableAudioOffload'
+import IsAutoCleanPlayedList from './IsAutoCleanPlayedList'
 import IsShowNotificationImage from './IsShowNotificationImage'
 import IsShowLyricTranslation from './IsShowLyricTranslation'
 import IsShowLyricRoma from './IsShowLyricRoma'
@@ -19,6 +20,7 @@ export default memo(() => {
   return (
     <Section title={t('setting_player')}>
       <IsSavePlayTime />
+      <IsAutoCleanPlayedList />
       <IsPlayHighQuality />
       <IsHandleAudioFocus />
       <IsEnableAudioOffload />

@@ -15,7 +15,7 @@ interface RuleInputType {
 }
 const RuleInput = forwardRef<RuleInputType, {}>((props, ref) => {
   const theme = useTheme()
-  const t = useI18n()
+  // const t = useI18n()
   const [text, setText] = useState('')
   const inputRef = useRef<InputType>(null)
   const [height, setHeight] = useState(100)
@@ -40,7 +40,6 @@ const RuleInput = forwardRef<RuleInputType, {}>((props, ref) => {
     <View style={styles.inputContent} onLayout={handleLayout}>
       <Input
         ref={inputRef}
-        placeholder={t('songlist_open_input_placeholder')}
         value={text}
         onChangeText={setText}
         multiline

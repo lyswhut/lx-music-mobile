@@ -317,6 +317,7 @@ export const playNext = async(isAutoToggle = false): Promise<void> => {
     list: currentList,
     playedList,
     playerMusicInfo: currentList[playInfo.playerPlayIndex],
+    isNext: true,
   })
 
   if (!filteredList.length) return handleToggleStop()
@@ -410,6 +411,7 @@ export const playPrev = async(isAutoToggle = false): Promise<void> => {
     list: currentList,
     playedList,
     playerMusicInfo: currentList[playInfo.playerPlayIndex],
+    isNext: false,
   })
   if (!filteredList.length) return handleToggleStop()
 

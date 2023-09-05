@@ -1,9 +1,11 @@
 import { removeListMusics, updateListMusicPosition } from '@/core/list'
-import { playList } from '@/core/player/player'
+import { playList, playNext } from '@/core/player/player'
 import { addTempPlayList } from '@/core/player/tempPlayList'
 import settingState from '@/store/setting/state'
 import { similar, sortInsert } from '@/utils'
 import { confirmDialog, shareMusic } from '@/utils/tools'
+import { addDislikeInfo, hasDislike } from '@/core/dislikeList'
+import playerState from '@/store/player/state'
 
 import type { SelectInfo } from './ListMenu'
 
@@ -69,3 +71,9 @@ export const searchListMusic = (list: LX.Music.MusicInfo[], text: string) => {
   return sortedList.map(item => item.data).reverse()
 }
 
+export const handleDislikeMusic = async(musicInfo: SelectInfo['musicInfo']) => {
+  await addDislikeInfo([{ name: musicInfo.name, singer: musicInfo.singer }])
+  if (hasDislike(playerState.playMusicInfo.musicInfo)) {
+    void playNext(true)
+  }
+}

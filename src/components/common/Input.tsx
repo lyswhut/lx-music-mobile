@@ -3,6 +3,7 @@ import { TextInput, View, TouchableOpacity, StyleSheet, type TextInputProps } fr
 import { Icon } from '@/components/common/Icon'
 import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
+import { setSpText } from '@/utils/pixelRatio'
 
 const styles = createStyle({
   content: {
@@ -46,6 +47,7 @@ export interface InputProps extends TextInputProps {
   onChangeText?: (value: string) => void
   onClearText?: () => void
   clearBtn?: boolean
+  size?: number
 }
 
 
@@ -56,7 +58,7 @@ export interface InputType {
   isFocused: () => boolean
 }
 
-export default forwardRef<InputType, InputProps>(({ onChangeText, onClearText, clearBtn, style, ...props }, ref) => {
+export default forwardRef<InputType, InputProps>(({ onChangeText, onClearText, clearBtn, style, size = 14, ...props }, ref) => {
   const inputRef = useRef<TextInput>(null)
   const theme = useTheme()
   // const scaleClearBtn = useRef(new Animated.Value(0)).current
@@ -113,7 +115,7 @@ export default forwardRef<InputType, InputProps>(({ onChangeText, onClearText, c
         autoCapitalize="none"
         onChangeText={changeText}
         autoComplete="off"
-        style={StyleSheet.compose({ ...styles.input, color: theme['c-font'] }, style)}
+        style={StyleSheet.compose({ ...styles.input, color: theme['c-font'], fontSize: setSpText(size) }, style)}
         placeholderTextColor={theme['c-primary-dark-100-alpha-600']}
         selectionColor={theme['c-primary-light-100-alpha-300']}
         ref={inputRef} {...props} />

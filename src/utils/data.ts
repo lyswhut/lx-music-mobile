@@ -25,6 +25,7 @@ const syncAuthKeyPrefix = storageDataPrefix.syncAuthKey
 const syncHostPrefix = storageDataPrefix.syncHost
 const syncHostHistoryPrefix = storageDataPrefix.syncHostHistory
 const listPrefix = storageDataPrefix.list
+const dislikeListPrefix = storageDataPrefix.dislikeList
 
 // const defaultListKey = listPrefix + 'default'
 // const loveListKey = listPrefix + 'love'
@@ -361,6 +362,21 @@ export const saveOtherSource = async(id: string, sourceInfo: LX.Music.MusicInfoO
 export const clearOtherSource = async(keys?: string[]) => {
   if (!keys) keys = (await getAllKeys()).filter(key => key.startsWith(storageDataPrefix.musicOtherSource))
   await removeDataMultiple(keys)
+}
+
+/**
+ * 获取不喜欢列表信息
+ * @returns 不喜欢列表信息
+ */
+export const getDislikeListRules = async() => {
+  return await getData<string>(dislikeListPrefix) ?? ''
+}
+/**
+ * 保存列表信息
+ * @param rules 规则信息
+ */
+export const saveDislikeListRules = async(rules: string) => {
+  await saveData(dislikeListPrefix, rules)
 }
 
 // export const clearMusicUrlAndLyric = async() => {

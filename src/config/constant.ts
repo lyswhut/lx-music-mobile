@@ -2,6 +2,11 @@ export const HEADER_HEIGHT = 42
 export const LIST_ITEM_HEIGHT = 54
 export const LIST_SCROLL_POSITION_KEY = '__LIST_SCROLL_POSITION_KEY__'
 
+export const SPLIT_CHAR = {
+  DISLIKE_NAME: '@',
+  DISLIKE_NAME_ALIAS: '#',
+} as const
+
 export const LIST_IDS = {
   DEFAULT: 'default',
   LOVE: 'love',
@@ -65,6 +70,8 @@ export const storageDataPrefix = {
   theme: '@theme',
 
   cheatTip: '@cheat_tip',
+
+  dislikeList: '@dislike_list',
 } as const
 
 // v0.x.x 版本的 data keys

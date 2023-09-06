@@ -5,7 +5,7 @@ import { getUserLists, setUserList } from '@/core/list'
 import { setNavActiveId } from '../common'
 import { getViewPrevState } from '@/utils/data'
 import { bootLog } from '@/utils/bootLog'
-import { initDislikeInfo } from '@/core/dislikeList'
+import { getDislikeInfo, setDislikeInfo } from '@/core/dislikeList'
 // import { play, playList } from '../player/player'
 
 // const initPrevPlayInfo = async(appSetting: LX.AppSetting) => {
@@ -27,7 +27,7 @@ export default async(appSetting: LX.AppSetting) => {
   void musicSdkInit() // 初始化音乐sdk
   bootLog('User list init...')
   setUserList(await getUserLists()) // 获取用户列表
-  await initDislikeInfo() // 获取不喜欢列表
+  setDislikeInfo(await getDislikeInfo()) // 获取不喜欢列表
   bootLog('User list inited.')
   setNavActiveId((await getViewPrevState()).id)
   // await initPrevPlayInfo(appSetting).catch(err => log.error(err)) // 初始化上次的歌曲播放信息

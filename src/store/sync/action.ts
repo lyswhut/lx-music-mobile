@@ -13,8 +13,9 @@ export default {
 
     global.state_event.syncStatusUpdated({ ...state.status })
   },
-  setServerNmae(name: string) {
+  setServerInfo(name: string, type: keyof LX.Sync.ModeTypes) {
     state.serverName = name
+    state.type = type
   },
   setSyncModeComponentId(id: string) {
     state.syncModeComponentId = id

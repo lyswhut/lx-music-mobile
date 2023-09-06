@@ -1,23 +1,16 @@
-// import { toRaw } from '@common/utils/vueTools'
-import { SPLIT_CHAR } from '@/config/constant'
-import { action, state } from '@/store/dislikeList'
-import { getDislikeListRules, saveDislikeListRules } from '@/utils/data'
+import { action } from '@/store/dislikeList'
 
-
-export const initDislikeInfo = async() => {
-  const rules = await getDislikeListRules()
-  action.initDislikeInfo(rules)
-}
 
 export const addDislikeInfo = async(infos: LX.Dislike.DislikeMusicInfo[]) => {
-  const rules = state.dislikeInfo.rules += '\n' + infos.map(info => `${info.name ?? ''}${SPLIT_CHAR.DISLIKE_NAME}${info.singer ?? ''}`).join('\n')
-  await saveDislikeListRules(rules)
-  return action.overwirteDislikeInfo(rules)
+  await global.dislike_event.dislike_music_add(infos)
 }
 
 export const overwirteDislikeInfo = async(rules: string) => {
-  await saveDislikeListRules(rules)
-  return action.overwirteDislikeInfo(rules)
+  await global.dislike_event.dislike_data_overwrite(rules)
+}
+
+export const clearDislikeInfo = async() => {
+  await global.dislike_event.dislike_music_clear()
 }
 
 
@@ -26,3 +19,9 @@ export const hasDislike = (info: LX.Music.MusicInfo | LX.Download.ListItem | nul
   return action.hasDislike(info)
 }
 
+
+export const setDislikeInfo = (info: LX.Dislike.DislikeInfo) => {
+  action.setDislikeInfo(info)
+}
+
+export { getDislikeInfo } from '@/utils/dislikeManage'

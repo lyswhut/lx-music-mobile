@@ -20,14 +20,23 @@ declare global {
         }
         moduleReadys: {
           list: boolean
+          dislike: boolean
         }
 
         onClose: (handler: (err: Error) => (void | Promise<void>)) => () => void
 
         remote: LX.Sync.ServerSyncActions
         remoteQueueList: LX.Sync.ServerSyncListActions
+        remoteQueueDislike: LX.Sync.ServerSyncDislikeActions
       }
 
+
+      interface ModeTypes {
+        list: LX.Sync.List.SyncMode
+        dislike: LX.Sync.Dislike.SyncMode
+      }
+
+      type ModeType = { [K in keyof ModeTypes]: { type: K, mode: ModeTypes[K] } }[keyof ModeTypes]
 
       interface UrlInfo {
         wsProtocol: string
@@ -39,6 +48,7 @@ declare global {
       type ServerType = 'desktop-app' | 'server'
       interface EnabledFeatures {
         list: boolean
+        dislike: boolean
       }
       type SupportedFeatures = Partial<{ [k in keyof EnabledFeatures]: number }>
     }

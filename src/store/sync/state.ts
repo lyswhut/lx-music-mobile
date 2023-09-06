@@ -2,6 +2,7 @@
 interface InitState {
   status: LX.Sync.Status
   serverName: string
+  type: keyof LX.Sync.ModeTypes
   syncModeComponentId: string
 }
 const state: InitState = {
@@ -10,6 +11,7 @@ const state: InitState = {
     message: '',
   },
   serverName: '',
+  type: 'list',
   syncModeComponentId: '',
 }
 

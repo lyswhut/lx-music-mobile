@@ -23,9 +23,9 @@ const closeSyncModeModal = () => {
     syncActions.setSyncModeComponentId('')
   }
 }
-export const selectSyncMode = async(serverName: string) => new Promise<LX.Sync.List.SyncMode>((resolve, reject) => {
+export const selectSyncMode = async<T extends keyof LX.Sync.ModeTypes>(serverName: string, type: T) => new Promise<LX.Sync.ModeTypes[T]>((resolve, reject) => {
   removeSyncModeEvent()
-  syncActions.setServerNmae(serverName)
+  syncActions.setServerInfo(serverName, type)
   showSyncModeModal()
 
   const removeListeners = () => {
@@ -35,10 +35,10 @@ export const selectSyncMode = async(serverName: string) => new Promise<LX.Sync.L
     global.app_event.off('selectSyncMode', handleSelectMode)
   }
 
-  const handleSelectMode = (mode: LX.Sync.List.SyncMode) => {
+  const handleSelectMode = ({ mode }: LX.Sync.ModeType) => {
     removeListeners()
     closeSyncModeModal()
-    resolve(mode)
+    resolve(mode as LX.Sync.ModeTypes[T])
   }
 
   removeEvent = () => {

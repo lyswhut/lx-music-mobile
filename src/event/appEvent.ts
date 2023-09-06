@@ -198,7 +198,7 @@ export class AppEvent extends Event {
     this.emit('songlistTagInfoChange', name, id)
   }
 
-  selectSyncMode(mode: LX.Sync.List.SyncMode) {
+  selectSyncMode(mode: LX.Sync.ModeType) {
     this.emit('selectSyncMode', mode)
   }
 }

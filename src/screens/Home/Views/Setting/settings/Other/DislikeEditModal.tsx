@@ -15,7 +15,7 @@ interface RuleInputType {
 }
 const RuleInput = forwardRef<RuleInputType, {}>((props, ref) => {
   const theme = useTheme()
-  // const t = useI18n()
+  const t = useI18n()
   const [text, setText] = useState('')
   const inputRef = useRef<InputType>(null)
   const [height, setHeight] = useState(100)
@@ -44,6 +44,7 @@ const RuleInput = forwardRef<RuleInputType, {}>((props, ref) => {
         onChangeText={setText}
         multiline
         textAlignVertical="top"
+        placeholder={t('setting_dislike_list_input_tip')}
         size={12}
         style={{ ...styles.input, height, backgroundColor: theme['c-primary-input-background'] }}
       />
@@ -71,7 +72,7 @@ export default forwardRef<DislikeEditModalType, DislikeEditModalProps>(({ onSave
   const handleShow = (rules: string) => {
     dialogRef.current?.setVisible(true)
     requestAnimationFrame(() => {
-      inputRef.current?.setText(rules)
+      inputRef.current?.setText(rules.length ? rules + '\n' : rules)
       // sourceSelectorRef.current?.setSource(source)
       // setTimeout(() => {
       //   inputRef.current?.focus()

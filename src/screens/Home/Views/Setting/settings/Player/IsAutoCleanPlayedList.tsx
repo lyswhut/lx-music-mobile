@@ -17,7 +17,12 @@ export default memo(() => {
 
   return (
     <View style={styles.content}>
-      <CheckBoxItem check={isAutoCleanPlayedList} onChange={setAutoCleanPlayedList} label={t('setting_play_auto_clean_played_list')} />
+      <CheckBoxItem
+        check={isAutoCleanPlayedList}
+        onChange={setAutoCleanPlayedList}
+        helpDesc={t('setting_play_auto_clean_played_list_tip')}
+        label={t('setting_play_auto_clean_played_list')}
+      />
     </View>
   )
 })

@@ -18,7 +18,12 @@ export default memo(() => {
 
   return (
     <View style={styles.content}>
-      <CheckBoxItem check={isEnableAudioOffload} onChange={setHandleAudioFocus} label={t('setting_play_audio_offload')} />
+      <CheckBoxItem
+        check={isEnableAudioOffload}
+        onChange={setHandleAudioFocus}
+        helpDesc={t('setting_play_audio_offload_tip')}
+        label={t('setting_play_audio_offload')}
+      />
     </View>
   )
 })

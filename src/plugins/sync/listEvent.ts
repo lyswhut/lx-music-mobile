@@ -2,6 +2,18 @@ import { LIST_IDS } from '@/config/constant'
 import { getListMusics } from '@/core/list'
 import { userLists } from '@/utils/listManage'
 
+// 构建列表信息对象，用于统一字段位置顺序
+export const buildUserListInfoFull = ({ id, name, source, sourceListId, list, locationUpdateTime }: LX.List.UserListInfoFull) => {
+  return {
+    id,
+    name,
+    source,
+    sourceListId,
+    locationUpdateTime,
+    list,
+  }
+}
+
 export const getLocalListData = async(): Promise<LX.Sync.List.ListData> => {
   return Promise.all([
     getListMusics(LIST_IDS.DEFAULT),
@@ -12,7 +24,7 @@ export const getLocalListData = async(): Promise<LX.Sync.List.ListData> => {
     return {
       defaultList,
       loveList,
-      userList: userLists.map((l, i) => ({ ...l, list: userList[i] })),
+      userList: userLists.map((l, i) => buildUserListInfoFull({ ...l, list: userList[i] })),
     }
   })
 }

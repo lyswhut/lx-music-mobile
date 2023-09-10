@@ -108,7 +108,7 @@ export default () => {
         for (let line = 0; line < index; line++) {
           offset += listLayoutInfoRef.current.lineHeights[line]
         }
-        offset -= (listLayoutInfoRef.current.lineHeights[line] ?? 0) / 2
+        offset += (listLayoutInfoRef.current.lineHeights[line] ?? 0) / 2
         try {
           scrollCancelRef.current = scrollTo(flatListRef.current, scrollInfoRef.current, offset - scrollInfoRef.current.layoutMeasurement.height * 0.42, 300, () => {
             scrollCancelRef.current = null

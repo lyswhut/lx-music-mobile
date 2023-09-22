@@ -55,3 +55,19 @@ export const onScreenStateChange = (callback: (state: 'ON' | 'OFF') => void): ()
     eventListener.remove()
   }
 }
+
+export const getWindowSize = async(): Promise<{ width: number, height: number }> => {
+  return UtilsModule.getWindowSize()
+}
+
+export const onWindowSizeChange = (callback: (size: { width: number, height: number }) => void): () => void => {
+  UtilsModule.listenWindowSizeChanged()
+  const eventEmitter = new NativeEventEmitter(UtilsModule)
+  const eventListener = eventEmitter.addListener('screen-size-changed', event => {
+    callback(event)
+  })
+
+  return () => {
+    eventListener.remove()
+  }
+}

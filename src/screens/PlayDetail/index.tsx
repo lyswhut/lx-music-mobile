@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 // import { View, StyleSheet } from 'react-native'
-import { useDimensions } from '@/utils/hooks'
+import { useWindowSize } from '@/utils/hooks'
 
 import Vertical from './Vertical'
 import Horizontal from './Horizontal'
@@ -10,7 +10,7 @@ import { setComponentId } from '@/core/common'
 import { COMPONENT_IDS } from '@/config/constant'
 
 export default ({ componentId }: { componentId: string }) => {
-  const { window } = useDimensions()
+  const windowSize = useWindowSize()
 
   useEffect(() => {
     setComponentId(COMPONENT_IDS.playDetail, componentId)
@@ -21,7 +21,7 @@ export default ({ componentId }: { componentId: string }) => {
     <PageContent>
       <StatusBar />
       {
-        window.height > window.width
+        windowSize.height > windowSize.width
           ? <Vertical componentId={componentId} />
           : <Horizontal componentId={componentId} />
       }

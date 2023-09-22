@@ -1,7 +1,7 @@
 import { View } from 'react-native'
 import { useTheme } from '@/store/theme/hook'
 import { createStyle } from '@/utils/tools'
-// import { useDimensions } from '@/utils/hooks'
+// import { useWindowSize } from '@/utils/hooks'
 const HEADER_HEIGHT = 20
 
 interface Props {

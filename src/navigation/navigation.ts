@@ -1,5 +1,5 @@
 import { Navigation } from 'react-native-navigation'
-import { Dimensions, InteractionManager } from 'react-native'
+import { InteractionManager } from 'react-native'
 
 import {
   HOME_SCREEN,
@@ -12,6 +12,7 @@ import {
 import themeState from '@/store/theme/state'
 import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 import { getStatusBarStyle } from './utils'
+import { windowSizeTools } from '@/utils/windowSizeTools'
 
 // const store = getStore()
 // const getTheme = () => getter('common', 'theme')(store.getState())
@@ -187,7 +188,7 @@ export function pushPlayDetailScreen(componentId: string) {
               ],
               // content: {
               //   translationX: {
-              //     from: Dimensions.get('window').width,
+              //     from: windowSizeTools.getSize().width,
               //     to: 0,
               //     duration: 300,
               //   },
@@ -197,7 +198,7 @@ export function pushPlayDetailScreen(componentId: string) {
               content: {
                 translationX: {
                   from: 0,
-                  to: Dimensions.get('window').width,
+                  to: windowSizeTools.getSize().width,
                   duration: 300,
                 },
               },
@@ -371,7 +372,7 @@ export function pushCommentScreen(componentId: string) {
             push: {
               content: {
                 translationX: {
-                  from: Dimensions.get('window').width,
+                  from: windowSizeTools.getSize().width,
                   to: 0,
                   duration: 300,
                 },
@@ -381,7 +382,7 @@ export function pushCommentScreen(componentId: string) {
               content: {
                 translationX: {
                   from: 0,
-                  to: Dimensions.get('window').width,
+                  to: windowSizeTools.getSize().width,
                   duration: 300,
                 },
               },
@@ -455,7 +456,7 @@ export function pushCommentScreen(componentId: string) {
 //             push: {
 //               content: {
 //                 translationX: {
-//                   from: Dimensions.get('window').width,
+//                   from: windowSizeTools.getSize().width,
 //                   to: 0,
 //                   duration: 300,
 //                 },
@@ -465,7 +466,7 @@ export function pushCommentScreen(componentId: string) {
 //               content: {
 //                 translationX: {
 //                   from: 0,
-//                   to: Dimensions.get('window').width,
+//                   to: windowSizeTools.getSize().width,
 //                   duration: 300,
 //                 },
 //               },

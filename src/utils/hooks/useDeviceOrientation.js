@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
-import { Dimensions } from 'react-native'
+import { windowSizeTools } from '../windowSizeTools'
 
-const screen = Dimensions.get('screen')
 
 export default () => {
   const isOrientationPortrait = ({
@@ -13,20 +12,21 @@ export default () => {
     height,
   }) => width >= height
 
+  const size = windowSizeTools.getSize()
   const [orientation, setOrientation] = useState({
-    portrait: isOrientationPortrait(screen),
-    landscape: isOrientationLandscape(screen),
+    portrait: isOrientationPortrait(size),
+    landscape: isOrientationLandscape(size),
   })
 
-  const onChange = useCallback(({ screen: scr }) => {
+  const onChange = useCallback((size) => {
     setOrientation({
-      portrait: isOrientationPortrait(scr),
-      landscape: isOrientationLandscape(scr),
+      portrait: isOrientationPortrait(size),
+      landscape: isOrientationLandscape(size),
     })
   }, [])
 
   useEffect(() => {
-    const changeEvent = Dimensions.addEventListener('change', onChange)
+    const changeEvent = windowSizeTools.onSizeChanged(onChange)
 
     return () => {
       changeEvent.remove()

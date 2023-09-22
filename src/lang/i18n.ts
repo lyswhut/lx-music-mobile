@@ -51,7 +51,7 @@ const useI18n = () => {
   }, [])
 
   return useCallback((key: keyof Message, val?: TranslateValues): string => {
-    return i18n.getMessage(key, val)
+    return i18n?.getMessage(key, val) ?? ''
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locale])
 }

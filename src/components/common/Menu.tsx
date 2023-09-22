@@ -1,6 +1,6 @@
 import { useImperativeHandle, forwardRef, useMemo, useRef, useState, type Ref } from 'react'
 import { View, Animated, TouchableHighlight } from 'react-native'
-import { useDimensions } from '@/utils/hooks'
+import { useWindowSize } from '@/utils/hooks'
 
 import Modal, { type ModalType } from './Modal'
 
@@ -73,7 +73,7 @@ const Menu = ({
   center = false,
 }: Props) => {
   const theme = useTheme()
-  const { window: windowSize } = useDimensions()
+  const windowSize = useWindowSize()
   // const fadeAnim = useRef(new Animated.Value(0)).current
   // console.log(buttonPosition)
 

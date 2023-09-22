@@ -5,7 +5,7 @@ import Text from '@/components/common/Text'
 import { useMyList } from '@/store/list/hook'
 import ListItem, { styles as listStyles } from './ListItem'
 import CreateUserList from '../MusicAddModal/CreateUserList'
-import { useDimensions } from '@/utils/hooks'
+import { useWindowSize } from '@/utils/hooks'
 import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'
 import { createStyle } from '@/utils/tools'
@@ -52,14 +52,14 @@ export default ({ listId, onPress }: {
   listId: string
   onPress: (listInfo: LX.List.MyListInfo) => void
 }) => {
-  const { window } = useDimensions()
+  const windowSize = useWindowSize()
   const allList = useMyList().filter(l => l.id != listId)
   const itemWidth = useMemo(() => {
-    let w = Math.floor(window.width * 0.9 - PADDING)
+    let w = Math.floor(windowSize.width * 0.9 - PADDING)
     let n = Math.floor(w / MIN_WIDTH)
     if (n > 10) n = 10
     return Math.floor((w - 1) / n)
-  }, [window])
+  }, [windowSize])
 
   return (
     <ScrollView style={{ flexGrow: 0 }}>

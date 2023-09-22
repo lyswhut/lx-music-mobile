@@ -5,7 +5,7 @@ import { createStyle } from '@/utils/tools'
 import { usePlayerMusicInfo } from '@/store/player/hook'
 import { useTheme } from '@/store/theme/hook'
 import { BorderRadius } from '@/theme'
-import { useDimensions } from '@/utils/hooks'
+import { useWindowSize } from '@/utils/hooks'
 import Text from '@/components/common/Text'
 import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 import { useNavigationComponentDidAppear } from '@/navigation'
@@ -23,7 +23,7 @@ const EmptyPic = memo(({ width }: { width: number }) => {
 
 export default ({ componentId }: { componentId: string }) => {
   const musicInfo = usePlayerMusicInfo()
-  const { window } = useDimensions()
+  const windowSize = useWindowSize()
 
   const [animated, setAnimated] = useState(false)
 
@@ -32,7 +32,7 @@ export default ({ componentId }: { componentId: string }) => {
   })
   // console.log('render pic')
 
-  const imgWidth = window.width * 0.8
+  const imgWidth = windowSize.width * 0.8
 
   return (
     <View style={styles.container}>

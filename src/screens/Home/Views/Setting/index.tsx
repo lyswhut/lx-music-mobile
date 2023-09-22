@@ -1,4 +1,4 @@
-import { useDimensions } from '@/utils/hooks'
+import { useWindowSize } from '@/utils/hooks'
 import Vertical from './Vertical'
 import Horizontal from './Horizontal'
 // import { AppColors } from '@/theme'
@@ -6,9 +6,9 @@ import Horizontal from './Horizontal'
 export type { SettingScreenIds } from './Main'
 
 export default () => {
-  const { window } = useDimensions()
+  const windowSize = useWindowSize()
 
-  return window.height > window.width
+  return windowSize.height > windowSize.width
     ? <Vertical />
     : <Horizontal />
 }

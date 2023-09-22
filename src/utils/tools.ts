@@ -29,29 +29,29 @@ export const osVer = Platform.constants.Release as string
 
 export const isActive = () => AppState.currentState == 'active'
 
-
 // fix https://github.com/facebook/react-native/issues/4934
-export const getWindowSise = (windowDimensions?: ReturnType<(typeof Dimensions)['get']>) => {
-  windowDimensions ??= Dimensions.get('window')
-  // if (Platform.OS === 'ios') return windowDimensions
-  return windowDimensions
-  // const windowSize = {
-  //   width: ExtraDimensions.getRealWindowWidth(),
-  //   height: ExtraDimensions.getRealWindowHeight(),
-  // }
-  // if (
-  //   (windowDimensions.height > windowDimensions.width && windowSize.height < windowSize.width) ||
-  //   (windowDimensions.width > windowDimensions.height && windowSize.width < windowSize.height)
-  // ) {
-  //   windowSize.height = windowSize.width
-  // }
-  // windowSize.width = windowDimensions.width
+// export const getWindowSise = (windowDimensions?: ReturnType<(typeof Dimensions)['get']>) => {
+//   return windowSizeTools.getSize()
+//   // windowDimensions ??= Dimensions.get('window')
+//   // if (Platform.OS === 'ios') return windowDimensions
+//   // return windowDimensions
+//   // const windowSize = {
+//   //   width: ExtraDimensions.getRealWindowWidth(),
+//   //   height: ExtraDimensions.getRealWindowHeight(),
+//   // }
+//   // if (
+//   //   (windowDimensions.height > windowDimensions.width && windowSize.height < windowSize.width) ||
+//   //   (windowDimensions.width > windowDimensions.height && windowSize.width < windowSize.height)
+//   // ) {
+//   //   windowSize.height = windowSize.width
+//   // }
+//   // windowSize.width = windowDimensions.width
 
-  // if (ExtraDimensions.isSoftMenuBarEnabled()) {
-  //   windowSize.height -= ExtraDimensions.getSoftMenuBarHeight()
-  // }
-  // return windowSize
-}
+//   // if (ExtraDimensions.isSoftMenuBarEnabled()) {
+//   //   windowSize.height -= ExtraDimensions.getSoftMenuBarHeight()
+//   // }
+//   // return windowSize
+// }
 
 export const checkStoragePermissions = async() => PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE)
 

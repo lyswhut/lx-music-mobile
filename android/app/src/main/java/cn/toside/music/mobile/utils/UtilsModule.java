@@ -14,6 +14,8 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.core.app.LocaleManagerCompat;
@@ -346,5 +348,25 @@ public class UtilsModule extends ReactContextBaseJavaModule {
   //    });
   //  }
 
+  @ReactMethod
+  public void getWindowSize(Promise promise) {
+    WritableMap params = Arguments.createMap();
+
+    Activity currentActivity = reactContext.getCurrentActivity();
+    if (currentActivity == null) {
+      params.putInt("width", 0);
+      params.putInt("height", 0);
+      promise.resolve(params);
+      return;
+    }
+    // 获取当前应用可用区域大小
+    Window window = currentActivity.getWindow();
+    View decorView = window.getDecorView();
+    int width = decorView.getMeasuredWidth();
+    int height = decorView.getMeasuredHeight();
+    params.putInt("width", width);
+    params.putInt("height", height);
+    promise.resolve(params);
+  }
 }
 

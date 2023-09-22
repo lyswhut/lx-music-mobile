@@ -17,7 +17,7 @@ import {
 } from '@/core/desktopLyric'
 import { getPosition } from '@/plugins/player'
 import playerState from '@/store/player/state'
-import settingState from '@/store/setting/state'
+// import settingState from '@/store/setting/state'
 
 /**
  * init lyric
@@ -31,9 +31,9 @@ export const init = async() => {
  * @param lyric lyric str
  * @param translation lyric translation
  */
-const handleSetLyric = (lyric: string, translation = '', romalrc = '') => {
-  void setDesktopLyric(lyric, translation, romalrc)
+const handleSetLyric = async(lyric: string, translation = '', romalrc = '') => {
   lrcSetLyric(lyric, translation, romalrc)
+  await setDesktopLyric(lyric, translation, romalrc)
 }
 
 /**
@@ -57,7 +57,7 @@ export const pause = () => {
  * stop lyric
  */
 export const stop = () => {
-  handleSetLyric('')
+  void handleSetLyric('')
 }
 
 /**
@@ -80,18 +80,20 @@ export const setPlaybackRate = async(playbackRate: number) => {
  * toggle show translation
  * @param isShowTranslation is show translation
  */
-export const toggleTranslation = (isShowTranslation: boolean) => {
+export const toggleTranslation = async(isShowTranslation: boolean) => {
   lrcToggleTranslation(isShowTranslation)
-  void toggleDesktopLyricTranslation(isShowTranslation)
+  await toggleDesktopLyricTranslation(isShowTranslation)
+  if (playerState.isPlay) play()
 }
 
 /**
  * toggle show roma lyric
  * @param isShowLyricRoma is show roma lyric
  */
-export const toggleRoma = (isShowLyricRoma: boolean) => {
+export const toggleRoma = async(isShowLyricRoma: boolean) => {
   lrcToggleRoma(isShowLyricRoma)
-  void toggleDesktopLyricRoma(isShowLyricRoma)
+  await toggleDesktopLyricRoma(isShowLyricRoma)
+  if (playerState.isPlay) play()
 }
 
 export const play = () => {
@@ -101,14 +103,14 @@ export const play = () => {
 }
 
 
-export const setLyric = () => {
+export const setLyric = async() => {
   if (!playerState.musicInfo.id) return
   if (playerState.musicInfo.lrc) {
     let tlrc = ''
     let rlrc = ''
-    if (settingState.setting['player.isShowLyricTranslation'] && playerState.musicInfo.tlrc) tlrc = playerState.musicInfo.tlrc
-    if (settingState.setting['player.isShowLyricRoma'] && playerState.musicInfo.rlrc) rlrc = playerState.musicInfo.rlrc
-    handleSetLyric(playerState.musicInfo.lrc, tlrc, rlrc)
+    if (playerState.musicInfo.tlrc) tlrc = playerState.musicInfo.tlrc
+    if (playerState.musicInfo.rlrc) rlrc = playerState.musicInfo.rlrc
+    await handleSetLyric(playerState.musicInfo.lrc, tlrc, rlrc)
   }
 
   if (playerState.isPlay) play()

@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -361,11 +362,13 @@ public class UtilsModule extends ReactContextBaseJavaModule {
     }
     // 获取当前应用可用区域大小
     Window window = currentActivity.getWindow();
-    View decorView = window.getDecorView();
-    int width = decorView.getMeasuredWidth();
-    int height = decorView.getMeasuredHeight();
-    params.putInt("width", width);
-    params.putInt("height", height);
+    Rect rect = new Rect();
+    window.getDecorView().getWindowVisibleDisplayFrame(rect);
+    // View decorView = window.getDecorView();
+    // int width = decorView.getMeasuredWidth();
+    // int height = decorView.getMeasuredHeight();
+    params.putInt("width", rect.width());
+    params.putInt("height", rect.height());
     promise.resolve(params);
   }
 }

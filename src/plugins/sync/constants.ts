@@ -34,6 +34,8 @@ export const SYNC_CODE = {
   connectServiceFailed: 'Connect service failed',
   connecting: 'Connecting...',
   unknownServiceAddress: 'Unknown service address',
+  lowServiceVersion: 'Sync server version too low, please upgrade server to latest',
+  highServiceVersion: 'Sync server version too high, please upgrade app to latest',
 } as const
 
 export const SYNC_CLOSE_CODE = {

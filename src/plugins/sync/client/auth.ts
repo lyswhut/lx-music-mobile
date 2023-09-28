@@ -7,7 +7,20 @@ import { toMD5 } from '@/utils/tools'
 import { SYNC_CODE } from '../constants'
 
 const hello = async(urlInfo: LX.Sync.UrlInfo) => request(`${urlInfo.httpProtocol}//${urlInfo.hostPath}/hello`)
-  .then(({ text }) => text == SYNC_CODE.helloMsg)
+  .then(({ text }) => {
+    if (text == SYNC_CODE.helloMsg) return true
+    if (text.startsWith('Hello~::^-^::')) {
+      const verRxp = /v(\d+)/
+      let result = verRxp.exec(text)?.[1]
+      if (result != null) {
+        const servVer = parseInt(result)
+        const localVer = parseInt(verRxp.exec(SYNC_CODE.helloMsg)[1])
+        if (servVer > localVer) throw new Error(SYNC_CODE.highServiceVersion)
+        else if (servVer < localVer) throw new Error(SYNC_CODE.lowServiceVersion)
+      }
+    }
+    return false
+  })
   .catch((err: any) => {
     log.error('[auth] hello', err.message)
     console.log(err)

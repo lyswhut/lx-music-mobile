@@ -26,8 +26,9 @@ export default () => {
   let isScreenOn = true
 
   const getCurrentTime = () => {
+    let id = playerState.musicInfo.id
     void getPosition().then(position => {
-      if (!position) return
+      if (!position || id != playerState.musicInfo.id) return
       setNowPlayTime(position)
       if (!playerState.isPlay) return
 

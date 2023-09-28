@@ -6,6 +6,27 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [1.1.1](https://github.com/lyswhut/lx-music-mobile/compare/v1.1.0...v1.1.1) - 2023-09-28
+
+落雪提前祝大家中秋快乐~🥮😘！
+
+### 优化
+
+- 通过歌曲菜单添加不喜欢歌曲时需要二次确认防止手抖
+- 减慢歌词详情页歌词滚动速度
+- 更改应用窗口大小获取方式，尝试解决在某些设备上的背景、弹出菜单显示问题
+- 优化同步功能错误消息提示，因同步服务版本不匹配导致的连接失败现在将区分提示
+
+### 修复
+
+- 修复横屏状态下的歌词滚动位置计算问题
+- 修复切歌时歌词激活行的重置问题
+- 修复更新翻译歌词、罗马音歌词设置后需重启应用才生效的问题，现在更新设置后会立即生效
+
+### 其他
+
+- 更新 React native 到 v0.72.5
+
 ## [1.1.0](https://github.com/lyswhut/lx-music-mobile/compare/v1.0.6...v1.1.0) - 2023-09-09
 
 目前本项目的原始发布地址只有 **GitHub** 及 **蓝奏网盘** （在设置-关于有说明），其他渠道均为第三方转载发布，可信度请自行鉴别。

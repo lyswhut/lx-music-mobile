@@ -24,7 +24,7 @@ import { requestMsg } from '@/utils/message'
 import { getRandom } from '@/utils/common'
 import { filterList } from './utils'
 import BackgroundTimer from 'react-native-background-timer'
-import { checkNotificationPermission } from '@/utils/tools'
+import { checkIgnoringBatteryOptimization, checkNotificationPermission } from '@/utils/tools'
 
 // import { checkMusicFileAvailable } from '@renderer/utils/music'
 
@@ -180,6 +180,7 @@ const handleRestorePlay = async(restorePlayInfo: LX.Player.SavedPlayInfo) => {
 const handlePlay = async() => {
   if (!isInitialized()) {
     await checkNotificationPermission()
+    void checkIgnoringBatteryOptimization()
     await playerInitial({
       volume: settingState.setting['player.volume'],
       playRate: settingState.setting['player.playbackRate'],

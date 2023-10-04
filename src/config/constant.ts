@@ -56,6 +56,7 @@ export const storageDataPrefix = {
   syncHostHistory: '@sync_host_history',
 
   notificationTipEnable: '@notification_tip_enable',
+  ignoringBatteryOptimizationTipEnable: '@ignoring_battery_optimization_tip_enable',
 
   searchHistoryList: '@search_history_list',
   listUpdateInfo: '@list_update_info',

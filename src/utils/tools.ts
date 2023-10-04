@@ -4,7 +4,7 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { storageDataPrefix } from '@/config/constant'
 import { gzipFile, unGzipFile } from '@/utils/nativeModules/gzip'
 import { temporaryDirectoryPath, unlink } from '@/utils/fs'
-import { getSystemLocales, isNotificationsEnabled, openNotificationPermissionActivity, readFile, shareText, writeFile } from '@/utils/nativeModules/utils'
+import { getSystemLocales, isIgnoringBatteryOptimization, isNotificationsEnabled, requestNotificationPermission, readFile, requestIgnoreBatteryOptimization, shareText, writeFile } from '@/utils/nativeModules/utils'
 import musicSdk from '@/utils/musicSdk'
 import { getData, removeData, saveData } from '@/plugins/storage'
 import BackgroundTimer from 'react-native-background-timer'
@@ -202,34 +202,88 @@ export const checkNotificationPermission = async() => {
   if (isHide != null) return
   const enabled = await isNotificationsEnabled()
   if (enabled) return
-  Alert.alert(
-    global.i18n.t('notifications_check_title'),
-    global.i18n.t('notifications_check_tip'),
-    [
-      {
-        text: global.i18n.t('never_show'),
-        onPress: () => {
-          void saveData(storageDataPrefix.notificationTipEnable, '1')
-          toast(global.i18n.t('disagree_tip'))
+  return new Promise<void>((resolve) => {
+    Alert.alert(
+      global.i18n.t('notifications_check_title'),
+      global.i18n.t('notifications_check_tip'),
+      [
+        {
+          text: global.i18n.t('never_show'),
+          onPress: () => {
+            void saveData(storageDataPrefix.notificationTipEnable, '1')
+            toast(global.i18n.t('disagree_tip'))
+            resolve()
+          },
         },
-      },
-      {
-        text: global.i18n.t('disagree'),
-        onPress: () => {
-          toast(global.i18n.t('disagree_tip'))
+        {
+          text: global.i18n.t('disagree'),
+          onPress: () => {
+            toast(global.i18n.t('disagree_tip'))
+            resolve()
+          },
         },
-      },
-      {
-        text: global.i18n.t('agree_go'),
-        onPress: () => {
-          void openNotificationPermissionActivity()
+        {
+          text: global.i18n.t('agree_go'),
+          onPress: () => {
+            requestAnimationFrame(() => {
+              void requestNotificationPermission().then((result) => {
+                if (!result) toast(global.i18n.t('disagree_tip'))
+                resolve()
+              })
+            })
+          },
         },
-      },
-    ],
-  )
+      ],
+    )
+  })
+}
+
+
+export const checkIgnoringBatteryOptimization = async() => {
+  const isHide = await getData(storageDataPrefix.ignoringBatteryOptimizationTipEnable)
+  if (isHide != null) return
+  const enabled = await isIgnoringBatteryOptimization()
+  if (enabled) return
+  return new Promise<void>((resolve) => {
+    Alert.alert(
+      global.i18n.t('ignoring_battery_optimization_check_title'),
+      global.i18n.t('ignoring_battery_optimization_check_tip'),
+      [
+        {
+          text: global.i18n.t('never_show'),
+          onPress: () => {
+            void saveData(storageDataPrefix.ignoringBatteryOptimizationTipEnable, '1')
+            toast(global.i18n.t('disagree_tip'))
+            resolve()
+          },
+        },
+        {
+          text: global.i18n.t('disagree'),
+          onPress: () => {
+            toast(global.i18n.t('disagree_tip'))
+            resolve()
+          },
+        },
+        {
+          text: global.i18n.t('agree_to'),
+          onPress: () => {
+            requestAnimationFrame(() => {
+              void requestIgnoreBatteryOptimization().then((result) => {
+                if (!result) toast(global.i18n.t('disagree_tip'))
+                resolve()
+              })
+            })
+          },
+        },
+      ],
+    )
+  })
 }
 export const resetNotificationPermissionCheck = async() => {
   return removeData(storageDataPrefix.notificationTipEnable)
+}
+export const resetIgnoringBatteryOptimizationCheck = async() => {
+  return removeData(storageDataPrefix.ignoringBatteryOptimizationTipEnable)
 }
 
 export const shareMusic = (shareType: LX.ShareType, downloadFileName: LX.AppSetting['download.fileName'], musicInfo: LX.Music.MusicInfo) => {

@@ -8,6 +8,7 @@ import BackgroundTimer from 'react-native-background-timer'
 import playerState from '@/store/player/state'
 import settingState from '@/store/setting/state'
 import { onScreenStateChange } from '@/utils/nativeModules/utils'
+import { AppState } from 'react-native'
 
 const delaySavePlayInfo = throttleBackgroundTimer(() => {
   void savePlayInfo({
@@ -158,6 +159,10 @@ export default () => {
     } else clearUpdateTimeout()
   }
 
+  // 修复在某些设备上屏幕状态改变事件未触发导致的进度条未更新的问题
+  AppState.addEventListener('change', (state) => {
+    if (state == 'active' && !isScreenOn) handleScreenStateChanged('ON')
+  })
 
   global.app_event.on('play', handlePlay)
   global.app_event.on('pause', handlePause)

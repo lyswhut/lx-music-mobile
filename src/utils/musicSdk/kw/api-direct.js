@@ -3,7 +3,7 @@ import { timeout } from '../options'
 
 export default {
   getMusicUrl(songInfo, type) {
-    const target_url = `http://www.kuwo.cn/api/v1/www/music/playUrl?mid=${songInfo.songmid}&type=music&br=${type}`
+    const target_url = `http://www.kuwo.cn/api/v1/www/music/playUrl?mid=${songInfo.songmid.match(/\d+/g)[0]}&type=music&br=${type}`
     const requestObj = httpFetch(target_url, {
       method: 'get',
       timeout,

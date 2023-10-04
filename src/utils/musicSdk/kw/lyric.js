@@ -232,7 +232,7 @@ export default {
   // },
   getLyric(musicInfo, isGetLyricx = true) {
     // this.getLyric2(musicInfo)
-    const requestObj = httpFetch(`http://newlyric.kuwo.cn/newlyric.lrc?${buildParams(musicInfo.songmid, isGetLyricx)}`, {
+    const requestObj = httpFetch(`http://newlyric.kuwo.cn/newlyric.lrc?${buildParams(musicInfo.songmid.match(/\d+/g)[0], isGetLyricx)}`, {
       cache: false,
       binary: true,
     })

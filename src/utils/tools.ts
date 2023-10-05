@@ -160,7 +160,18 @@ export const handleReadFile = async<T = unknown>(path: string): Promise<T> => {
     data = await readFile(tempFilePath)
     await unlink(tempFilePath)
   }
-  return JSON.parse(data)
+  data = JSON.parse(data)
+
+  // 修复PC v1.14.0出现的导出数据被序列化两次的问题
+  if (typeof data != 'object') {
+    try {
+      data = JSON.parse(data)
+    } catch (err) {
+      return data
+    }
+  }
+
+  return data
 }
 
 export const confirmDialog = async({

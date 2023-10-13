@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
+import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
 import { DrawerLayoutAndroid, type DrawerLayoutAndroidProps, View, type LayoutChangeEvent } from 'react-native'
 // import { getWindowSise } from '@/utils/tools'
 import { usePageVisible } from '@/store/common/hook'

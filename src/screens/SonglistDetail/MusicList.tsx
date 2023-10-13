@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
 import OnlineList, { type OnlineListType, type OnlineListProps } from '@/components/OnlineList'
 import { clearListDetail, getListDetail, setListDetail, setListDetailInfo } from '@/core/songlist'
 import songlistState from '@/store/songlist/state'
@@ -26,7 +26,8 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
           listRef.current?.setList(listDetailInfo.list)
           headerRef.current?.setInfo({
             name: (songlistState.selectListInfo.name || listDetailInfo.info.name) ?? '',
-            desc: songlistState.selectListInfo.desc ?? listDetailInfo.desc ?? '',
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+            desc: songlistState.selectListInfo.desc || listDetailInfo.info.desc || '',
             playCount: (songlistState.selectListInfo.play_count ?? listDetailInfo.info.play_count) ?? '',
             imgUrl: songlistState.selectListInfo.img ?? listDetailInfo.info.img,
           })
@@ -37,7 +38,8 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
         setListDetailInfo(songlistState.selectListInfo.source, songlistState.selectListInfo.id)
         headerRef.current?.setInfo({
           name: (songlistState.selectListInfo.name || listDetailInfo.info.name) ?? '',
-          desc: songlistState.selectListInfo.desc ?? listDetailInfo.desc ?? '',
+          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+          desc: songlistState.selectListInfo.desc || listDetailInfo.info.desc || '',
           playCount: (songlistState.selectListInfo.play_count ?? listDetailInfo.info.play_count) ?? '',
           imgUrl: songlistState.selectListInfo.img ?? listDetailInfo.info.img,
         })
@@ -47,7 +49,8 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
           requestAnimationFrame(() => {
             headerRef.current?.setInfo({
               name: (songlistState.selectListInfo.name || listDetailInfo.info.name) ?? '',
-              desc: songlistState.selectListInfo.desc ?? listDetailInfo.desc ?? '',
+              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+              desc: songlistState.selectListInfo.desc || listDetailInfo.info.desc || '',
               playCount: (songlistState.selectListInfo.play_count ?? listDetailInfo.info.play_count) ?? '',
               imgUrl: songlistState.selectListInfo.img ?? listDetailInfo.info.img,
             })
@@ -94,7 +97,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
     getListDetail(songlistState.listDetailInfo.id, songlistState.listDetailInfo.source, page).then((listDetail) => {
       const result = setListDetail(listDetail, songlistState.listDetailInfo.id, page)
       if (isUnmountedRef.current) return
-      listRef.current?.setList(result.list)
+      listRef.current?.setList(result.list, true)
       listRef.current?.setStatus(songlistState.listDetailInfo.maxPage <= page ? 'end' : 'idle')
     }).catch(() => {
       if (songlistState.listDetailInfo.list.length && page == 1) clearListDetail()

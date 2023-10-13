@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useEffect, useRef, useState, useCallback } from 'react'
+import { memo, useMemo, useEffect, useRef, useState, useCallback } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import PagerView, { type PagerViewOnPageSelectedEvent } from 'react-native-pager-view'
 import Header from './components/Header'

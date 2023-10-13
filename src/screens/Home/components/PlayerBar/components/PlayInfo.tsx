@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import { memo, useState } from 'react'
 import { View } from 'react-native'
 
 import Progress from '@/components/player/Progress'

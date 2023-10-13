@@ -52,7 +52,7 @@ export declare interface ListInfo {
 export declare interface ListDetailInfo {
   list: LX.Music.MusicInfoOnline[]
   source: LX.OnlineSource
-  desc: string | null
+  // desc: string | null
   total: number
   page: number
   limit: number
@@ -113,7 +113,7 @@ const state: InitState = {
   listDetailInfo: {
     list: [],
     id: '',
-    desc: null,
+    // desc: null,
     total: 0,
     page: 1,
     limit: 30,

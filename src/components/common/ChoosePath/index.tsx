@@ -1,4 +1,4 @@
-import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react'
+import { useState, useRef, forwardRef, useImperativeHandle } from 'react'
 // import { StyleSheet, View, Text, StatusBar, ScrollView } from 'react-native'
 
 // import { useGetter, useDispatch } from '@/store'

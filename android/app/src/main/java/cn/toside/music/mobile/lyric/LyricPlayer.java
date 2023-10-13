@@ -1,7 +1,5 @@
 package cn.toside.music.mobile.lyric;
 
-import com.facebook.react.bridge.Promise;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,9 +13,7 @@ import java.util.regex.Pattern;
 
 public class LyricPlayer {
   final String timeFieldExp = "^(?:\\[[\\d:.]+])+";
-  final String timeExp = "[\\d:.]+";
-  final String timeLabelRxp = "^(\\[[\\d:]+\\.)0+(\\d+])";
-  final String timeLabelFixRxp = "(?:\\.0+|0+)$";
+  final String timeExp = "\\d{1,3}(:\\d{1,3}){0,2}(?:\\.\\d{1,3})";
 //  HashMap tagRegMap;
   Pattern timeFieldPattern;
   Pattern timePattern;
@@ -117,6 +113,16 @@ public class LyricPlayer {
     }
   }
 
+
+  final String t_rxp_1 = "^0+(\\d+)";
+  final String t_rxp_2 = ":0+(\\d+)";
+  final String t_rxp_3 = "\\.0+(\\d+)";
+  private String formatTimeLabel(String label) {
+    return label.replaceAll(t_rxp_1, "$1")
+      .replaceAll(t_rxp_2, ":$1")
+      .replaceAll(t_rxp_3, ".$1");
+  }
+
   private void parseExtendedLyric(HashMap linesMap, String extendedLyric) {
     String[] extendedLyricLines = extendedLyric.split("\r\n|\n|\r");
     for (String translationLine : extendedLyricLines) {
@@ -129,9 +135,7 @@ public class LyricPlayer {
           Matcher timeMatchResult = timePattern.matcher(timeField);
           while (timeMatchResult.find()) {
             String timeStr = timeMatchResult.group();
-            if (timeStr.contains(".")) timeStr = timeStr.replaceAll(timeLabelRxp, "$1$2");
-            else timeStr += ".0";
-            timeStr = timeStr.replaceAll(timeLabelFixRxp, "");
+            timeStr = formatTimeLabel(timeStr);
             HashMap targetLine = (HashMap) linesMap.get(timeStr);
             if (targetLine != null) ((ArrayList<String>) targetLine.get("extendedLyrics")).add(text);
           }
@@ -156,10 +160,7 @@ public class LyricPlayer {
         if (text.length() > 0) {
           Matcher timeMatchResult = timePattern.matcher(timeField);
           while (timeMatchResult.find()) {
-            String timeStr = timeMatchResult.group();
-            if (timeStr.contains(".")) timeStr = timeStr.replaceAll(timeLabelRxp, "$1$2");
-            else timeStr += ".0";
-            timeStr = timeStr.replaceAll(timeLabelFixRxp, "");
+            String timeStr = formatTimeLabel(timeMatchResult.group());
             if (linesMap.containsKey(timeStr)) {
               ((ArrayList<String>) ((HashMap) linesMap.get(timeStr)).get("extendedLyrics")).add(text);
               continue;
@@ -180,13 +181,18 @@ public class LyricPlayer {
                 minutes = timeArr[0];
                 seconds = timeArr[1];
                 break;
+              case 1:
+                hours = "0";
+                minutes = "0";
+                seconds = timeArr[0];
+                break;
               default:
                 continue;
             }
             if (seconds.contains(".")) {
               timeArr = seconds.split("\\.");
               seconds = timeArr[0];
-              milliseconds = timeArr[1];
+              if (timeArr.length > 1) milliseconds = timeArr[1];
             }
             HashMap<String, Object> lineInfo = new HashMap<>();
             int time = Integer.parseInt(hours) * 60 * 60 * 1000

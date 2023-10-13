@@ -1,5 +1,5 @@
 import { useI18n } from '@/lang'
-import React, { memo } from 'react'
+import { memo } from 'react'
 
 import Section from '../../components/Section'
 import Part from './Part'

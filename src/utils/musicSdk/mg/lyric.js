@@ -1,6 +1,6 @@
 import { httpFetch } from '../../request'
-import musicSearch from './musicSearch'
-import { decrypt } from './mrc'
+import { getMusicInfo } from './musicInfo'
+import { decrypt } from './utils/mrc'
 
 const mrcTools = {
   rxps: {
@@ -57,7 +57,7 @@ const mrcTools = {
     })
     return requestObj.promise.then(({ statusCode, body }) => {
       if (statusCode == 200) return body
-      if (tryNum > 5 || statusCode == 404) return Promise.reject('歌词获取失败')
+      if (tryNum > 5 || statusCode == 404) return Promise.reject(new Error('歌词获取失败'))
       return this.getText(url, ++tryNum)
     })
   },
@@ -75,11 +75,8 @@ const mrcTools = {
   },
   getMusicInfo(songInfo) {
     return songInfo.mrcUrl == null
-      ? musicSearch.search(`${songInfo.name} ${songInfo.singer || ''}`.trim(), 1, { limit: 25 }).then(({ list }) => {
-        const targetSong = list.find(s => s.songmid == songInfo.songmid)
-        return targetSong ? { lrcUrl: targetSong.lrcUrl, mrcUrl: targetSong.mrcUrl, trcUrl: targetSong.trcUrl } : Promise.reject('获取歌词失败')
-      })
-      : Promise.resolve({ lrcUrl: songInfo.lrcUrl, mrcUrl: songInfo.mrcUrl, trcUrl: songInfo.trcUrl })
+      ? getMusicInfo(songInfo.copyrightId)
+      : songInfo
   },
   getLyric(songInfo) {
     return {
@@ -87,7 +84,7 @@ const mrcTools = {
         let p
         if (info.mrcUrl) p = this.getMrc(info.mrcUrl)
         else if (info.lrcUrl) p = this.getLrc(info.lrcUrl)
-        if (p == null) return Promise.reject('获取歌词失败')
+        if (p == null) return Promise.reject(new Error('获取歌词失败'))
         return Promise.all([p, this.getTrc(info.trcUrl)]).then(([lrcInfo, tlyric]) => {
           lrcInfo.tlyric = tlyric
           return lrcInfo
@@ -105,7 +102,7 @@ export default {
       let requestObj = httpFetch(songInfo.lrcUrl)
       requestObj.promise = requestObj.promise.then(({ body, statusCode }) => {
         if (statusCode !== 200) {
-          if (tryNum > 5) return Promise.reject('歌词获取失败')
+          if (tryNum > 5) return Promise.reject(new Error('歌词获取失败'))
           let tryRequestObj = this.getLyricWeb(songInfo, ++tryNum)
           requestObj.cancelHttp = tryRequestObj.cancelHttp.bind(tryRequestObj)
           return tryRequestObj.promise

@@ -1,4 +1,3 @@
-import React from 'react'
 import Text from '@/components/common/Text'
 import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'

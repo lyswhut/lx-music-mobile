@@ -1,6 +1,7 @@
-import React, { useMemo, useRef, useImperativeHandle, forwardRef, useState } from 'react'
+import { useMemo, useRef, useImperativeHandle, forwardRef, useState } from 'react'
 import { useI18n } from '@/lang'
 import Menu, { type MenuType, type Position } from '@/components/common/Menu'
+import { hasDislike } from '@/core/dislikeList'
 
 export interface SelectInfo {
   musicInfo: LX.Music.MusicInfoOnline
@@ -15,6 +16,7 @@ export interface ListMenuProps {
   onPlayLater: (selectInfo: SelectInfo) => void
   onAdd: (selectInfo: SelectInfo) => void
   onCopyName: (selectInfo: SelectInfo) => void
+  onDislikeMusic: (selectInfo: SelectInfo) => void
 }
 export interface ListMenuType {
   show: (selectInfo: SelectInfo, position: Position) => void
@@ -29,10 +31,12 @@ export default forwardRef<ListMenuType, ListMenuProps>((props: ListMenuProps, re
   const [visible, setVisible] = useState(false)
   const menuRef = useRef<MenuType>(null)
   const selectInfoRef = useRef<SelectInfo>(initSelectInfo as SelectInfo)
+  const [isDislikeMusic, setDislikeMusic] = useState(false)
 
   useImperativeHandle(ref, () => ({
     show(selectInfo, position) {
       selectInfoRef.current = selectInfo
+      setDislikeMusic(hasDislike(selectInfo.musicInfo))
       if (visible) menuRef.current?.show(position)
       else {
         setVisible(true)
@@ -50,8 +54,9 @@ export default forwardRef<ListMenuType, ListMenuProps>((props: ListMenuProps, re
       // { action: 'download', label: '下载' },
       { action: 'add', label: t('add_to') },
       { action: 'copyName', label: t('copy_name') },
+      { action: 'dislike', label: t('dislike'), disabled: isDislikeMusic },
     ] as const
-  }, [t])
+  }, [t, isDislikeMusic])
 
   const handleMenuPress = ({ action }: typeof menus[number]) => {
     const selectInfo = selectInfoRef.current
@@ -67,6 +72,9 @@ export default forwardRef<ListMenuType, ListMenuProps>((props: ListMenuProps, re
         break
       case 'copyName':
         props.onCopyName(selectInfo)
+        break
+      case 'dislike':
+        props.onDislikeMusic(selectInfo)
         break
       default:
         break

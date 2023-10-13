@@ -1,5 +1,4 @@
 import { createStyle } from '@/utils/tools'
-import React from 'react'
 import { View } from 'react-native'
 import PlayModeBtn from './PlayModeBtn'
 import MusicAddBtn from './MusicAddBtn'

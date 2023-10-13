@@ -1,4 +1,4 @@
-import React, { useRef, useImperativeHandle, forwardRef, useState, useEffect } from 'react'
+import { useRef, useImperativeHandle, forwardRef, useState, useEffect } from 'react'
 import SearchTipList, { type SearchTipListProps as _SearchTipListProps, type SearchTipListType } from '@/components/SearchTipList'
 import { debounce } from '@/utils'
 import { searchListMusic } from './listAction'

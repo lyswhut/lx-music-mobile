@@ -1,6 +1,6 @@
-import React, { useMemo, useRef, useImperativeHandle, forwardRef, useState } from 'react'
+import { useMemo, useRef, useImperativeHandle, forwardRef, useState } from 'react'
 import { View, TouchableWithoutFeedback } from 'react-native'
-import { useDimensions } from '@/utils/hooks'
+import { useWindowSize } from '@/utils/hooks'
 
 import Modal, { type ModalType } from '@/components/common/Modal'
 import { createStyle } from '@/utils/tools'
@@ -42,8 +42,8 @@ const Panel = ({
   onHide: () => void
   children: React.ReactNode | React.ReactNode[]
 }) => {
-  // const dimensions = useDimensions()
-  const { window: windowSize } = useDimensions()
+  // const dimensions = useWindowSize()
+  const windowSize = useWindowSize()
   // const theme = useGetter('common', 'theme')
   // const fadeAnim = useRef(new Animated.Value(0)).current
   // console.log(buttonPosition)

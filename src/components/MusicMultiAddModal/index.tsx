@@ -1,11 +1,14 @@
-import React, { useRef, useImperativeHandle, forwardRef, useState } from 'react'
-import Modal, { type MusicMultiAddModalType as ModalType, type SelectInfo } from './MusicMultiAddModal'
+import { useRef, useImperativeHandle, forwardRef, useState } from 'react'
+import Modal, { type MusicMultiAddModalType as ModalType, type MusicMultiAddModalProps as ModalProps, type SelectInfo } from './MusicMultiAddModal'
 
+export interface MusicAddModalProps {
+  onAdded?: ModalProps['onAdded']
+}
 export interface MusicMultiAddModalType {
   show: (info: SelectInfo) => void
 }
 
-export default forwardRef<MusicMultiAddModalType, {}>((props, ref) => {
+export default forwardRef<MusicMultiAddModalType, MusicAddModalProps>(({ onAdded }, ref) => {
   const musicMultiAddModalRef = useRef<ModalType>(null)
   const [visible, setVisible] = useState(false)
 
@@ -23,7 +26,7 @@ export default forwardRef<MusicMultiAddModalType, {}>((props, ref) => {
 
   return (
     visible
-      ? <Modal ref={musicMultiAddModalRef} />
+      ? <Modal ref={musicMultiAddModalRef} onAdded={onAdded} />
       : null
   )
 })

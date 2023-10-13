@@ -1,5 +1,5 @@
 import { getSongListSetting, saveSongListSetting } from '@/utils/data'
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 // import List from './List/List'

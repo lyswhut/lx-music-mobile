@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from 'react'
+import { memo, useState, useEffect } from 'react'
 import { StyleSheet, View, InteractionManager } from 'react-native'
 
 // import { gzip, ungzip } from 'pako'
@@ -35,7 +35,7 @@ export default memo(() => {
       if (!confirm) return
       setCleaning(true)
       void InteractionManager.runAfterInteractions(() => {
-        Promise.all([
+        void Promise.all([
           clearAppCache(),
           clearMusicUrl(),
           resetNotificationPermissionCheck(),

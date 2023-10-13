@@ -1,7 +1,7 @@
 import { updateSetting } from '@/core/common'
 import { useI18n } from '@/lang'
 import { createStyle } from '@/utils/tools'
-import React, { memo } from 'react'
+import { memo } from 'react'
 import { View } from 'react-native'
 import { useSettingValue } from '@/store/setting/hook'
 

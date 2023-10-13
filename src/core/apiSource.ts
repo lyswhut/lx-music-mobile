@@ -29,6 +29,9 @@ export const setUserApi = (apiId: string) => {
 
   if (apiId != settingState.setting['common.apiSource']) {
     updateSetting({ 'common.apiSource': apiId })
+    requestAnimationFrame(() => {
+      global.state_event.apiSourceUpdated(apiId)
+    })
   }
 }
 

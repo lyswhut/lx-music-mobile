@@ -1,4 +1,4 @@
-import React, { useRef, useImperativeHandle, forwardRef, useState } from 'react'
+import { useRef, useImperativeHandle, forwardRef, useState } from 'react'
 import { useI18n } from '@/lang'
 import Menu, { type Menus, type MenuType, type Position } from '@/components/common/Menu'
 import { LIST_IDS } from '@/config/constant'

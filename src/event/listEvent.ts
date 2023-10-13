@@ -48,6 +48,19 @@ export const checkUpdateList = async(changedIds: string[]) => {
 //   // },
 // }
 
+// 兼容v2.3.0之前版本插入数字类型的ID导致其意外在末尾追加 .0 的问题，确保所有ID都是字符串类型
+const fixListIdType = (lists: LX.List.UserListInfo[] | LX.List.UserListInfoFull[]) => {
+  for (const list of lists) {
+    if (typeof list.sourceListId == 'number') {
+      list.sourceListId = String(list.sourceListId)
+      if (typeof list.id == 'number') {
+        list.id = String(list.id)
+      }
+    }
+  }
+}
+
+
 export class ListEvent extends Event {
   /**
    * 现有歌曲列表更改时触发的事件
@@ -63,6 +76,7 @@ export class ListEvent extends Event {
    * @param isRemote 是否属于远程操作
    */
   async list_data_overwrite(listData: MakeOptional<LX.List.ListDataFull, 'tempList'>, isRemote: boolean = false) {
+    fixListIdType(listData.userList)
     const oldIds = userLists.map(l => l.id)
     const changedIds = listDataOverwrite(listData)
     await updateUserList(userLists)
@@ -86,6 +100,7 @@ export class ListEvent extends Event {
    */
   async list_create(position: number, lists: LX.List.UserListInfo[], isRemote: boolean = false) {
     // const changedIds: string[] = []
+    fixListIdType(lists)
     for (const list of lists) {
       userListCreate({ ...list, position })
       // changedIds.push(list.id)

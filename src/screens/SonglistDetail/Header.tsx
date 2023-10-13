@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react'
+import { forwardRef, useImperativeHandle, useState } from 'react'
 import { View, Image } from 'react-native'
 import { BorderWidths } from '@/theme'
 import ButtonBar from './ActionBar'

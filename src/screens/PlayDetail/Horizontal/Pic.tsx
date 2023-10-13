@@ -1,11 +1,11 @@
-import React, { memo, useState } from 'react'
+import { memo, useState } from 'react'
 import { View, Image, StyleSheet } from 'react-native'
 // import { useLayout } from '@/utils/hooks'
 import { useTheme } from '@/store/theme/hook'
 import { BorderRadius } from '@/theme'
 import Text from '@/components/common/Text'
 import { usePlayerMusicInfo } from '@/store/player/hook'
-import { useDimensions } from '@/utils/hooks'
+import { useWindowSize } from '@/utils/hooks'
 import { useNavigationComponentDidAppear } from '@/navigation'
 import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 
@@ -22,7 +22,7 @@ const EmptyPic = memo(({ width }: { width: number }) => {
 
 export default memo(({ componentId }: { componentId: string }) => {
   const musicInfo = usePlayerMusicInfo()
-  const { window: { width: winWidth, height: winHeight } } = useDimensions()
+  const { width: winWidth, height: winHeight } = useWindowSize()
 
   const [animated, setAnimated] = useState(false)
 

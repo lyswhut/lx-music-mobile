@@ -1,4 +1,4 @@
-import React, { memo, useRef } from 'react'
+import { memo, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 // import { gzip, ungzip } from 'pako'

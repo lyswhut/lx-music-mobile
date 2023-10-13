@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { View, ImageBackground, TouchableOpacity, InteractionManager, type ImageSourcePropType } from 'react-native'
 import { setTheme } from '@/core/theme'
 import { useI18n } from '@/lang'

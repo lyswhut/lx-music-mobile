@@ -18,6 +18,7 @@ export const BG_IMAGES = {
 
 let userThemes: LX.Theme[]
 export const getAllThemes = async() => {
+  // eslint-disable-next-line require-atomic-updates
   userThemes ??= await getUserTheme()
   return {
     themes,

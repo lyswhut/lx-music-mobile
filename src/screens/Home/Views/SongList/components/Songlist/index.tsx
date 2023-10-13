@@ -1,4 +1,4 @@
-import React, { useRef, forwardRef, useImperativeHandle } from 'react'
+import { useRef, forwardRef, useImperativeHandle } from 'react'
 import { type ListInfoItem } from '@/store/songlist/state'
 // import LoadingMask, { LoadingMaskType } from '@/components/common/LoadingMask'
 import List, { type ListProps, type ListType, type Status } from './List'

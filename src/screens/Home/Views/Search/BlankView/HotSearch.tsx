@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 import { type Source, type InitState } from '@/store/hotSearch/state'
 import Button from '@/components/common/Button'

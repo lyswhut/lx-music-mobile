@@ -1,4 +1,4 @@
-import React, { useState, useRef, useImperativeHandle, forwardRef } from 'react'
+import { useState, useRef, useImperativeHandle, forwardRef } from 'react'
 import { View } from 'react-native'
 
 import ConfirmAlert, { type ConfirmAlertType } from '@/components/common/ConfirmAlert'

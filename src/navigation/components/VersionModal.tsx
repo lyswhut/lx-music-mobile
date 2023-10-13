@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, memo } from 'react'
+import { useMemo, useState, useEffect, memo } from 'react'
 import { View, ScrollView } from 'react-native'
 
 import { compareVer, sizeFormate } from '@/utils'

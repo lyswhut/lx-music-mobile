@@ -1,8 +1,8 @@
 // import { createStyle } from '@/utils/tools'
-import React, { useImperativeHandle, forwardRef, useState, useMemo } from 'react'
+import { useImperativeHandle, forwardRef, useState, useMemo } from 'react'
 import { Modal, TouchableWithoutFeedback, View, type ModalProps as _ModalProps } from 'react-native'
 import StatusBar from './StatusBar'
-// import { useDimensions } from '@/utils/hooks'
+// import { useWindowSize } from '@/utils/hooks'
 
 // const styles = createStyle({
 //   container: {
@@ -54,7 +54,7 @@ export default forwardRef<ModalType, ModalProps>(({
   ...props
 }: ModalProps, ref) => {
   const [visible, setVisible] = useState(false)
-  // const { window: windowSize } = useDimensions()
+  // const { window: windowSize } = useWindowSize()
   const handleRequestClose = () => {
     if (keyHide) {
       setVisible(false)

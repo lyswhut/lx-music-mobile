@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from 'react'
+import { memo, useState, useEffect } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 // import { gzip, ungzip } from 'pako'
@@ -27,9 +27,9 @@ export default memo(() => {
   }
 
   const handleCleanOtherSourceCache = () => {
-    if (cacheInfo.otherSourceKeys == null || !cacheInfo.otherSourceKeys.length) return
+    if (!cacheInfo.otherSourceKeys?.length) return
     setOtherSourceCleaning(true)
-    clearOtherSource(cacheInfo.otherSourceKeys).then(() => {
+    void clearOtherSource(cacheInfo.otherSourceKeys).then(() => {
       toast(t('setting_other_cache_clear_success_tip'))
     }).finally(() => {
       handleGetMetaCache()
@@ -38,9 +38,9 @@ export default memo(() => {
   }
 
   const handleCleanLyricKeysCache = () => {
-    if (cacheInfo.lyricKeys == null || !cacheInfo.lyricKeys.length) return
+    if (!cacheInfo.lyricKeys?.length) return
     setLyricCleaning(true)
-    clearLyric(cacheInfo.lyricKeys).then(() => {
+    void clearLyric(cacheInfo.lyricKeys).then(() => {
       toast(t('setting_other_cache_clear_success_tip'))
     }).finally(() => {
       handleGetMetaCache()

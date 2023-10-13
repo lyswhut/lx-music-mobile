@@ -17,7 +17,7 @@ const timeoutTools = {
       global.lx.isPlayedStop = true
       this.callHooks()
     } else {
-      exitApp()
+      exitApp('Timeout Exit')
     }
   },
   getTime() {

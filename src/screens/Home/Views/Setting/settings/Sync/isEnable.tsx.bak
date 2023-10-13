@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect, useRef } from 'react'
+import { memo, useState, useEffect, useRef } from 'react'
 import { View } from 'react-native'
 
 import CheckBoxItem from '../../components/CheckBoxItem'

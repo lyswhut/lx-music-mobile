@@ -13,6 +13,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class Lyric extends LyricPlayer {
   LyricView lyricView = null;
@@ -48,7 +49,7 @@ public class Lyric extends LyricPlayer {
       public void onReceive(Context context, Intent intent) {
         String strAction = intent.getAction();
 
-        switch (strAction) {
+        switch (Objects.requireNonNull(strAction)) {
           case Intent.ACTION_SCREEN_OFF:
             Log.d("Lyric", "ACTION_SCREEN_OFF");
             handleScreenOff();

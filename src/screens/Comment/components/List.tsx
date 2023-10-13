@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react'
+import { useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { FlatList, type FlatListProps, RefreshControl, View } from 'react-native'
 
 // import { useMusicList } from '@/store/list/hook'
@@ -47,10 +47,7 @@ const List = forwardRef<ListType, ListProps>(({
   }))
 
   const handleLoadMore = () => {
-    switch (status) {
-      case 'loading':
-      case 'refreshing': return
-    }
+    if (status != 'idle') return
     onLoadMore()
   }
 

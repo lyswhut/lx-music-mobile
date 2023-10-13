@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 import { View, Image, TouchableOpacity } from 'react-native'
 import { navigations } from '@/navigation'
 import { usePlayerMusicInfo } from '@/store/player/hook'

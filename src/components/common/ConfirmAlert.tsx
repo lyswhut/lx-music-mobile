@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useImperativeHandle, useRef } from 'react'
 import { View, ScrollView } from 'react-native'
 import Dialog, { type DialogType } from './Dialog'
 import Button from './Button'

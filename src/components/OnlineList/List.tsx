@@ -1,9 +1,9 @@
-import React, { useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react'
+import { useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { FlatList, type FlatListProps, RefreshControl, View } from 'react-native'
 
 // import { useMusicList } from '@/store/list/hook'
 import ListItem, { ITEM_HEIGHT } from './ListItem'
-import { createStyle } from '@/utils/tools'
+import { createStyle, getRowInfo, type RowInfoType } from '@/utils/tools'
 import type { Position } from './ListMenu'
 import type { SelectMode } from './MultipleModeBar'
 import { useTheme } from '@/store/theme/hook'
@@ -12,8 +12,13 @@ import { MULTI_SELECT_BAR_HEIGHT } from './MultipleModeBar'
 import { useI18n } from '@/lang'
 import Text from '@/components/common/Text'
 import { handlePlay } from './listAction'
+import { useSettingValue } from '@/store/setting/hook'
 
 type FlatListType = FlatListProps<LX.Music.MusicInfoOnline>
+
+export type {
+  RowInfoType,
+}
 
 export interface ListProps {
   onShowMenu: (musicInfo: LX.Music.MusicInfoOnline, index: number, position: Position) => void
@@ -25,9 +30,10 @@ export interface ListProps {
   progressViewOffset?: number
   ListHeaderComponent?: FlatListType['ListEmptyComponent']
   checkHomePagerIdle: boolean
+  rowType?: RowInfoType
 }
 export interface ListType {
-  setList: (list: LX.Music.MusicInfoOnline[], showSource?: boolean) => void
+  setList: (list: LX.Music.MusicInfoOnline[], isAppend: boolean, showSource: boolean) => void
   setIsMultiSelectMode: (isMultiSelectMode: boolean) => void
   setSelectMode: (mode: SelectMode) => void
   selectAll: (isAll: boolean) => void
@@ -48,6 +54,7 @@ const List = forwardRef<ListType, ListProps>(({
   progressViewOffset,
   ListHeaderComponent,
   checkHomePagerIdle,
+  rowType,
 }, ref) => {
   // const t = useI18n()
   const theme = useTheme()
@@ -61,13 +68,17 @@ const List = forwardRef<ListType, ListProps>(({
   const selectedListRef = useRef<LX.Music.MusicInfoOnline[]>([])
   const [visibleMultiSelect, setVisibleMultiSelect] = useState(false)
   const [status, setStatus] = useState<Status>('idle')
+  const rowInfo = useRef(getRowInfo(rowType))
+  const isShowAlbumName = useSettingValue('list.isShowAlbumName')
+  const isShowInterval = useSettingValue('list.isShowInterval')
   // const currentListIdRef = useRef('')
   // console.log('render music list')
 
   useImperativeHandle(ref, () => ({
-    setList(list, showSource = false) {
+    setList(list, isAppend, showSource) {
       setList(list)
       setShowSource(showSource)
+      if (!isAppend && selectedListRef.current.length) setSelectedList(selectedListRef.current = [])
     },
     setIsMultiSelectMode(isMultiSelectMode) {
       isMultiSelectModeRef.current = isMultiSelectMode
@@ -164,11 +175,7 @@ const List = forwardRef<ListType, ListProps>(({
   }
 
   const handleLoadMore = () => {
-    switch (status) {
-      case 'end':
-      case 'loading':
-      case 'refreshing': return
-    }
+    if (status != 'idle') return
     onLoadMore()
   }
 
@@ -182,6 +189,9 @@ const List = forwardRef<ListType, ListProps>(({
       onLongPress={handleLongPress}
       onShowMenu={onShowMenu}
       selectedList={selectedList}
+      rowInfo={rowInfo.current}
+      isShowAlbumName={isShowAlbumName}
+      isShowInterval={isShowInterval}
     />
   )
   const getkey: FlatListType['keyExtractor'] = item => item.id
@@ -224,6 +234,8 @@ const List = forwardRef<ListType, ListProps>(({
       ref={flatListRef}
       style={styles.list}
       data={currentList}
+      numColumns={rowInfo.current.rowNum}
+      horizontal={false}
       maxToRenderPerBatch={4}
       // updateCellsBatchingPeriod={80}
       windowSize={8}

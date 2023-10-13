@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 import { FlatList, type FlatListProps } from 'react-native'
 
 import Basic from '../settings/Basic'
@@ -40,8 +40,7 @@ const ListItem = memo(({
     case 'other': return <Other />
     case 'version': return <Version />
     case 'about': return <About />
-    case 'basic':
-    default: return <Basic />
+    case 'basic': return <Basic />
   }
 }, () => true)
 

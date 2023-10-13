@@ -1,9 +1,6 @@
-// import '../../polyfill/array.find'
-
 import { httpFetch } from '../../request'
 import { formatPlayTime, sizeFormate } from '../../index'
-// import { debug } from '../../utils/env'
-// import { formatSinger } from './util'
+import { formatSingerName } from '../utils'
 
 export default {
   limit: 50,
@@ -47,16 +44,10 @@ export default {
     })
     // searchRequest = httpFetch(`http://ioscdn.kugou.com/api/v3/search/song?keyword=${encodeURIComponent(str)}&page=${page}&pagesize=${this.limit}&showtype=10&plat=2&version=7910&tag=1&correct=1&privilege=1&sver=5`)
     return searchRequest.promise.then(({ body }) => {
+      // console.log(body)
       if (body.code != this.successCode || body.req.code != this.successCode) return this.musicSearch(str, page, limit, ++retryNum)
       return body.req.data
     })
-  },
-  getSinger(singers) {
-    let arr = []
-    singers.forEach(singer => {
-      arr.push(singer.name)
-    })
-    return arr.join('、')
   },
   handleResult(rawList) {
     // console.log(rawList)
@@ -103,8 +94,8 @@ export default {
         albumId = item.album.mid
       }
       list.push({
-        singer: this.getSinger(item.singer),
-        name: item.name,
+        singer: formatSingerName(item.singer, 'name'),
+        name: item.name + (item.title_extra ?? ''),
         albumName,
         albumId,
         source: 'tx',

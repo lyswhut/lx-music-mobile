@@ -1,4 +1,3 @@
-import React from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import { Icon } from '@/components/common/Icon'
 import { useTheme } from '@/store/theme/hook'

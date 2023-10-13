@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { filterList, getHotComment } from './utils'
 import music from '@/utils/musicSdk'
 import List, { type ListType } from './components/List'

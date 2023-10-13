@@ -1,8 +1,8 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 
 import listState from '@/store/list/state'
 import ListMenu, { type ListMenuType, type Position, type SelectInfo } from './ListMenu'
-import { handlePlay, handlePlayLater, handleRemove, handleShare, handleUpdateMusicPosition } from './listAction'
+import { handleDislikeMusic, handlePlay, handlePlayLater, handleRemove, handleShare, handleUpdateMusicPosition } from './listAction'
 import List, { type ListType } from './List'
 import ListMusicAdd, { type MusicAddModalType as ListMusicAddType } from '@/components/MusicAddModal'
 import ListMusicMultiAdd, { type MusicMultiAddModalType as ListAddMultiType } from '@/components/MusicMultiAddModal'
@@ -130,15 +130,16 @@ export default () => {
           onScrollToInfo={handleScrollToInfo}
         />
       </View>
-      <ListMusicAdd ref={listMusicAddRef} />
-      <ListMusicMultiAdd ref={listMusicMultiAddRef} />
+      <ListMusicAdd ref={listMusicAddRef} onAdded={() => { hancelExitSelect() }} />
+      <ListMusicMultiAdd ref={listMusicMultiAddRef} onAdded={() => { hancelExitSelect() }} />
       <MusicPositionModal ref={musicPositionModalRef}
         onUpdatePosition={(info, postion) => { handleUpdateMusicPosition(postion, info.listId, info.musicInfo, info.selectedList, hancelExitSelect) }} />
       <ListMenu
         ref={listMenuRef}
         onPlay={info => { handlePlay(info.listId, info.index) }}
-        onPlayLater={info => { handlePlayLater(info.listId, info.musicInfo, info.selectedList, hancelExitSelect) }}
-        onRemove={info => { handleRemove(info.listId, info.musicInfo, info.selectedList, hancelExitSelect) }}
+        onPlayLater={info => { hancelExitSelect(); handlePlayLater(info.listId, info.musicInfo, info.selectedList, hancelExitSelect) }}
+        onRemove={info => { hancelExitSelect(); handleRemove(info.listId, info.musicInfo, info.selectedList, hancelExitSelect) }}
+        onDislikeMusic={info => { void handleDislikeMusic(info.musicInfo) }}
         onCopyName={info => { handleShare(info.musicInfo) }}
         onAdd={handleAddMusic}
         onMove={handleMoveMusic}

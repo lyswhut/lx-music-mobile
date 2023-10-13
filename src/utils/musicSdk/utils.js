@@ -1,4 +1,5 @@
-import crypto from 'crypto'
+import { stringMd5 } from 'react-native-quick-md5'
+import { decodeName } from '../common'
 
 /**
  * 获取音乐音质
@@ -18,4 +19,24 @@ export const getMusicType = (info, type) => {
   return '128k'
 }
 
-export const toMD5 = str => crypto.createHash('md5').update(str).digest('hex')
+export const toMD5 = str => stringMd5(str)
+
+
+/**
+ * 格式化歌手
+ * @param singers 歌手数组
+ * @param nameKey 歌手名键值
+ * @param join 歌手分割字符
+ */
+export const formatSingerName = (singers, nameKey = 'name', join = '、') => {
+  if (Array.isArray(singers)) {
+    const singer = []
+    singers.forEach(item => {
+      let name = item[nameKey]
+      if (!name) return
+      singer.push(name)
+    })
+    return decodeName(singer.join(join))
+  }
+  return decodeName(String(singers ?? ''))
+}

@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 import { ScrollView, StatusBar, TouchableOpacity, View } from 'react-native'
 import { useI18n } from '@/lang'
 import { useNavActiveId } from '@/store/common/hook'
@@ -109,7 +109,7 @@ export default memo(() => {
           confirmButtonText: global.i18n.t('list_remove_tip_button'),
         }).then(isExit => {
           if (!isExit) return
-          exitApp()
+          exitApp('Exit Btn')
         })
         return
       case 'back_home':

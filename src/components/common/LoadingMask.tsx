@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useRef, forwardRef, useImperativeHandle } from 'react'
+import { useState, useCallback, useMemo, useRef, forwardRef, useImperativeHandle } from 'react'
 import { Animated } from 'react-native'
 import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'

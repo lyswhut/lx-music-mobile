@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react'
+import { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react'
 import { View } from 'react-native'
 import { readDir, externalStorageDirectoryPath } from '@/utils/fs'
 import { createStyle, toast } from '@/utils/tools'

@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { View, Pressable, type GestureResponderEvent } from 'react-native'
 import { useLayout } from '@/utils/hooks'
 import { createStyle } from '@/utils/tools'

@@ -26,7 +26,7 @@ export function compareVer(currentVer: string, targetVer: string): -1 | 0 | 1 {
 
 export const toNewMusicInfo = (oldMusicInfo: any): LX.Music.MusicInfo => {
   const meta: Record<string, any> = {
-    songId: oldMusicInfo.songmid, // 歌曲ID，mg源为copyrightId，local为文件路径
+    songId: oldMusicInfo.songmid, // 歌曲ID，local为文件路径
     albumName: oldMusicInfo.albumName, // 歌曲专辑名称
     picUrl: oldMusicInfo.img, // 歌曲图片链接
   }
@@ -179,4 +179,14 @@ export const dateFormat2 = (time: number): string => {
   } else {
     return dateFormat(time)
   }
+}
+
+/**
+ * 格式化播放数量
+ * @param {*} num 数字
+ */
+export const formatPlayCount = (num: number): string => {
+  if (num > 100000000) return `${Math.trunc(num / 10000000) / 10}亿`
+  if (num > 10000) return `${Math.trunc(num / 1000) / 10}万`
+  return String(num)
 }

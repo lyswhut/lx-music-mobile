@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react'
+import { memo, useEffect } from 'react'
 import { View, StyleSheet, AppState } from 'react-native'
 import { screenkeepAwake, screenUnkeepAwake } from '@/utils/nativeModules/utils'
 import StatusBar from '@/components/common/StatusBar'

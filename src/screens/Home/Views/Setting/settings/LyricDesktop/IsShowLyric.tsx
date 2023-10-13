@@ -1,4 +1,4 @@
-import React, { memo, useRef } from 'react'
+import { memo, useRef } from 'react'
 import { View } from 'react-native'
 
 import ConfirmAlert, { type ConfirmAlertType } from '@/components/common/ConfirmAlert'
@@ -33,6 +33,7 @@ export default memo(() => {
   }
 
   const handleTipsCancel = () => {
+    updateSetting({ 'desktopLyric.enable': false })
     toast(t('disagree_tip'), 'long')
   }
   const handleTipsConfirm = () => {

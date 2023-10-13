@@ -2,7 +2,7 @@ import { Platform, ToastAndroid, BackHandler, Linking, Dimensions, Alert, Appear
 // import ExtraDimensions from 'react-native-extra-dimensions-android'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { storageDataPrefix } from '@/config/constant'
-import { gzip, ungzip } from '@/utils/nativeModules/gzip'
+import { gzipFile, unGzipFile } from '@/utils/nativeModules/gzip'
 import { temporaryDirectoryPath, unlink } from '@/utils/fs'
 import { getSystemLocales, isNotificationsEnabled, openNotificationPermissionActivity, readFile, shareText, writeFile } from '@/utils/nativeModules/utils'
 import musicSdk from '@/utils/musicSdk'
@@ -19,7 +19,7 @@ export const getDeviceLanguage = async() => {
   //     NativeModules.SettingsManager.settings.AppleLanguages[0] // iOS 13
   //   : await getSystemLocales()
   // deviceLanguage = typeof deviceLanguage === 'string' ? deviceLanguage.substring(0, 5).toLocaleLowerCase() : ''
-  return await getSystemLocales()
+  return getSystemLocales()
 }
 
 
@@ -29,29 +29,29 @@ export const osVer = Platform.constants.Release as string
 
 export const isActive = () => AppState.currentState == 'active'
 
-
 // fix https://github.com/facebook/react-native/issues/4934
-export const getWindowSise = (windowDimensions?: ReturnType<(typeof Dimensions)['get']>) => {
-  windowDimensions ??= Dimensions.get('window')
-  // if (Platform.OS === 'ios') return windowDimensions
-  return windowDimensions
-  // const windowSize = {
-  //   width: ExtraDimensions.getRealWindowWidth(),
-  //   height: ExtraDimensions.getRealWindowHeight(),
-  // }
-  // if (
-  //   (windowDimensions.height > windowDimensions.width && windowSize.height < windowSize.width) ||
-  //   (windowDimensions.width > windowDimensions.height && windowSize.width < windowSize.height)
-  // ) {
-  //   windowSize.height = windowSize.width
-  // }
-  // windowSize.width = windowDimensions.width
+// export const getWindowSise = (windowDimensions?: ReturnType<(typeof Dimensions)['get']>) => {
+//   return windowSizeTools.getSize()
+//   // windowDimensions ??= Dimensions.get('window')
+//   // if (Platform.OS === 'ios') return windowDimensions
+//   // return windowDimensions
+//   // const windowSize = {
+//   //   width: ExtraDimensions.getRealWindowWidth(),
+//   //   height: ExtraDimensions.getRealWindowHeight(),
+//   // }
+//   // if (
+//   //   (windowDimensions.height > windowDimensions.width && windowSize.height < windowSize.width) ||
+//   //   (windowDimensions.width > windowDimensions.height && windowSize.width < windowSize.height)
+//   // ) {
+//   //   windowSize.height = windowSize.width
+//   // }
+//   // windowSize.width = windowDimensions.width
 
-  // if (ExtraDimensions.isSoftMenuBarEnabled()) {
-  //   windowSize.height -= ExtraDimensions.getSoftMenuBarHeight()
-  // }
-  // return windowSize
-}
+//   // if (ExtraDimensions.isSoftMenuBarEnabled()) {
+//   //   windowSize.height -= ExtraDimensions.getSoftMenuBarHeight()
+//   // }
+//   // return windowSize
+// }
 
 export const checkStoragePermissions = async() => PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE)
 
@@ -146,7 +146,7 @@ export const handleSaveFile = async(path: string, data: any) => {
   // const buffer = gzip(data)
   const tempFilePath = `${temporaryDirectoryPath}/tempFile.json`
   await writeFile(tempFilePath, JSON.stringify(data))
-  await gzip(tempFilePath, path)
+  await gzipFile(tempFilePath, path)
   await unlink(tempFilePath)
 }
 export const handleReadFile = async<T = unknown>(path: string): Promise<T> => {
@@ -156,7 +156,7 @@ export const handleReadFile = async<T = unknown>(path: string): Promise<T> => {
     data = await readFile(path)
   } else {
     const tempFilePath = `${temporaryDirectoryPath}/tempFile.json`
-    await ungzip(path, tempFilePath)
+    await unGzipFile(path, tempFilePath)
     data = await readFile(tempFilePath)
     await unlink(tempFilePath)
   }
@@ -423,4 +423,44 @@ export const createStyle = <T extends StyleSheet.NamedStyles<T>>(styles: T | Sty
   return StyleSheet.create(newStyle as StyleSheet.NamedStyles<T>)
 }
 
+export interface RowInfo {
+  rowNum: number | undefined
+  rowWidth: `${number}%`
+}
+
+export type RowInfoType = 'full' | 'medium'
+
+export const getRowInfo = (type: RowInfoType = 'full'): RowInfo => {
+  const win = Dimensions.get('window')
+  let isMultiRow = win.width > win.height
+  if (type == 'medium' && win.width / win.height < 1.8) isMultiRow = false
+  // console.log('getRowInfo')
+  return {
+    rowNum: isMultiRow ? 2 : undefined,
+    rowWidth: isMultiRow ? '50%' : '100%',
+  }
+}
+
 export const toMD5 = stringMd5
+
+
+export const cheatTip = async() => {
+  const isRead = await getData<boolean>(storageDataPrefix.cheatTip)
+  if (isRead) return
+
+  return new Promise<void>((resolve) => {
+    Alert.alert(
+      '谨防被骗提示',
+      `1. 本项目无微信公众号之类的官方账号，也未在小米、华为、vivo等应用商店发布应用，商店内的“LX Music”、“洛雪音乐”相关的应用全部属于假冒应用，谨防被骗。
+2. 本软件完全无广告且无引流（如需要加群、关注公众号之类才能使用或者升级）的行为，若你使用过程中遇到广告或者引流的信息，则表明你当前运行的软件是第三方修改版。
+3. 目前本项目的原始发布地址只有 GitHub 及 蓝奏网盘 （在设置-关于有说明），其他渠道均为第三方转载发布，可信度请自行鉴别。`,
+      [{
+        text: '我知道了 (Close)',
+        onPress: () => {
+          void saveData(storageDataPrefix.cheatTip, true)
+          resolve()
+        },
+      }],
+    )
+  })
+}

@@ -37,7 +37,7 @@ export const search = async(text: string, page: number, sourceId: Source): Promi
         }
       }))
     }
-    return await Promise.all(task).then((results: SearchResult[]) => {
+    return Promise.all(task).then((results: SearchResult[]) => {
       if (key != listInfo.key) return []
       setSearchText(text)
       setSource(sourceId)

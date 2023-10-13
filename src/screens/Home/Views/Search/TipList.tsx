@@ -1,4 +1,4 @@
-import React, { useRef, useImperativeHandle, forwardRef, useState, useEffect } from 'react'
+import { useRef, useImperativeHandle, forwardRef, useState, useEffect } from 'react'
 import SearchTipList, { type SearchTipListProps as _SearchTipListProps, type SearchTipListType as _SearchTipListType } from '@/components/SearchTipList'
 import Button from '@/components/common/Button'
 import { createStyle } from '@/utils/tools'
@@ -13,7 +13,7 @@ export const ITEM_HEIGHT = scaleSizeH(36)
 
 export const debounceTipSearch = debounce((keyword: string, source: SearchState['temp_source'], callback: (list: string[]) => void) => {
   // console.log(reslutList)
-  void musicSdk[source].tempSearch.search(keyword).then(callback)
+  void musicSdk[source].tipSearch.search(keyword).then(callback)
 }, 200)
 
 

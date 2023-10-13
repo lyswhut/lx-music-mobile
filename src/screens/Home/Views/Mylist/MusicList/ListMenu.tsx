@@ -1,6 +1,7 @@
-import React, { useMemo, useRef, useImperativeHandle, forwardRef, useState } from 'react'
+import { useMemo, useRef, useImperativeHandle, forwardRef, useState } from 'react'
 import { useI18n } from '@/lang'
 import Menu, { type MenuType, type Position } from '@/components/common/Menu'
+import { hasDislike } from '@/core/dislikeList'
 
 export interface SelectInfo {
   musicInfo: LX.Music.MusicInfo
@@ -18,6 +19,7 @@ export interface ListMenuProps {
   onMove: (selectInfo: SelectInfo) => void
   onCopyName: (selectInfo: SelectInfo) => void
   onChangePosition: (selectInfo: SelectInfo) => void
+  onDislikeMusic: (selectInfo: SelectInfo) => void
   onRemove: (selectInfo: SelectInfo) => void
 }
 export interface ListMenuType {
@@ -33,10 +35,12 @@ export default forwardRef<ListMenuType, ListMenuProps>((props, ref) => {
   const [visible, setVisible] = useState(false)
   const menuRef = useRef<MenuType>(null)
   const selectInfoRef = useRef<SelectInfo>(initSelectInfo as SelectInfo)
+  const [isDislikeMusic, setDislikeMusic] = useState(false)
 
   useImperativeHandle(ref, () => ({
     show(selectInfo, position) {
       selectInfoRef.current = selectInfo
+      setDislikeMusic(hasDislike(selectInfo.musicInfo))
       if (visible) menuRef.current?.show(position)
       else {
         setVisible(true)
@@ -56,9 +60,10 @@ export default forwardRef<ListMenuType, ListMenuProps>((props, ref) => {
       { action: 'move', label: t('move_to') },
       { action: 'copyName', label: t('copy_name') },
       { action: 'changePosition', label: t('change_position') },
+      { action: 'dislike', label: t('dislike'), disabled: isDislikeMusic },
       { action: 'remove', label: t('delete') },
     ] as const
-  }, [t])
+  }, [t, isDislikeMusic])
 
   const handleMenuPress = ({ action }: typeof menus[number]) => {
     const selectInfo = selectInfoRef.current
@@ -90,6 +95,9 @@ export default forwardRef<ListMenuType, ListMenuProps>((props, ref) => {
       case 'changePosition':
         props.onChangePosition(selectInfo)
         // setVIsibleMusicPosition(true)
+        break
+      case 'dislike':
+        props.onDislikeMusic(selectInfo)
         break
       case 'remove':
         props.onRemove(selectInfo)

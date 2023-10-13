@@ -1,14 +1,14 @@
-import React, { forwardRef, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useImperativeHandle, useRef } from 'react'
 import { View } from 'react-native'
 
 import SourceSelector, {
   type SourceSelectorType as _SourceSelectorType,
   // type SourceSelectorProps as _SourceSelectorProps,
 } from '@/components/SourceSelector'
-import BoardsList, { type BoardsListType, type BoardsListProps } from './BoardsList'
+import BoardsList, { type BoardsListType, type BoardsListProps } from '../BoardsList'
 import { BorderWidths } from '@/theme'
 import { createStyle } from '@/utils/tools'
-import { handleCollect, handlePlay } from './listAction'
+import { handleCollect, handlePlay } from '../listAction'
 import boardState, { type InitState } from '@/store/leaderboard/state'
 import { useTheme } from '@/store/theme/hook'
 import { getBoardsList } from '@/core/leaderboard'
@@ -86,6 +86,7 @@ const styles = createStyle({
     flexDirection: 'column',
     width: '26%',
     maxWidth: 180,
+    minWidth: 110,
     flexGrow: 0,
     flexShrink: 0,
     borderRightWidth: BorderWidths.normal,

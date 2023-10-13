@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 
 import Slider, { type SliderProps as _SliderProps } from '@react-native-community/slider'
 import { createStyle } from '@/utils/tools'

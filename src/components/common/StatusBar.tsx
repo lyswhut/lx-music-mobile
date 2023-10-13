@@ -1,5 +1,4 @@
 import { useTheme } from '@/store/theme/hook'
-import React from 'react'
 import { StatusBar as RNStatusBar } from 'react-native'
 
 const StatusBar = function() {
@@ -9,5 +8,6 @@ const StatusBar = function() {
 }
 
 StatusBar.currentHeight = RNStatusBar.currentHeight ?? 0
+StatusBar.setBarStyle = RNStatusBar.setBarStyle
 
 export default StatusBar

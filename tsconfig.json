@@ -1,10 +1,9 @@
-// prettier-ignore
 {
   "extends": "@tsconfig/react-native/tsconfig.json",     /* Recommended React Native TSConfig base */
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
-    "types": ["react-native"],
+    "types": ["react-native", "node"],
     /* Completeness */
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
 
@@ -20,5 +19,5 @@
       // "@utils": ["src/utils"],
     }
   },
-  "exclude": ["node_modules", "build", "dist", ".eslintrc.js"]
+  "exclude": ["node_modules", "build", "dist"]
 }

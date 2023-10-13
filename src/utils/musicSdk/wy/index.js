@@ -6,8 +6,10 @@ import musicSearch from './musicSearch'
 import songList from './songList'
 import hotSearch from './hotSearch'
 import comment from './comment'
+// import tipSearch from './tipSearch'
 
 const wy = {
+  // tipSearch,
   leaderboard,
   musicSearch,
   songList,
@@ -21,8 +23,7 @@ const wy = {
   },
   getPic(songInfo) {
     const requestObj = getMusicInfo(songInfo.songmid)
-    requestObj.promise = requestObj.promise.then(info => info.al.picUrl)
-    return requestObj
+    return requestObj.promise.then(info => info.al.picUrl)
   },
   getMusicDetailPageUrl(songInfo) {
     return `https://music.163.com/#/song?id=${songInfo.songmid}`

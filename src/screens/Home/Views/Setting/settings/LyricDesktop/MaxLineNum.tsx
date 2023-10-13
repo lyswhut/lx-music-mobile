@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { View } from 'react-native'
 
 import SubTitle from '../../components/SubTitle'

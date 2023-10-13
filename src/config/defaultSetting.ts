@@ -20,7 +20,9 @@ const defaultSetting: LX.AppSetting = {
   'player.cacheSize': '1024',
   'player.timeoutExit': '',
   'player.timeoutExitPlayed': true,
+  'player.isAutoCleanPlayedList': false,
   'player.isHandleAudioFocus': true,
+  'player.isEnableAudioOffload': true,
   'player.isShowLyricTranslation': false,
   'player.isShowLyricRoma': false,
   'player.isShowNotificationImage': true,
@@ -31,6 +33,7 @@ const defaultSetting: LX.AppSetting = {
   'playDetail.style.align': 'center',
   'playDetail.vertical.style.lrcFontSize': 176,
   'playDetail.horizontal.style.lrcFontSize': 180,
+  'playDetail.isShowLyricProgressSetting': false,
 
   'desktopLyric.enable': false,
   'desktopLyric.isLock': false,
@@ -53,6 +56,8 @@ const defaultSetting: LX.AppSetting = {
 
   'list.isClickPlayList': false,
   'list.isShowSource': true,
+  'list.isShowAlbumName': false,
+  'list.isShowInterval': true,
   'list.isSaveScrollLocation': true,
   'list.addMusicLocationType': 'top',
 
@@ -60,7 +65,8 @@ const defaultSetting: LX.AppSetting = {
 
   'sync.enable': false,
 
-  'theme.id': 'blue_plus',
+  // 'theme.id': 'blue_plus',
+  'theme.id': 'green',
   'theme.lightId': 'green',
   'theme.darkId': 'black',
   'theme.hideBgDark': false,

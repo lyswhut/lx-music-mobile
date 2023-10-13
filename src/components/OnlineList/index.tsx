@@ -1,12 +1,12 @@
-import React, { useRef, forwardRef, useImperativeHandle } from 'react'
+import { useRef, forwardRef, useImperativeHandle } from 'react'
 import { View } from 'react-native'
 // import LoadingMask, { LoadingMaskType } from '@/components/common/LoadingMask'
-import List, { type ListProps, type ListType, type Status } from './List'
+import List, { type ListProps, type ListType, type Status, type RowInfoType } from './List'
 import ListMenu, { type ListMenuType, type Position, type SelectInfo } from './ListMenu'
 import ListMusicMultiAdd, { type MusicMultiAddModalType as ListAddMultiType } from '@/components/MusicMultiAddModal'
 import ListMusicAdd, { type MusicAddModalType as ListMusicAddType } from '@/components/MusicAddModal'
 import MultipleModeBar, { type MultipleModeBarType, type SelectMode } from './MultipleModeBar'
-import { handlePlay, handlePlayLater, handleShare } from './listAction'
+import { handleDislikeMusic, handlePlay, handlePlayLater, handleShare } from './listAction'
 import { createStyle } from '@/utils/tools'
 
 export interface OnlineListProps {
@@ -16,9 +16,10 @@ export interface OnlineListProps {
   progressViewOffset?: ListProps['progressViewOffset']
   ListHeaderComponent?: ListProps['ListHeaderComponent']
   checkHomePagerIdle?: boolean
+  rowType?: RowInfoType
 }
 export interface OnlineListType {
-  setList: (list: LX.Music.MusicInfoOnline[], showSource?: boolean) => void
+  setList: (list: LX.Music.MusicInfoOnline[], isAppend?: boolean, showSource?: boolean) => void
   setStatus: (val: Status) => void
 }
 
@@ -29,6 +30,7 @@ export default forwardRef<OnlineListType, OnlineListProps>(({
   progressViewOffset,
   ListHeaderComponent,
   checkHomePagerIdle = false,
+  rowType,
 }, ref) => {
   const listRef = useRef<ListType>(null)
   const multipleModeBarRef = useRef<MultipleModeBarType>(null)
@@ -38,8 +40,9 @@ export default forwardRef<OnlineListType, OnlineListProps>(({
   // const loadingMaskRef = useRef<LoadingMaskType>(null)
 
   useImperativeHandle(ref, () => ({
-    setList(list, showSource) {
-      listRef.current?.setList(list, showSource)
+    setList(list, isAppend = false, showSource = false) {
+      listRef.current?.setList(list, isAppend, showSource)
+      multipleModeBarRef.current?.setIsSelectAll(false)
     },
     setStatus(val) {
       listRef.current?.setStatus(val)
@@ -89,6 +92,7 @@ export default forwardRef<OnlineListType, OnlineListProps>(({
           progressViewOffset={progressViewOffset}
           ListHeaderComponent={ListHeaderComponent}
           checkHomePagerIdle={checkHomePagerIdle}
+          rowType={rowType}
         />
         <MultipleModeBar
           ref={multipleModeBarRef}
@@ -97,14 +101,15 @@ export default forwardRef<OnlineListType, OnlineListProps>(({
           onExitSelectMode={hancelExitSelect}
         />
       </View>
-      <ListMusicAdd ref={listMusicAddRef} />
-      <ListMusicMultiAdd ref={listMusicMultiAddRef} />
+      <ListMusicAdd ref={listMusicAddRef} onAdded={() => { hancelExitSelect() }} />
+      <ListMusicMultiAdd ref={listMusicMultiAddRef} onAdded={() => { hancelExitSelect() }} />
       <ListMenu
         ref={listMenuRef}
         onPlay={info => { handlePlay(info.musicInfo) }}
-        onPlayLater={info => { handlePlayLater(info.musicInfo, info.selectedList, hancelExitSelect) }}
+        onPlayLater={info => { hancelExitSelect(); handlePlayLater(info.musicInfo, info.selectedList, hancelExitSelect) }}
         onCopyName={info => { handleShare(info.musicInfo) }}
         onAdd={handleAddMusic}
+        onDislikeMusic={info => { void handleDislikeMusic(info.musicInfo) }}
       />
       {/* <LoadingMask ref={loadingMaskRef} /> */}
     </View>

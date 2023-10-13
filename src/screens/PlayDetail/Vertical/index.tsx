@@ -1,4 +1,4 @@
-import React, { memo, useState, useRef, useMemo, useEffect } from 'react'
+import { memo, useState, useRef, useMemo, useEffect } from 'react'
 import { View, StyleSheet, AppState } from 'react-native'
 
 import Header from './components/Header'

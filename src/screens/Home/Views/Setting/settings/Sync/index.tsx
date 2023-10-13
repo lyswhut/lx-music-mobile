@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import { memo, useState } from 'react'
 
 import Section from '../../components/Section'
 import IsEnable from './IsEnable'

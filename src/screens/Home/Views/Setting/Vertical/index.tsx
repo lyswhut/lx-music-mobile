@@ -1,6 +1,5 @@
 export { default } from './Main'
-// import React from 'react'
-// import { View } from 'react-native'
+// // import { View } from 'react-native'
 // import Main from './Main'
 // import { createStyle } from '@/utils/tools'
 

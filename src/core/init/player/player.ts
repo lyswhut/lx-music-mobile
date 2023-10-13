@@ -24,6 +24,7 @@ export default async(setting: LX.AppSetting) => {
     }
     // resetPlayerMusicInfo()
     // global.app_event.stop()
+    global.app_event.setProgress(0)
     setStatusText(global.i18n.t('player__end'))
     void playNext(true)
     // })

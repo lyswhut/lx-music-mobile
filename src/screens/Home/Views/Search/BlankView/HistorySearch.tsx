@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { type InitState } from '@/store/hotSearch/state'
 import Button from '@/components/common/Button'

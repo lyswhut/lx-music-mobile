@@ -60,12 +60,36 @@ const { addDelayNextTimeout: addLoadTimeout, clearDelayNextTimeout: clearLoadTim
  * 检查音乐信息是否已更改
  */
 const diffCurrentMusicInfo = (curMusicInfo: LX.Music.MusicInfo | LX.Download.ListItem): boolean => {
-  return curMusicInfo !== playerState.playMusicInfo.musicInfo || playerState.isPlay
+  // return curMusicInfo !== playerState.playMusicInfo.musicInfo || playerState.isPlay
+  return curMusicInfo.id != global.lx.gettingUrlId || curMusicInfo.id != playerState.playMusicInfo.musicInfo?.id || playerState.isPlay
 }
 
+let cancelDelayRetry: (() => void) | null = null
+const delayRetry = async(musicInfo: LX.Music.MusicInfo | LX.Download.ListItem, isRefresh = false): Promise<string | null> => {
+  // if (cancelDelayRetry) cancelDelayRetry()
+  return new Promise<string | null>((resolve, reject) => {
+    const time = getRandom(2, 6)
+    setStatusText(global.i18n.t('player__geting_url_delay_retry', { time }))
+    const tiemout = setTimeout(() => {
+      getMusicPlayUrl(musicInfo, isRefresh, true).then((result) => {
+        cancelDelayRetry = null
+        resolve(result)
+      }).catch(async(err: any) => {
+        cancelDelayRetry = null
+        reject(err)
+      })
+    }, time * 1000)
+    cancelDelayRetry = () => {
+      clearTimeout(tiemout)
+      cancelDelayRetry = null
+      resolve(null)
+    }
+  })
+}
 const getMusicPlayUrl = async(musicInfo: LX.Music.MusicInfo | LX.Download.ListItem, isRefresh = false, isRetryed = false): Promise<string | null> => {
   // this.musicInfo.url = await getMusicPlayUrl(targetSong, type)
   setStatusText(global.i18n.t('player__geting_url'))
+  addLoadTimeout()
 
   // const type = getPlayType(settingState.setting['player.isPlayHighQuality'], musicInfo)
 
@@ -86,6 +110,8 @@ const getMusicPlayUrl = async(musicInfo: LX.Music.MusicInfo | LX.Download.ListIt
       diffCurrentMusicInfo(musicInfo) ||
       err.message == requestMsg.cancelRequest) return null
 
+    if (err.message == requestMsg.tooManyRequests) return delayRetry(musicInfo, isRefresh)
+
     if (!isRetryed) return getMusicPlayUrl(musicInfo, isRefresh, true)
 
     throw err
@@ -93,7 +119,9 @@ const getMusicPlayUrl = async(musicInfo: LX.Music.MusicInfo | LX.Download.ListIt
 }
 
 export const setMusicUrl = (musicInfo: LX.Music.MusicInfo | LX.Download.ListItem, isRefresh?: boolean) => {
-  addLoadTimeout()
+  // addLoadTimeout()
+  if (!diffCurrentMusicInfo(musicInfo)) return
+  if (cancelDelayRetry) cancelDelayRetry()
   global.lx.gettingUrlId = musicInfo.id
   void getMusicPlayUrl(musicInfo, isRefresh).then((url) => {
     if (!url) return
@@ -157,6 +185,7 @@ const handlePlay = async() => {
       playRate: settingState.setting['player.playbackRate'],
       cacheSize: settingState.setting['player.cacheSize'] ? parseInt(settingState.setting['player.cacheSize']) : 0,
       isHandleAudioFocus: settingState.setting['player.isHandleAudioFocus'],
+      isEnableAudioOffload: settingState.setting['player.isEnableAudioOffload'],
     })
   }
 
@@ -171,8 +200,7 @@ const handlePlay = async() => {
   const playMusicInfo = playerState.playMusicInfo
   const musicInfo = playMusicInfo.musicInfo
 
-  if (!musicInfo || global.lx.gettingUrlId == musicInfo.id) return
-  global.lx.gettingUrlId &&= ''
+  if (!musicInfo) return
 
   await setStop()
   global.app_event.pause()
@@ -215,9 +243,10 @@ const handlePlay = async() => {
  */
 export const playList = async(listId: string, index: number) => {
   await pause()
+  const prevListId = playerState.playInfo.playerListId
   setPlayListId(listId)
   setPlayMusicInfo(listId, getList(listId)[index])
-  clearPlayedList()
+  if (settingState.setting['player.isAutoCleanPlayedList'] || prevListId != listId) clearPlayedList()
   clearTempPlayeList()
   await handlePlay()
 }
@@ -289,6 +318,7 @@ export const playNext = async(isAutoToggle = false): Promise<void> => {
     list: currentList,
     playedList,
     playerMusicInfo: currentList[playInfo.playerPlayIndex],
+    isNext: true,
   })
 
   if (!filteredList.length) return handleToggleStop()
@@ -382,6 +412,7 @@ export const playPrev = async(isAutoToggle = false): Promise<void> => {
     list: currentList,
     playedList,
     playerMusicInfo: currentList[playInfo.playerPlayIndex],
+    isNext: false,
   })
   if (!filteredList.length) return handleToggleStop()
 

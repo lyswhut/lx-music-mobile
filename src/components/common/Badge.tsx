@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import Text from './Text'
@@ -12,7 +12,8 @@ const styles = createStyle({
     // borderRadius: 2,
     // lineHeight: 12,
     // marginTop: 2,
-    marginLeft: 5,
+    marginRight: 5,
+    fontWeight: '400',
     // marginRight: 5,
     // marginBottom: 2,
     // alignSelf: 'flex-start',

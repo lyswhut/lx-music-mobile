@@ -1,12 +1,26 @@
 import { request, generateRsaKey } from './utils'
 import { getSyncAuthKey, setSyncAuthKey } from '../data'
-import { SYNC_CODE } from '@/config/constant'
 import log from '../log'
 import { aesDecrypt, aesEncrypt, rsaDecrypt } from '../utils'
 import { getDeviceName } from '@/utils/nativeModules/utils'
+import { toMD5 } from '@/utils/tools'
+import { SYNC_CODE } from '../constants'
 
 const hello = async(urlInfo: LX.Sync.UrlInfo) => request(`${urlInfo.httpProtocol}//${urlInfo.hostPath}/hello`)
-  .then(({ text }) => text == SYNC_CODE.helloMsg)
+  .then(({ text }) => {
+    if (text == SYNC_CODE.helloMsg) return true
+    if (text.startsWith('Hello~::^-^::')) {
+      const verRxp = /v(\d+)/
+      let result = verRxp.exec(text)?.[1]
+      if (result != null) {
+        const servVer = parseInt(result)
+        const localVer = parseInt(verRxp.exec(SYNC_CODE.helloMsg)[1])
+        if (servVer > localVer) throw new Error(SYNC_CODE.highServiceVersion)
+        else if (servVer < localVer) throw new Error(SYNC_CODE.lowServiceVersion)
+      }
+    }
+    return false
+  })
   .catch((err: any) => {
     log.error('[auth] hello', err.message)
     console.log(err)
@@ -25,7 +39,7 @@ const getServerId = async(urlInfo: LX.Sync.UrlInfo) => request(`${urlInfo.httpPr
   })
 
 const codeAuth = async(urlInfo: LX.Sync.UrlInfo, serverId: string, authCode: string) => {
-  let key = ''.padStart(16, Buffer.from(authCode).toString('hex'))
+  let key = toMD5(authCode).substring(0, 16)
   // const iv = Buffer.from(key.split('').reverse().join('')).toString('base64')
   key = Buffer.from(key).toString('base64')
   let { publicKey, privateKey } = await generateRsaKey()

@@ -18,9 +18,9 @@ let isInitialized = false
 // let isPlaying = false
 
 // 销毁播放器并退出
-const handleExitApp = async() => {
+const handleExitApp = async(reason: string) => {
   global.lx.isPlayedStop = false
-  exitApp()
+  exitApp(reason)
 }
 
 
@@ -50,7 +50,7 @@ const registerPlaybackService = async() => {
 
   TrackPlayer.addEventListener(TPEvent.RemoteStop, () => {
     // console.log('remote-stop')
-    void handleExitApp()
+    void handleExitApp('Remote Stop')
   })
 
   // TrackPlayer.addEventListener(TPEvent.RemoteDuck, async({ permanent, paused, ducking }) => {
@@ -105,7 +105,7 @@ const registerPlaybackService = async() => {
         // console.log('playback-state', info)
         break
     }
-    if (global.lx.isPlayedStop) return handleExitApp()
+    if (global.lx.isPlayedStop) return handleExitApp('Timeout Exit')
 
     // console.log('currentIsPlaying', currentIsPlaying, global.lx.playInfo.isPlaying)
     // void updateMetaData(global.lx.store_playMusicInfo.musicInfo, currentIsPlaying)
@@ -114,12 +114,14 @@ const registerPlaybackService = async() => {
     // console.log('PlaybackTrackChanged====>', info)
     global.lx.playerTrackId = await getCurrentTrackId()
     if (info.track == null) return
-    if (global.lx.isPlayedStop) return handleExitApp()
+    if (global.lx.isPlayedStop) return handleExitApp('Timeout Exit')
 
     // console.log('global.lx.playerTrackId====>', global.lx.playerTrackId)
     if (isEmpty()) {
       // console.log('====TEMP PAUSE====')
       await TrackPlayer.pause()
+      global.app_event.playerPause()
+      global.app_event.pause()
       global.app_event.playerEnded()
       global.app_event.playerEmptied()
       // if (retryTrack) {

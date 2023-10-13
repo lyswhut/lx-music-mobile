@@ -1,5 +1,5 @@
-import React, { memo, useRef } from 'react'
-import { StyleSheet, View, TouchableOpacity } from 'react-native'
+import { memo, useRef } from 'react'
+import { View, TouchableOpacity } from 'react-native'
 // import Button from '@/components/common/Button'
 import Text from '@/components/common/Text'
 import Badge, { type BadgeType } from '@/components/common/Badge'
@@ -8,6 +8,7 @@ import { useI18n } from '@/lang'
 import { useTheme } from '@/store/theme/hook'
 import { scaleSizeH } from '@/utils/pixelRatio'
 import { LIST_ITEM_HEIGHT } from '@/config/constant'
+import { createStyle, type RowInfo } from '@/utils/tools'
 
 export const ITEM_HEIGHT = scaleSizeH(LIST_ITEM_HEIGHT)
 
@@ -28,7 +29,7 @@ const useQualityTag = (musicInfo: LX.Music.MusicInfoOnline) => {
   return info
 }
 
-export default memo(({ item, index, showSource, onPress, onLongPress, onShowMenu, selectedList }: {
+export default memo(({ item, index, showSource, onPress, onLongPress, onShowMenu, selectedList, rowInfo, isShowAlbumName, isShowInterval }: {
   item: LX.Music.MusicInfoOnline
   index: number
   showSource?: boolean
@@ -36,6 +37,9 @@ export default memo(({ item, index, showSource, onPress, onLongPress, onShowMenu
   onLongPress: (item: LX.Music.MusicInfoOnline, index: number) => void
   onShowMenu: (item: LX.Music.MusicInfoOnline, index: number, position: { x: number, y: number, w: number, h: number }) => void
   selectedList: LX.Music.MusicInfoOnline[]
+  rowInfo: RowInfo
+  isShowAlbumName: boolean
+  isShowInterval: boolean
 }) => {
   const theme = useTheme()
 
@@ -52,18 +56,25 @@ export default memo(({ item, index, showSource, onPress, onLongPress, onShowMenu
   }
   const tagInfo = useQualityTag(item)
 
+  const singer = `${item.singer}${isShowAlbumName && item.meta.albumName ? ` · ${item.meta.albumName}` : ''}`
+
   return (
-    <View style={{ ...styles.listItem, height: ITEM_HEIGHT, backgroundColor: isSelected ? theme['c-primary-background-hover'] : 'rgba(0,0,0,0)' }}>
+    <View style={{ ...styles.listItem, width: rowInfo.rowWidth, height: ITEM_HEIGHT, backgroundColor: isSelected ? theme['c-primary-background-hover'] : 'rgba(0,0,0,0)' }}>
       <TouchableOpacity style={styles.listItemLeft} onPress={() => { onPress(item, index) }} onLongPress={() => { onLongPress(item, index) }}>
         <Text style={styles.sn} size={13} color={theme['c-300']}>{index + 1}</Text>
         <View style={styles.itemInfo}>
           <Text numberOfLines={1}>{item.name}</Text>
           <View style={styles.listItemSingle}>
-            <Text style={styles.listItemSingleText} size={13} color={theme['c-500']} numberOfLines={1}>{item.singer}</Text>
             { tagInfo.type ? <Badge type={tagInfo.type}>{tagInfo.text}</Badge> : null }
             { showSource ? <Badge type="tertiary">{item.source}</Badge> : null }
+            <Text style={styles.listItemSingleText} size={11} color={theme['c-500']} numberOfLines={1}>{singer}</Text>
           </View>
         </View>
+        {
+          isShowInterval ? (
+            <Text size={12} color={theme['c-250']} numberOfLines={1}>{item.interval}</Text>
+          ) : null
+        }
       </TouchableOpacity>
      <TouchableOpacity onPress={handleShowMenu} ref={moreButtonRef} style={styles.moreButton}>
         <Icon name="dots-vertical" style={{ color: theme['c-350'] }} size={12} />
@@ -73,13 +84,15 @@ export default memo(({ item, index, showSource, onPress, onLongPress, onShowMenu
 }, (prevProps, nextProps) => {
   return !!(prevProps.item === nextProps.item &&
     prevProps.index === nextProps.index &&
+    prevProps.isShowAlbumName === nextProps.isShowAlbumName &&
+    prevProps.isShowInterval === nextProps.isShowInterval &&
     nextProps.selectedList.includes(nextProps.item) == prevProps.selectedList.includes(nextProps.item)
   )
 })
 
-const styles = StyleSheet.create({
+const styles = createStyle({
   listItem: {
-    width: '100%',
+    // width: '100%',
     flexDirection: 'row',
     flexWrap: 'nowrap',
     // paddingLeft: 10,
@@ -103,8 +116,9 @@ const styles = StyleSheet.create({
     paddingRight: 3,
   },
   itemInfo: {
-    flexGrow: 0,
+    flexGrow: 1,
     flexShrink: 1,
+    paddingRight: 2,
     // paddingTop: 10,
     // paddingBottom: 10,
   },
@@ -117,14 +131,20 @@ const styles = StyleSheet.create({
   listItemSingle: {
     paddingTop: 2,
     flexDirection: 'row',
+    alignItems: 'center',
     // alignItems: 'flex-end',
     // backgroundColor: 'rgba(0,0,0,0.2)',
+  },
+  listItemTimeLabel: {
+    marginRight: 5,
+    fontWeight: '400',
   },
   listItemSingleText: {
     // fontSize: 13,
     // paddingTop: 2,
     flexGrow: 0,
     flexShrink: 1,
+    fontWeight: '300',
   },
   listItemBadge: {
     // fontSize: 10,

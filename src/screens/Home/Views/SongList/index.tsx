@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import settingState from '@/store/setting/state'
 import Content from './Content'
 import TagList from './TagList'

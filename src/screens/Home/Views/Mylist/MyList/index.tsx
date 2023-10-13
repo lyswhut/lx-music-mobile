@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import ListMenu, { type ListMenuType } from './ListMenu'
 import ListNameEdit, { type ListNameEditType } from './ListNameEdit'

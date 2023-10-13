@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { ScrollView, View } from 'react-native'
 import NavList from './NavList'
 import Main, { type MainType } from '../Main'

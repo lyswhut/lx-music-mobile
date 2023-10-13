@@ -1,4 +1,4 @@
-import React, { memo, useRef } from 'react'
+import { memo, useRef } from 'react'
 import TimeoutExitEditModal, { type TimeoutExitEditModalType, useTimeInfo } from '@/components/TimeoutExitEditModal'
 import { useTheme } from '@/store/theme/hook'
 import Btn from './Btn'

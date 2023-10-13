@@ -9,7 +9,7 @@
  * @format
  */
 
-import React, { forwardRef } from 'react'
+import { forwardRef } from 'react'
 import {
   View,
   StyleSheet,
@@ -22,7 +22,7 @@ import type { ImageBackgroundProps as _ImageBackgroundProps } from 'react-native
  * Very simple drop-in replacement for <Image> which supports nesting views.
  *
  * ```ReactNativeWebPlayer
- * import React, { Component } from 'react';
+ * import { Component } from 'react';
  * import { AppRegistry, View, ImageBackground, Text } from 'react-native';
  *
  * class DisplayAnImageBackground extends Component {

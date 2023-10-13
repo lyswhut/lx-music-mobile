@@ -1,4 +1,4 @@
-import { NativeModules } from 'react-native'
+import { NativeEventEmitter, NativeModules } from 'react-native'
 
 const { UtilsModule } = NativeModules
 
@@ -43,4 +43,31 @@ export const readFile = async(filePath: string): Promise<string> => {
 }
 export const getSystemLocales = async(): Promise<string> => {
   return UtilsModule.getSystemLocales()
+}
+
+export const onScreenStateChange = (callback: (state: 'ON' | 'OFF') => void): () => void => {
+  const eventEmitter = new NativeEventEmitter(UtilsModule)
+  const eventListener = eventEmitter.addListener('screen-state', event => {
+    callback(event.state)
+  })
+
+  return () => {
+    eventListener.remove()
+  }
+}
+
+export const getWindowSize = async(): Promise<{ width: number, height: number }> => {
+  return UtilsModule.getWindowSize()
+}
+
+export const onWindowSizeChange = (callback: (size: { width: number, height: number }) => void): () => void => {
+  UtilsModule.listenWindowSizeChanged()
+  const eventEmitter = new NativeEventEmitter(UtilsModule)
+  const eventListener = eventEmitter.addListener('screen-size-changed', event => {
+    callback(event)
+  })
+
+  return () => {
+    eventListener.remove()
+  }
 }

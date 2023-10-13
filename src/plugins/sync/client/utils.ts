@@ -1,4 +1,5 @@
-import { generateKeyPair } from 'crypto'
+// import { generateKeyPair } from 'crypto'
+import { gzipStringToBase64, unGzipFromBase64 } from '@/utils/nativeModules/gzip'
 import BackgroundTimer from 'react-native-background-timer'
 
 export const request = async(url: string, { timeout = 10000, ...options }: RequestInit & { timeout?: number } = {}) => {
@@ -37,44 +38,49 @@ export const request = async(url: string, { timeout = 10000, ...options }: Reque
 //   return Buffer.concat([decipher.update(Buffer.from(text, 'base64')), decipher.final()]).toString()
 // }
 
-export const generateRsaKey = async() => new Promise<{ publicKey: string, privateKey: string }>((resolve, reject) => {
-  generateKeyPair(
-    'rsa',
-    {
-      modulusLength: 2048, // It holds a number. It is the key size in bits and is applicable for RSA, and DSA algorithm only.
-      publicKeyEncoding: {
-        type: 'spki', // Note the type is pkcs1 not spki
-        format: 'pem',
-      },
-      privateKeyEncoding: {
-        type: 'pkcs8', // Note again the type is set to pkcs1
-        format: 'pem',
-        // cipher: "aes-256-cbc", //Optional
-        // passphrase: "", //Optional
-      },
-    },
-    (err, publicKey, privateKey) => {
-      if (err) {
-        reject(err)
-        return
-      }
-      resolve({
-        publicKey,
-        privateKey,
-      })
-    },
-  )
-})
+export { generateRsaKey } from '@/utils/nativeModules/crypto'
+// export const generateRsaKey = async() => new Promise<{ publicKey: string, privateKey: string }>((resolve, reject) => {
+//   generateKeyPair(
+//     'rsa',
+//     {
+//       modulusLength: 2048, // It holds a number. It is the key size in bits and is applicable for RSA, and DSA algorithm only.
+//       publicKeyEncoding: {
+//         type: 'spki', // Note the type is pkcs1 not spki
+//         format: 'pem',
+//       },
+//       privateKeyEncoding: {
+//         type: 'pkcs8', // Note again the type is set to pkcs1
+//         format: 'pem',
+//         // cipher: "aes-256-cbc", //Optional
+//         // passphrase: "", //Optional
+//       },
+//     },
+//     (err, publicKey, privateKey) => {
+//       if (err) {
+//         reject(err)
+//         return
+//       }
+//       resolve({
+//         publicKey,
+//         privateKey,
+//       })
+//     },
+//   )
+// })
 
 
-export const encryptMsg = (keyInfo: LX.Sync.KeyInfo, msg: string): string => {
-  return msg
+export const encryptMsg = async(keyInfo: LX.Sync.KeyInfo, msg: string): Promise<string> => {
+  return msg.length > 1024
+    ? 'cg_' + await gzipStringToBase64(msg)
+    : msg
   // if (!keyInfo) return ''
   // return aesEncrypt(msg, keyInfo.key, keyInfo.iv)
 }
 
-export const decryptMsg = (keyInfo: LX.Sync.KeyInfo, enMsg: string): string => {
-  return enMsg
+export const decryptMsg = async(keyInfo: LX.Sync.KeyInfo, enMsg: string): Promise<string> => {
+  return enMsg.substring(0, 3) == 'cg_'
+    ? unGzipFromBase64(enMsg.replace('cg_', ''))
+    : enMsg
   // if (!keyInfo) return ''
   // let msg = ''
   // try {

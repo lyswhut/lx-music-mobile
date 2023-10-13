@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { InteractionManager } from 'react-native'
 import Search from '../Views/Search'
 import SongList from '../Views/SongList'

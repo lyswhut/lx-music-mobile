@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback, useMemo, forwardRef, useImperativeHandle, type Ref } from 'react'
+import { useRef, useState, useCallback, useMemo, forwardRef, useImperativeHandle, type Ref } from 'react'
 import { StyleSheet, View, Animated } from 'react-native'
 // import PropTypes from 'prop-types'
 // import { AppColors } from '@/theme'
@@ -47,28 +47,29 @@ const Component = <T extends ItemT<T>>({ onPressBg = noop, ...props }: SearchTip
     if (!heightRef.current) return
     setVisible(true)
     setAnimatPlayed(false)
+    requestAnimationFrame(() => {
+      translateY.setValue(-heightRef.current / 2)
+      scaleY.setValue(0)
 
-    translateY.setValue(-heightRef.current / 2)
-    scaleY.setValue(0)
-
-    Animated.parallel([
+      Animated.parallel([
       // Animated.timing(fade, {
       //   toValue: 1,
       //   duration: 300,
       //   useNativeDriver: true,
       // }),
-      Animated.timing(translateY, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scaleY, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      setAnimatPlayed(true)
+        Animated.timing(translateY, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleY, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        setAnimatPlayed(true)
+      })
     })
   }, [translateY, scaleY])
 

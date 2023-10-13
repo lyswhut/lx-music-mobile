@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 // import { getWindowSise, onDimensionChange } from '@/utils/tools'
 import DrawerNav from './DrawerNav'
 import Header from './Header'

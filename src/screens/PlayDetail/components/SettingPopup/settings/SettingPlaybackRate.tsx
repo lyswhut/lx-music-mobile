@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import { View } from 'react-native'
 import { useTheme } from '@/store/theme/hook'
@@ -46,8 +46,8 @@ const Volume = () => {
     setSliderSize(100)
     void setPlaybackRate(1).then(() => {
       void updateMetaData(playerState.musicInfo, playerState.isPlay, true) // 更新通知栏的播放速率
+      void setLyricPlaybackRate(1)
     })
-    void setLyricPlaybackRate(1)
     updateSetting({ 'player.playbackRate': 1 })
   }
 

@@ -2,7 +2,7 @@ import Button from '@/components/common/Button'
 import Text from '@/components/common/Text'
 import { useI18n } from '@/lang'
 import { createStyle } from '@/utils/tools'
-import React, { forwardRef, useImperativeHandle, useState } from 'react'
+import { forwardRef, useImperativeHandle, useState } from 'react'
 
 
 export interface CurrentTagBtnProps {

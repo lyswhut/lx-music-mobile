@@ -1,5 +1,5 @@
 import { Navigation } from 'react-native-navigation'
-import { Dimensions, InteractionManager } from 'react-native'
+import { InteractionManager } from 'react-native'
 
 import {
   HOME_SCREEN,
@@ -11,10 +11,11 @@ import {
 
 import themeState from '@/store/theme/state'
 import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
+import { getStatusBarStyle } from './utils'
+import { windowSizeTools } from '@/utils/windowSizeTools'
 
 // const store = getStore()
 // const getTheme = () => getter('common', 'theme')(store.getState())
-const getStatusBarStyle = (isDark: boolean) => isDark ? 'light' : 'dark'
 
 export async function pushHomeScreen() {
   /*
@@ -71,10 +72,10 @@ export async function pushHomeScreen() {
               },
               navigationBar: {
                 // visible: false,
-                backgroundColor: theme.isDark ? '#000' : '#fff',
+                backgroundColor: theme['c-content-background'],
               },
               layout: {
-                // componentBackgroundColor: theme.isDark ? '#000' : '#fff',
+                componentBackgroundColor: theme['c-content-background'],
               },
             },
           },
@@ -134,12 +135,12 @@ export function pushPlayDetailScreen(componentId: string) {
             style: getStatusBarStyle(theme.isDark),
             backgroundColor: 'transparent',
           },
-          navigationBar: {
-            // visible: false,
-            backgroundColor: theme.isDark ? '#000' : '#fff',
-          },
+          // navigationBar: {
+          //   // visible: false,
+          //   backgroundColor: theme['c-content-background'],
+          // },
           layout: {
-            componentBackgroundColor: theme.isDark ? '#000' : '#fff',
+            componentBackgroundColor: theme['c-content-background'],
           },
           animations: {
             push: {
@@ -187,7 +188,7 @@ export function pushPlayDetailScreen(componentId: string) {
               ],
               // content: {
               //   translationX: {
-              //     from: Dimensions.get('window').width,
+              //     from: windowSizeTools.getSize().width,
               //     to: 0,
               //     duration: 300,
               //   },
@@ -197,7 +198,7 @@ export function pushPlayDetailScreen(componentId: string) {
               content: {
                 translationX: {
                   from: 0,
-                  to: Dimensions.get('window').width,
+                  to: windowSizeTools.getSize().width,
                   duration: 300,
                 },
               },
@@ -227,12 +228,12 @@ export function pushSonglistDetailScreen(componentId: string, id: string) {
             style: getStatusBarStyle(theme.isDark),
             backgroundColor: 'transparent',
           },
-          navigationBar: {
-            // visible: false,
-            backgroundColor: theme.isDark ? '#000' : '#fff',
-          },
+          // navigationBar: {
+          //   // visible: false,
+          //   backgroundColor: theme['c-content-background'],
+          // },
           layout: {
-            componentBackgroundColor: theme.isDark ? '#000' : '#fff',
+            componentBackgroundColor: theme['c-content-background'],
           },
           animations: {
             push: {
@@ -360,18 +361,18 @@ export function pushCommentScreen(componentId: string) {
             style: getStatusBarStyle(theme.isDark),
             backgroundColor: 'transparent',
           },
-          navigationBar: {
-            // visible: false,
-            backgroundColor: theme.isDark ? '#000' : '#fff',
-          },
+          // navigationBar: {
+          //   // visible: false,
+          //   backgroundColor: theme['c-content-background'],
+          // },
           layout: {
-            componentBackgroundColor: theme.isDark ? '#000' : '#fff',
+            componentBackgroundColor: theme['c-content-background'],
           },
           animations: {
             push: {
               content: {
                 translationX: {
-                  from: Dimensions.get('window').width,
+                  from: windowSizeTools.getSize().width,
                   to: 0,
                   duration: 300,
                 },
@@ -381,7 +382,7 @@ export function pushCommentScreen(componentId: string) {
               content: {
                 translationX: {
                   from: 0,
-                  to: Dimensions.get('window').width,
+                  to: windowSizeTools.getSize().width,
                   duration: 300,
                 },
               },
@@ -446,16 +447,16 @@ export function pushCommentScreen(componentId: string) {
 //           },
 //           navigationBar: {
 //             // visible: false,
-//             backgroundColor: theme.isDark ? '#000' : '#fff',
+//             backgroundColor: theme['c-content-background'],
 //           },
 //           layout: {
-//             componentBackgroundColor: theme.isDark ? '#000' : '#fff',
+//             componentBackgroundColor: theme['c-content-background'],
 //           },
 //           animations: {
 //             push: {
 //               content: {
 //                 translationX: {
-//                   from: Dimensions.get('window').width,
+//                   from: windowSizeTools.getSize().width,
 //                   to: 0,
 //                   duration: 300,
 //                 },
@@ -465,7 +466,7 @@ export function pushCommentScreen(componentId: string) {
 //               content: {
 //                 translationX: {
 //                   from: 0,
-//                   to: Dimensions.get('window').width,
+//                   to: windowSizeTools.getSize().width,
 //                   duration: 300,
 //                 },
 //               },

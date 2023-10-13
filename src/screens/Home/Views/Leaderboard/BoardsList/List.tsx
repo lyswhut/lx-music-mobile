@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react'
+import { forwardRef, useImperativeHandle, useState } from 'react'
 import { View, ScrollView } from 'react-native'
 
 import { createStyle } from '@/utils/tools'

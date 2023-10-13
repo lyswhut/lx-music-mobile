@@ -1,14 +1,15 @@
 import { updateListMusics } from '@/core/list'
 import { setMaxplayTime, setNowPlayTime } from '@/core/player/progress'
 import { setCurrentTime, getDuration, getPosition } from '@/plugins/player'
-import { formatPlayTime2, throttle } from '@/utils/common'
+import { formatPlayTime2 } from '@/utils/common'
 import { savePlayInfo } from '@/utils/data'
-// import { throttleBackgroundTimer } from '@/utils/tools'
-// import BackgroundTimer from 'react-native-background-timer'
+import { throttleBackgroundTimer } from '@/utils/tools'
+import BackgroundTimer from 'react-native-background-timer'
 import playerState from '@/store/player/state'
 import settingState from '@/store/setting/state'
+import { onScreenStateChange } from '@/utils/nativeModules/utils'
 
-const delaySavePlayInfo = throttle(() => {
+const delaySavePlayInfo = throttleBackgroundTimer(() => {
   void savePlayInfo({
     time: playerState.progress.nowPlayTime,
     maxTime: playerState.progress.maxPlayTime,
@@ -20,14 +21,18 @@ const delaySavePlayInfo = throttle(() => {
 export default () => {
   // const updateMusicInfo = useCommit('list', 'updateMusicInfo')
 
-  let updateTimeout: NodeJS.Timer | null = null
+  let updateTimeout: number | null = null
+
+  let isScreenOn = true
 
   const getCurrentTime = () => {
+    let id = playerState.musicInfo.id
     void getPosition().then(position => {
-      if (!position || !playerState.isPlay) return
+      if (!position || id != playerState.musicInfo.id) return
       setNowPlayTime(position)
+      if (!playerState.isPlay) return
 
-      if (settingState.setting['player.isSavePlayTime'] && !playerState.playMusicInfo.isTempPlay) {
+      if (settingState.setting['player.isSavePlayTime'] && !playerState.playMusicInfo.isTempPlay && isScreenOn) {
         delaySavePlayInfo()
       }
     })
@@ -52,12 +57,13 @@ export default () => {
 
   const clearUpdateTimeout = () => {
     if (!updateTimeout) return
-    clearInterval(updateTimeout)
+    BackgroundTimer.clearInterval(updateTimeout)
     updateTimeout = null
   }
   const startUpdateTimeout = () => {
+    if (!isScreenOn) return
     clearUpdateTimeout()
-    updateTimeout = setInterval(() => {
+    updateTimeout = BackgroundTimer.setInterval(() => {
       getCurrentTime()
     }, 1000 / settingState.setting['player.playbackRate'])
     getCurrentTime()
@@ -145,6 +151,13 @@ export default () => {
     if (keys.includes('player.playbackRate')) startUpdateTimeout()
   }
 
+  const handleScreenStateChanged: Parameters<typeof onScreenStateChange>[0] = (state) => {
+    isScreenOn = state == 'ON'
+    if (isScreenOn) {
+      if (playerState.isPlay) startUpdateTimeout()
+    } else clearUpdateTimeout()
+  }
+
 
   global.app_event.on('play', handlePlay)
   global.app_event.on('pause', handlePause)
@@ -158,4 +171,6 @@ export default () => {
   // global.app_event.on('playerEmptied', handleEmpied)
   global.app_event.on('musicToggled', handleSetPlayInfo)
   global.state_event.on('configUpdated', handleConfigUpdated)
+
+  onScreenStateChange(handleScreenStateChanged)
 }

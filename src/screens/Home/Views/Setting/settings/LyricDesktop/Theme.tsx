@@ -1,32 +1,32 @@
 import { updateSetting } from '@/core/common'
 import { setDesktopLyricColor } from '@/core/desktopLyric'
 import { useI18n } from '@/lang'
-import React, { memo } from 'react'
+import { memo } from 'react'
 import { StyleSheet, View, TouchableOpacity } from 'react-native'
 
 import SubTitle from '../../components/SubTitle'
 
 const themes = [
-  '#07c556',
-  '#fffa12',
-  '#19b5fe',
-  '#ff1222',
-  '#f1828d',
-  '#c851d4',
-  '#ffad12',
-  '#bdc3c7',
-  '#333333',
-  '#ffffff',
+  ['#08e664', 'rgba(0,0,0,0.6)'],
+  ['#fffa12', 'rgba(0,0,0,0.6)'],
+  ['#019ce4', 'rgba(0,0,0,0.6)'],
+  ['#ff1222', 'rgba(0,0,0,0.6)'],
+  ['#ef6976', 'rgba(0,0,0,0.6)'],
+  ['#c851d4', 'rgba(0,0,0,0.6)'],
+  ['#ffa600', 'rgba(0,0,0,0.6)'],
+  ['#000000', '#ffffff'],
+  ['#ffffff', 'rgba(0,0,0,0.6)'],
 ] as const
+type Theme = typeof themes[number]
 
 const ThemeItem = ({ color, change }: {
-  color: string
-  change: (color: string) => void
+  color: Theme
+  change: (color: Theme) => void
 }) => {
   return (
     <TouchableOpacity style={styles.item} activeOpacity={0.5} onPress={() => { change(color) }}>
       <View style={styles.colorContent}>
-        <View style={{ ...styles.image, backgroundColor: color }}></View>
+        <View style={{ ...styles.image, backgroundColor: color[0] }}></View>
       </View>
     </TouchableOpacity>
   )
@@ -35,10 +35,10 @@ const ThemeItem = ({ color, change }: {
 export default memo(() => {
   const t = useI18n()
 
-  const setThemeDesktopLyric = (color: string) => {
-    const shadowColor = 'rgba(0,0,0,0.6)'
-    void setDesktopLyricColor(null, color, shadowColor).then(() => {
-      updateSetting({ 'desktopLyric.style.lyricPlayedColor': color, 'desktopLyric.style.lyricShadowColor': shadowColor })
+  const setThemeDesktopLyric = (color: Theme) => {
+    // const shadowColor = 'rgba(0,0,0,0.6)'
+    void setDesktopLyricColor(null, color[0], color[1]).then(() => {
+      updateSetting({ 'desktopLyric.style.lyricPlayedColor': color[0], 'desktopLyric.style.lyricShadowColor': color[1] })
     })
   }
 
@@ -46,7 +46,7 @@ export default memo(() => {
     <SubTitle title={t('setting_lyric_desktop_theme')}>
       <View style={styles.list}>
         {
-          themes.map(c => <ThemeItem key={c} color={c} change={setThemeDesktopLyric} />)
+          themes.map((c, i) => <ThemeItem key={i.toString()} color={c} change={setThemeDesktopLyric} />)
         }
       </View>
     </SubTitle>

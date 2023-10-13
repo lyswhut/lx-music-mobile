@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import OnlineList, { type OnlineListType, type OnlineListProps } from '@/components/OnlineList'
 import { clearListDetail, getListDetail, setListDetail, setListDetailInfo } from '@/core/leaderboard'
 import boardState from '@/store/leaderboard/state'
@@ -76,7 +76,7 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
     getListDetail(boardState.listDetailInfo.id, page).then((listDetail) => {
       const result = setListDetail(listDetail, boardState.listDetailInfo.id, page)
       if (isUnmountedRef.current) return
-      listRef.current?.setList(result.list)
+      listRef.current?.setList(result.list, true)
       listRef.current?.setStatus(boardState.listDetailInfo.maxPage <= page ? 'end' : 'idle')
     }).catch(() => {
       if (boardState.listDetailInfo.list.length && page == 1) clearListDetail()
@@ -90,6 +90,7 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
     onRefresh={handleRefresh}
     onLoadMore={handleLoadMore}
     checkHomePagerIdle
+    rowType='medium'
    />
 })
 

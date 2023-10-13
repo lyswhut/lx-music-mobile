@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useImperativeHandle, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 import List, { type ListType, type ListProps } from './List'
 import ListMenu, { type ListMenuType, type Position } from './ListMenu'

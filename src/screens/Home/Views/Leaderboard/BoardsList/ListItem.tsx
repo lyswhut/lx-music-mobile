@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import Text from '@/components/common/Text'
 import { useTheme } from '@/store/theme/hook'
 import Button, { type BtnType } from '@/components/common/Button'
@@ -47,7 +47,7 @@ export default ({ item, activeId, index, longPressIndex, onBoundChange, onShowMe
           ? <Icon style={styles.listActiveIcon} name="chevron-right" size={12} color={theme['c-primary-font']} />
           : null
       }
-      <Text style={styles.listName} size={14} color={active ? theme['c-primary-font-active'] : theme['c-font']} numberOfLines={1}>{item.name}</Text>
+      <Text style={styles.listName} size={14} textBreakStrategy="simple" color={active ? theme['c-primary-font-active'] : theme['c-font']} numberOfLines={1}>{item.name}</Text>
     </Button>
   )
 }

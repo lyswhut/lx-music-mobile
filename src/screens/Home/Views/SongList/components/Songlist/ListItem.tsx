@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 import { View, Image, Platform, TouchableOpacity } from 'react-native'
 import { createStyle } from '@/utils/tools'
 import { type ListInfoItem } from '@/store/songlist/state'

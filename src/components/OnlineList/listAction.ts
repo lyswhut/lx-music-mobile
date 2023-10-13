@@ -1,10 +1,12 @@
 import { LIST_IDS } from '@/config/constant'
 import { addListMusics } from '@/core/list'
-import { playList } from '@/core/player/player'
+import { playList, playNext } from '@/core/player/player'
 import { addTempPlayList } from '@/core/player/tempPlayList'
 import settingState from '@/store/setting/state'
 import { getListMusicSync } from '@/utils/listManage'
-import { shareMusic } from '@/utils/tools'
+import { confirmDialog, shareMusic, toast } from '@/utils/tools'
+import { addDislikeInfo, hasDislike } from '@/core/dislikeList'
+import playerState from '@/store/player/state'
 
 export const handlePlay = (musicInfo: LX.Music.MusicInfoOnline) => {
   void addListMusics(LIST_IDS.DEFAULT, [musicInfo], settingState.setting['list.addMusicLocationType']).then(() => {
@@ -25,5 +27,20 @@ export const handlePlayLater = (musicInfo: LX.Music.MusicInfoOnline, selectedLis
 
 export const handleShare = (musicInfo: LX.Music.MusicInfoOnline) => {
   shareMusic(settingState.setting['common.shareType'], settingState.setting['download.fileName'], musicInfo)
+}
+
+export const handleDislikeMusic = async(musicInfo: LX.Music.MusicInfoOnline) => {
+  const confirm = await confirmDialog({
+    message: global.i18n.t('lists_dislike_music_tip', { name: musicInfo.name }),
+    cancelButtonText: global.i18n.t('cancel_button_text_2'),
+    confirmButtonText: global.i18n.t('confirm_button_text'),
+    bgClose: false,
+  })
+  if (!confirm) return
+  await addDislikeInfo([{ name: musicInfo.name, singer: musicInfo.singer }])
+  toast(global.i18n.t('lists_dislike_music_add_tip'))
+  if (hasDislike(playerState.playMusicInfo.musicInfo)) {
+    void playNext(true)
+  }
 }
 

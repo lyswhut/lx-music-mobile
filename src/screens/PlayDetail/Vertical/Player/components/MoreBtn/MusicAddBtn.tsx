@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import MusicAddModal, { type MusicAddModalType } from '@/components/MusicAddModal'
 import playerState from '@/store/player/state'
 import Btn from './Btn'

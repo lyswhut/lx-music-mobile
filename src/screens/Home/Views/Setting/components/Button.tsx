@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 
 import Button, { type BtnProps } from '@/components/common/Button'
 import Text from '@/components/common/Text'

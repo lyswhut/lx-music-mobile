@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState, useEffect, useRef, useMemo } from 'react'
+import { memo, useCallback, useState, useEffect, useRef, useMemo } from 'react'
 import { View } from 'react-native'
 
 import CheckBoxItem from '../../components/CheckBoxItem'
@@ -16,7 +16,7 @@ import { useSettingValue } from '@/store/setting/hook'
 import { useTheme } from '@/store/theme/hook'
 import { useStatus } from '@/store/sync/hook'
 import Text from '@/components/common/Text'
-import { SYNC_CODE } from '@/config/constant'
+import { SYNC_CODE } from '@/plugins/sync/constants'
 
 const addressRxp = /^https?:\/\/\S+/i
 

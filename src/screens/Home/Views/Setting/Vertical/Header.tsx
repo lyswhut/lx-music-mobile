@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react'
+import { forwardRef, useImperativeHandle, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import { Icon } from '@/components/common/Icon'

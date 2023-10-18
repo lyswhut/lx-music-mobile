@@ -22,7 +22,7 @@ export const setUserApi = (apiId: string) => {
     // })
   } else {
     // @ts-expect-error
-    global.lx.qualityList = musicSdk.supportQuality[apiId] as LX.QualityList
+    global.lx.qualityList = musicSdk.supportQuality[apiId] ?? {}
     // apiSource.value = apiId
     // void setUserApiAction(apiId)
   }

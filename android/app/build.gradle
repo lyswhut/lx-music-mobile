@@ -188,6 +188,9 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    // implementation "androidx.javascriptengine:javascriptengine:1.0.0-alpha07"
+    // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation group: 'wang.harlon.quickjs', name: 'wrapper-android', version: '1.0.0'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {

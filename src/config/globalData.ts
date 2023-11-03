@@ -45,12 +45,14 @@ global.lx = {
   // syncKeyInfo: {},
 
   isEnableSyncLog: false,
+  isEnableUserApiLog: false,
 
   playerTrackId: '',
 
   gettingUrlId: '',
 
   qualityList: {},
+  apis: {},
 
   jumpMyListPosition: false,
 

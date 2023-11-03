@@ -2,11 +2,12 @@ import { initSetting, showPactModal } from '@/core/common'
 import registerPlaybackService from '@/plugins/player/service'
 import initTheme from './theme'
 import initI18n from './i18n'
+import initUserApi from './userApi'
 import initPlayer from './player'
 import dataInit from './dataInit'
 import initSync from './sync'
 // import syncSetting from './syncSetting'
-import { setUserApi } from '@/core/apiSource'
+import { setApiSource } from '@/core/apiSource'
 import commonActions from '@/store/common/action'
 import settingState from '@/store/setting/state'
 import { checkUpdate } from '@/core/version'
@@ -42,7 +43,10 @@ export default async() => {
   await initI18n(setting)
   bootLog('I18n inited.')
 
-  setUserApi(setting['common.apiSource'])
+  await initUserApi(setting)
+  bootLog('User Api inited.')
+
+  setApiSource(setting['common.apiSource'])
   bootLog('Api inited.')
 
   registerPlaybackService()

@@ -15,6 +15,7 @@ export interface CheckBoxProps {
   onChange: (check: boolean) => void
   disabled?: boolean
   need?: boolean
+  size?: number
   marginRight?: number
   marginBottom?: number
 
@@ -22,7 +23,7 @@ export interface CheckBoxProps {
   helpDesc?: string
 }
 
-export default ({ check, label, children, onChange, helpTitle, helpDesc, disabled = false, need = false, marginRight = 0, marginBottom = 0 }: CheckBoxProps) => {
+export default ({ check, label, children, onChange, helpTitle, helpDesc, disabled = false, need = false, marginRight = 0, marginBottom = 0, size = 1 }: CheckBoxProps) => {
   const theme = useTheme()
   const [isDisabled, setDisabled] = useState(false)
   const tintColors = {
@@ -65,10 +66,10 @@ export default ({ check, label, children, onChange, helpTitle, helpDesc, disable
     }
     return (helpTitle ?? helpDesc) ? (
       <TouchableOpacity style={styles.helpBtn} onPress={handleShowHelp}>
-        <Icon name="help" />
+        <Icon size={15 * size} name="help" />
       </TouchableOpacity>
     ) : null
-  }, [helpTitle, helpDesc])
+  }, [helpTitle, helpDesc, size])
 
 
   const contentStyle = { ...styles.content, marginBottom: scaleSizeH(marginBottom) }
@@ -78,16 +79,16 @@ export default ({ check, label, children, onChange, helpTitle, helpDesc, disable
     disabled
       ? (
           <View style={contentStyle}>
-            <CheckBox status={check ? 'checked' : 'unchecked'} disabled={true} tintColors={disabledTintColors} />
-            <View style={labelStyle}>{label ? <Text style={styles.name} color={theme['c-500']}>{label}</Text> : children}</View>
+            <CheckBox status={check ? 'checked' : 'unchecked'} disabled={true} tintColors={disabledTintColors} size={size} />
+            <View style={labelStyle}>{label ? <Text style={styles.name} color={theme['c-500']} size={15 * size}>{label}</Text> : children}</View>
             {helpComponent}
           </View>
         )
       : (
           <View style={contentStyle}>
-            <CheckBox status={check ? 'checked' : 'unchecked'} disabled={isDisabled} onPress={handleLabelPress} tintColors={tintColors} />
+            <CheckBox status={check ? 'checked' : 'unchecked'} disabled={isDisabled} onPress={handleLabelPress} tintColors={tintColors} size={size} />
             <TouchableOpacity style={labelStyle} activeOpacity={0.3} onPress={handleLabelPress}>
-              {label ? <Text style={styles.name}>{label}</Text> : children}
+              {label ? <Text style={styles.name} size={15 * size}>{label}</Text> : children}
             </TouchableOpacity>
             {helpComponent}
           </View>

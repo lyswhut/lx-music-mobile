@@ -25,6 +25,8 @@ export interface Props {
    */
   onPress?: (e: GestureResponderEvent) => void
 
+  size?: number
+
   /**
    * Custom color for checkbox.
    */
@@ -45,6 +47,7 @@ const PADDING = scaleSizeW(4)
 const Checkbox = ({
   status,
   disabled,
+  size = 1,
   onPress,
   tintColors,
   ...rest
@@ -86,12 +89,12 @@ const Checkbox = ({
       accessibilityRole="checkbox"
       accessibilityState={{ disabled, checked }}
       accessibilityLiveRegion="polite"
-      style={{ ...styles.container, padding: PADDING }}
+      style={{ ...styles.container, padding: PADDING, marginLeft: -PADDING }}
     >
       <Icon
         allowFontScaling={false}
         name="checkbox-blank-outline"
-        size={24}
+        size={24 * size}
         color={tintColors.false}
       />
       <View style={[StyleSheet.absoluteFill, styles.fillContainer]}>
@@ -99,7 +102,7 @@ const Checkbox = ({
           <Icon
             allowFontScaling={false}
             name={icon}
-            size={24}
+            size={24 * size}
             color={tintColors.true}
           />
         </Animated.View>

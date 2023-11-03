@@ -3,26 +3,22 @@ import musicSdk from '@/utils/musicSdk'
 // import apiSourceInfo from '@renderer/utils/musicSdk/api-source-info'
 import { updateSetting } from './common'
 import settingState from '@/store/setting/state'
+import { destroyUserApi, setUserApi } from './userApi'
+import apiSourceInfo from '@/utils/musicSdk/api-source-info'
 
 
-export const setUserApi = (apiId: string) => {
+export const setApiSource = (apiId: string) => {
   if (/^user_api/.test(apiId)) {
-    // qualityList.value = {}
-    // userApi.status = false
-    // userApi.message = 'initing'
-
-    // await setUserApiAction(apiId).then(() => {
-    //   apiSource.value = apiId
-    // }).catch(err => {
-    //   console.log(err)
-    //   let api = apiSourceInfo.find(api => !api.disabled)
-    //   if (!api) return
-    //   apiSource.value = api.id
-    //   if (api.id != appSetting['common.apiSource']) setApiSource(api.id)
-    // })
+    setUserApi(apiId).catch(err => {
+      console.log(err)
+      let api = apiSourceInfo.find(api => !api.disabled)
+      if (!api) return
+      if (api.id != settingState.setting['common.apiSource']) setApiSource(api.id)
+    })
   } else {
     // @ts-expect-error
     global.lx.qualityList = musicSdk.supportQuality[apiId] ?? {}
+    destroyUserApi()
     // apiSource.value = apiId
     // void setUserApiAction(apiId)
   }

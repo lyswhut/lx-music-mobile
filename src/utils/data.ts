@@ -26,6 +26,7 @@ const syncHostPrefix = storageDataPrefix.syncHost
 const syncHostHistoryPrefix = storageDataPrefix.syncHostHistory
 const listPrefix = storageDataPrefix.list
 const dislikeListPrefix = storageDataPrefix.dislikeList
+const userApiPrefix = storageDataPrefix.userApi
 
 // const defaultListKey = listPrefix + 'default'
 // const loveListKey = listPrefix + 'love'
@@ -460,3 +461,54 @@ export const removeSyncHostHistory = async(index: number) => {
   await saveData(syncHostHistoryPrefix, syncHostHistory)
 }
 
+let userApis: LX.UserApi.UserApiInfo[] = []
+export const getUserApiList = async(): Promise<LX.UserApi.UserApiInfo[]> => {
+  userApis = await getData<LX.UserApi.UserApiInfo[]>(userApiPrefix) ?? []
+  return [...userApis]
+}
+export const getUserApiScript = async(id: string): Promise<string> => {
+  const script = await getData<string>(`${userApiPrefix}${id}`) ?? ''
+  return script
+}
+export const addUserApi = async(script: string): Promise<LX.UserApi.UserApiInfo> => {
+  let scriptInfo = script.split(/\r?\n/)
+  let name = scriptInfo[1] || ''
+  let description = scriptInfo[2] || ''
+  name = name.startsWith(' * @name ') ? name.replace(' * @name ', '').trim() : `user_api_${new Date().toLocaleString()}`
+  if (name.length > 24) name = name.substring(0, 24) + '...'
+  description = description.startsWith(' * @description ') ? description.replace(' * @description ', '').trim() : ''
+  if (description.length > 36) description = description.substring(0, 36) + '...'
+  const apiInfo = {
+    id: `user_api_${Math.random().toString().substring(2, 5)}_${Date.now()}`,
+    name,
+    description,
+    // script,
+    allowShowUpdateAlert: true,
+  }
+  userApis.push(apiInfo)
+  await saveDataMultiple([
+    [userApiPrefix, userApis],
+    [`${userApiPrefix}${apiInfo.id}`, script],
+  ])
+  return apiInfo
+}
+export const removeUserApi = async(ids: string[]) => {
+  if (!userApis) return []
+  const _ids: string[] = []
+  for (let index = userApis.length - 1; index > -1; index--) {
+    if (ids.includes(userApis[index].id)) {
+      _ids.push(`${userApiPrefix}${userApis[index].id}`)
+      userApis.splice(index, 1)
+      ids.splice(index, 1)
+    }
+  }
+  await saveData(userApiPrefix, userApis)
+  if (_ids.length) await removeDataMultiple(_ids)
+  return [...userApis]
+}
+export const setUserApiAllowShowUpdateAlert = async(id: string, enable: boolean) => {
+  const targetApi = userApis?.find(api => api.id == id)
+  if (!targetApi) return
+  targetApi.allowShowUpdateAlert = enable
+  await saveData(userApiPrefix, userApis)
+}

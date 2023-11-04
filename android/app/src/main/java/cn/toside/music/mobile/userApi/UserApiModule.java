@@ -1,6 +1,7 @@
 package cn.toside.music.mobile.userApi;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import com.facebook.react.bridge.Arguments;
@@ -33,10 +34,10 @@ public class UserApiModule extends ReactContextBaseJavaModule {
     if (this.javaScriptThread != null) destroy();
     Bundle info = Arguments.toBundle(data);
     this.javaScriptThread = new JavaScriptThread(this.reactContext, info);
-    final JsHandler jsHandler = new JsHandler(this.reactContext.getMainLooper(), this.utilsEvent);
-    this.javaScriptThread.prepareHandler(jsHandler);
+    this.javaScriptThread.prepareHandler(new JsHandler(this.reactContext.getMainLooper(), this.utilsEvent));
     this.javaScriptThread.getHandler().sendEmptyMessage(HandlerWhat.INIT);
     this.javaScriptThread.setUncaughtExceptionHandler((thread, ex) -> {
+      Handler jsHandler = javaScriptThread.getHandler();
       Message message = jsHandler.obtainMessage();
       message.what = HandlerWhat.LOG;
       message.obj = new Object[]{"error", "Uncaught exception in JavaScriptThread: " + ex.getMessage()};
@@ -50,19 +51,19 @@ public class UserApiModule extends ReactContextBaseJavaModule {
   public boolean sendAction(String action, String info) {
     JavaScriptThread javaScriptThread = this.javaScriptThread;
     if (javaScriptThread == null) return false;
-    Message message = javaScriptThread.getHandler().obtainMessage();
+    Handler jsHandler = javaScriptThread.getHandler();
+    Message message = jsHandler.obtainMessage();
     message.what = HandlerWhat.ACTION;
     message.obj = new Object[]{action, info};
-    this.javaScriptThread.getHandler().sendMessage(message);
+    jsHandler.sendMessage(message);
     return true;
   }
 
   @ReactMethod
   public void destroy() {
     JavaScriptThread javaScriptThread = this.javaScriptThread;
-    if (javaScriptThread == null) {
-      return;
-    }
+    if (javaScriptThread == null) return;
+    javaScriptThread.getHandler().sendEmptyMessage(HandlerWhat.DESTROY);
     javaScriptThread.stopThread();
     this.javaScriptThread = null;
   }

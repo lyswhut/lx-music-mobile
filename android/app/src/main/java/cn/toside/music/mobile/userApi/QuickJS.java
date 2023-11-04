@@ -185,4 +185,9 @@ public class QuickJS {
       return null;
     }
   }
+
+  public void destroy () {
+    this.jsContext.destroy();
+    this.jsContext = null;
+  }
 }

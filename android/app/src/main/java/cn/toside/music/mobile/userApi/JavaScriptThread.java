@@ -41,14 +41,22 @@ public class JavaScriptThread extends HandlerThread {
             handler.sendMessage(handler.obtainMessage(HandlerWhat.INIT_FAILED, result));
           }
         }
-        if (message.what == HandlerWhat.INIT) return;
-        if (message.what == HandlerWhat.ACTION) {
-          Object[] data = (Object[]) message.obj;
-          Log.d("UserApi [handler]", "handler action: " + data[0]);
-          javaScriptExecutor.callJS((String) data[0], data[1]);
-          return;
+        switch (message.what) {
+          case HandlerWhat.INIT: break;
+          case HandlerWhat.ACTION: {
+            Object[] data = (Object[]) message.obj;
+            Log.d("UserApi [handler]", "handler action: " + data[0]);
+            javaScriptExecutor.callJS((String) data[0], data[1]);
+            return;
+          }
+          case HandlerWhat.DESTROY:
+            javaScriptExecutor.destroy();
+            javaScriptExecutor = null;
+            break;
+          default:
+            Log.w("UserApi [handler]", "Unknown message what: " + message.what);
+            break;
         }
-        Log.w("UserApi [handler]", "Unknown message what: " + message.what);
       }
     };
   }

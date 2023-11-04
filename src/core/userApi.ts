@@ -33,9 +33,7 @@ export const importUserApi = async(script: string) => {
 }
 
 export const removeUserApi = async(ids: string[]) => {
-  console.log(ids)
   const list = await removeUserApiFromStore(ids)
-  console.log(list)
   action.setUserApiList(list)
 }
 

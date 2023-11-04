@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { View, TouchableOpacity, Alert } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import CheckBox from './Checkbox'
 
-import { createStyle } from '@/utils/tools'
+import { createStyle, tipDialog } from '@/utils/tools'
 import { scaleSizeH, scaleSizeW } from '@/utils/pixelRatio'
 import { useTheme } from '@/store/theme/hook'
 import Text from '../Text'
@@ -54,15 +54,11 @@ export default ({ check, label, children, onChange, helpTitle, helpDesc, disable
 
   const helpComponent = useMemo(() => {
     const handleShowHelp = () => {
-      Alert.alert(helpTitle ?? '', helpDesc,
-        // [{
-        //   text: '我知道了 (Close)',
-        //   // onPress: () => {
-        //   //   void saveData(storageDataPrefix.cheatTip, true)
-        //   //   resolve()
-        //   // },
-        // }],
-      )
+      void tipDialog({
+        title: helpTitle ?? '',
+        message: helpDesc,
+        btnText: global.i18n.t('understand'),
+      })
     }
     return (helpTitle ?? helpDesc) ? (
       <TouchableOpacity style={styles.helpBtn} onPress={handleShowHelp}>

@@ -175,13 +175,14 @@ export const handleReadFile = async<T = unknown>(path: string): Promise<T> => {
 }
 
 export const confirmDialog = async({
+  title = '',
   message = '',
   cancelButtonText = global.i18n.t('dialog_cancel'),
   confirmButtonText = global.i18n.t('dialog_confirm'),
   bgClose = true,
 }) => {
-  return new Promise(resolve => {
-    Alert.alert('', message, [
+  return new Promise<boolean>(resolve => {
+    Alert.alert(title, message, [
       {
         text: cancelButtonText,
         onPress() {
@@ -198,6 +199,29 @@ export const confirmDialog = async({
       cancelable: bgClose,
       onDismiss() {
         resolve(false)
+      },
+    })
+  })
+}
+
+export const tipDialog = async({
+  title = '',
+  message = '',
+  btnText = global.i18n.t('dialog_confirm'),
+  bgClose = true,
+}) => {
+  return new Promise<void>(resolve => {
+    Alert.alert(title, message, [
+      {
+        text: btnText,
+        onPress() {
+          resolve()
+        },
+      },
+    ], {
+      cancelable: bgClose,
+      onDismiss() {
+        resolve()
       },
     })
   })
@@ -365,15 +389,11 @@ export const showImportTip = (type: string) => {
       message = global.i18n.t('list_import_tip__unknown')
       break
   }
-  Alert.alert(
-    global.i18n.t('list_import_tip__failed'),
+  void tipDialog({
+    title: global.i18n.t('list_import_tip__failed'),
     message,
-    [
-      {
-        text: global.i18n.t('ok'),
-      },
-    ],
-  )
+    btnText: global.i18n.t('ok'),
+  })
 }
 
 
@@ -513,19 +533,14 @@ export const cheatTip = async() => {
   const isRead = await getData<boolean>(storageDataPrefix.cheatTip)
   if (isRead) return
 
-  return new Promise<void>((resolve) => {
-    Alert.alert(
-      '谨防被骗提示',
-      `1. 本项目无微信公众号之类的官方账号，也未在小米、华为、vivo等应用商店发布应用，商店内的“LX Music”、“洛雪音乐”相关的应用全部属于假冒应用，谨防被骗。
+  return tipDialog({
+    title: '谨防被骗提示',
+    message: `1. 本项目无微信公众号之类的官方账号，也未在小米、华为、vivo等应用商店发布应用，商店内的“LX Music”、“洛雪音乐”相关的应用全部属于假冒应用，谨防被骗。
 2. 本软件完全无广告且无引流（如需要加群、关注公众号之类才能使用或者升级）的行为，若你使用过程中遇到广告或者引流的信息，则表明你当前运行的软件是第三方修改版。
 3. 目前本项目的原始发布地址只有 GitHub 及 蓝奏网盘 （在设置-关于有说明），其他渠道均为第三方转载发布，可信度请自行鉴别。`,
-      [{
-        text: '我知道了 (Close)',
-        onPress: () => {
-          void saveData(storageDataPrefix.cheatTip, true)
-          resolve()
-        },
-      }],
-    )
+    btnText: '我知道了 (Close)',
+    bgClose: false,
+  }).then(() => {
+    void saveData(storageDataPrefix.cheatTip, true)
   })
 }

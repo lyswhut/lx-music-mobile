@@ -3,10 +3,10 @@ import { init as initLog } from '@/utils/log'
 import { bootLog, getBootLog } from '@/utils/bootLog'
 import '@/config/globalData'
 import { getFontSize } from '@/utils/data'
-import { Alert } from 'react-native'
 import { exitApp } from './utils/nativeModules/utils'
 import { windowSizeTools } from './utils/windowSizeTools'
 import { listenLaunchEvent } from './navigation/regLaunchedEvent'
+import { tipDialog } from './utils/tools'
 
 console.log('starting app...')
 listenLaunchEvent()
@@ -33,15 +33,13 @@ void Promise.all([getFontSize(), windowSizeTools.init()]).then(async([fontSize])
     try {
       handlePushedHomeScreen = await init()
     } catch (err: any) {
-      Alert.alert('初始化失败 (Init Failed)', `Boot Log:\n${tryGetBootLog()}\n\n${(err.stack ?? err.message) as string}`, [
-        {
-          text: 'Exit',
-          onPress() {
-            exitApp()
-          },
-        },
-      ], {
-        cancelable: false,
+      void tipDialog({
+        title: '初始化失败 (Init Failed)',
+        message: `Boot Log:\n${tryGetBootLog()}\n\n${(err.stack ?? err.message) as string}`,
+        btnText: 'Exit',
+        bgClose: false,
+      }).then(() => {
+        exitApp()
       })
       return
     }
@@ -57,27 +55,23 @@ void Promise.all([getFontSize(), windowSizeTools.init()]).then(async([fontSize])
     await navigations.pushHomeScreen().then(() => {
       void handlePushedHomeScreen()
     }).catch((err: any) => {
-      Alert.alert('Error', err.message, [
-        {
-          text: 'Exit',
-          onPress() {
-            exitApp()
-          },
-        },
-      ], {
-        cancelable: false,
+      void tipDialog({
+        title: 'Error',
+        message: err.message,
+        btnText: 'Exit',
+        bgClose: false,
+      }).then(() => {
+        exitApp()
       })
     })
   })
 }).catch((err) => {
-  Alert.alert('初始化失败 (Init Failed)', `Boot Log:\n\n${(err.stack ?? err.message) as string}`, [
-    {
-      text: 'Exit',
-      onPress() {
-        exitApp()
-      },
-    },
-  ], {
-    cancelable: false,
+  void tipDialog({
+    title: '初始化失败 (Init Failed)',
+    message: `Boot Log:\n\n${(err.stack ?? err.message) as string}`,
+    btnText: 'Exit',
+    bgClose: false,
+  }).then(() => {
+    exitApp()
   })
 })

@@ -1,13 +1,14 @@
 import { useRef, useImperativeHandle, forwardRef, useState } from 'react'
 import Text from '@/components/common/Text'
 import { View, TouchableOpacity } from 'react-native'
-import { createStyle, openUrl } from '@/utils/tools'
+import { createStyle, openUrl, tipDialog } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'
 import Dialog, { type DialogType } from '@/components/common/Dialog'
 import Button from '@/components/common/Button'
 import List from './List'
 import ScriptImportExport, { type ScriptImportExportType } from './ScriptImportExport'
+import { state } from '@/store/userApi'
 
 // interface UrlInputType {
 //   setText: (text: string) => void
@@ -96,6 +97,13 @@ export default forwardRef<UserApiEditModalType, {}>((props, ref) => {
     dialogRef.current?.setVisible(false)
   }
   const handleImport = () => {
+    if (state.list.length > 20) {
+      void tipDialog({
+        message: t('user_api_max_tip'),
+        btnText: t('ok'),
+      })
+      return
+    }
     scriptImportExportRef.current?.import()
   }
   const openFAQPage = () => {
@@ -108,7 +116,7 @@ export default forwardRef<UserApiEditModalType, {}>((props, ref) => {
           <Dialog ref={dialogRef} bgHide={false}>
             <View style={styles.content}>
               {/* <UrlInput ref={inputRef} /> */}
-              <Text style={styles.title}>{t('user_api_title')}</Text>
+              <Text size={16} style={styles.title}>{t('user_api_title')}</Text>
               <List />
               <View style={styles.tips}>
                 <Text style={styles.tipsText} size={12}>
@@ -169,10 +177,7 @@ const styles = createStyle({
   },
   btn: {
     flex: 1,
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 10,
-    paddingRight: 10,
+    padding: 10,
     alignItems: 'center',
     borderRadius: 4,
     marginRight: 15,

@@ -45,7 +45,7 @@ const RuleInput = forwardRef<RuleInputType, {}>((props, ref) => {
         multiline
         textAlignVertical="top"
         placeholder={t('setting_dislike_list_input_tip')}
-        size={12}
+        size={13}
         style={{ ...styles.input, height, backgroundColor: theme['c-primary-input-background'] }}
       />
     </View>
@@ -106,7 +106,7 @@ export default forwardRef<DislikeEditModalType, DislikeEditModalProps>(({ onSave
           <Dialog height='80%' ref={dialogRef} bgHide={false}>
             <View style={styles.content}>
               <RuleInput ref={inputRef} />
-              <Text style={styles.inputTipText} size={12} color={theme['c-600']}>{t('setting_dislike_list_tips')}</Text>
+              <Text style={styles.inputTipText} size={13} color={theme['c-600']}>{t('setting_dislike_list_tips')}</Text>
             </View>
             <View style={styles.btns}>
               <Button style={{ ...styles.btn, backgroundColor: theme['c-button-background'] }} onPress={handleCancel}>
@@ -167,10 +167,7 @@ const styles = createStyle({
   },
   btn: {
     flex: 1,
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 10,
-    paddingRight: 10,
+    padding: 10,
     alignItems: 'center',
     borderRadius: 4,
     marginRight: 15,

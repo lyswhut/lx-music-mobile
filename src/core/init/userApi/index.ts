@@ -1,9 +1,10 @@
 import { type InitParams, onScriptAction, sendAction, type ResponseParams, type UpdateInfoParams } from '@/utils/nativeModules/userApi'
-import { log, setUserApiList, setUserApiStatus } from '../userApi'
+import { log, setUserApiList, setUserApiStatus } from '@/core/userApi'
 import settingState from '@/store/setting/state'
 import BackgroundTimer from 'react-native-background-timer'
-import { httpFetch } from '@/utils/request'
+import { fetchData } from './request'
 import { getUserApiList } from '@/utils/data'
+import { confirmDialog, openUrl, tipDialog } from '@/utils/tools'
 
 
 export default async(setting: LX.AppSetting) => {
@@ -90,26 +91,26 @@ export default async(setting: LX.AppSetting) => {
     global.state_event.apiSourceUpdated(settingState.setting['common.apiSource'])
   }
   const showUpdateAlert = ({ name, log, updateUrl }: UpdateInfoParams) => {
-    // if (updateUrl) {
-    //   void dialog({
-    //     message: `${t('user_api__update_alert', { name })}\n${log}`,
-    //     selection: true,
-    //     showCancel: true,
-    //     confirmButtonText: t('user_api__update_alert_open_url'),
-    //     cancelButtonText: t('close'),
-    //   }).then(confirm => {
-    //     if (!confirm) return
-    //     window.setTimeout(() => {
-    //       void openUrl(updateUrl)
-    //     }, 300)
-    //   })
-    // } else {
-    //   void dialog({
-    //     message: `${t('user_api__update_alert', { name })}\n${log}`,
-    //     selection: true,
-    //     confirmButtonText: t('ok'),
-    //   })
-    // }
+    if (updateUrl) {
+      void confirmDialog({
+        message: `${global.i18n.t('user_api_update_alert', { name })}\n${log}`,
+        // selection: true,
+        // showCancel: true,
+        confirmButtonText: global.i18n.t('user_api_update_alert_open_url'),
+        cancelButtonText: global.i18n.t('close'),
+      }).then(confirm => {
+        if (!confirm) return
+        setTimeout(() => {
+          void openUrl(updateUrl)
+        }, 300)
+      })
+    } else {
+      void tipDialog({
+        message: `${global.i18n.t('user_api_update_alert', { name })}\n${log}`,
+        // selection: true,
+        btnText: global.i18n.t('ok'),
+      })
+    }
   }
 
   onScriptAction((event) => {
@@ -122,11 +123,7 @@ export default async(setting: LX.AppSetting) => {
         handleUserApiResponse(event.data)
         break
       case 'request':
-        httpFetch(event.data.url, {
-          ...event.data.options,
-          credentials: 'omit',
-          cache: 'default',
-        }).promise.then(response => {
+        fetchData(event.data.url, event.data.options).request.then(response => {
           // console.log(response)
           sendAction('response', {
             error: null,

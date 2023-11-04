@@ -4,8 +4,7 @@ import { getData, removeData, saveData } from '@/plugins/storage'
 import migrateSetting from './migrateSetting'
 import settingState from '@/store/setting/state'
 import { migrateMetaData, migrateListData } from './migrate'
-import { Alert } from 'react-native'
-import { exitApp } from '@/utils/tools'
+import { exitApp, tipDialog } from '@/utils/tools'
 
 // 业务相关工具方法
 
@@ -90,15 +89,13 @@ export const initSetting = async() => {
         await migrateListData()
         await migrateMetaData()
       } catch (err: any) {
-        Alert.alert('数据迁移失败 (Migrate data Failed)', `请加企鹅群(830125506)或到GitHub反馈，为了防止数据丢失，应用将停止运行，错误信息：\n${(err.stack ?? err.message) as string}`, [
-          {
-            text: 'Exit',
-            onPress() {
-              exitApp()
-            },
-          },
-        ], {
-          cancelable: false,
+        void tipDialog({
+          title: '数据迁移失败 (Migrate data Failed)',
+          message: `请加企鹅群(830125506)或到GitHub反馈，为了防止数据丢失，应用将停止运行，错误信息：\n${(err.stack ?? err.message) as string}`,
+          btnText: 'Exit',
+          bgClose: false,
+        }).then(() => {
+          exitApp()
         })
         throw err
       }

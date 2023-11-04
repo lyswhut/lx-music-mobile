@@ -10,6 +10,9 @@ import { removeUserApi, setUserApiAllowShowUpdateAlert } from '@/core/userApi'
 import { BorderRadius } from '@/theme'
 import CheckBox from '@/components/common/CheckBox'
 import { Icon } from '@/components/common/Icon'
+import settingState from '@/store/setting/state'
+import apiSourceInfo from '@/utils/musicSdk/api-source-info'
+import { setApiSource } from '@/core/apiSource'
 
 
 const ListItem = ({ item, activeId, onRemove, onChangeAllowShowUpdateAlert }: {
@@ -29,12 +32,12 @@ const ListItem = ({ item, activeId, onRemove, onChangeAllowShowUpdateAlert }: {
 
   return (
     <View style={{ ...styles.listItem, backgroundColor: activeId == item.id ? theme['c-primary-background-active'] : 'transparent' }}>
-      <View>
-        <Text size={13}>{item.name}</Text>
+      <View style={styles.listItemLeft}>
+        <Text size={14}>{item.name}</Text>
         <Text size={12} color={theme['c-font-label']}>{item.description}</Text>
-        <CheckBox check={item.allowShowUpdateAlert} label={t('user_api_allow_show_update_alert')} onChange={changeAllowShowUpdateAlert} size={0.8} />
+        <CheckBox check={item.allowShowUpdateAlert} label={t('user_api_allow_show_update_alert')} onChange={changeAllowShowUpdateAlert} size={0.86} />
       </View>
-      <View>
+      <View style={styles.listItemRight}>
         <TouchableOpacity style={styles.btn} onPress={handleRemove}>
           <Icon name="close" color={theme['c-button-font']} />
         </TouchableOpacity>
@@ -55,6 +58,8 @@ export interface UserApiEditModalType {
 export default () => {
   const userApiList = useUserApiList()
   const apiSource = useSettingValue('common.apiSource')
+  const theme = useTheme()
+  const t = useI18n()
 
   const handleRemove = useCallback(async(id: string, name: string) => {
     const confirm = await confirmDialog({
@@ -64,7 +69,12 @@ export default () => {
       bgClose: false,
     })
     if (!confirm) return
-    void removeUserApi([id])
+    void removeUserApi([id]).finally(() => {
+      if (settingState.setting['common.apiSource'] == id) {
+        let backApi = apiSourceInfo.find(api => !api.disabled)
+        setApiSource(backApi?.id ?? '')
+      }
+    })
   }, [])
   const handleChangeAllowShowUpdateAlert = useCallback((id: string, enabled: boolean) => {
     void setUserApiAllowShowUpdateAlert(id, enabled)
@@ -74,8 +84,9 @@ export default () => {
     <ScrollView style={styles.scrollView} keyboardShouldPersistTaps={'always'}>
       <View onStartShouldSetResponder={() => true}>
         {
-          userApiList.map((item) => {
-            return (
+          userApiList.length
+            ? userApiList.map((item) => {
+              return (
               <ListItem
                 key={item.id}
                 item={item}
@@ -83,8 +94,9 @@ export default () => {
                 onRemove={handleRemove}
                 onChangeAllowShowUpdateAlert={handleChangeAllowShowUpdateAlert}
               />
-            )
-          })
+              )
+            })
+            : <Text style={styles.tipText} color={theme['c-font-label']}>{t('user_api_empty')}</Text>
         }
       </View>
     </ScrollView>
@@ -107,12 +119,26 @@ const styles = createStyle({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  listItemLeft: {
+    paddingRight: 10,
+    flex: 1,
+    gap: 2,
+  },
+  listItemRight: {
+    flex: 0,
+    // backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  },
   // btns: {
   //   padding: 5,
   // },
   btn: {
     padding: 10,
     // backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  },
+  tipText: {
+    textAlign: 'center',
+    marginTop: 25,
+    marginBottom: 15,
   },
 })
 

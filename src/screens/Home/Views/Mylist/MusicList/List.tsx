@@ -28,6 +28,7 @@ export interface ListType {
   selectAll: (isAll: boolean) => void
   getSelectedList: () => LX.List.ListMusics
   scrollToInfo: (info: LX.Music.MusicInfo) => void
+  scrollToTop: () => void
 }
 
 const usePlayIndex = () => {
@@ -89,6 +90,12 @@ const List = forwardRef<ListType, ListProps>(({ onShowMenu, onMuiltSelectMode, o
         const index = list.findIndex(m => m.id == info.id)
         if (index < 0) return
         flatListRef.current?.scrollToIndex({ index: Math.floor(index / (rowInfo.current.rowNum ?? 1)), viewPosition: 0.3, animated: true })
+      })
+    },
+    scrollToTop() {
+      flatListRef.current?.scrollToOffset({
+        offset: 0,
+        animated: true,
       })
     },
   }))

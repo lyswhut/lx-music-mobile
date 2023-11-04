@@ -14,12 +14,13 @@ import { LIST_IDS } from '@/config/constant'
 
 export interface ActiveListProps {
   onShowSearchBar: () => void
+  onScrollToTop: () => void
 }
 export interface ActiveListType {
   setVisibleBar: (visible: boolean) => void
 }
 
-export default forwardRef<ActiveListType, ActiveListProps>(({ onShowSearchBar }, ref) => {
+export default forwardRef<ActiveListType, ActiveListProps>(({ onShowSearchBar, onScrollToTop }, ref) => {
   const theme = useTheme()
   const currentListId = useActiveListId()
   let currentListName = currentListId == LIST_IDS.TEMP ? global.i18n.t(`list_${LIST_IDS.TEMP}`) : listState.allList.find(l => l.id === currentListId)?.name ?? ''
@@ -42,7 +43,7 @@ export default forwardRef<ActiveListType, ActiveListProps>(({ onShowSearchBar },
   }, [])
 
   return (
-    <TouchableOpacity onPress={showList} style={{ ...styles.currentList, opacity: visibleBar ? 1 : 0, borderBottomColor: theme['c-border-background'] }}>
+    <TouchableOpacity onPress={showList} onLongPress={onScrollToTop} style={{ ...styles.currentList, opacity: visibleBar ? 1 : 0, borderBottomColor: theme['c-border-background'] }}>
       <Icon style={styles.currentListIcon} color={theme['c-button-font']} name="chevron-right" size={12} />
       <Text numberOfLines={1} style={styles.currentListText} color={theme['c-button-font']}>{currentListName}</Text>
       <TouchableOpacity style={styles.currentListBtns} onPress={onShowSearchBar}>

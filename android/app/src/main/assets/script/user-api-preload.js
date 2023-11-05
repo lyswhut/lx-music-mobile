@@ -484,6 +484,13 @@ globalThis.lx_setup = (key, id, name, description, rawScript) => {
     },
   }
 
+  const freezeObject = (obj) => {
+    if (typeof obj != 'object') return
+    Object.freeze(obj)
+    for (const subObj of Object.values(obj)) freezeObject(subObj)
+  }
+  freezeObject(globalThis.lx)
+
   const _toString = Function.prototype.toString
   // eslint-disable-next-line no-extend-native
   Function.prototype.toString = function() {
@@ -497,7 +504,7 @@ globalThis.lx_setup = (key, id, name, description, rawScript) => {
     Function.prototype.toLocaleString,
     Object.prototype.toString,
   ]
-  const freezeObject = (obj, freezedObj = new Set()) => {
+  const freezeObjectProperty = (obj, freezedObj = new Set()) => {
     if (obj == null) return
     switch (typeof obj) {
       case 'object':
@@ -511,11 +518,11 @@ globalThis.lx_setup = (key, id, name, description, rawScript) => {
             if (config.configurable) config.configurable = false
             Object.defineProperty(obj, name, config)
           }
-          freezeObject(config.value, freezedObj)
+          freezeObjectProperty(config.value, freezedObj)
         }
     }
   }
-  freezeObject(globalThis)
+  freezeObjectProperty(globalThis)
 
   console.log('Preload finished.')
 }

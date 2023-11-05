@@ -1,7 +1,7 @@
 'use strict'
 
 globalThis.lx_setup = (key, id, name, description, rawScript) => {
-  delete globalThis.setup
+  delete globalThis.lx_setup
   const _nativeCall = globalThis.__lx_native_call__
   delete globalThis.__lx_native_call__
   const set_timeout = globalThis.__lx_native_call__set_timeout

@@ -1,3 +1,4 @@
+'use strict'
 
 globalThis.lx_setup = (key, id, name, description, rawScript) => {
   delete globalThis.setup
@@ -37,7 +38,7 @@ globalThis.lx_setup = (key, id, name, description, rawScript) => {
 
   const callbacks = new Map()
   let timeoutId = 0
-  const setTimeout = (callback, timeout = 0, ...params) => {
+  const _setTimeout = (callback, timeout = 0, ...params) => {
     if (typeof timeout !== 'number' || timeout < 0) throw new Error('timeout required number')
     if (timeoutId > 90000000000) throw new Error('max timeout')
     const id = timeoutId++
@@ -48,7 +49,7 @@ globalThis.lx_setup = (key, id, name, description, rawScript) => {
     set_timeout(id, parseInt(timeout))
     return id
   }
-  const clearTimeout = (id) => {
+  const _clearTimeout = (id) => {
     const tagret = callbacks.get(id)
     if (!tagret) return
     callbacks.delete(id)
@@ -113,11 +114,11 @@ globalThis.lx_setup = (key, id, name, description, rawScript) => {
     // 'utils.zlib.inflate': 'utils.zlib.inflate',
     // 'utils.zlib.deflate': 'utils.zlib.deflate',
   }
-  const EVENT_NAMES = Object.freeze({
+  const EVENT_NAMES = {
     request: 'request',
     inited: 'inited',
     updateAlert: 'updateAlert',
-  })
+  }
   const eventNames = Object.values(EVENT_NAMES)
   const events = {
     request: null,
@@ -299,7 +300,7 @@ globalThis.lx_setup = (key, id, name, description, rawScript) => {
     else if (Array.isArray(data) || ArrayBuffer.isView(data)) return utils.buffer.bufToString(data, 'base64')
     throw new Error('data type error: ' + typeof data + ' raw data: ' + data)
   }
-  const utils = Object.freeze({
+  const utils = {
     crypto: {
       aesEncrypt(buffer, mode, key, iv) {
         // console.log('aesEncrypt', buffer, mode, key, iv)
@@ -391,117 +392,130 @@ globalThis.lx_setup = (key, id, name, description, rawScript) => {
     //       })
     //     })
     //   },
-    // },
-  })
-  Object.defineProperty(globalThis, 'lx', {
-    configurable: false,
-    writable: false,
-    value: Object.freeze({
-      EVENT_NAMES,
-      request(url, { method = 'get', timeout, headers, body, form, formData, binary }, callback) {
-        let options = { headers, binary: binary === true }
-        // let data
-        // if (body) {
-        //   data = body
-        // } else if (form) {
-        //   data = form
-        //   // data.content_type = 'application/x-www-form-urlencoded'
-        //   options.json = false
-        // } else if (formData) {
-        //   data = formData
-        //   // data.content_type = 'multipart/form-data'
-        //   options.json = false
-        // }
-        if (timeout && typeof timeout == 'number') options.timeout = Math.min(options.timeout, 60_000)
+    // }),
+  }
 
-        let request = sendNativeRequest(url, { method, body, form, formData, ...options }, (err, resp) => {
-          callback(err, {
-            statusCode: resp.statusCode,
-            statusMessage: resp.statusMessage,
-            headers: resp.headers,
-            // bytes: resp.bytes,
-            // raw: resp.raw,
-            body: resp.body,
-          }, resp.body)
-        })
+  globalThis.lx = {
+    EVENT_NAMES,
+    request(url, { method = 'get', timeout, headers, body, form, formData, binary }, callback) {
+      let options = { headers, binary: binary === true }
+      // let data
+      // if (body) {
+      //   data = body
+      // } else if (form) {
+      //   data = form
+      //   // data.content_type = 'application/x-www-form-urlencoded'
+      //   options.json = false
+      // } else if (formData) {
+      //   data = formData
+      //   // data.content_type = 'multipart/form-data'
+      //   options.json = false
+      // }
+      if (timeout && typeof timeout == 'number') options.timeout = Math.min(options.timeout, 60_000)
 
-        return () => {
-          if (!request.aborted) request.abort()
-          request = null
-        }
-      },
-      send(eventName, data) {
-        return new Promise((resolve, reject) => {
-          if (!eventNames.includes(eventName)) return reject(new Error('The event is not supported: ' + eventName))
-          switch (eventName) {
-            case EVENT_NAMES.inited:
-              if (isInitedApi) return reject(new Error('Script is inited'))
-              isInitedApi = true
-              handleInit(data)
-              resolve()
-              break
-            case EVENT_NAMES.updateAlert:
-              if (isShowedUpdateAlert) return reject(new Error('The update alert can only be called once.'))
-              isShowedUpdateAlert = true
-              handleShowUpdateAlert(data, resolve, reject)
-              break
-            default:
-              reject(new Error('Unknown event name: ' + eventName))
-          }
-        })
-      },
-      on(eventName, handler) {
-        if (!eventNames.includes(eventName)) return Promise.reject(new Error('The event is not supported: ' + eventName))
+      let request = sendNativeRequest(url, { method, body, form, formData, ...options }, (err, resp) => {
+        callback(err, {
+          statusCode: resp.statusCode,
+          statusMessage: resp.statusMessage,
+          headers: resp.headers,
+          // bytes: resp.bytes,
+          // raw: resp.raw,
+          body: resp.body,
+        }, resp.body)
+      })
+
+      return () => {
+        if (!request.aborted) request.abort()
+        request = null
+      }
+    },
+    send(eventName, data) {
+      return new Promise((resolve, reject) => {
+        if (!eventNames.includes(eventName)) return reject(new Error('The event is not supported: ' + eventName))
         switch (eventName) {
-          case EVENT_NAMES.request:
-            events.request = handler
+          case EVENT_NAMES.inited:
+            if (isInitedApi) return reject(new Error('Script is inited'))
+            isInitedApi = true
+            handleInit(data)
+            resolve()
             break
-          default: return Promise.reject(new Error('The event is not supported: ' + eventName))
+          case EVENT_NAMES.updateAlert:
+            if (isShowedUpdateAlert) return reject(new Error('The update alert can only be called once.'))
+            isShowedUpdateAlert = true
+            handleShowUpdateAlert(data, resolve, reject)
+            break
+          default:
+            reject(new Error('Unknown event name: ' + eventName))
         }
-        return Promise.resolve()
-      },
-      utils,
-      currentScriptInfo: Object.freeze({
-        name,
-        description,
-      }),
-      version: '1.0.0',
-      env: 'mobile',
-    }),
-  })
+      })
+    },
+    on(eventName, handler) {
+      if (!eventNames.includes(eventName)) return Promise.reject(new Error('The event is not supported: ' + eventName))
+      switch (eventName) {
+        case EVENT_NAMES.request:
+          events.request = handler
+          break
+        default: return Promise.reject(new Error('The event is not supported: ' + eventName))
+      }
+      return Promise.resolve()
+    },
+    utils,
+    currentScriptInfo: {
+      name,
+      description,
+    },
+    version: '1.0.0',
+    env: 'mobile',
+  }
 
+  globalThis.setTimeout = _setTimeout
+  globalThis.clearTimeout = _clearTimeout
+  globalThis.window = globalThis
+  globalThis.document = {
+    getElementsByTagName(name) {
+      if (name == 'script') {
+        return [
+          Object.freeze({
+            innerText: rawScript,
+          }),
+        ]
+      }
+      return null
+    },
+  }
 
-  Object.defineProperty(globalThis, 'setTimeout', {
-    configurable: false,
-    writable: false,
-    value: setTimeout,
-  })
-  Object.defineProperty(globalThis, 'clearTimeout', {
-    configurable: false,
-    writable: false,
-    value: clearTimeout,
-  })
-  Object.defineProperty(globalThis, 'window', {
-    configurable: false,
-    writable: false,
-    value: globalThis,
-  })
-  Object.defineProperty(globalThis, 'document', {
-    configurable: false,
-    writable: false,
-    value: Object.freeze({
-      getElementsByTagName(name) {
-        if (name == 'script') {
-          return [
-            Object.freeze({
-              innerText: rawScript,
-            }),
-          ]
+  const _toString = Function.prototype.toString
+  // eslint-disable-next-line no-extend-native
+  Function.prototype.toString = function() {
+    return Object.getOwnPropertyDescriptors(this).name.configurable
+      ? _toString.apply(this)
+      : `function ${this.name}() { [native code] }`
+  }
+
+  const excludes = [
+    Function.prototype.toString,
+    Function.prototype.toLocaleString,
+    Object.prototype.toString,
+  ]
+  const freezeObject = (obj, freezedObj = new Set()) => {
+    if (obj == null) return
+    switch (typeof obj) {
+      case 'object':
+      case 'function':
+        if (freezedObj.has(obj)) return
+        // Object.freeze(obj)
+        freezedObj.add(obj)
+        for (const [name, { ...config }] of Object.entries(Object.getOwnPropertyDescriptors(obj))) {
+          if (!excludes.includes(config.value)) {
+            if (config.writable) config.writable = false
+            if (config.configurable) config.configurable = false
+            Object.defineProperty(obj, name, config)
+          }
+          freezeObject(config.value, freezedObj)
         }
-        return null
-      },
-    }),
-  })
+    }
+  }
+  freezeObject(globalThis)
 
   console.log('Preload finished.')
 }

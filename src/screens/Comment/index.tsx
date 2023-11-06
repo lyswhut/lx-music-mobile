@@ -120,10 +120,12 @@ export default memo(({ componentId }: {
   }, [])
 
   useEffect(() => {
-    if (!playerState.playMusicInfo.musicInfo) return
-    let playerMusicInfo = playerState.playMusicInfo.musicInfo
-    if ('progress' in playerMusicInfo) playerMusicInfo = playerMusicInfo.metadata.musicInfo
-    setMusicInfo(playerMusicInfo)
+    setTimeout(() => {
+      if (!playerState.playMusicInfo.musicInfo) return
+      let playerMusicInfo = playerState.playMusicInfo.musicInfo
+      if ('progress' in playerMusicInfo) playerMusicInfo = playerMusicInfo.metadata.musicInfo
+      setMusicInfo(playerMusicInfo)
+    }, 300)
   }, [])
 
   return (

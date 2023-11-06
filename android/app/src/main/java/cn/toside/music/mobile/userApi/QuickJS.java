@@ -123,7 +123,7 @@ public class QuickJS {
     });
   }
 
-  private boolean createJSEnv(String id, String name, String desc, String rawScript) {
+  private boolean createJSEnv(String id, String name, String desc) {
     init();
     QuickJSContext quickJSContext = this.jsContext;
     if (quickJSContext != null) quickJSContext.destroy();
@@ -134,7 +134,7 @@ public class QuickJS {
     if (preloadScript == null) return false;
     createEnvObj(this.jsContext);
     this.jsContext.evaluate(preloadScript);
-    this.jsContext.getGlobalObject().getJSFunction("lx_setup").call(this.key, id, name, desc, rawScript);
+    this.jsContext.getGlobalObject().getJSFunction("lx_setup").call(this.key, id, name, desc);
     return true;
   }
 
@@ -148,12 +148,11 @@ public class QuickJS {
 
   public String loadScript(Bundle scriptInfo) {
     Log.d("UserApi", "UserApi Thread id: " + Thread.currentThread().getId());
-    String script = scriptInfo.getString("script", "");
     if (createJSEnv(scriptInfo.getString("id", ""),
       scriptInfo.getString("name", "Unknown"),
-      scriptInfo.getString("description", ""), script)) {
+      scriptInfo.getString("description", ""))) {
       try {
-        this.jsContext.evaluate(script);
+        this.jsContext.evaluate(scriptInfo.getString("script", ""));
         return "";
       } catch (Exception e) {
         Log.e("UserApi", "load script error: " + e.getMessage());

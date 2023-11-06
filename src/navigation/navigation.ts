@@ -136,10 +136,10 @@ export function pushPlayDetailScreen(componentId: string) {
               style: getStatusBarStyle(theme.isDark),
               backgroundColor: 'transparent',
             },
-            // navigationBar: {
-            //   // visible: false,
-            //   backgroundColor: theme['c-content-background'],
-            // },
+            navigationBar: {
+              // visible: false,
+              backgroundColor: theme['c-content-background'],
+            },
             layout: {
               componentBackgroundColor: theme['c-content-background'],
             },
@@ -231,10 +231,10 @@ export function pushSonglistDetailScreen(componentId: string, id: string) {
               style: getStatusBarStyle(theme.isDark),
               backgroundColor: 'transparent',
             },
-            // navigationBar: {
-            //   // visible: false,
-            //   backgroundColor: theme['c-content-background'],
-            // },
+            navigationBar: {
+              // visible: false,
+              backgroundColor: theme['c-content-background'],
+            },
             layout: {
               componentBackgroundColor: theme['c-content-background'],
             },
@@ -366,10 +366,10 @@ export function pushCommentScreen(componentId: string) {
               style: getStatusBarStyle(theme.isDark),
               backgroundColor: 'transparent',
             },
-            // navigationBar: {
-            //   // visible: false,
-            //   backgroundColor: theme['c-content-background'],
-            // },
+            navigationBar: {
+              // visible: false,
+              backgroundColor: theme['c-content-background'],
+            },
             layout: {
               componentBackgroundColor: theme['c-content-background'],
             },

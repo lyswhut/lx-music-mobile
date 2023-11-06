@@ -78,7 +78,10 @@ export const removeComponentId = (name: string) => {
 export const setNavActiveId = (id: Parameters<typeof commonActions.setNavActiveId>['0']) => {
   if (id == commonState.navActiveId) return
   commonActions.setNavActiveId(id)
-  saveViewPrevState({ id })
+  if (id != 'nav_setting') {
+    commonActions.setLastNavActiveId(id)
+    saveViewPrevState({ id })
+  }
 }
 
 export const showPactModal = () => {

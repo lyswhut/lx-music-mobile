@@ -1,6 +1,6 @@
 'use strict'
 
-globalThis.lx_setup = (key, id, name, description, rawScript) => {
+globalThis.lx_setup = (key, id, name, description) => {
   delete globalThis.lx_setup
   const _nativeCall = globalThis.__lx_native_call__
   delete globalThis.__lx_native_call__
@@ -471,18 +471,6 @@ globalThis.lx_setup = (key, id, name, description, rawScript) => {
   globalThis.setTimeout = _setTimeout
   globalThis.clearTimeout = _clearTimeout
   globalThis.window = globalThis
-  globalThis.document = {
-    getElementsByTagName(name) {
-      if (name == 'script') {
-        return [
-          Object.freeze({
-            innerText: rawScript,
-          }),
-        ]
-      }
-      return null
-    },
-  }
 
   const freezeObject = (obj) => {
     if (typeof obj != 'object') return

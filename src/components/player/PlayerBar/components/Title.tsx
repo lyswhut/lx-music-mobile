@@ -8,9 +8,10 @@ import commonState from '@/store/common/state'
 import playerState from '@/store/player/state'
 import Text from '@/components/common/Text'
 import { LIST_IDS } from '@/config/constant'
+import { createStyle } from '@/utils/tools'
 
 
-export default () => {
+export default ({ isHome }: { isHome: boolean }) => {
   // const { t } = useTranslation()
   const musicInfo = usePlayerMusicInfo()
   const downloadFileName = useSettingValue('download.fileName')
@@ -34,7 +35,7 @@ export default () => {
   const title = musicInfo.id ? downloadFileName.replace('歌手', musicInfo.singer).replace('歌名', musicInfo.name) : ''
   // console.log(playMusicInfo)
   return (
-    <TouchableOpacity style={{ width: '100%' }} onLongPress={handleLongPress} onPress={handlePress} activeOpacity={0.7} >
+    <TouchableOpacity style={styles.container} onLongPress={handleLongPress} onPress={handlePress} activeOpacity={0.7} >
       <Text color={theme['c-font-label']} numberOfLines={1}>{title}</Text>
     </TouchableOpacity>
   )
@@ -60,6 +61,10 @@ export default () => {
 //   )
 // }
 
-// const styles = StyleSheet.create({
-
-// })
+const styles = createStyle({
+  container: {
+    width: '100%',
+    paddingHorizontal: 2,
+    paddingBottom: 2,
+  },
+})

@@ -1,5 +1,5 @@
-import { memo, useState } from 'react'
-import { View } from 'react-native'
+import { memo, useCallback, useState } from 'react'
+import { View, StyleSheet } from 'react-native'
 
 import Progress from '@/components/player/Progress'
 import Status from './Status'
@@ -23,38 +23,39 @@ const PlayTimeMax = memo(({ timeStr }: { timeStr: string }) => {
   return <Text size={FONT_SIZE} color={theme['c-500']}>{timeStr}</Text>
 })
 
-export default () => {
+export default ({ isHome }: { isHome: boolean }) => {
   const theme = useTheme()
   const [autoUpdate, setAutoUpdate] = useState(true)
   const { maxPlayTimeStr, nowPlayTimeStr, progress, maxPlayTime } = useProgress(autoUpdate)
-  usePageVisible([COMPONENT_IDS.home], setAutoUpdate)
+  usePageVisible([COMPONENT_IDS.home], useCallback((visible) => {
+    if (isHome) setAutoUpdate(visible)
+  }, [isHome]))
 
   return (
-    <>
-      <View style={styles.progress}><Progress progress={progress} duration={maxPlayTime} /></View>
-      <View style={styles.info}>
-        {/* <MusicName /> */}
-        <View style={styles.status}>
-          <Status autoUpdate={autoUpdate} />
-        </View>
-        <View style={{ flexGrow: 0, flexShrink: 0, flexDirection: 'row', alignItems: 'flex-start' }} >
-          <PlayTimeCurrent timeStr={nowPlayTimeStr} />
-          <Text size={FONT_SIZE} color={theme['c-500']}> / </Text>
-          <PlayTimeMax timeStr={maxPlayTimeStr} />
-        </View>
+    <View style={styles.container}>
+      {/* <MusicName /> */}
+      <View style={styles.status}>
+        <Status autoUpdate={autoUpdate} />
       </View>
-    </>
+      <View style={{ flexGrow: 0, flexShrink: 0, flexDirection: 'row', alignItems: 'flex-start' }} >
+        <PlayTimeCurrent timeStr={nowPlayTimeStr} />
+        <Text size={FONT_SIZE} color={theme['c-500']}> / </Text>
+        <PlayTimeMax timeStr={maxPlayTimeStr} />
+      </View>
+      <View style={[StyleSheet.absoluteFill, styles.progress]}><Progress progress={progress} duration={maxPlayTime} /></View>
+    </View>
   )
 }
 
 
 const styles = createStyle({
-  progress: {
-    height: 16,
+  container: {
+    flex: 1,
+    // height: 16,
     // flexGrow: 0,
-    flexShrink: 0,
+    // flexShrink: 0,
     // flexDirection: 'column',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     // alignItems: 'center',
     // marginBottom: -1,
     // backgroundColor: '#ccc',
@@ -63,13 +64,15 @@ const styles = createStyle({
     // position: 'absolute',
     // width: '100%',
     // top: 0,
-  },
-  info: {
-    // flex: 1,
+    paddingVertical: 2,
+    paddingHorizontal: 3,
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    // alignItems: 'center',
-    // backgroundColor: '#ccc',
+  },
+  progress: {
+    paddingVertical: 2,
+    zIndex: 100,
   },
   status: {
     flexGrow: 1,

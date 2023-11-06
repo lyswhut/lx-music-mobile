@@ -6,7 +6,7 @@ import StatusBar from '@/components/common/StatusBar'
 import { setComponentId } from '@/core/common'
 import { COMPONENT_IDS } from '@/config/constant'
 import songlistState from '@/store/songlist/state'
-import PlayerBar from './PlayerBar'
+import PlayerBar from '@/components/player/PlayerBar'
 
 
 export default ({ componentId }: { componentId: string }) => {

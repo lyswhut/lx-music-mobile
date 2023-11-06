@@ -4,8 +4,8 @@ import { createStyle } from '@/utils/tools'
 import Text from '@/components/common/Text'
 
 
-export default () => {
-  const { text } = useLrcPlay()
+export default ({ autoUpdate }: { autoUpdate: boolean }) => {
+  const { text } = useLrcPlay(autoUpdate)
   const statusText = useStatusText()
   const isPlay = useIsPlay()
   // console.log('render status')
@@ -19,7 +19,7 @@ const styles = createStyle({
   text: {
     // fontSize: 10,
     // lineHeight: 18,
-    height: 18,
+    // height: 18,
     // backgroundColor: 'rgba(0,0,0,0.2)',
   },
 })

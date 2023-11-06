@@ -58,7 +58,8 @@ export default () => {
   }
 
   const handleLoadstart = () => {
-    if (global.lx.isPlayedStop) return
+    console.log('handleLoadstart', playerState.isPlay)
+    if (global.lx.isPlayedStop || !playerState.isPlay) return
     startLoadingTimeout()
     setStatusText(global.i18n.t('player__loading'))
   }

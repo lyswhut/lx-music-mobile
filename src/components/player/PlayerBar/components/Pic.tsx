@@ -7,9 +7,9 @@ import { scaleSizeH } from '@/utils/pixelRatio'
 import { createStyle } from '@/utils/tools'
 import { BorderRadius } from '@/theme'
 import commonState from '@/store/common/state'
-// import playerState from '@/store/player/state'
+import playerState from '@/store/player/state'
 import Text from '@/components/common/Text'
-import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
+import { LIST_IDS, NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 
 const PIC_HEIGHT = scaleSizeH(46)
 
@@ -38,7 +38,7 @@ const EmptyPic = memo(() => {
   )
 })
 
-export default () => {
+export default ({ isHome }: { isHome: boolean }) => {
   const musicInfo = usePlayerMusicInfo()
   const handlePress = () => {
     // console.log('')
@@ -49,16 +49,17 @@ export default () => {
     // toast(global.i18n.t('play_detail_todo_tip'), 'long')
   }
 
-  // const handleLongPress = () => {
-  //   const listId = playerState.playMusicInfo.listId
-  //   if (!listId || listId == LIST_IDS.DOWNLOAD) return
-  //   global.app_event.jumpListPosition()
-  // }
+  const handleLongPress = () => {
+    if (!isHome) return
+    const listId = playerState.playMusicInfo.listId
+    if (!listId || listId == LIST_IDS.DOWNLOAD) return
+    global.app_event.jumpListPosition()
+  }
 
   // console.log('render pic')
 
   return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={0.7} >
+    <TouchableOpacity onLongPress={handleLongPress} onPress={handlePress} activeOpacity={0.7} >
       {
         musicInfo.pic
           ? (

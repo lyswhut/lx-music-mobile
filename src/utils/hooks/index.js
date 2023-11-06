@@ -5,3 +5,4 @@ export { default as useDeviceOrientation } from './useDeviceOrientation'
 
 export { default as usePlayTime } from './usePlayTime'
 export { default as useAssertApiSupport } from './useAssertApiSupport'
+export { useDrag } from './useDrag'

@@ -111,6 +111,7 @@ export const useLrcPlay = (autoUpdate = true) => {
     }
     lrcTools.addSetLyricHook(setLrcCallback)
     lrcTools.addPlayHook(playCallback)
+    setLrcInfo(lrcTools.currentLineData)
     return () => {
       lrcTools.removeSetLyricHook(setLrcCallback)
       lrcTools.removePlayHook(playCallback)

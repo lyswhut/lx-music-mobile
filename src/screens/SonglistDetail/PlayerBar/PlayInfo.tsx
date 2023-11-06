@@ -33,7 +33,7 @@ export default () => {
         <View style={styles.status}>
           <Status />
         </View>
-        <View style={{ flexGrow: 0, flexShrink: 0, flexDirection: 'row' }} >
+        <View style={{ flexGrow: 0, flexShrink: 0, flexDirection: 'row', alignItems: 'flex-start' }} >
           <PlayTimeCurrent timeStr={nowPlayTimeStr} />
           <Text size={FONT_SIZE} color={theme['c-500']}> / </Text>
           <PlayTimeMax timeStr={maxPlayTimeStr} />

@@ -22,7 +22,7 @@ export default ({ icon, color, onPress }: {
 
 const styles = createStyle({
   cotrolBtn: {
-    marginLeft: 5,
+    marginBottom: 5,
     justifyContent: 'center',
     alignItems: 'center',
 

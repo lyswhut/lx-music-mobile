@@ -1,6 +1,6 @@
 import { useLrcPlay } from '@/plugins/lyric'
 import { useIsPlay, useStatusText } from '@/store/player/hook'
-import { createStyle } from '@/utils/tools'
+// import { createStyle } from '@/utils/tools'
 import Text from '@/components/common/Text'
 
 
@@ -12,14 +12,15 @@ export default ({ autoUpdate }: { autoUpdate: boolean }) => {
 
   const status = isPlay ? text : statusText
 
-  return <Text style={styles.text} numberOfLines={1} size={12}>{status}</Text>
+  return <Text numberOfLines={1} size={12}>{status}</Text>
 }
 
-const styles = createStyle({
-  text: {
-    // fontSize: 10,
-    // lineHeight: 18,
-    // height: 18,
-    // backgroundColor: 'rgba(0,0,0,0.2)',
-  },
-})
+// const styles = createStyle({
+//   text: {
+//     // fontSize: 10,
+//     // lineHeight: 18,
+//     // height: 18,
+//     // height: '100%',
+//     // backgroundColor: 'rgba(0,0,0,0.2)',
+//   },
+// })

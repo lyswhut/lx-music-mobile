@@ -8,9 +8,16 @@ import { useTheme } from '@/store/theme/hook'
 
 
 const DefaultBar = memo(() => {
-  const theme = useTheme()
+  // const theme = useTheme()
 
-  return <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-light-600-alpha-900'], position: 'absolute', width: '100%', left: 0, top: 0 }}></View>
+  return <View style={{
+    ...styles.progressBar,
+    // backgroundColor: theme['c-primary-light-200-alpha-900'],
+    position: 'absolute',
+    width: '100%',
+    left: 0,
+    top: 0,
+  }}></View>
 })
 
 // const BufferedBar = memo(({ bufferedProgress }) => {
@@ -96,7 +103,7 @@ const Progress = ({ progress, duration }: {
         {/* <BufferedBar bufferedProgress={bufferedProgress} /> */}
         <View style={{
           ...styles.progressBar,
-          backgroundColor: theme['c-primary-light-200-alpha-900'],
+          backgroundColor: theme['c-primary-alpha-900'],
           width: progressStr,
         }}>
         </View>

@@ -147,6 +147,10 @@ export default () => {
       clearTimeout(scrollTimoutRef.current)
       scrollTimoutRef.current = null
     }
+    if (scrollCancelRef.current) {
+      scrollCancelRef.current()
+      scrollCancelRef.current = null
+    }
   }
 
   const onScrollEndDrag = () => {

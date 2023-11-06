@@ -2,6 +2,7 @@ import { memo, useEffect } from 'react'
 import { View, StyleSheet, AppState } from 'react-native'
 import { screenkeepAwake, screenUnkeepAwake } from '@/utils/nativeModules/utils'
 import StatusBar from '@/components/common/StatusBar'
+import MoreBtn from './Player/MoreBtn'
 
 import Header from './components/Header'
 import { setComponentId } from '@/core/common'
@@ -51,12 +52,15 @@ export default memo(({ componentId }: { componentId: string }) => {
       <View style={{ ...styles.container, paddingTop: StatusBar.currentHeight }}>
         <View style={styles.left}>
           <Header />
-          <Pic componentId={componentId} />
+          <View style={styles.leftContent}>
+            <MoreBtn />
+            <Pic componentId={componentId} />
+          </View>
+          <Player />
           {/* <View style={styles.controlBtn} nativeID="pageIndicator">
             <MoreBtn />
             <ControlBtn />
           </View> */}
-          <Player />
         </View>
         <View style={styles.right}>
           <Lyric />
@@ -74,9 +78,14 @@ const styles = StyleSheet.create({
   left: {
     flex: 1,
     width: '45%',
-    // paddingLeft: 15,
     paddingBottom: 10,
     // backgroundColor: '#eee',
+  },
+  leftContent: {
+    flex: 1,
+    paddingLeft: 15,
+    flexDirection: 'column',
+    // alignItems: 'center',
   },
   right: {
     width: '55%',

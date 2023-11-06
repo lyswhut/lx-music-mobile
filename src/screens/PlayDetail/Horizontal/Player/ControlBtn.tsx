@@ -56,6 +56,8 @@ const styles = StyleSheet.create({
   content: {
     flexGrow: 0,
     flexDirection: 'row',
+    paddingVertical: 8,
+    gap: 20,
   },
   cotrolBtn: {
     justifyContent: 'center',
@@ -64,6 +66,6 @@ const styles = StyleSheet.create({
     // backgroundColor: '#ccc',
     shadowOpacity: 1,
     textShadowRadius: 1,
-    marginLeft: 10,
+    // marginLeft: 10,
   },
 })

@@ -75,6 +75,7 @@ export const useProgress = (autoUpdate = true) => {
     const handleUpdate = (progress: InitState['progress']) => {
       if (isActive()) update(progress)
     }
+    update(state.progress)
     global.state_event.on('playProgressChanged', handleUpdate)
     return () => {
       global.state_event.off('playProgressChanged', handleUpdate)

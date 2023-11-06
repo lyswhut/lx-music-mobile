@@ -44,7 +44,7 @@ export default () => {
 
 const styles = createStyle({
   container: {
-    marginLeft: 15,
+    // marginLeft: 15,
     marginVertical: 5,
     height: 26,
     // flex: 1,

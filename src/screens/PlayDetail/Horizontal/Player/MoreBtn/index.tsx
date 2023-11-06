@@ -19,8 +19,14 @@ const styles = createStyle({
   container: {
     flexShrink: 0,
     flexGrow: 0,
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     // backgroundColor: 'rgba(0,0,0,0.1)',
+    justifyContent: 'center',
+    position: 'absolute',
+    height: '100%',
+    left: 15,
+    gap: 10,
+    zIndex: 1,
   },
 })

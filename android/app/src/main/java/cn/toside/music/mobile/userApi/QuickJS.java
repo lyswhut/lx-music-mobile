@@ -26,6 +26,7 @@ public class QuickJS {
   private boolean isInited = false;
   private QuickJSContext jsContext = null;
   final Handler timeoutHandler = new Handler();
+  private boolean inited = false;
 
   public QuickJS(ReactApplicationContext context, Handler eventHandler) {
     this.reactContext = context;
@@ -123,24 +124,27 @@ public class QuickJS {
     });
   }
 
-  private boolean createJSEnv(String id, String name, String desc) {
+  private boolean createJSEnv(String id, String name, String desc, String version, String author, String homepage, String rawScript) {
     init();
     QuickJSContext quickJSContext = this.jsContext;
     if (quickJSContext != null) quickJSContext.destroy();
-    QuickJSContext create = QuickJSContext.create();
-    this.jsContext = create;
-    create.setConsole(new Console(this.eventHandler));
+    this.jsContext = QuickJSContext.create();
+    this.jsContext.setConsole(new Console(this.eventHandler));
     String preloadScript = getPreloadScript();
     if (preloadScript == null) return false;
     createEnvObj(this.jsContext);
     this.jsContext.evaluate(preloadScript);
-    this.jsContext.getGlobalObject().getJSFunction("lx_setup").call(this.key, id, name, desc);
+    this.jsContext.getGlobalObject().getJSFunction("lx_setup").call(this.key, id, name, desc, version, author, homepage, rawScript);
     return true;
   }
 
   private void callNative(String action, String data) {
     Message message = this.eventHandler.obtainMessage();
     message.what = HandlerWhat.ACTION;
+    if ("init".equals(action)) {
+      if (inited) return;
+      inited = true;
+    }
     message.obj = new Object[]{action, data};
     Log.d("UserApi [script call]", "script call action: " + action + " data: " + data);
     this.eventHandler.sendMessage(message);
@@ -148,11 +152,16 @@ public class QuickJS {
 
   public String loadScript(Bundle scriptInfo) {
     Log.d("UserApi", "UserApi Thread id: " + Thread.currentThread().getId());
+    String script = scriptInfo.getString("script", "");
     if (createJSEnv(scriptInfo.getString("id", ""),
       scriptInfo.getString("name", "Unknown"),
-      scriptInfo.getString("description", ""))) {
+      scriptInfo.getString("description", ""),
+      scriptInfo.getString("version", ""),
+      scriptInfo.getString("author", ""),
+      scriptInfo.getString("homepage", ""),
+      script)) {
       try {
-        this.jsContext.evaluate(scriptInfo.getString("script", ""));
+        this.jsContext.evaluate(script);
         return "";
       } catch (Exception e) {
         Log.e("UserApi", "load script error: " + e.getMessage());
@@ -178,9 +187,16 @@ public class QuickJS {
     } catch (Exception e) {
       Message message = eventHandler.obtainMessage();
       message.what = HandlerWhat.LOG;
-      message.obj = new Object[]{"error", "Call script error: " + e.getMessage()};
+      String msg = e.getMessage();
+      if (msg == null) return null;
+      if (msg.length() > 1024) msg = msg.substring(0, 1024) + "...";
+      message.obj = new Object[]{"error", "Call script error: " + msg};
       eventHandler.sendMessage(message);
       Log.e("UserApi", "Call script error: " + e.getMessage());
+      if (!this.inited) {
+        eventHandler.sendMessage(eventHandler.obtainMessage(HandlerWhat.INIT_FAILED, msg));
+        this.inited = true;
+      }
       return null;
     }
   }

@@ -389,6 +389,7 @@
   "toggle_source_failed": "Failed to change the source, please try to manually search for the song in other sources to play",
   "toggle_source_try": "Try switching to another source...",
   "understand": "Already understood 👌",
+  "user_api__init_failed_alert": "Custom source [{name}] failed to initialize:",
   "user_api_allow_show_update_alert": "Allow update popups to be displayed",
   "user_api_btn_import": "Import",
   "user_api_empty": "It’s actually empty here 😲",

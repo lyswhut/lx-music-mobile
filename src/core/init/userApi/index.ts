@@ -38,57 +38,68 @@ export default async(setting: LX.AppSetting) => {
     if (status) target.resolve(result)
     else target.reject(new Error(errorMessage ?? 'failed'))
   }
-  const handleStateChange = ({ status, errorMessage, info, id }: InitParams) => {
+  const handleStateChange = ({ status, errorMessage, info }: InitParams) => {
     // console.log(status, message, info)
     setUserApiStatus(status, errorMessage)
-    if (!status || !info?.sources || id !== settingState.setting['common.apiSource']) return
-
-    let apis: any = {}
-    let qualitys: LX.QualityList = {}
-    for (const [source, { actions, type, qualitys: sourceQualitys }] of Object.entries(info.sources)) {
-      if (type != 'music') continue
-      apis[source as LX.Source] = {}
-      for (const action of actions) {
-        switch (action) {
-          case 'musicUrl':
-            apis[source].getMusicUrl = (songInfo: LX.Music.MusicInfo, type: LX.Quality) => {
-              const requestKey = `request__${Math.random().toString().substring(2)}`
-              return {
-                canceleFn() {
-                  // userApiRequestCancel(requestKey)
-                },
-                promise: sendUserApiRequest({
-                  requestKey,
-                  data: {
-                    source,
-                    action: 'musicUrl',
-                    info: {
-                      type,
-                      musicInfo: songInfo,
+    if (!info || info.id !== settingState.setting['common.apiSource']) return
+    if (status) {
+      if (info.sources) {
+        let apis: any = {}
+        let qualitys: LX.QualityList = {}
+        for (const [source, { actions, type, qualitys: sourceQualitys }] of Object.entries(info.sources)) {
+          if (type != 'music') continue
+          apis[source as LX.Source] = {}
+          for (const action of actions) {
+            switch (action) {
+              case 'musicUrl':
+                apis[source].getMusicUrl = (songInfo: LX.Music.MusicInfo, type: LX.Quality) => {
+                  const requestKey = `request__${Math.random().toString().substring(2)}`
+                  return {
+                    canceleFn() {
+                      // userApiRequestCancel(requestKey)
                     },
-                  },
-                  // eslint-disable-next-line @typescript-eslint/promise-function-async
-                }).then(res => {
-                  // console.log(res)
-                  if (!/^https?:/.test(res.data.url)) return Promise.reject(new Error('Get url failed'))
-                  return { type, url: res.data.url }
-                }).catch(async err => {
-                  console.log(err.message)
-                  return Promise.reject(err)
-                }),
-              }
-            }
-            break
+                    promise: sendUserApiRequest({
+                      requestKey,
+                      data: {
+                        source,
+                        action: 'musicUrl',
+                        info: {
+                          type,
+                          musicInfo: songInfo,
+                        },
+                      },
+                      // eslint-disable-next-line @typescript-eslint/promise-function-async
+                    }).then(res => {
+                      // console.log(res)
+                      if (!/^https?:/.test(res.data.url)) return Promise.reject(new Error('Get url failed'))
+                      return { type, url: res.data.url }
+                    }).catch(async err => {
+                      console.log(err.message)
+                      return Promise.reject(err)
+                    }),
+                  }
+                }
+                break
 
-          default:
-            break
+              default:
+                break
+            }
+          }
+          qualitys[source as LX.Source] = sourceQualitys
         }
+        global.lx.qualityList = qualitys
+        global.lx.apis = apis
+        global.state_event.apiSourceUpdated(settingState.setting['common.apiSource'])
       }
-      qualitys[source as LX.Source] = sourceQualitys
+    } else {
+      if (errorMessage) {
+        void tipDialog({
+          message: `${global.i18n.t('user_api__init_failed_alert', { name: info.name })}\n${errorMessage}`,
+          // selection: true,
+          btnText: global.i18n.t('ok'),
+        })
+      }
     }
-    global.lx.qualityList = qualitys
-    global.lx.apis = apis
-    global.state_event.apiSourceUpdated(settingState.setting['common.apiSource'])
   }
   const showUpdateAlert = ({ name, log, updateUrl }: UpdateInfoParams) => {
     if (updateUrl) {
@@ -117,6 +128,7 @@ export default async(setting: LX.AppSetting) => {
     // console.log('script actuon: ', event)
     switch (event.action) {
       case 'init':
+        if ((event as unknown as { errorMessage?: string }).errorMessage) event.data.errorMessage = (event as unknown as { errorMessage: string }).errorMessage
         handleStateChange(event.data)
         break
       case 'response':

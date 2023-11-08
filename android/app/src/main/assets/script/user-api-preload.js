@@ -470,6 +470,19 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
 
   globalThis.setTimeout = _setTimeout
   globalThis.clearTimeout = _clearTimeout
+  globalThis.window = globalThis
+  globalThis.document = {
+    getElementsByTagName(name) {
+      if (name == 'script') {
+        return [
+          Object.freeze({
+            innerText: globalThis.lx.currentScriptInfo.rawScript,
+          }),
+        ]
+      }
+      return null
+    },
+  }
 
   const freezeObject = (obj) => {
     if (typeof obj != 'object') return

@@ -27,9 +27,9 @@ const IcoMoon = createIconSetFromIcoMoon(icoMoonConfig)
 
 type IconType = ReturnType<typeof createIconSetFromIcoMoon>
 
-export const Icon = ({ size = 15, color, ...props }: ComponentProps<IconType>) => {
+export const Icon = ({ size = 15, rawSize, color, ...props }: ComponentProps<IconType> & { rawSize?: number }) => {
   const theme = useTheme()
-  return <IcoMoon size={scaleSizeW(size)} color={color ?? theme['c-font']} {...props} />
+  return <IcoMoon size={rawSize ?? scaleSizeW(size)} color={color ?? theme['c-font']} {...props} />
 }
 
 export {

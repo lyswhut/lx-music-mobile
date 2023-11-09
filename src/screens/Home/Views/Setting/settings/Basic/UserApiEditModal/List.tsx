@@ -4,7 +4,7 @@ import { View, TouchableOpacity, ScrollView } from 'react-native'
 import { confirmDialog, createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'
-import { useUserApiList } from '@/store/userApi'
+import { useUserApiList, state as userApiState } from '@/store/userApi'
 import { useSettingValue } from '@/store/setting/hook'
 import { removeUserApi, setUserApiAllowShowUpdateAlert } from '@/core/userApi'
 import { BorderRadius } from '@/theme'
@@ -71,8 +71,9 @@ export default () => {
     if (!confirm) return
     void removeUserApi([id]).finally(() => {
       if (settingState.setting['common.apiSource'] == id) {
-        let backApi = apiSourceInfo.find(api => !api.disabled)
-        setApiSource(backApi?.id ?? '')
+        let backApiId = apiSourceInfo.find(api => !api.disabled)?.id
+        if (!backApiId) backApiId = userApiState.list[0]?.id
+        setApiSource(backApiId ?? '')
       }
     })
   }, [])

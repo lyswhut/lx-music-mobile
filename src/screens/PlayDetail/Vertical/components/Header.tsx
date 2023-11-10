@@ -13,7 +13,7 @@ import { HEADER_HEIGHT as _HEADER_HEIGHT, NAV_SHEAR_NATIVE_IDS } from '@/config/
 import commonState from '@/store/common/state'
 import SettingPopup, { type SettingPopupType } from '../../components/SettingPopup'
 
-const HEADER_HEIGHT = scaleSizeH(_HEADER_HEIGHT)
+export const HEADER_HEIGHT = scaleSizeH(_HEADER_HEIGHT)
 
 
 const Title = () => {

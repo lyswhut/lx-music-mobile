@@ -15,9 +15,7 @@ export default memo(() => {
       <View style={styles.status}>
         <PlayInfo />
       </View>
-      <View style={styles.control}>
-        <ControlBtn />
-      </View>
+      <ControlBtn />
       <View style={{ ...styles.info }} >
         <MoreBtn />
       </View>
@@ -27,6 +25,7 @@ export default memo(() => {
 
 const styles = createStyle({
   container: {
+    flex: 1,
     width: '100%',
     // paddingTop: progressContentPadding,
     // marginTop: -progressContentPadding,
@@ -34,33 +33,20 @@ const styles = createStyle({
     padding: 15,
     // backgroundColor: AppColors.primary,
     // backgroundColor: 'red',
+    flexDirection: 'column',
   },
   info: {
+    flex: 0,
     flexDirection: 'row',
     paddingBottom: 5,
-    justifyContent: 'flex-end',
+    // justifyContent: 'flex-end',
   },
   status: {
     marginTop: 10,
     flexDirection: 'column',
-    flexGrow: 1,
-    flexShrink: 1,
+    flex: 0,
     paddingLeft: 5,
     justifyContent: 'space-evenly',
-  },
-  control: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    flexGrow: 0,
-    flexShrink: 0,
-    paddingLeft: '10%',
-    paddingRight: '10%',
-    paddingTop: '8.6%',
-    paddingBottom: '8.6%',
-  },
-  row: {
-    flexDirection: 'row',
-    flexGrow: 0,
-    flexShrink: 0,
+    // backgroundColor: 'rgba(0, 0, 0, .1)',
   },
 })

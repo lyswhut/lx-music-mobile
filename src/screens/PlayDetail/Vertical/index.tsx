@@ -122,5 +122,7 @@ const styles = StyleSheet.create({
   },
   player: {
     flex: 0,
+    height: '38%',
+    // backgroundColor: 'rgba(0,0,0,0.1)',
   },
 })

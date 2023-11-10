@@ -14,7 +14,7 @@ const styles = createStyle({
   },
   nav: {
     height: '100%',
-    width: '18%',
+    width: '22%',
     borderRightWidth: BorderWidths.normal,
   },
   main: {

@@ -14,7 +14,7 @@ import CommentBtn from './CommentBtn'
 import Btn from './Btn'
 import SettingPopup, { type SettingPopupType } from '../../components/SettingPopup'
 
-const HEADER_HEIGHT = scaleSizeH(_HEADER_HEIGHT)
+export const HEADER_HEIGHT = scaleSizeH(_HEADER_HEIGHT)
 
 const Title = () => {
   const theme = useTheme()

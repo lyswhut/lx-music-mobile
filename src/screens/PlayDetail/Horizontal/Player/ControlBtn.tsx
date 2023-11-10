@@ -3,11 +3,12 @@ import { Icon } from '@/components/common/Icon'
 import { useTheme } from '@/store/theme/hook'
 // import { useIsPlay } from '@/store/player/hook'
 import { playNext, playPrev, togglePlay } from '@/core/player/player'
-import { scaleSizeW } from '@/utils/pixelRatio'
+// import { scaleSizeW } from '@/utils/pixelRatio'
 import { useIsPlay } from '@/store/player/hook'
 import { useLayout } from '@/utils/hooks'
+import { marginLeft } from '../constant'
 
-const WIDTH = scaleSizeW(48)
+// const WIDTH = scaleSizeW(48)
 
 const PrevBtn = ({ size }: { size: number }) => {
   const theme = useTheme()
@@ -15,8 +16,8 @@ const PrevBtn = ({ size }: { size: number }) => {
     void playPrev()
   }
   return (
-    <TouchableOpacity style={{ ...styles.cotrolBtn, width: WIDTH, height: WIDTH }} activeOpacity={0.5} onPress={handlePlayPrev}>
-      <Icon name='prevMusic' color={theme['c-button-font']} rawSize={size} />
+    <TouchableOpacity style={{ ...styles.cotrolBtn, width: size, height: size }} activeOpacity={0.5} onPress={handlePlayPrev}>
+      <Icon name='prevMusic' color={theme['c-button-font']} rawSize={size * 0.7} />
     </TouchableOpacity>
   )
 }
@@ -26,8 +27,8 @@ const NextBtn = ({ size }: { size: number }) => {
     void playNext()
   }
   return (
-    <TouchableOpacity style={{ ...styles.cotrolBtn, width: WIDTH, height: WIDTH }} activeOpacity={0.5} onPress={handlePlayNext}>
-      <Icon name='nextMusic' color={theme['c-button-font']} rawSize={size} />
+    <TouchableOpacity style={{ ...styles.cotrolBtn, width: size, height: size }} activeOpacity={0.5} onPress={handlePlayNext}>
+      <Icon name='nextMusic' color={theme['c-button-font']} rawSize={size * 0.7} />
     </TouchableOpacity>
   )
 }
@@ -36,17 +37,17 @@ const TogglePlayBtn = ({ size }: { size: number }) => {
   const theme = useTheme()
   const isPlay = useIsPlay()
   return (
-    <TouchableOpacity style={{ ...styles.cotrolBtn, width: WIDTH, height: WIDTH }} activeOpacity={0.5} onPress={togglePlay}>
-      <Icon name={isPlay ? 'pause' : 'play'} color={theme['c-button-font']} rawSize={size} />
+    <TouchableOpacity style={{ ...styles.cotrolBtn, width: size, height: size }} activeOpacity={0.5} onPress={togglePlay}>
+      <Icon name={isPlay ? 'pause' : 'play'} color={theme['c-button-font']} rawSize={size * 0.7} />
     </TouchableOpacity>
   )
 }
 
 export default () => {
-  const { onLayout, height } = useLayout()
-  const size = height * 0.55
+  const { onLayout, height, width } = useLayout()
+  const size = Math.min(height * 0.65, (width - marginLeft) * 0.7 * 0.3)
   return (
-    <View style={styles.content} onLayout={onLayout}>
+    <View style={{ ...styles.content, gap: size * 0.5 }} onLayout={onLayout}>
       <PrevBtn size={size} />
       <TogglePlayBtn size={size}/>
       <NextBtn size={size} />
@@ -57,10 +58,13 @@ export default () => {
 
 const styles = StyleSheet.create({
   content: {
-    flexGrow: 0,
+    flex: 1,
     flexDirection: 'row',
-    paddingVertical: 8,
+    // paddingVertical: 8,
     gap: 22,
+    // backgroundColor: 'rgba(0,0,0,0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   cotrolBtn: {
     justifyContent: 'center',

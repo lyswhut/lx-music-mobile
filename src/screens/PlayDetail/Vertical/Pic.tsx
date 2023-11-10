@@ -9,6 +9,8 @@ import { useWindowSize } from '@/utils/hooks'
 import Text from '@/components/common/Text'
 import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 import { useNavigationComponentDidAppear } from '@/navigation'
+import StatusBar from '@/components/common/StatusBar'
+import { HEADER_HEIGHT } from './components/Header'
 
 const EmptyPic = memo(({ width }: { width: number }) => {
   const theme = useTheme()
@@ -23,7 +25,7 @@ const EmptyPic = memo(({ width }: { width: number }) => {
 
 export default ({ componentId }: { componentId: string }) => {
   const musicInfo = usePlayerMusicInfo()
-  const windowSize = useWindowSize()
+  const { width: winWidth, height: winHeight } = useWindowSize()
 
   const [animated, setAnimated] = useState(false)
 
@@ -32,7 +34,7 @@ export default ({ componentId }: { componentId: string }) => {
   })
   // console.log('render pic')
 
-  const imgWidth = windowSize.width * 0.8
+  const imgWidth = Math.min(winWidth * 0.8, (winHeight - StatusBar.currentHeight - HEADER_HEIGHT) * 0.58)
 
   return (
     <View style={styles.container}>

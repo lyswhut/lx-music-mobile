@@ -1,5 +1,5 @@
 import { memo, useState } from 'react'
-import { View, Image, StyleSheet } from 'react-native'
+import { View, Image } from 'react-native'
 // import { useLayout } from '@/utils/hooks'
 import { useTheme } from '@/store/theme/hook'
 import { BorderRadius } from '@/theme'
@@ -8,6 +8,11 @@ import { usePlayerMusicInfo } from '@/store/player/hook'
 import { useWindowSize } from '@/utils/hooks'
 import { useNavigationComponentDidAppear } from '@/navigation'
 import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
+import { createStyle } from '@/utils/tools'
+import StatusBar from '@/components/common/StatusBar'
+import { HEADER_HEIGHT } from './components/Header'
+import { BTN_WIDTH } from './MoreBtn/Btn'
+import { marginLeft } from './constant'
 
 const EmptyPic = memo(({ width }: { width: number }) => {
   const theme = useTheme()
@@ -30,10 +35,10 @@ export default memo(({ componentId }: { componentId: string }) => {
     setAnimated(true)
   })
 
-  const imgWidth = Math.min(winWidth * 0.6 * 0.5, winHeight * 0.5)
+  const imgWidth = Math.min((winWidth * 0.45 - marginLeft - BTN_WIDTH) * 0.76, (winHeight - StatusBar.currentHeight - HEADER_HEIGHT) * 0.62)
 
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, height: (winHeight - StatusBar.currentHeight - HEADER_HEIGHT) * 0.66 }}>
       <View style={{ ...styles.content, elevation: animated ? 3 : 0 }}>
         {
           musicInfo.pic
@@ -51,10 +56,9 @@ export default memo(({ componentId }: { componentId: string }) => {
   )
 })
 
-const styles = StyleSheet.create({
+const styles = createStyle({
   container: {
-    flexGrow: 1,
-    flexShrink: 1,
+    flex: 0,
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: 'rgba(0,0,0,0.1)',

@@ -40,6 +40,7 @@ public class Utils {
   // https://stackoverflow.com/a/13357785
   public static String getStringFromFile (String filePath) throws Exception {
     File fl = new File(filePath);
+    if (!fl.exists()) return "";
     FileInputStream fin = new FileInputStream(fl);
     String ret = convertStreamToString(fin);
     //Make sure you close all streams.

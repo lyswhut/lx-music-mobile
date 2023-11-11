@@ -89,7 +89,7 @@ export default memo(({ componentId }: { componentId: string }) => {
           <View style={{ ...styles.pageIndicatorItem, backgroundColor: pageIndex == 0 ? theme.secondary20 : theme.normal60 }}></View>
           <View style={{ ...styles.pageIndicatorItem, backgroundColor: pageIndex == 1 ? theme.secondary20 : theme.normal60 }}></View>
         </View> */}
-        <View style={styles.player} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_player}>
+        <View style={{ flex: 0, height: `${36 * global.lx.fontSize}%` }} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_player}>
           <Player />
         </View>
       </View>
@@ -120,9 +120,9 @@ const styles = StyleSheet.create({
     marginRight: 2,
     borderRadius: 2,
   },
-  player: {
-    flex: 0,
-    height: '38%',
-    // backgroundColor: 'rgba(0,0,0,0.1)',
-  },
+  // player: {
+  //   flex: 0,
+  //   height: '36%',
+  //   // backgroundColor: 'rgba(0,0,0,0.1)',
+  // },
 })

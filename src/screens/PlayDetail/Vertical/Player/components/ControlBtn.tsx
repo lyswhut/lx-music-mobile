@@ -45,7 +45,7 @@ const TogglePlayBtn = ({ size }: { size: number }) => {
 
 export default () => {
   const { onLayout, height, width } = useLayout()
-  const size = Math.min(height * 0.95, width * 0.5 * 0.3)
+  const size = Math.min(height * 0.5, width * 0.4 * 0.33) * global.lx.fontSize
 
   return (
     <View style={styles.conatiner} onLayout={onLayout}>
@@ -63,8 +63,8 @@ const styles = createStyle({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     flex: 1,
-    paddingLeft: '2%',
-    paddingRight: '2%',
+    paddingLeft: '4%',
+    paddingRight: '4%',
     // paddingTop: '8.6%',
     // paddingBottom: '8.6%',
     // backgroundColor: 'rgba(0, 0, 0, .1)',

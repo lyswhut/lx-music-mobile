@@ -34,7 +34,7 @@ export default ({ componentId }: { componentId: string }) => {
   })
   // console.log('render pic')
 
-  const imgWidth = Math.min(winWidth * 0.8, (winHeight - StatusBar.currentHeight - HEADER_HEIGHT) * 0.58)
+  const imgWidth = Math.min(winWidth * 0.8, (winHeight - StatusBar.currentHeight - HEADER_HEIGHT) * 0.5)
 
   return (
     <View style={styles.container}>

@@ -42,6 +42,8 @@ import java.util.Objects;
 public class UtilsModule extends ReactContextBaseJavaModule {
   private final ReactApplicationContext reactContext;
 
+  private int listenerCount = 0;
+
   UtilsEvent utilsEvent;
 
   UtilsModule(ReactApplicationContext reactContext) {
@@ -54,6 +56,23 @@ public class UtilsModule extends ReactContextBaseJavaModule {
   @Override
   public String getName() {
     return "UtilsModule";
+  }
+
+  @ReactMethod
+  public void addListener(String eventName) {
+    if (listenerCount == 0) {
+      // Set up any upstream listeners or background tasks as necessary
+    }
+
+    listenerCount += 1;
+  }
+
+  @ReactMethod
+  public void removeListeners(Integer count) {
+    listenerCount -= count;
+    if (listenerCount == 0) {
+      // Remove upstream listeners, stop unnecessary background tasks
+    }
   }
 
   private void registerScreenBroadcastReceiver() {

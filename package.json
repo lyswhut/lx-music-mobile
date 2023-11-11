@@ -1,6 +1,6 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.2.0-beta.4",
+  "version": "1.2.0-beta.5",
   "versionCode": 62,
   "private": true,
   "scripts": {
@@ -44,7 +44,7 @@
   "homepage": "https://github.com/lyswhut/lx-music-mobile#readme",
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.0.5",
-    "@react-native-async-storage/async-storage": "^1.19.4",
+    "@react-native-async-storage/async-storage": "^1.19.5",
     "@react-native-clipboard/clipboard": "^1.12.1",
     "@react-native-community/slider": "^4.4.3",
     "iconv-lite": "^0.6.3",

@@ -4,18 +4,39 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
   delete globalThis.lx_setup
   const _nativeCall = globalThis.__lx_native_call__
   delete globalThis.__lx_native_call__
-  const set_timeout = globalThis.__lx_native_call__set_timeout
-  delete globalThis.__lx_native_call__set_timeout
-  const utils_str2b64 = globalThis.__lx_native_call__utils_str2b64
-  delete globalThis.__lx_native_call__utils_str2b64
-  const utils_b642buf = globalThis.__lx_native_call__utils_b642buf
-  delete globalThis.__lx_native_call__utils_b642buf
-  const utils_str2md5 = globalThis.__lx_native_call__utils_str2md5
-  delete globalThis.__lx_native_call__utils_str2md5
-  const utils_aes_encrypt = globalThis.__lx_native_call__utils_aes_encrypt
-  delete globalThis.__lx_native_call__utils_aes_encrypt
-  const utils_rsa_encrypt = globalThis.__lx_native_call__utils_rsa_encrypt
-  delete globalThis.__lx_native_call__utils_rsa_encrypt
+  const checkLength = (str, length = 1048576) => {
+    if (typeof str == 'string' && str.length > length) throw new Error('Input too long')
+    return str
+  }
+  const nativeFuncNames = [
+    '__lx_native_call__set_timeout',
+    '__lx_native_call__utils_str2b64',
+    '__lx_native_call__utils_b642buf',
+    '__lx_native_call__utils_str2md5',
+    '__lx_native_call__utils_aes_encrypt',
+    '__lx_native_call__utils_rsa_encrypt',
+  ]
+  const nativeFuncs = {}
+  for (const name of nativeFuncNames) {
+    const nativeFunc = globalThis[name]
+    delete globalThis[name]
+    nativeFuncs[name.replace('__lx_native_call__', '')] = (...args) => {
+      for (const arg of args) checkLength(arg)
+      return nativeFunc(...args)
+    }
+  }
+  // const set_timeout = globalThis.__lx_native_call__set_timeout
+  // delete globalThis.__lx_native_call__set_timeout
+  // const utils_str2b64 = globalThis.__lx_native_call__utils_str2b64
+  // delete globalThis.__lx_native_call__utils_str2b64
+  // const utils_b642buf = globalThis.__lx_native_call__utils_b642buf
+  // delete globalThis.__lx_native_call__utils_b642buf
+  // const utils_str2md5 = globalThis.__lx_native_call__utils_str2md5
+  // delete globalThis.__lx_native_call__utils_str2md5
+  // const utils_aes_encrypt = globalThis.__lx_native_call__utils_aes_encrypt
+  // delete globalThis.__lx_native_call__utils_aes_encrypt
+  // const utils_rsa_encrypt = globalThis.__lx_native_call__utils_rsa_encrypt
+  // delete globalThis.__lx_native_call__utils_rsa_encrypt
   const KEY_PREFIX = {
     publicKeyStart: '-----BEGIN PUBLIC KEY-----',
     publicKeyEnd: '-----END PUBLIC KEY-----',
@@ -33,6 +54,7 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
   const nativeCall = (action, data) => {
     data = JSON.stringify(data)
     // console.log('nativeCall', action, data)
+    checkLength(data, 2097152)
     _nativeCall(key, action, data)
   }
 
@@ -46,7 +68,7 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
       callback,
       params,
     })
-    set_timeout(id, parseInt(timeout))
+    nativeFuncs.set_timeout(id, parseInt(timeout))
     return id
   }
   const _clearTimeout = (id) => {
@@ -288,7 +310,7 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
   }
 
   const dataToB64 = (data) => {
-    if (typeof data === 'string') return utils_str2b64(data)
+    if (typeof data === 'string') return nativeFuncs.utils_str2b64(data)
     else if (Array.isArray(data) || ArrayBuffer.isView(data)) return utils.buffer.bufToString(data, 'base64')
     throw new Error('data type error: ' + typeof data + ' raw data: ' + data)
   }
@@ -298,9 +320,9 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
         // console.log('aesEncrypt', buffer, mode, key, iv)
         switch (mode) {
           case 'aes-128-cbc':
-            return utils.buffer.from(utils_aes_encrypt(dataToB64(buffer), dataToB64(key), dataToB64(iv), AES_MODE.CBC_128_PKCS7Padding), 'base64')
+            return utils.buffer.from(nativeFuncs.utils_aes_encrypt(dataToB64(buffer), dataToB64(key), dataToB64(iv), AES_MODE.CBC_128_PKCS7Padding), 'base64')
           case 'aes-128-ecb':
-            return utils.buffer.from(utils_aes_encrypt(dataToB64(buffer), dataToB64(key), '', AES_MODE.ECB_128_NoPadding), 'base64')
+            return utils.buffer.from(nativeFuncs.utils_aes_encrypt(dataToB64(buffer), dataToB64(key), '', AES_MODE.ECB_128_NoPadding), 'base64')
           default:
             throw new Error('Binary encoding is not supported for input strings')
         }
@@ -310,7 +332,7 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
         if (typeof key !== 'string') throw new Error('Invalid RSA key')
         key = key.replace(KEY_PREFIX.publicKeyStart, '')
           .replace(KEY_PREFIX.publicKeyEnd, '')
-        return utils.buffer.from(utils_rsa_encrypt(dataToB64(buffer), key, RSA_PADDING.NoPadding), 'base64')
+        return utils.buffer.from(nativeFuncs.utils_rsa_encrypt(dataToB64(buffer), key, RSA_PADDING.NoPadding), 'base64')
       },
       randomBytes(size) {
         const byteArray = new Uint8Array(size)
@@ -321,7 +343,7 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
       },
       md5(str) {
         if (typeof str !== 'string') throw new Error('param required a string')
-        const md5 = utils_str2md5(str)
+        const md5 = nativeFuncs.utils_str2md5(str)
         // console.log('md5', str, md5)
         return md5
       },
@@ -334,7 +356,7 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
             case 'binary':
               throw new Error('Binary encoding is not supported for input strings')
             case 'base64':
-              return new Uint8Array(JSON.parse(utils_b642buf(input)))
+              return new Uint8Array(JSON.parse(nativeFuncs.utils_b642buf(input)))
             case 'hex':
               return new Uint8Array(input.match(/.{1,2}/g).map(byte => parseInt(byte, 16)))
             default:
@@ -356,7 +378,7 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
             case 'hex':
               return new Uint8Array(buf).reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '')
             case 'base64':
-              return utils_str2b64(bytesToString(Array.from(buf)))
+              return nativeFuncs.utils_str2b64(bytesToString(Array.from(buf)))
             case 'utf8':
             case 'utf-8':
             default:

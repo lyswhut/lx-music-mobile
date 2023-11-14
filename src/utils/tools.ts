@@ -357,7 +357,7 @@ export const getIsSupportedAutoTheme = () => {
   if (isSupportedAutoTheme == null) {
     const osVerNum = parseInt(osVer)
     isSupportedAutoTheme = isAndroid
-      ? osVerNum >= 10
+      ? osVerNum >= 5
       : osVerNum >= 13
   }
   return isSupportedAutoTheme

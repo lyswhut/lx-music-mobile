@@ -50,10 +50,10 @@ export default ({ isHome }: { isHome: boolean }) => {
 
 const styles = createStyle({
   container: {
-    flex: 1,
     // height: 16,
-    // flexGrow: 0,
-    // flexShrink: 0,
+    maxHeight: 32,
+    flexGrow: 1,
+    flexShrink: 0,
     // flexDirection: 'column',
     // justifyContent: 'center',
     // alignItems: 'center',

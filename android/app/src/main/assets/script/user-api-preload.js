@@ -61,7 +61,8 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
   const callbacks = new Map()
   let timeoutId = 0
   const _setTimeout = (callback, timeout = 0, ...params) => {
-    if (typeof timeout !== 'number' || timeout < 0) throw new Error('timeout required number')
+    if (typeof callback !== 'function') throw new Error('callback required a function')
+    if (typeof timeout !== 'number' || timeout < 0) throw new Error('timeout required a number')
     if (timeoutId > 90000000000) throw new Error('max timeout')
     const id = timeoutId++
     callbacks.set(id, {
@@ -519,6 +520,10 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
     return Object.getOwnPropertyDescriptors(this).name.configurable
       ? _toString.apply(this)
       : `function ${this.name}() { [native code] }`
+  }
+  // eslint-disable-next-line no-eval
+  globalThis.eval = function() {
+    throw new Error('eval is not available')
   }
 
   const excludes = [

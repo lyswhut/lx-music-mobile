@@ -139,7 +139,9 @@ export const assertApiSupport = (source: LX.Source): boolean => {
 //   if (keys.length) return handleRemoveDataMultiple(keys)
 // }
 
-export const exitApp = BackHandler.exitApp
+export const exitApp = () => {
+  BackHandler.exitApp()
+}
 
 export const handleSaveFile = async(path: string, data: any) => {
   // if (!path.endsWith('.json')) path += '.json'

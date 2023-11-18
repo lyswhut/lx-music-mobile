@@ -24,7 +24,7 @@ import { requestMsg } from '@/utils/message'
 import { getRandom } from '@/utils/common'
 import { filterList } from './utils'
 import BackgroundTimer from 'react-native-background-timer'
-import { checkIgnoringBatteryOptimization, checkNotificationPermission } from '@/utils/tools'
+import { checkIgnoringBatteryOptimization, checkNotificationPermission, debounceBackgroundTimer } from '@/utils/tools'
 
 // import { checkMusicFileAvailable } from '@renderer/utils/music'
 
@@ -176,6 +176,32 @@ const handleRestorePlay = async(restorePlayInfo: LX.Player.SavedPlayInfo) => {
 }
 
 
+const debouncePlay = debounceBackgroundTimer((musicInfo: LX.Player.PlayMusic) => {
+  setMusicUrl(musicInfo)
+
+  void getPicPath({ musicInfo, listId: playerState.playMusicInfo.listId }).then((url: string) => {
+    if (musicInfo.id != playerState.playMusicInfo.musicInfo?.id) return
+    setMusicInfo({ pic: url })
+    global.app_event.picUpdated()
+  })
+
+  void getLyricInfo({ musicInfo }).then((lyricInfo) => {
+    if (musicInfo.id != playerState.playMusicInfo.musicInfo?.id) return
+    setMusicInfo({
+      lrc: lyricInfo.lyric,
+      tlrc: lyricInfo.tlyric,
+      lxlrc: lyricInfo.lxlyric,
+      rlrc: lyricInfo.rlyric,
+      rawlrc: lyricInfo.rawlrcInfo.lyric,
+    })
+    global.app_event.lyricUpdated()
+  }).catch((err) => {
+    console.log(err)
+    if (musicInfo.id != playerState.playMusicInfo.musicInfo?.id) return
+    setStatusText(global.i18n.t('lyric__load_error'))
+  })
+}, 200)
+
 // 处理音乐播放
 const handlePlay = async() => {
   if (!isInitialized()) {
@@ -212,29 +238,7 @@ const handlePlay = async() => {
 
   if (settingState.setting['player.togglePlayMethod'] == 'random' && !playMusicInfo.isTempPlay) addPlayedList(playMusicInfo as LX.Player.PlayMusicInfo)
 
-  setMusicUrl(musicInfo)
-
-  void getPicPath({ musicInfo, listId: playMusicInfo.listId }).then((url: string) => {
-    if (musicInfo.id != playMusicInfo.musicInfo?.id) return
-    setMusicInfo({ pic: url })
-    global.app_event.picUpdated()
-  })
-
-  void getLyricInfo({ musicInfo }).then((lyricInfo) => {
-    if (musicInfo.id != playMusicInfo.musicInfo?.id) return
-    setMusicInfo({
-      lrc: lyricInfo.lyric,
-      tlrc: lyricInfo.tlyric,
-      lxlrc: lyricInfo.lxlyric,
-      rlrc: lyricInfo.rlyric,
-      rawlrc: lyricInfo.rawlrcInfo.lyric,
-    })
-    global.app_event.lyricUpdated()
-  }).catch((err) => {
-    console.log(err)
-    if (musicInfo.id != playMusicInfo.musicInfo?.id) return
-    setStatusText(global.i18n.t('lyric__load_error'))
-  })
+  debouncePlay(musicInfo)
 }
 
 /**

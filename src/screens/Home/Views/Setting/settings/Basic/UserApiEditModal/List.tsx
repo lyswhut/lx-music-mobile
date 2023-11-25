@@ -14,7 +14,9 @@ import settingState from '@/store/setting/state'
 import apiSourceInfo from '@/utils/musicSdk/api-source-info'
 import { setApiSource } from '@/core/apiSource'
 
-
+const formatVersionName = (version: string) => {
+  return /^\d/.test(version) ? `v${version}` : version
+}
 const ListItem = ({ item, activeId, onRemove, onChangeAllowShowUpdateAlert }: {
   item: LX.UserApi.UserApiInfo
   activeId: string
@@ -33,7 +35,19 @@ const ListItem = ({ item, activeId, onRemove, onChangeAllowShowUpdateAlert }: {
   return (
     <View style={{ ...styles.listItem, backgroundColor: activeId == item.id ? theme['c-primary-background-active'] : 'transparent' }}>
       <View style={styles.listItemLeft}>
-        <Text size={14}>{item.name}</Text>
+        <Text size={14}>
+          {item.name}
+          {
+            item.version ? (
+              <Text size={11} color={theme['c-font-label']}>{ '   ' + formatVersionName(item.version) }</Text>
+            ) : null
+          }
+          {
+            item.author ? (
+              <Text size={11} color={theme['c-font-label']}>{ '   ' + item.author }</Text>
+            ) : null
+          }
+        </Text>
         <Text size={12} color={theme['c-font-label']}>{item.description}</Text>
         <CheckBox check={item.allowShowUpdateAlert} label={t('user_api_allow_show_update_alert')} onChange={changeAllowShowUpdateAlert} size={0.86} />
       </View>

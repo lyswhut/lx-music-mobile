@@ -38,8 +38,7 @@ const Content = () => {
         <Text selectable style={styles.bold} >一、数据来源</Text>
         <Text selectable style={styles.text} >1.1 本项目的数据来源原理是从各官方音乐平台的公开服务器中拉取数据（与未登录状态在官方平台APP获取的数据相同），经过对数据简单地筛选与合并后进行展示，因此本项目不对数据的准确性负责。</Text>
         <Text selectable style={styles.text} >1.2 本项目本身没有获取某个音频数据的能力，本项目使用的在线音频数据来源来自软件设置内“音乐来源”设置所选择的“源”返回的在线链接。例如播放某首歌，本项目所做的只是将希望播放的歌曲名字、歌手名字等信息传递给“源”，若“源”返回了一个链接，则本项目将认为这就是该歌曲的音频数据而进行使用，至于这是不是正确的音频数据本项目无法校验其准确性，所以使用本项目的过程中可能会出现希望播放的音频与实际播放的音频不对应或者无法播放的问题。</Text>
-        <Text selectable style={styles.text} >1.3 本项目内置的“试听接口”源的工作原理是尝试直接从对应官方平台公开服务器获取免费歌曲的音频连接（与未登录状态在官方平台APP获取的歌曲链接相同），所以若某首歌若无法在处于未登录状态的官方平台APP播放，则理论上“试听接口”源也无法播放该歌曲。</Text>
-        <Text selectable style={styles.text} >1.4 本项目的非官方平台数据（例如我的收藏列表）来自使用者本地系统或者使用者连接的同步服务，本项目不对这些数据的合法性、准确性负责。{'\n'}</Text>
+        <Text selectable style={styles.text} >1.3 本项目的非官方平台数据（例如我的收藏列表）来自使用者本地系统或者使用者连接的同步服务，本项目不对这些数据的合法性、准确性负责。{'\n'}</Text>
         <Text selectable style={styles.bold} >二、版权数据</Text>
         <Text selectable style={styles.text} >2.1 使用本项目的过程中可能会产生版权数据。对于这些版权数据，本项目不拥有它们的所有权。为了避免侵权，使用者务必在 <Text style={styles.bold}>24小时内</Text> 清除使用本项目的过程中所产生的版权数据。{'\n'}</Text>
         <Text selectable style={styles.bold} >三、音乐平台别名</Text>

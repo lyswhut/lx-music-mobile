@@ -426,7 +426,7 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
       //   // data.content_type = 'multipart/form-data'
       //   options.json = false
       // }
-      if (timeout && typeof timeout == 'number') options.timeout = Math.min(options.timeout, 60_000)
+      if (timeout && typeof timeout == 'number') options.timeout = Math.min(timeout, 60_000)
 
       let request = sendNativeRequest(url, { method, body, form, formData, ...options }, (err, resp) => {
         if (err) {

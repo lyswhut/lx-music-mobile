@@ -1,6 +1,6 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.2.0-beta.6",
+  "version": "1.2.0-beta.7",
   "versionCode": 62,
   "private": true,
   "scripts": {
@@ -44,7 +44,7 @@
   "homepage": "https://github.com/lyswhut/lx-music-mobile#readme",
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.0.5",
-    "@react-native-async-storage/async-storage": "^1.19.5",
+    "@react-native-async-storage/async-storage": "^1.21.0",
     "@react-native-clipboard/clipboard": "^1.12.1",
     "@react-native-community/slider": "^4.4.3",
     "iconv-lite": "^0.6.3",
@@ -56,23 +56,23 @@
     "react-native-background-timer": "github:lyswhut/react-native-background-timer#bfeb1f27635a7f3919dbfe95b3e08ca34bb95e68",
     "react-native-exception-handler": "^2.10.10",
     "react-native-fs": "^2.20.0",
-    "react-native-navigation": "^7.37.1",
-    "react-native-pager-view": "^6.2.2",
+    "react-native-navigation": "^7.37.2",
+    "react-native-pager-view": "^6.2.3",
     "react-native-quick-base64": "^2.0.7",
     "react-native-quick-md5": "^3.0.5",
     "react-native-track-player": "github:lyswhut/react-native-track-player#dfa8b708a5c7398c03a2d14f83542877c665769b",
     "react-native-vector-icons": "^10.0.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.3",
+    "@babel/core": "^7.23.5",
     "@babel/eslint-parser": "^7.23.3",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
-    "@babel/preset-env": "^7.23.3",
-    "@babel/runtime": "^7.23.2",
+    "@babel/preset-env": "^7.23.5",
+    "@babel/runtime": "^7.23.5",
     "@react-native/metro-config": "^0.73.2",
     "@tsconfig/react-native": "^3.0.2",
-    "@types/react": "^18.2.37",
-    "@types/react-native": "^0.70.17",
+    "@types/react": "^18.2.39",
+    "@types/react-native": "^0.70.18",
     "@types/react-native-background-timer": "^2.0.2",
     "@types/react-native-vector-icons": "^6.4.18",
     "babel-plugin-module-resolver": "^5.0.0",
@@ -82,6 +82,6 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "metro-react-native-babel-preset": "0.76.8",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.2"
   }
 }

@@ -61,7 +61,7 @@ export default memo(() => {
     return userApiListRaw.map(api => {
       return {
         id: api.id,
-        name: `${api.name}${api.description ? `（${api.description}）` : ''}${api.id == apiSourceSetting ? `[${getApiStatus()}]` : ''}`,
+        name: `${api.name}${api.id == apiSourceSetting ? `[${getApiStatus()}]` : ''}`,
         // status: apiStatus.status,
         // message: apiStatus.message,
         // disabled: false,

@@ -39,12 +39,12 @@ const ListItem = ({ item, activeId, onRemove, onChangeAllowShowUpdateAlert }: {
           {item.name}
           {
             item.version ? (
-              <Text size={11} color={theme['c-font-label']}>{ '   ' + formatVersionName(item.version) }</Text>
+              <Text size={12} color={theme['c-font-label']}>{ '   ' + formatVersionName(item.version) }</Text>
             ) : null
           }
           {
             item.author ? (
-              <Text size={11} color={theme['c-font-label']}>{ '   ' + item.author }</Text>
+              <Text size={12} color={theme['c-font-label']}>{ '   ' + item.author }</Text>
             ) : null
           }
         </Text>

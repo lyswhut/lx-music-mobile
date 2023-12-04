@@ -10,7 +10,7 @@ import { Icon } from '../Icon'
 
 export interface CheckBoxProps {
   check: boolean
-  label: string
+  label?: string
   children?: React.ReactNode
   onChange: (check: boolean) => void
   disabled?: boolean

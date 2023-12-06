@@ -11,6 +11,8 @@ import BackgroundTimer from 'react-native-background-timer'
 import { scaleSizeH, scaleSizeW, setSpText } from './pixelRatio'
 import { toOldMusicInfo } from './index'
 import { stringMd5 } from 'react-native-quick-md5'
+import { windowSizeTools } from '@/utils/windowSizeTools'
+
 
 // https://stackoverflow.com/a/47349998
 export const getDeviceLanguage = async() => {
@@ -510,6 +512,11 @@ export const createStyle = <T extends StyleSheet.NamedStyles<T>>(styles: T | Sty
   return StyleSheet.create(newStyle as StyleSheet.NamedStyles<T>)
 }
 
+export const isHorizontalMode = (width: number, height: number): boolean => {
+  return width / height > 1.2
+}
+
+
 export interface RowInfo {
   rowNum: number | undefined
   rowWidth: `${number}%`
@@ -518,8 +525,8 @@ export interface RowInfo {
 export type RowInfoType = 'full' | 'medium'
 
 export const getRowInfo = (type: RowInfoType = 'full'): RowInfo => {
-  const win = Dimensions.get('window')
-  let isMultiRow = win.width > win.height
+  const win = windowSizeTools.getSize()
+  let isMultiRow = isHorizontalMode(win.width, win.height)
   if (type == 'medium' && win.width / win.height < 1.8) isMultiRow = false
   // console.log('getRowInfo')
   return {

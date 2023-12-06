@@ -1,7 +1,7 @@
 import { useI18n } from '@/lang'
 import { useTheme } from '@/store/theme/hook'
-import { createStyle } from '@/utils/tools'
-import { useMemo } from 'react'
+import { createStyle, getRowInfo } from '@/utils/tools'
+import { useMemo, useRef } from 'react'
 import { View, FlatList } from 'react-native'
 
 import ListItem, { type PathItem } from './ListItem'
@@ -14,6 +14,8 @@ export default ({ list, onSetPath, toParentDir }: {
 }) => {
   const t = useI18n()
   const theme = useTheme()
+  const rowInfo = useRef(getRowInfo('full'))
+  const fullRow = useRef({ rowNum: undefined, rowWidth: '100%' } as const)
 
   const ParentItemComponent = useMemo(() => (
     <View style={{ backgroundColor: theme['c-primary-light-700-alpha-900'] }}>
@@ -22,7 +24,7 @@ export default ({ list, onSetPath, toParentDir }: {
         desc: t('parent_dir_name'),
         isDir: true,
         path: '',
-      }} onPress={toParentDir} />
+      }} rowInfo={fullRow.current} onPress={toParentDir} />
     </View>
   ), [t, theme, toParentDir])
 
@@ -31,7 +33,8 @@ export default ({ list, onSetPath, toParentDir }: {
       keyboardShouldPersistTaps={'always'}
       style={styles.list}
       data={list}
-      renderItem={({ item }) => <ListItem item={item} onPress={onSetPath} />}
+      numColumns={rowInfo.current.rowNum}
+      renderItem={({ item }) => <ListItem item={item} rowInfo={rowInfo.current} onPress={onSetPath} />}
       keyExtractor={item => item.path + '/' + item.name}
       removeClippedSubviews={true}
     />

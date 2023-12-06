@@ -1,12 +1,12 @@
-import { useWindowSize } from '@/utils/hooks'
+import { useHorizontalMode } from '@/utils/hooks'
 import Vertical from './Vertical'
 import Horizontal from './Horizontal'
 // import { AppColors } from '@/theme'
 
 export default () => {
-  const windowSize = useWindowSize()
+  const isHorizontalMode = useHorizontalMode()
 
-  return windowSize.height > windowSize.width
-    ? <Vertical />
-    : <Horizontal />
+  return isHorizontalMode
+    ? <Horizontal />
+    : <Vertical />
 }

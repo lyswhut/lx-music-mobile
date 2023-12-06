@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from 'react-native'
 import { Icon } from '@/components/common/Icon'
 import { useTheme } from '@/store/theme/hook'
 import Text from '@/components/common/Text'
-import { createStyle } from '@/utils/tools'
+import { type RowInfo, createStyle } from '@/utils/tools'
 
 export interface PathItem {
   name: string
@@ -15,9 +15,10 @@ export interface PathItem {
   sizeText?: string
 }
 
-export default memo(({ item, onPress }: {
+export default memo(({ item, onPress, rowInfo }: {
   item: PathItem
   onPress: (item: PathItem) => void
+  rowInfo: RowInfo
 }) => {
   const theme = useTheme()
 
@@ -32,7 +33,7 @@ export default memo(({ item, onPress }: {
   // }, [item, index, showMenu])
 
   return (
-    <View style={styles.listItem}>
+    <View style={{ ...styles.listItem, width: rowInfo.rowWidth }}>
       <TouchableOpacity style={styles.listItem} onPress={ () => { onPress(item) } }>
         <View style={styles.itemInfo}>
           <Text style={styles.listItemTitleText}>{item.name}</Text>

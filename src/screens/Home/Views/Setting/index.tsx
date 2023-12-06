@@ -1,4 +1,4 @@
-import { useWindowSize } from '@/utils/hooks'
+import { useHorizontalMode } from '@/utils/hooks'
 import Vertical from './Vertical'
 import Horizontal from './Horizontal'
 import { useBackHandler } from '@/utils/hooks/useBackHandler'
@@ -10,7 +10,7 @@ import { setNavActiveId } from '@/core/common'
 export type { SettingScreenIds } from './Main'
 
 export default () => {
-  const windowSize = useWindowSize()
+  const isHorizontalMode = useHorizontalMode()
   useBackHandler(useCallback(() => {
     if (Object.keys(commonState.componentIds).length == 1 && commonState.navActiveId == 'nav_setting') {
       setNavActiveId(commonState.lastNavActiveId)
@@ -19,7 +19,7 @@ export default () => {
     return false
   }, []))
 
-  return windowSize.height > windowSize.width
-    ? <Vertical />
-    : <Horizontal />
+  return isHorizontalMode
+    ? <Horizontal />
+    : <Vertical />
 }

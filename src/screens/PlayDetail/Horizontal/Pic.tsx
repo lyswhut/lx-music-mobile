@@ -61,10 +61,12 @@ export default memo(({ componentId }: { componentId: string }) => {
 
 const styles = createStyle({
   container: {
-    flex: 0,
+    flexShrink: 1,
+    flexGrow: 0,
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: 'rgba(0,0,0,0.1)',
+    overflow: 'hidden',
   },
   content: {
     // elevation: 3,

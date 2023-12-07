@@ -6,9 +6,7 @@ import { playNext, playPrev, togglePlay } from '@/core/player/player'
 import { useIsPlay } from '@/store/player/hook'
 import { createStyle } from '@/utils/tools'
 import { useLayout } from '@/utils/hooks'
-// import { scaleSizeW } from '@/utils/pixelRatio'
-
-// const WIDTH = scaleSizeW(50)
+import { BTN_WIDTH } from './MoreBtn/Btn'
 
 const PrevBtn = ({ size }: { size: number }) => {
   const theme = useTheme()
@@ -43,9 +41,11 @@ const TogglePlayBtn = ({ size }: { size: number }) => {
   )
 }
 
+const MIN_SIZE = BTN_WIDTH * 1.2
+
 export default () => {
   const { onLayout, height, width } = useLayout()
-  const size = Math.min(height * 0.5, width * 0.4 * 0.33) * global.lx.fontSize
+  const size = Math.max(Math.min(height * 0.5, width * 0.4 * 0.33) * global.lx.fontSize, MIN_SIZE)
 
   return (
     <View style={styles.conatiner} onLayout={onLayout}>
@@ -62,11 +62,10 @@ const styles = createStyle({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    flex: 1,
-    paddingLeft: '4%',
-    paddingRight: '4%',
-    // paddingTop: '8.6%',
-    // paddingBottom: '8.6%',
+    flexGrow: 1,
+    flexShrink: 1,
+    paddingHorizontal: '4%',
+    paddingVertical: 6,
     // backgroundColor: 'rgba(0, 0, 0, .1)',
   },
   cotrolBtn: {

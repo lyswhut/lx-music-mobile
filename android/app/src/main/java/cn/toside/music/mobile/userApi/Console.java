@@ -15,7 +15,7 @@ public class Console implements QuickJSContext.Console {
 
   private void sendLog(String type, String log) {
     Message message = this.eventHandler.obtainMessage();
-    message.what = 1001;
+    message.what = HandlerWhat.LOG;
     message.obj = new Object[]{type, log};
     Log.d("UserApi Log", "[" + type + "]" + log);
     this.eventHandler.sendMessage(message);

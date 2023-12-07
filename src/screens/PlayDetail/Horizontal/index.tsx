@@ -84,7 +84,8 @@ const styles = createStyle({
     // backgroundColor: 'rgba(0,0,0,0.1)',
   },
   leftContent: {
-    flex: 0,
+    flexShrink: 1,
+    flexGrow: 0,
     marginLeft: marginLeftRaw,
     // flexDirection: 'row',
     // backgroundColor: 'rgba(0,0,0,0.1)',

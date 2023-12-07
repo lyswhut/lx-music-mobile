@@ -1,5 +1,5 @@
 import { memo, useState, useRef, useMemo, useEffect } from 'react'
-import { View, StyleSheet, AppState } from 'react-native'
+import { View, AppState } from 'react-native'
 
 import Header from './components/Header'
 // import Aside from './components/Aside'
@@ -76,7 +76,7 @@ export default memo(({ componentId }: { componentId: string }) => {
         <PagerView
           onPageSelected={onPageSelected}
           // onPageScrollStateChanged={onPageScrollStateChanged}
-          style={styles.pagerView}
+          style={{ flexGrow: 0, flexShrink: 1, height: `${64 * global.lx.fontSize}%` }}
         >
           <View collapsable={false}>
             <Pic componentId={componentId} />
@@ -89,7 +89,7 @@ export default memo(({ componentId }: { componentId: string }) => {
           <View style={{ ...styles.pageIndicatorItem, backgroundColor: pageIndex == 0 ? theme.secondary20 : theme.normal60 }}></View>
           <View style={{ ...styles.pageIndicatorItem, backgroundColor: pageIndex == 1 ? theme.secondary20 : theme.normal60 }}></View>
         </View> */}
-        <View style={{ flex: 0, height: `${36 * global.lx.fontSize}%` }} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_player}>
+        <View style={{ flexGrow: 1, flexShrink: 0 }} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_player}>
           <Player />
         </View>
       </View>
@@ -97,32 +97,32 @@ export default memo(({ componentId }: { componentId: string }) => {
   )
 })
 
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    flexShrink: 1,
-    backgroundColor: '#fff',
-  },
-  pagerView: {
-    flex: 1,
-  },
-  pageIndicator: {
-    flex: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingTop: 10,
-    // backgroundColor: 'rgba(0,0,0,0.1)',
-  },
-  pageIndicatorItem: {
-    height: 3,
-    width: '5%',
-    marginLeft: 2,
-    marginRight: 2,
-    borderRadius: 2,
-  },
-  // player: {
-  //   flex: 0,
-  //   height: '36%',
-  //   // backgroundColor: 'rgba(0,0,0,0.1)',
-  // },
-})
+// const styles = StyleSheet.create({
+//   // container: {
+//   //   flexGrow: 1,
+//   //   flexShrink: 0,
+//   //   backgroundColor: '#fff',
+//   // },
+//   pagerView: {
+//     flex: 1,
+//   },
+//   pageIndicator: {
+//     flex: 0,
+//     flexDirection: 'row',
+//     justifyContent: 'center',
+//     paddingTop: 10,
+//     // backgroundColor: 'rgba(0,0,0,0.1)',
+//   },
+//   pageIndicatorItem: {
+//     height: 3,
+//     width: '5%',
+//     marginLeft: 2,
+//     marginRight: 2,
+//     borderRadius: 2,
+//   },
+//   // player: {
+//   //   flex: 0,
+//   //   height: '36%',
+//   //   // backgroundColor: 'rgba(0,0,0,0.1)',
+//   // },
+// })

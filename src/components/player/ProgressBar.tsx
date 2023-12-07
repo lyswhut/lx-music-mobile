@@ -2,7 +2,7 @@ import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { View, PanResponder } from 'react-native'
 import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
-import { scaleSizeW } from '@/utils/pixelRatio'
+import { scaleSizeW, scaleSizeH } from '@/utils/pixelRatio'
 import { useDrag } from '@/utils/hooks'
 // import { AppColors } from '@/theme'
 
@@ -95,11 +95,9 @@ const Progress = ({ progress, duration }: {
       width: progressDotSize,
       height: progressDotSize,
       borderRadius: progressDotSize,
-      position: 'absolute',
       right: -progressDotSize / 2,
-      top: -(progressDotSize - progressHeight) / 2,
+      top: -(progressDotSize - progressHeightSize) / 2,
       backgroundColor: theme['c-primary-light-100'],
-      zIndex: 9,
     } as const
   }, [theme])
 
@@ -121,6 +119,7 @@ const Progress = ({ progress, duration }: {
 
 const progressContentPadding = 10
 const progressHeight = 3.6
+const progressHeightSize = scaleSizeH(progressHeight)
 let progressDotSize = Math.round(scaleSizeW(12))
 if (progressDotSize % 2 != 0) progressDotSize += 1
 const styles = createStyle({
@@ -137,12 +136,12 @@ const styles = createStyle({
     borderRadius: 4,
   },
   progressDot: {
-    width: progressDotSize,
-    height: progressDotSize,
-    borderRadius: progressDotSize,
+    // width: progressDotSize,
+    // height: progressDotSize,
+    // borderRadius: progressDotSize,
     position: 'absolute',
-    right: -progressDotSize / 2,
-    top: -(progressDotSize - progressHeight) / 2,
+    // right: -progressDotSize / 2,
+    // top: -(progressDotSize - progressHeight) / 2,
     zIndex: 9,
   },
   pressBar: {

@@ -7,6 +7,7 @@ import { playNext, playPrev, togglePlay } from '@/core/player/player'
 import { useIsPlay } from '@/store/player/hook'
 import { useLayout } from '@/utils/hooks'
 import { marginLeft } from '../constant'
+import { BTN_WIDTH } from '../MoreBtn/Btn'
 
 // const WIDTH = scaleSizeW(48)
 
@@ -43,9 +44,10 @@ const TogglePlayBtn = ({ size }: { size: number }) => {
   )
 }
 
+const MIN_SIZE = BTN_WIDTH * 1.1
 export default () => {
   const { onLayout, height, width } = useLayout()
-  const size = Math.min(height * 0.65, (width - marginLeft) * 0.52 * 0.3) * global.lx.fontSize
+  const size = Math.max(Math.min(height * 0.65, (width - marginLeft) * 0.52 * 0.3) * global.lx.fontSize, MIN_SIZE)
   return (
     <View style={{ ...styles.content, gap: size * 0.5 }} onLayout={onLayout}>
       <PrevBtn size={size} />
@@ -58,7 +60,8 @@ export default () => {
 
 const styles = StyleSheet.create({
   content: {
-    flex: 1,
+    flexGrow: 1,
+    flexShrink: 1,
     flexDirection: 'row',
     // paddingVertical: 8,
     gap: 22,

@@ -65,7 +65,7 @@ const styles = createStyle({
     flexGrow: 1,
     flexShrink: 1,
     paddingHorizontal: '4%',
-    paddingVertical: 6,
+    paddingVertical: 12,
     // backgroundColor: 'rgba(0, 0, 0, .1)',
   },
   cotrolBtn: {

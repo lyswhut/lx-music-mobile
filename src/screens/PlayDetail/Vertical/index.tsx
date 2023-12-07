@@ -76,7 +76,7 @@ export default memo(({ componentId }: { componentId: string }) => {
         <PagerView
           onPageSelected={onPageSelected}
           // onPageScrollStateChanged={onPageScrollStateChanged}
-          style={{ flexGrow: 0, flexShrink: 1, height: `${64 * global.lx.fontSize}%` }}
+          style={{ flexGrow: 0, flexShrink: 1, height: '64%' }}
         >
           <View collapsable={false}>
             <Pic componentId={componentId} />

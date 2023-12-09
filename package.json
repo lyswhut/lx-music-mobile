@@ -61,7 +61,7 @@
     "react-native-pager-view": "^6.2.3",
     "react-native-quick-base64": "^2.0.7",
     "react-native-quick-md5": "^3.0.5",
-    "react-native-track-player": "github:lyswhut/react-native-track-player#c7e3166cab47df3a252952c99993eb2715e8f9ee",
+    "react-native-track-player": "github:lyswhut/react-native-track-player#5c2fbbab733e34d298fa75a80749f1f0b56d4ed8",
     "react-native-vector-icons": "^10.0.2"
   },
   "devDependencies": {

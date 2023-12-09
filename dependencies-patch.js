@@ -9,12 +9,12 @@ const patchs = [
   [
     path.join(rootPath, './node_modules/react-native-quick-base64/android/CMakeLists.txt'),
     'CMAKE_CXX_STANDARD 11',
-    'CMAKE_CXX_STANDARD 17',
+    'CMAKE_CXX_STANDARD 14',
   ],
   [
     path.join(rootPath, './node_modules/react-native-quick-md5/android/CMakeLists.txt'),
     'CMAKE_CXX_STANDARD 11',
-    'CMAKE_CXX_STANDARD 17',
+    'CMAKE_CXX_STANDARD 14',
   ],
   [
     path.join(rootPath, './node_modules/react-native-navigation/lib/android/app/build.gradle'),

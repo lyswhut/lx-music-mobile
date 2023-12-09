@@ -17,7 +17,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-
+      - name: Setup Java Env
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'microsoft'
+          java-version: '17'
       - name: Cache Gradle Wrapper
         uses: actions/cache@v3
         with:

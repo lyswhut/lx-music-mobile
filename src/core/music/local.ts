@@ -9,6 +9,8 @@ import {
   getOnlineOtherSourcePicUrl,
   getOtherSource,
 } from './utils'
+import { getLocalFilePath } from '@/utils/music'
+import { readLyric, readPic } from '@/utils/nativeModules/locaMedia'
 
 
 export const getMusicUrl = async({ musicInfo, isRefresh, onToggleSource = () => {} }: {
@@ -16,10 +18,11 @@ export const getMusicUrl = async({ musicInfo, isRefresh, onToggleSource = () => 
   isRefresh: boolean
   onToggleSource?: (musicInfo?: LX.Music.MusicInfoOnline) => void
 }): Promise<string> => {
-  // if (!isRefresh) {
-  //   const path = await getLocalFilePath(musicInfo)
-  //   if (path) return encodePath(path)
-  // }
+  if (!isRefresh) {
+    const path = await getLocalFilePath(musicInfo)
+    // console.log(path)
+    if (path) return path
+  }
   onToggleSource()
   const otherSource = await getOtherSource(musicInfo)
   if (!otherSource.length) throw new Error('source not found')
@@ -39,8 +42,8 @@ export const getPicUrl = async({ musicInfo, listId, isRefresh, onToggleSource = 
   onToggleSource?: (musicInfo?: LX.Music.MusicInfoOnline) => void
 }): Promise<string> => {
   if (!isRefresh) {
-    // const pic = await window.lx.worker.main.getMusicFilePic(musicInfo.meta.filePath)
-    // if (pic) return pic
+    const pic = await readPic(musicInfo.meta.filePath)
+    if (pic) return pic
 
     if (musicInfo.meta.picUrl) return musicInfo.meta.picUrl
   }
@@ -58,6 +61,13 @@ export const getPicUrl = async({ musicInfo, listId, isRefresh, onToggleSource = 
   })
 }
 
+const getMusicFileLyric = async(filePath: string) => {
+  const lyric = await readLyric(filePath)
+  if (!lyric) return null
+  return {
+    lyric,
+  }
+}
 export const getLyricInfo = async({ musicInfo, isRefresh, onToggleSource = () => {} }: {
   musicInfo: LX.Music.MusicInfoLocal
   isRefresh: boolean
@@ -71,8 +81,8 @@ export const getLyricInfo = async({ musicInfo, isRefresh, onToggleSource = () =>
     }
 
     // 尝试读取文件内歌词
-    // const rawlrcInfo = await window.lx.worker.main.getMusicFileLyric(musicInfo.meta.filePath)
-    // if (rawlrcInfo) return buildLyricInfo(lyricInfo ? { ...lyricInfo, rawlrcInfo } : rawlrcInfo)
+    const rawlrcInfo = await getMusicFileLyric(musicInfo.meta.filePath)
+    if (rawlrcInfo) return buildLyricInfo(lyricInfo ? { ...lyricInfo, rawlrcInfo } : rawlrcInfo)
   }
 
   onToggleSource()

@@ -1,9 +1,11 @@
-import { getListMusics, removeUserList } from '@/core/list'
+import { addListMusics, getListMusics, removeUserList, setFetchingListStatus } from '@/core/list'
 import { confirmDialog, handleReadFile, handleSaveFile, showImportTip, toast } from '@/utils/tools'
 import syncSourceList from '@/core/syncSourceList'
 import { log } from '@/utils/log'
-import { filterFileName, filterMusicList, toNewMusicInfo } from '@/utils'
+import { filterFileName, filterMusicList, formatPlayTime2, toNewMusicInfo } from '@/utils'
 import { handleImportListPart } from '@/screens/Home/Views/Setting/settings/Backup/actions'
+import { type MusicMetadata, readMetadata, scanAudioFiles } from '@/utils/nativeModules/locaMedia'
+import settingState from '@/store/setting/state'
 
 export const handleRemove = (listInfo: LX.List.UserListInfo) => {
   void confirmDialog({
@@ -85,4 +87,50 @@ export const handleSync = (listInfo: LX.List.UserListInfo) => {
       toast(global.i18n.t('list_update_error', { name: listInfo.name }))
     })
   })
+}
+
+const buildLocalMusicInfo = (filePath: string, metadata: MusicMetadata): LX.Music.MusicInfoLocal => {
+  return {
+    id: filePath,
+    name: metadata.name,
+    singer: metadata.singer,
+    source: 'local',
+    interval: formatPlayTime2(metadata.interval),
+    meta: {
+      albumName: metadata.albumName,
+      filePath,
+      songId: filePath,
+      picUrl: '',
+      ext: metadata.ext,
+    },
+  }
+}
+const createLocalMusicInfos = async(filePaths: string[]): Promise<LX.Music.MusicInfoLocal[]> => {
+  const list: LX.Music.MusicInfoLocal[] = []
+  for await (const path of filePaths) {
+    const musicInfo = await readMetadata(path)
+    if (!musicInfo) continue
+    list.push(buildLocalMusicInfo(path, musicInfo))
+  }
+
+  return list
+}
+const handleAddMusics = async(listId: string, filePaths: string[], index: number = -1, total: number = 0, successNum = 0) => {
+  // console.log(index + 1, index + 201)
+  if (!total) total = filePaths.length
+  const paths = filePaths.slice(index + 1, index + 201)
+  const musicInfos = await createLocalMusicInfos(paths)
+  successNum += musicInfos.length
+  if (musicInfos.length) await addListMusics(listId, musicInfos, settingState.setting['list.addMusicLocationType'])
+  index += 200
+  if (filePaths.length - 1 > index) await handleAddMusics(listId, filePaths, index, total, successNum)
+
+  toast(global.i18n.t('list_select_local_file_result_tip', { total, success: successNum, failed: total - successNum }), 'long')
+}
+export const handleImportMediaFile = async(listInfo: LX.List.MyListInfo, path: string) => {
+  setFetchingListStatus(listInfo.id, true)
+  const files = await scanAudioFiles(path)
+  if (files.length) await handleAddMusics(listInfo.id, files)
+  else toast(global.i18n.t('list_select_local_file_empty_tip'), 'long')
+  setFetchingListStatus(listInfo.id, false)
 }

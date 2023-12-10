@@ -1,7 +1,7 @@
 import ChoosePath, { type ChoosePathType } from '@/components/common/ChoosePath'
 import { LXM_FILE_EXT_RXP } from '@/config/constant'
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
-import { handleExport, handleImport } from './listAction'
+import { handleExport, handleImport, handleImportMediaFile } from './listAction'
 
 export interface SelectInfo {
   listInfo: LX.List.MyListInfo
@@ -9,7 +9,7 @@ export interface SelectInfo {
   index: number
   // listId: string
   // single: boolean
-  action: 'import' | 'export'
+  action: 'import' | 'export' | 'selectFile'
 }
 const initSelectInfo = {}
 
@@ -23,6 +23,7 @@ const initSelectInfo = {}
 export interface ListImportExportType {
   import: (listInfo: LX.List.MyListInfo, index: number) => void
   export: (listInfo: LX.List.MyListInfo, index: number) => void
+  selectFile: (listInfo: LX.List.MyListInfo, index: number) => void
 }
 
 export default forwardRef<ListImportExportType, {}>((props, ref) => {
@@ -78,6 +79,27 @@ export default forwardRef<ListImportExportType, {}>((props, ref) => {
         })
       }
     },
+    selectFile(listInfo, index) {
+      selectInfoRef.current = {
+        action: 'selectFile',
+        listInfo,
+        index,
+      }
+      if (visible) {
+        choosePathRef.current?.show({
+          title: global.i18n.t('list_select_local_file_desc'),
+          dirOnly: true,
+        })
+      } else {
+        setVisible(true)
+        requestAnimationFrame(() => {
+          choosePathRef.current?.show({
+            title: global.i18n.t('list_select_local_file_desc'),
+            dirOnly: true,
+          })
+        })
+      }
+    },
   }))
 
 
@@ -88,6 +110,9 @@ export default forwardRef<ListImportExportType, {}>((props, ref) => {
         break
       case 'export':
         handleExport(selectInfoRef.current.listInfo, path)
+        break
+      case 'selectFile':
+        void handleImportMediaFile(selectInfoRef.current.listInfo, path)
         break
     }
   }

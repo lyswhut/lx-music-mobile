@@ -128,7 +128,7 @@ export const setMusicUrl = (musicInfo: LX.Music.MusicInfo | LX.Download.ListItem
     setResource(musicInfo, url, playerState.progress.nowPlayTime)
   }).catch((err: any) => {
     console.log(err)
-    setStatusText(err.message)
+    setStatusText(err.message as string)
     global.app_event.error()
     addDelayNextTimeout()
   }).finally(() => {

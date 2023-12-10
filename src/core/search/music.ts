@@ -1,4 +1,4 @@
-import searchMusicState, { type ListInfo, type Source } from '@/store/search/music/state'
+import searchMusicState, { type Source } from '@/store/search/music/state'
 import searchMusicActions, { type SearchResult } from '@/store/search/music/action'
 import musicSdk from '@/utils/musicSdk'
 
@@ -18,7 +18,7 @@ export const clearListInfo: typeof searchMusicActions.clearListInfo = (source) =
 
 
 export const search = async(text: string, page: number, sourceId: Source): Promise<LX.Music.MusicInfoOnline[]> => {
-  const listInfo = searchMusicState.listInfos[sourceId] as ListInfo
+  const listInfo = searchMusicState.listInfos[sourceId]!
   if (!text) return []
   const key = `${page}__${text}`
   if (sourceId == 'all') {

@@ -21,7 +21,7 @@ export const sizeFormate = (size: number): string => {
  * @param date 时间
  * @returns 时间对象或空字符串
  */
-export const toDateObj = (date: any): Date | '' => {
+export const toDateObj = (date?: number | string | Date): Date | '' => {
   // console.log(date)
   if (!date) return ''
   switch (typeof date) {
@@ -44,7 +44,7 @@ const numFix = (n: number): string => n < 10 ? (`0${n}`) : n.toString()
  * @param _date 时间
  * @param format Y-M-D h:m:s Y年 M月 D日 h时 m分 s秒
  */
-export const dateFormat = (_date: any, format = 'Y-M-D h:m:s') => {
+export const dateFormat = (_date: number | string | Date, format = 'Y-M-D h:m:s') => {
   // console.log(date)
   const date = toDateObj(_date)
   if (!date) return ''

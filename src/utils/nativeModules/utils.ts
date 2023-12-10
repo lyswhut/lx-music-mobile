@@ -58,10 +58,11 @@ export const getSystemLocales = async(): Promise<string> => {
   return UtilsModule.getSystemLocales()
 }
 
-export const onScreenStateChange = (callback: (state: 'ON' | 'OFF') => void): () => void => {
+export const onScreenStateChange = (handler: (state: 'ON' | 'OFF') => void): () => void => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const eventEmitter = new NativeEventEmitter(UtilsModule)
   const eventListener = eventEmitter.addListener('screen-state', event => {
-    callback(event.state)
+    handler(event.state as 'ON' | 'OFF')
   })
 
   return () => {
@@ -73,11 +74,12 @@ export const getWindowSize = async(): Promise<{ width: number, height: number }>
   return UtilsModule.getWindowSize()
 }
 
-export const onWindowSizeChange = (callback: (size: { width: number, height: number }) => void): () => void => {
+export const onWindowSizeChange = (handler: (size: { width: number, height: number }) => void): () => void => {
   UtilsModule.listenWindowSizeChanged()
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const eventEmitter = new NativeEventEmitter(UtilsModule)
   const eventListener = eventEmitter.addListener('screen-size-changed', event => {
-    callback(event)
+    handler(event as { width: number, height: number })
   })
 
   return () => {

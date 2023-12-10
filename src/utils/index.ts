@@ -33,7 +33,7 @@ export const toNewMusicInfo = (oldMusicInfo: any): LX.Music.MusicInfo => {
 
   if (oldMusicInfo.source == 'local') {
     meta.filePath = oldMusicInfo.filePath ?? oldMusicInfo.songmid ?? ''
-    meta.ext = oldMusicInfo.ext ?? /\.(\w+)$/.exec(meta.filePath)?.[1] ?? ''
+    meta.ext = oldMusicInfo.ext ?? /\.(\w+)$/.exec(meta.filePath as string)?.[1] ?? ''
   } else {
     meta.qualitys = oldMusicInfo.types
     meta._qualitys = oldMusicInfo._types

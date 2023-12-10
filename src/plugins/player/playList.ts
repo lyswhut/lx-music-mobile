@@ -137,7 +137,7 @@ const handlePlayMusic = async(musicInfo: LX.Player.PlayMusic, url: string, time:
   await TrackPlayer.skip(queue.findIndex(t => t.id == track.id))
 
   if (currentTrackIndex == null) {
-    if (!isTempTrack(track.id)) {
+    if (!isTempTrack(track.id as string)) {
       if (time) await TrackPlayer.seekTo(time)
       if (global.lx.restorePlayInfo) {
         await TrackPlayer.pause()
@@ -152,7 +152,7 @@ const handlePlayMusic = async(musicInfo: LX.Player.PlayMusic, url: string, time:
     }
   } else {
     await TrackPlayer.pause()
-    if (!isTempTrack(track.id)) {
+    if (!isTempTrack(track.id as string)) {
       await TrackPlayer.seekTo(time)
       await TrackPlayer.play()
     }

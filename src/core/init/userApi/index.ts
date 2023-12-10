@@ -71,7 +71,7 @@ export default async(setting: LX.AppSetting) => {
                       // eslint-disable-next-line @typescript-eslint/promise-function-async
                     }).then(res => {
                       // console.log(res)
-                      if (!/^https?:/.test(res.data.url)) return Promise.reject(new Error('Get url failed'))
+                      if (!/^https?:/.test(res.data.url as string)) return Promise.reject(new Error('Get url failed'))
                       return { type, url: res.data.url }
                     }).catch(async err => {
                       console.log(err.message)

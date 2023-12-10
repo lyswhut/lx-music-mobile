@@ -52,7 +52,7 @@ export default forwardRef<MusicAddModalType, MusicAddModalProps>(({ onAdded }, r
     dialogRef.current?.setVisible(false)
     if (selectInfo.isMove) {
       void moveListMusics(selectInfo.listId, listInfo.id,
-        [selectInfo.musicInfo as LX.Music.MusicInfo],
+        [selectInfo.musicInfo!],
         settingState.setting['list.addMusicLocationType'],
       ).then(() => {
         onAdded?.()
@@ -62,7 +62,7 @@ export default forwardRef<MusicAddModalType, MusicAddModalProps>(({ onAdded }, r
       })
     } else {
       void addListMusics(listInfo.id,
-        [selectInfo.musicInfo as LX.Music.MusicInfo],
+        [selectInfo.musicInfo!],
         settingState.setting['list.addMusicLocationType'],
       ).then(() => {
         onAdded?.()

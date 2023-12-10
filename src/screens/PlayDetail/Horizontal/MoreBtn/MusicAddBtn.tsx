@@ -13,7 +13,7 @@ export default () => {
     musicAddModalRef.current?.show({
       musicInfo: 'progress' in musicInfo ? musicInfo.metadata.musicInfo : musicInfo,
       isMove: false,
-      listId: playerState.playMusicInfo.listId as string,
+      listId: playerState.playMusicInfo.listId!,
     })
   }
 

@@ -26,6 +26,7 @@ export default class Event {
       let targetListeners = this.listeners.get(eventName)
       if (!targetListeners) return
       for (const listener of targetListeners) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         listener(...args)
       }
     })

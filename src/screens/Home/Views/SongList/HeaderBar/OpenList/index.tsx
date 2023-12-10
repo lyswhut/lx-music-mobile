@@ -41,7 +41,7 @@ export default forwardRef<OpenListType, {}>((props, ref) => {
       desc: undefined,
       source: songlistInfoRef.current.source,
     })
-    navigations.pushSonglistDetailScreen(commonState.componentIds.home as string, id)
+    navigations.pushSonglistDetailScreen(commonState.componentIds.home!, id)
   }
 
   // const handleSourceChange: ModalProps['onSourceChange'] = (source) => {

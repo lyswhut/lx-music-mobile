@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 
 import { search } from '@/core/search/songlist'
 import Songlist, { type SonglistProps, type SonglistType } from '@/screens/Home/Views/SongList/components/Songlist'
-import searchSonglistState, { type SearchListInfo, type Source } from '@/store/search/songlist/state'
+import searchSonglistState, { type Source } from '@/store/search/songlist/state'
 
 // export type MusicListProps = Pick<OnlineListProps,
 // 'onLoadMore'
@@ -67,7 +67,7 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
   }
   const handleLoadMore: SonglistProps['onLoadMore'] = () => {
     listRef.current?.setStatus('loading')
-    const info = searchSonglistState.listInfos[searchInfoRef.current.source] as SearchListInfo
+    const info = searchSonglistState.listInfos[searchInfoRef.current.source]!
     const page = info.list.length ? info.page + 1 : 1
     search(searchInfoRef.current.text, page, searchInfoRef.current.source).then((list) => {
       // const result = setListInfo(listDetail, searchSonglistState.listDetailInfo.id, page)

@@ -10,9 +10,11 @@ const handleUpdateSourceNmaes = () => {
     kg: 'kg',
     mg: 'mg',
     wy: 'wy',
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     all: global.i18n.t(prefix + 'all' as any),
   }
   for (const { id } of musicSdk.sources) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     sourceNames[id as LX.OnlineSource] = global.i18n.t(prefix + id as any)
   }
   commonActions.setSourceNames(sourceNames)

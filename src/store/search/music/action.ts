@@ -1,4 +1,4 @@
-import state, { type InitState, type ListInfo, type Source } from './state'
+import state, { type InitState, type Source } from './state'
 import { sortInsert, similar, arrPush } from '@/utils/common'
 import { deduplicationList, toNewMusicInfo } from '@/utils'
 
@@ -21,6 +21,7 @@ export interface SearchResult {
 const handleSortList = (list: LX.Music.MusicInfoOnline[], keyword: string) => {
   let arr: any[] = []
   for (const item of list) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     sortInsert(arr, {
       num: similar(keyword, `${item.name} ${item.singer}`),
       data: item,
@@ -59,7 +60,7 @@ const setLists = (results: SearchResult[], page: number, text: string): LX.Music
 
 const setList = (datas: SearchResult, page: number, text: string): LX.Music.MusicInfoOnline[] => {
   // console.log(datas.source, datas.list)
-  let listInfo = state.listInfos[datas.source] as ListInfo
+  let listInfo = state.listInfos[datas.source]!
   const list = datas.list.map(s => toNewMusicInfo(s) as LX.Music.MusicInfoOnline)
   listInfo.list = deduplicationList(page == 1 ? list : [...listInfo.list, ...list])
   if (page == 1 || (datas.total && datas.list.length)) listInfo.total = datas.total
@@ -87,7 +88,7 @@ export default {
     }
   },
   clearListInfo(sourceId: Source) {
-    let listInfo = state.listInfos[sourceId] as ListInfo
+    let listInfo = state.listInfos[sourceId]!
     listInfo.list = []
     listInfo.page = 0
     listInfo.maxPage = 0

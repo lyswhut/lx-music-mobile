@@ -26,7 +26,7 @@ export default forwardRef<SortTabType, SortTabProps>(({ onSortChange }, ref) => 
   useImperativeHandle(ref, () => ({
     setSource(source, activeTab) {
       scrollViewRef.current?.scrollTo({ x: 0 })
-      setSortList(songlistState.sortList[source] as SortInfo[])
+      setSortList(songlistState.sortList[source]!)
       setActiveId(activeTab)
     },
   }))

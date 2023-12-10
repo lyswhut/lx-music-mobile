@@ -151,7 +151,7 @@ const timeStr2Intv = (timeStr: string) => {
   let intv = 0
   let unit = 1
   while (intvArr.length) {
-    intv += parseInt(intvArr.pop() as string) * unit
+    intv += parseInt(intvArr.pop()!) * unit
     unit *= 60
   }
   return intv
@@ -160,7 +160,7 @@ const migratePlayInfo = async() => {
   const playInfo = await getData<any>(storageDataPrefixOld.playInfo)
   if (playInfo == null) return
   if (playInfo.list !== undefined) delete playInfo.list
-  if (playInfo.maxTime) playInfo.maxTime = timeStr2Intv(playInfo.maxTime)
+  if (playInfo.maxTime) playInfo.maxTime = timeStr2Intv(playInfo.maxTime as string)
   await saveData(storageDataPrefix.playInfo, playInfo)
 }
 /**

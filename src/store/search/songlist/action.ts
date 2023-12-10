@@ -1,6 +1,6 @@
 import { sortInsert, similar } from '@/utils/common'
 
-import type { InitState, ListInfoItem, SearchListInfo, Source } from './state'
+import type { InitState, ListInfoItem, Source } from './state'
 import state from './state'
 
 export interface SearchResult {
@@ -20,6 +20,7 @@ export interface SearchResult {
 const handleSortList = (list: ListInfoItem[], keyword: string) => {
   let arr: any[] = []
   for (const item of list) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     sortInsert(arr, {
       num: similar(keyword, item.name),
       data: item,
@@ -57,7 +58,7 @@ const setLists = (results: SearchResult[], page: number, text: string): ListInfo
 
 const setList = (datas: SearchResult, page: number, text: string): ListInfoItem[] => {
   // console.log(datas.source, datas.list)
-  let listInfo = state.listInfos[datas.source] as SearchListInfo
+  let listInfo = state.listInfos[datas.source]!
   listInfo.list = page == 1 ? datas.list : [...listInfo.list, ...datas.list]
   if (page == 1 || (datas.total && datas.list.length)) listInfo.total = datas.total
   else listInfo.total = datas.limit * page
@@ -83,7 +84,7 @@ export default {
     }
   },
   clearListInfo(sourceId: Source) {
-    let listInfo = state.listInfos[sourceId] as SearchListInfo
+    let listInfo = state.listInfos[sourceId]!
     listInfo.page = 1
     listInfo.limit = 20
     listInfo.total = 0

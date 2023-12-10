@@ -34,7 +34,7 @@ export default forwardRef<SonglistType, SonglistProps>(({
   const handleOpenDetail = (item: ListInfoItem, index: number) => {
     // console.log(item)
     setSelectListInfo(item)
-    navigations.pushSonglistDetailScreen(commonState.componentIds.home as string, item.id)
+    navigations.pushSonglistDetailScreen(commonState.componentIds.home!, item.id)
   }
 
   return (

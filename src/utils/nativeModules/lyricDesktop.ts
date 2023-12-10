@@ -186,7 +186,7 @@ export const setAlpha = async(alpha: number): Promise<void> => {
  * set text size
  * @param size text size
  */
-export const setTextSize = async(size: any): Promise<void> => {
+export const setTextSize = async(size: number): Promise<void> => {
   if (!isShowLyric) return Promise.resolve()
   return LyricModule.setTextSize(getTextSize(size))
 }
@@ -234,10 +234,11 @@ export const openOverlayPermissionActivity = async(): Promise<void> => {
   return LyricModule.openOverlayPermissionActivity()
 }
 
-export const onPositionChange = (callback: (position: { x: number, y: number }) => void): () => void => {
+export const onPositionChange = (handler: (position: { x: number, y: number }) => void): () => void => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const eventEmitter = new NativeEventEmitter(LyricModule)
   const eventListener = eventEmitter.addListener('set-position', event => {
-    callback(event)
+    handler(event as { x: number, y: number })
   })
 
   return () => {

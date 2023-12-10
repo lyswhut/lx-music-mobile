@@ -186,7 +186,7 @@ export const userListsUpdatePosition = (position: number, ids: string[]) => {
   const map = new Map<string, LX.List.UserListInfo>()
   for (const item of newUserLists) map.set(item.id, item)
   for (const id of ids) {
-    const listInfo = map.get(id) as LX.List.UserListInfo
+    const listInfo = map.get(id)!
     listInfo.locationUpdateTime = Date.now()
     updateLists.push(listInfo)
     map.delete(id)
@@ -207,7 +207,7 @@ export const getListMusicSync = (id: string | null) => {
  */
 export const getListMusics = async(listId: string): Promise<LX.Music.MusicInfo[]> => {
   if (!listId) return []
-  if (allMusicList.has(listId)) return allMusicList.get(listId) as LX.Music.MusicInfo[]
+  if (allMusicList.has(listId)) return allMusicList.get(listId)!
   const list = await getListMusicsFromStore(listId)
   return setMusicList(listId, list)
 }
@@ -303,7 +303,7 @@ export const listMusicUpdatePosition = async(listId: string, position: number, i
   const map = new Map<string, LX.Music.MusicInfo>()
   for (const item of targetList) map.set(item.id, item)
   for (const id of ids) {
-    infos.push(map.get(id) as LX.Music.MusicInfo)
+    infos.push(map.get(id)!)
     map.delete(id)
   }
   const list = targetList.filter(mInfo => map.has(mInfo.id))

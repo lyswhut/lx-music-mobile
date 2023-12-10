@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { log as writeLog } from '@/utils/log'
 
 export default {

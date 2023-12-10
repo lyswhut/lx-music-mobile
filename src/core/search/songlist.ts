@@ -1,4 +1,4 @@
-import searchSonglistState, { type SearchListInfo, type Source, type ListInfoItem } from '@/store/search/songlist/state'
+import searchSonglistState, { type Source, type ListInfoItem } from '@/store/search/songlist/state'
 import searchSonglistActions, { type SearchResult } from '@/store/search/songlist/action'
 import musicSdk from '@/utils/musicSdk'
 
@@ -18,7 +18,7 @@ export const clearListInfo: typeof searchSonglistActions.clearListInfo = (source
 
 
 export const search = async(text: string, page: number, sourceId: Source): Promise<ListInfoItem[]> => {
-  const listInfo = searchSonglistState.listInfos[sourceId] as SearchListInfo
+  const listInfo = searchSonglistState.listInfos[sourceId]!
   // if (!text) return []
   const key = `${page}__${sourceId}__${text}`
   if (listInfo.key == key && listInfo.list.length) return listInfo.list
@@ -26,7 +26,7 @@ export const search = async(text: string, page: number, sourceId: Source): Promi
     listInfo.key = key
     let task = []
     for (const source of searchSonglistState.sources) {
-      if (source == 'all' || (page > 1 && page > (searchSonglistState.maxPages[source] as number))) continue
+      if (source == 'all' || (page > 1 && page > (searchSonglistState.maxPages[source]!))) continue
       task.push(((musicSdk[source]?.songList.search(text, page, searchSonglistState.listInfos.all.limit) as Promise<SearchResult>) ?? Promise.reject(new Error('source not found: ' + source))).catch((error: any) => {
         console.log(error)
         return {

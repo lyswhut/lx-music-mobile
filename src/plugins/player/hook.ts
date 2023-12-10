@@ -14,7 +14,7 @@ export const usePlaybackState = () => {
     void setPlayerState()
 
     const sub = TrackPlayer.addEventListener(Event.PlaybackState, data => {
-      setState(data.state)
+      setState(data.state as State)
     })
 
     return () => { sub.remove() }
@@ -99,6 +99,7 @@ export function useProgress(updateInterval: number) {
   }
 
   useEffect(() => {
+    // @ts-expect-error
     if (!pollTrackPlayerStates.includes(playerState)) return
 
     void getProgress()

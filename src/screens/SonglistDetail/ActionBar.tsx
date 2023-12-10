@@ -17,7 +17,7 @@ export default memo(() => {
   const t = useI18n()
 
   const back = () => {
-    void pop(commonState.componentIds.songlistDetail as string)
+    void pop(commonState.componentIds.songlistDetail!)
   }
 
   const handlePlayAll = () => {

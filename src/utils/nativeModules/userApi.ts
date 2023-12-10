@@ -76,15 +76,16 @@ export interface Actions {
 }
 export type ActionsEvent = { [K in keyof Actions]: { action: K, data: Actions[K] } }[keyof Actions]
 
-export const onScriptAction = (callback: (event: ActionsEvent) => void): () => void => {
+export const onScriptAction = (handler: (event: ActionsEvent) => void): () => void => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const eventEmitter = new NativeEventEmitter(UserApiModule)
   const eventListener = eventEmitter.addListener('api-action', event => {
-    if (event.data) event.data = JSON.parse(event.data)
+    if (event.data) event.data = JSON.parse(event.data as string)
     if (event.action == 'init') {
       if (event.data.info) event.data.info = { ...loadScriptInfo, ...event.data.info }
       else event.data.info = { ...loadScriptInfo }
     }
-    callback(event)
+    handler(event as ActionsEvent)
   })
 
   return () => {

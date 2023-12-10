@@ -1,4 +1,4 @@
-import songlistState, { type TagInfo, type ListDetailInfo, type ListInfo, type SortInfo, type ListInfoItem } from '@/store/songlist/state'
+import songlistState, { type TagInfo, type ListDetailInfo, type ListInfo, type ListInfoItem } from '@/store/songlist/state'
 import songlistActions from '@/store/songlist/action'
 import { deduplicationList, toNewMusicInfo } from '@/utils'
 import musicSdk from '@/utils/musicSdk'
@@ -28,7 +28,7 @@ export const setSelectListInfo = (info: ListInfoItem) => {
  * @returns
  */
 export const getSortList = (source: LX.OnlineSource) => {
-  return songlistState.sortList[source] as SortInfo[]
+  return songlistState.sortList[source]!
 }
 
 /**

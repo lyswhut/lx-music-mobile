@@ -20,7 +20,7 @@ export default memo(({ musicInfo }: {
   const t = useI18n()
 
   const back = () => {
-    void pop(commonState.componentIds.comment as string)
+    void pop(commonState.componentIds.comment!)
   }
 
   return (

@@ -3,6 +3,7 @@
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
+    "module": "ESNext",
     "types": ["react-native", "node"],
     /* Completeness */
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */

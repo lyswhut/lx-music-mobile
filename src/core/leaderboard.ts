@@ -52,8 +52,8 @@ const getListLimit = async(source: LX.OnlineSource, bangId: string, page: number
   const prevPageKey = `${source}__${bangId}__${page - 1}`
   const tempListKey = `${source}__${bangId}__temp`
 
-  let listCache = cache.get(listKey) as CacheValue
-  if (!listCache) cache.set(listKey, listCache = new Map())
+  let listCache = cache.get(listKey)!
+  if (!listCache) cache.set(listKey, listCache = new Map<string, PageCache | LX.Music.MusicInfoOnline[]>())
   let sourcePage = 0
   {
     const prevPageData = listCache.get(prevPageKey) as PageCache
@@ -113,7 +113,7 @@ export const getListDetail = async(id: string, page: number, isRefresh = false):
 
   let listCache = cache.get(listKey)
   if (!listCache || isRefresh) {
-    cache.set(listKey, listCache = new Map())
+    cache.set(listKey, listCache = new Map<string, PageCache | LX.Music.MusicInfoOnline[]>())
   }
 
   let pageCache = listCache.get(pageKey) as PageCache
@@ -132,9 +132,9 @@ export const getListDetailAll = async(id: string, isRefresh = false): Promise<LX
   const [source, bangId] = id.split('__') as [LX.OnlineSource, string]
   // console.log(tabId)
   const listKey = `${source}__${bangId}`
-  let listCache = cache.get(listKey) as CacheValue
+  let listCache = cache.get(listKey)!
   if (!listCache || isRefresh) {
-    cache.set(listKey, listCache = new Map())
+    cache.set(listKey, listCache = new Map<string, PageCache | LX.Music.MusicInfoOnline[]>())
   }
 
   const loadData = async(page: number): Promise<ListDetailInfo> => {

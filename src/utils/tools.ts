@@ -169,7 +169,7 @@ export const handleReadFile = async<T = unknown>(path: string): Promise<T> => {
   // 修复PC v1.14.0出现的导出数据被序列化两次的问题
   if (typeof data != 'object') {
     try {
-      data = JSON.parse(data)
+      data = JSON.parse(data as string)
     } catch (err) {
       return data
     }
@@ -509,6 +509,7 @@ export const createStyle = <T extends StyleSheet.NamedStyles<T>>(styles: T | Sty
   for (const [n, s] of Object.entries(newStyle)) {
     newStyle[n] = trasformeStyle(s)
   }
+  // @ts-expect-error
   return StyleSheet.create(newStyle as StyleSheet.NamedStyles<T>)
 }
 

@@ -35,7 +35,7 @@ const readListData = async(path: string) => {
       listData = configData.data
       break
     default:
-      showImportTip(configData.type)
+      showImportTip(configData.type as string)
       return null
   }
   return listData

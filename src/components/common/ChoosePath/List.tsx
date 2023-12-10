@@ -17,7 +17,7 @@ const caches = new Map<string, PathItem[]>()
 
 const handleReadDir = async(path: string, dirOnly: boolean, filter?: RegExp, isRefresh = false) => {
   const cacheKey = `${path}_${dirOnly ? 'true' : 'false'}_${filter ? filter.toString() : 'null'}`
-  if (!isRefresh && caches.has(cacheKey)) return caches.get(cacheKey) as PathItem[]
+  if (!isRefresh && caches.has(cacheKey)) return caches.get(cacheKey)!
   return readDir(path).then(paths => {
     // console.log('read')
     // prevPath = path

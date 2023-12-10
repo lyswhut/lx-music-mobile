@@ -133,7 +133,7 @@ const playMusic = ((fn: (musicInfo: LX.Player.PlayMusic, url: string, time: numb
         _url = ''
         _time = 0
         isDelayRun = false
-        fn(musicInfo as LX.Player.PlayMusic, url, time)
+        fn(musicInfo!, url, time)
       }, delay)
     } else {
       isDelayRun = true

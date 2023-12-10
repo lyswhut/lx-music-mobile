@@ -33,7 +33,7 @@ export default memo(() => {
   const popupRef = useRef<SettingPopupType>(null)
 
   const back = () => {
-    void pop(commonState.componentIds.playDetail as string)
+    void pop(commonState.componentIds.playDetail!)
   }
   const showSetting = () => {
     popupRef.current?.show()

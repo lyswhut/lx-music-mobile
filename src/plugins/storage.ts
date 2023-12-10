@@ -117,6 +117,7 @@ export const getDataMultiple = async<T extends readonly string[]>(keys: T) => {
     if (value && partKeyPrefixRxp.test(value)) {
       promises.push(handleGetData(value))
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       promises.push(Promise.resolve(value ? JSON.parse(value) : value))
     }
   }

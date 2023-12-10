@@ -9,7 +9,7 @@ export const getList = async(source: Source): Promise<string[]> => {
       if (source == 'all') continue
       task.push(
         hotSearchState.sourceList[source]?.length
-          ? Promise.resolve({ source, list: hotSearchState.sourceList[source] as Lists[number]['list'] })
+          ? Promise.resolve({ source, list: hotSearchState.sourceList[source]! })
           : ((musicSdk[source]?.hotSearch.getList() as Promise<Lists[number]>) ?? Promise.reject(new Error('source not found: ' + source))).catch((err: any) => {
               console.log(err)
               return { source, list: [] }
@@ -20,7 +20,7 @@ export const getList = async(source: Source): Promise<string[]> => {
       return hotSearchActions.setList(source, results)
     })
   } else {
-    if (hotSearchState.sourceList[source]?.length) return hotSearchState.sourceList[source] as string[]
+    if (hotSearchState.sourceList[source]?.length) return hotSearchState.sourceList[source]!
     if (!musicSdk[source]?.hotSearch) {
       hotSearchActions.setList(source, [])
       return []
@@ -28,6 +28,7 @@ export const getList = async(source: Source): Promise<string[]> => {
     return musicSdk[source]?.hotSearch.getList().catch((err: any) => {
       console.log(err)
       return { source, list: [] }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     }).then(data => hotSearchActions.setList(source, data.list))
   }
 }

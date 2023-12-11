@@ -57,6 +57,7 @@
     "react-native-background-timer": "github:lyswhut/react-native-background-timer#f49f41d0283a796e3e38cb3d505198b5953dc249",
     "react-native-exception-handler": "^2.10.10",
     "react-native-fs": "^2.20.0",
+    "react-native-local-media-metadata": "github:lyswhut/react-native-local-media-metadata#5e17f715e27d977d550ca7fd4e702e5c823067a6",
     "react-native-navigation": "^7.37.2",
     "react-native-pager-view": "^6.2.3",
     "react-native-quick-base64": "^2.0.8",

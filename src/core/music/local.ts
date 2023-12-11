@@ -10,7 +10,7 @@ import {
   getOtherSource,
 } from './utils'
 import { getLocalFilePath } from '@/utils/music'
-import { readLyric, readPic } from '@/utils/nativeModules/locaMedia'
+import { readLyric, readPic } from '@/utils/localMediaMetadata'
 
 
 export const getMusicUrl = async({ musicInfo, isRefresh, onToggleSource = () => {} }: {

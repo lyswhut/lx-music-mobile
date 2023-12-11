@@ -4,7 +4,7 @@ import syncSourceList from '@/core/syncSourceList'
 import { log } from '@/utils/log'
 import { filterFileName, filterMusicList, formatPlayTime2, toNewMusicInfo } from '@/utils'
 import { handleImportListPart } from '@/screens/Home/Views/Setting/settings/Backup/actions'
-import { type MusicMetadata, readMetadata, scanAudioFiles } from '@/utils/nativeModules/locaMedia'
+import { type MusicMetadata, readMetadata, scanAudioFiles } from '@/utils/localMediaMetadata'
 import settingState from '@/store/setting/state'
 
 export const handleRemove = (listInfo: LX.List.UserListInfo) => {

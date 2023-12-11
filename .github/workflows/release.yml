@@ -13,45 +13,11 @@ jobs:
       - name: Check out git repository
         uses: actions/checkout@v3
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: Setup Java Env
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'microsoft'
-          java-version: '17'
-      - name: Cache Gradle Wrapper
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-
-      - name: Cache Gradle Dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-caches-
-
-      - name: Cache Node Dependencies
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-caches-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-caches-
-
-      - name: Install dependencies
-        run: npm ci
+      - name: Setup Env
+        uses: ./.github/actions/setup
 
       - name: Build Packages
-        run: |
-          cd android
-          echo ${{ secrets.KEYSTORE_STORE_FILE_BASE64 }} | base64 --decode > app/${{ secrets.KEYSTORE_STORE_FILE }}
-          ./gradlew assembleRelease -PMYAPP_UPLOAD_STORE_FILE='${{ secrets.KEYSTORE_STORE_FILE }}' -PMYAPP_UPLOAD_KEY_ALIAS='${{ secrets.KEYSTORE_KEY_ALIAS }}' -PMYAPP_UPLOAD_STORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}' -PMYAPP_UPLOAD_KEY_PASSWORD='${{ secrets.KEYSTORE_KEY_PASSWORD }}'
+        uses: ./.github/actions/build-packages
 
       # Push tag to GitHub if package.json version's tag is not tagged
       - name: Get package version
@@ -89,32 +55,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload Artifact arm64-v8a
-        uses: actions/upload-artifact@v3
-        with:
-          name: app-v${{ env.PACKAGE_VERSION }}-arm64-v8a-release
-          path: android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-arm64-v8a.apk
-
-      - name: Upload Artifact armeabi-v7a
-        uses: actions/upload-artifact@v3
-        with:
-          name: app-v${{ env.PACKAGE_VERSION }}-armeabi-v7a-release
-          path: android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-armeabi-v7a.apk
-
-      - name: Upload Artifact universal
-        uses: actions/upload-artifact@v3
-        with:
-          name: app-v${{ env.PACKAGE_VERSION }}-universal-release
-          path: android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-universal.apk
-
-      - name: Upload Artifact x86_64
-        uses: actions/upload-artifact@v3
-        with:
-          name: app-v${{ env.PACKAGE_VERSION }}-x86_64-release
-          path: android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86_64.apk
-
-      - name: Upload Artifact x86
-        uses: actions/upload-artifact@v3
-        with:
-          name: app-v${{ env.PACKAGE_VERSION }}-x86-release
-          path: android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86.apk
+      - name: Upload Artifact
+        uses: ./.github/actions/upload-artifact
+        env:
+          PACKAGE_VERSION: ${{ env.PACKAGE_VERSION }}

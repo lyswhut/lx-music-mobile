@@ -1,4 +1,4 @@
-// 修补依赖源码以使vite构建的依赖恢复正常工作
+// 修补依赖源码以使构建的依赖恢复正常工作
 
 const fs = require('node:fs')
 const path = require('node:path')

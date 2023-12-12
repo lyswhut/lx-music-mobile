@@ -5,6 +5,7 @@ runs:
   using: composite
   steps:
     - name: Build Packages
+      shell: bash
       run: |
         cd android
         echo ${{ secrets.KEYSTORE_STORE_FILE_BASE64 }} | base64 --decode > app/${{ secrets.KEYSTORE_STORE_FILE }}

@@ -32,7 +32,11 @@ export default ({ isHome }: { isHome: boolean }) => {
   }
   // console.log('render title')
 
-  const title = musicInfo.id ? downloadFileName.replace('歌手', musicInfo.singer).replace('歌名', musicInfo.name) : ''
+  const title = musicInfo.id
+    ? musicInfo.singer
+      ? downloadFileName.replace('歌手', musicInfo.singer).replace('歌名', musicInfo.name)
+      : musicInfo.name
+    : ''
   // console.log(playMusicInfo)
   return (
     <TouchableOpacity style={styles.container} onLongPress={handleLongPress} onPress={handlePress} activeOpacity={0.7} >

@@ -13,6 +13,7 @@ export interface PathItem {
   desc?: string
   size?: number
   sizeText?: string
+  disabled?: boolean
 }
 
 export default memo(({ item, onPress, rowInfo }: {
@@ -33,18 +34,33 @@ export default memo(({ item, onPress, rowInfo }: {
   // }, [item, index, showMenu])
 
   return (
-    <View style={{ ...styles.listItem, width: rowInfo.rowWidth }}>
-      <TouchableOpacity style={styles.listItem} onPress={ () => { onPress(item) } }>
-        <View style={styles.itemInfo}>
-          <Text style={styles.listItemTitleText}>{item.name}</Text>
-          <Text style={styles.listItemDesc} size={12} color={theme['c-font-label']} numberOfLines={1}>{item.mtime ? new Date(item.mtime).toLocaleString() : item.desc}</Text>
-        </View>
-        {
-        item.isDir
-          ? <Icon name="chevron-right" color={theme['c-primary-light-100-alpha-600']} size={18} />
-          : <Text style={styles.size} size={12} color={theme['c-font-label']}>{item.sizeText}</Text>
-        }
-      </TouchableOpacity>
+    <View style={{ ...styles.listItem, width: rowInfo.rowWidth }} onStartShouldSetResponder={() => true}>
+      {
+        item.disabled ? (
+          <View style={{ ...styles.listItem, opacity: 0.3 }}>
+            <View style={styles.itemInfo}>
+              <Text style={styles.listItemTitleText}>{item.name}</Text>
+              <Text style={styles.listItemDesc} size={12} color={theme['c-font-label']} numberOfLines={1}>{item.mtime ? new Date(item.mtime).toLocaleString() : item.desc}</Text>
+            </View>
+            {
+              item.isDir ? null
+                : <Text style={styles.size} size={12} color={theme['c-font-label']}>{item.sizeText}</Text>
+            }
+          </View>
+        ) : (
+          <TouchableOpacity style={styles.listItem} onPress={ () => { onPress(item) } }>
+            <View style={styles.itemInfo}>
+              <Text style={styles.listItemTitleText}>{item.name}</Text>
+              <Text style={styles.listItemDesc} size={12} color={theme['c-font-label']} numberOfLines={1}>{item.mtime ? new Date(item.mtime).toLocaleString() : item.desc}</Text>
+            </View>
+            {
+              item.isDir
+                ? <Icon name="chevron-right" color={theme['c-primary-light-100-alpha-600']} size={18} />
+                : <Text style={styles.size} size={12} color={theme['c-font-label']}>{item.sizeText}</Text>
+            }
+          </TouchableOpacity>
+        )
+      }
     </View>
   )
 })

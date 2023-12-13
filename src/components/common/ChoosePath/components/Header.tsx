@@ -46,7 +46,11 @@ const NameInput = forwardRef<NameInputType, {}>((props, ref) => {
 })
 
 
-export default memo(({ title, path, onRefreshDir }: {
+export default memo(({
+  title,
+  path,
+  onRefreshDir,
+}: {
   title: string
   path: string
   onRefreshDir: (dir: string) => Promise<void>
@@ -57,6 +61,10 @@ export default memo(({ title, path, onRefreshDir }: {
 
   const refresh = () => {
     void onRefreshDir(path)
+  }
+
+  const toggleStorageDir = () => {
+    void onRefreshDir('/storage')
   }
 
   const handleShow = () => {
@@ -103,6 +111,9 @@ export default memo(({ title, path, onRefreshDir }: {
           <Text style={styles.subTitle} color={theme['c-primary-font']} size={13} numberOfLines={1}>{path}</Text>
         </View>
         <View style={styles.actions}>
+          <TouchableOpacity style={styles.actionBtn} onPress={toggleStorageDir}>
+            <Icon name="sd-card" color={theme['c-primary-font']} size={22} />
+          </TouchableOpacity>
           <TouchableOpacity style={styles.actionBtn} onPress={handleShow}>
             <Icon name="add_folder" color={theme['c-primary-font']} size={22} />
           </TouchableOpacity>

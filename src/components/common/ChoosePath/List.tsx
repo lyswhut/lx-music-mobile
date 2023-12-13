@@ -21,24 +21,24 @@ const handleReadDir = async(path: string, dirOnly: boolean, filter?: RegExp, isR
   return readDir(path).then(paths => {
     // console.log('read')
     // prevPath = path
-    const list = [] as PathItem[]
+    let list = [] as PathItem[]
     // console.log(paths)
     for (const path of paths) {
       // console.log(path)
+      if (filter != null && path.isFile() && !filter.test(path.name)) continue
+
       const isDirectory = path.isDirectory()
       if (dirOnly) {
-        if (!isDirectory) continue
         list.push({
           name: path.name,
           path: path.path,
           mtime: path.mtime,
           size: path.size,
-          isDir: true,
-          sizeText: '',
+          isDir: isDirectory,
+          sizeText: isDirectory ? '' : sizeFormate(path.size),
+          disabled: !isDirectory,
         })
       } else {
-        if (filter != null && path.isFile() && !filter.test(path.name)) continue
-
         list.push({
           name: path.name,
           path: path.path,
@@ -51,6 +51,14 @@ const handleReadDir = async(path: string, dirOnly: boolean, filter?: RegExp, isR
     }
 
     list.sort((a, b) => a.name.charCodeAt(0) - b.name.charCodeAt(0))
+    let fileList = [] as PathItem[]
+    list = [...list.filter(i => {
+      if (i.isDir) return true
+      else {
+        fileList.push(i)
+        return false
+      }
+    }), ...fileList]
     caches.set(cacheKey, list)
     return list
   })

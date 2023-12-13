@@ -105,27 +105,35 @@ const buildLocalMusicInfo = (filePath: string, metadata: MusicMetadata): LX.Musi
     },
   }
 }
-const createLocalMusicInfos = async(filePaths: string[]): Promise<LX.Music.MusicInfoLocal[]> => {
+const createLocalMusicInfos = async(filePaths: string[], errorPath: string[]): Promise<LX.Music.MusicInfoLocal[]> => {
   const list: LX.Music.MusicInfoLocal[] = []
   for await (const path of filePaths) {
     const musicInfo = await readMetadata(path)
-    if (!musicInfo) continue
+    if (!musicInfo) {
+      errorPath.push(path)
+      continue
+    }
     list.push(buildLocalMusicInfo(path, musicInfo))
   }
 
   return list
 }
-const handleAddMusics = async(listId: string, filePaths: string[], index: number = -1, total: number = 0, successNum = 0) => {
+const handleAddMusics = async(listId: string, filePaths: string[], index: number = -1, total: number = 0, errorPath: string[] = []) => {
   // console.log(index + 1, index + 201)
   if (!total) total = filePaths.length
   const paths = filePaths.slice(index + 1, index + 201)
-  const musicInfos = await createLocalMusicInfos(paths)
-  successNum += musicInfos.length
+  const musicInfos = await createLocalMusicInfos(paths, errorPath)
   if (musicInfos.length) await addListMusics(listId, musicInfos, settingState.setting['list.addMusicLocationType'])
   index += 200
-  if (filePaths.length - 1 > index) await handleAddMusics(listId, filePaths, index, total, successNum)
-
-  toast(global.i18n.t('list_select_local_file_result_tip', { total, success: successNum, failed: total - successNum }), 'long')
+  if (filePaths.length - 1 > index) await handleAddMusics(listId, filePaths, index, total, errorPath)
+  else {
+    if (errorPath.length) {
+      log.warn('Parse metadata failed:\n' + errorPath.map(p => p.split('/').at(-1)).join('\n'))
+      toast(global.i18n.t('list_select_local_file_result_failed_tip', { total, success: total - errorPath.length, failed: errorPath.length }), 'long')
+    } else {
+      toast(global.i18n.t('list_select_local_file_result_tip', { total }), 'long')
+    }
+  }
 }
 export const handleImportMediaFile = async(listInfo: LX.List.MyListInfo, path: string) => {
   setFetchingListStatus(listInfo.id, true)

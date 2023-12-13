@@ -1,4 +1,4 @@
-import { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react'
+import { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import Input, { type InputType } from '@/components/common/Input'
 import Text from '@/components/common/Text'
@@ -6,7 +6,7 @@ import { Icon } from '@/components/common/Icon'
 import StatusBar from '@/components/common/StatusBar'
 import ConfirmAlert, { type ConfirmAlertType } from '@/components/common/ConfirmAlert'
 import { createStyle, toast } from '@/utils/tools'
-import { mkdir } from '@/utils/fs'
+import { mkdir, readDir } from '@/utils/fs'
 import { useTheme } from '@/store/theme/hook'
 import { scaleSizeH } from '@/utils/pixelRatio'
 const filterFileName = /[\\/:*?#"<>|]/
@@ -45,6 +45,7 @@ const NameInput = forwardRef<NameInputType, {}>((props, ref) => {
   )
 })
 
+const storagePath = '/storage'
 
 export default memo(({
   title,
@@ -58,13 +59,26 @@ export default memo(({
   const theme = useTheme()
   const confirmAlertRef = useRef<ConfirmAlertType>(null)
   const nameInputRef = useRef<NameInputType>(null)
+  const [isShowStorage, setIsShowStorage] = useState(false)
+
+  useEffect(() => {
+    let isUnmounted = false
+    void readDir(storagePath).then(() => {
+      if (isUnmounted) return
+      setIsShowStorage(true)
+    }).catch(_ => _)
+
+    return () => {
+      isUnmounted = true
+    }
+  }, [])
 
   const refresh = () => {
     void onRefreshDir(path)
   }
 
   const toggleStorageDir = () => {
-    void onRefreshDir('/storage')
+    void onRefreshDir(storagePath)
   }
 
   const handleShow = () => {
@@ -111,9 +125,13 @@ export default memo(({
           <Text style={styles.subTitle} color={theme['c-primary-font']} size={13} numberOfLines={1}>{path}</Text>
         </View>
         <View style={styles.actions}>
-          <TouchableOpacity style={styles.actionBtn} onPress={toggleStorageDir}>
-            <Icon name="sd-card" color={theme['c-primary-font']} size={22} />
-          </TouchableOpacity>
+          {
+            isShowStorage ? (
+              <TouchableOpacity style={styles.actionBtn} onPress={toggleStorageDir}>
+                <Icon name="sd-card" color={theme['c-primary-font']} size={22} />
+              </TouchableOpacity>
+            ) : null
+          }
           <TouchableOpacity style={styles.actionBtn} onPress={handleShow}>
             <Icon name="add_folder" color={theme['c-primary-font']} size={22} />
           </TouchableOpacity>

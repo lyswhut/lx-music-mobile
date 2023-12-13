@@ -84,6 +84,8 @@ export const onScriptAction = (handler: (event: ActionsEvent) => void): () => vo
     if (event.action == 'init') {
       if (event.data.info) event.data.info = { ...loadScriptInfo, ...event.data.info }
       else event.data.info = { ...loadScriptInfo }
+    } else if (event.action == 'showUpdateAlert') {
+      if (!loadScriptInfo?.allowShowUpdateAlert) return
     }
     handler(event as ActionsEvent)
   })

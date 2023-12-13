@@ -25,7 +25,8 @@ export const addUserApi = (info: LX.UserApi.UserApiInfo) => {
 export const setUserApiAllowShowUpdateAlert = (id: string, enable: boolean) => {
   const targetIndex = state.list.findIndex(api => api.id == id)
   if (targetIndex < 0) return
-  state.list.splice(targetIndex, 1, { ...state.list[targetIndex], allowShowUpdateAlert: enable })
+  state.list[targetIndex].allowShowUpdateAlert = enable
+  state.list.splice(targetIndex, 1, { ...state.list[targetIndex] })
 
   event.list_changed([...state.list])
 }

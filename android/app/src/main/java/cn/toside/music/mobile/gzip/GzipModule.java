@@ -8,15 +8,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.concurrent.Callable;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-
-import cn.toside.music.mobile.utils.TaskRunner;
+import cn.toside.music.mobile.utils.AsyncTask;
 
 // https://github.com/FWC1994/react-native-gzip/blob/main/android/src/main/java/com/reactlibrary/GzipModule.java
 // https://www.digitalocean.com/community/tutorials/java-gzip-example-compress-decompress-file
@@ -36,50 +28,22 @@ public class GzipModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void unGzipFromBase64(String base64, Promise promise) {
-    TaskRunner taskRunner = new TaskRunner();
-    try {
-      taskRunner.executeAsync(new Utils.UnGzip(base64), promise::resolve);
-    } catch (RuntimeException err) {
-      promise.reject("-2", err.getMessage());
-    }
+    AsyncTask.runTask(new Utils.UnGzip(base64), promise);
   }
 
   @ReactMethod
   public void gzipStringToBase64(String data, Promise promise) {
-    TaskRunner taskRunner = new TaskRunner();
-    try {
-      taskRunner.executeAsync(new Utils.Gzip(data), promise::resolve);
-    } catch (RuntimeException err) {
-      promise.reject("-2", err.getMessage());
-    }
+    AsyncTask.runTask(new Utils.Gzip(data), promise);
   }
 
   @ReactMethod
   public void unGzipFile(String source, String target, Boolean force, Promise promise) {
-    TaskRunner taskRunner = new TaskRunner();
-    try {
-      taskRunner.executeAsync(new Utils.UnGzipFile(source, target, force), (String errMessage) -> {
-        if ("".equals(errMessage)) {
-          promise.resolve(null);
-        } else promise.reject("-2", errMessage);
-      });
-    } catch (RuntimeException err) {
-      promise.reject("-2", err.getMessage());
-    }
+    AsyncTask.runTask(new Utils.UnGzipFile(source, target, force), promise);
   }
 
   @ReactMethod
   public void gzipFile(String source, String target, Boolean force, Promise promise) {
-    TaskRunner taskRunner = new TaskRunner();
-    try {
-      taskRunner.executeAsync(new Utils.GzipFile(source, target, force), (String errMessage) -> {
-        if ("".equals(errMessage)) {
-          promise.resolve(null);
-        } else promise.reject("-2", errMessage);
-      });
-    } catch (RuntimeException err) {
-      promise.reject("-2", err.getMessage());
-    }
+    AsyncTask.runTask(new Utils.GzipFile(source, target, force), promise);
   }
 }
 

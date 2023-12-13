@@ -48,7 +48,7 @@ public class Utils {
     return ret;
   }
 
-  static class ReadStringFromFile implements Callable<String> {
+  static class ReadStringFromFile implements Callable<Object> {
     private final String filePath;
 
     public ReadStringFromFile(String filePath) {

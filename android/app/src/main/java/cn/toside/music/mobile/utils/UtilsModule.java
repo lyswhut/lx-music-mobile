@@ -306,22 +306,12 @@ public class UtilsModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void getStringFromFile(String filePath, Promise promise) {
-    TaskRunner taskRunner = new TaskRunner();
-    try {
-      taskRunner.executeAsync(new Utils.ReadStringFromFile(filePath), promise::resolve);
-    } catch (RuntimeException err) {
-      promise.reject("-2", err.getMessage());
-    }
+    AsyncTask.runTask(new Utils.ReadStringFromFile(filePath), promise);
   }
 
   @ReactMethod
   public void writeStringToFile(String filePath, String dataStr, Promise promise) {
-    TaskRunner taskRunner = new TaskRunner();
-    try {
-      taskRunner.executeAsync(new Utils.WriteStringToFile(filePath, dataStr), promise::resolve);
-    } catch (RuntimeException err) {
-      promise.reject("-2", err.getMessage());
-    }
+    AsyncTask.runTask(new Utils.WriteStringToFile(filePath, dataStr), promise);
   }
 
   // https://stackoverflow.com/questions/73463341/in-per-app-language-how-to-get-app-locale-in-api-33-if-system-locale-is-diffe

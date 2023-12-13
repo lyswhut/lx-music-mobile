@@ -54,7 +54,7 @@ public class Utils {
     return true;
   }
 
-  static class UnGzipFile implements Callable<String> {
+  static class UnGzipFile implements Callable<Object> {
     private final String source;
     private final String target;
     private final Boolean force;
@@ -101,7 +101,7 @@ public class Utils {
     }
   }
 
-  static class GzipFile implements Callable<String> {
+  static class GzipFile implements Callable<Object> {
     private final String source;
     private final String target;
     private final Boolean force;
@@ -148,7 +148,7 @@ public class Utils {
     }
   }
 
-  static class UnGzip implements Callable<String> {
+  static class UnGzip implements Callable<Object> {
     private final byte[] data;
 
     public UnGzip(String data) {
@@ -174,7 +174,7 @@ public class Utils {
     }
   }
 
-  static class Gzip implements Callable<String> {
+  static class Gzip implements Callable<Object> {
     private final String data;
 
     public Gzip(String data) {

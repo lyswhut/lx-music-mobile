@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { View, ImageBackground, TouchableOpacity, InteractionManager, type ImageSourcePropType } from 'react-native'
+import { View, TouchableOpacity, InteractionManager } from 'react-native'
 import { setTheme } from '@/core/theme'
 import { useI18n } from '@/lang'
 import { useSettingValue } from '@/store/setting/hook'
@@ -11,6 +11,7 @@ import Text from '@/components/common/Text'
 import { createStyle } from '@/utils/tools'
 import { scaleSizeH } from '@/utils/pixelRatio'
 import { Icon } from '@/components/common/Icon'
+import ImageBackground, { type ImageSourceType } from '@/components/common/ImageBackground'
 
 const useActive = (id: string) => {
   const activeThemeId = useSettingValue('theme.id')
@@ -23,7 +24,7 @@ const ThemeItem = ({ id, name, color, image, setTheme, showAll }: {
   name: string
   color: string
   showAll: boolean
-  image?: ImageSourcePropType
+  image?: ImageSourceType
   setTheme: (id: string) => void
 }) => {
   const theme = useTheme()
@@ -36,7 +37,8 @@ const ThemeItem = ({ id, name, color, image, setTheme, showAll }: {
           {
             image
               ? <ImageBackground style={{ ...styles.imageContent, width: scaleSizeH(IMAGE_HEIGHT), backgroundColor: color }}
-                  source={image} borderRadius={4} />
+                  imageStyle={{ borderRadius: 4 }}
+                  url={image} />
               : <View style={{ ...styles.imageContent, width: scaleSizeH(IMAGE_HEIGHT), backgroundColor: color }}></View>
             }
         </View>

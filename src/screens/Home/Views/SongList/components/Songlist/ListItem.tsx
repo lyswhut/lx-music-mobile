@@ -1,11 +1,12 @@
 import { memo } from 'react'
-import { View, Image, Platform, TouchableOpacity } from 'react-native'
+import { View, Platform, TouchableOpacity } from 'react-native'
 import { createStyle } from '@/utils/tools'
 import { type ListInfoItem } from '@/store/songlist/state'
 import Text from '@/components/common/Text'
 import { scaleSizeW } from '@/utils/pixelRatio'
 import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 import { useTheme } from '@/store/theme/hook'
+import Image from '@/components/common/Image'
 
 const gap = scaleSizeW(15)
 export default memo(({ item, index, width, showSource, onPress }: {
@@ -26,7 +27,7 @@ export default memo(({ item, index, width, showSource, onPress }: {
           <View style={{ ...styles.listItem, width: itemWidth }}>
             <View style={{ ...styles.listItemImg, backgroundColor: theme['c-content-background'] }}>
               <TouchableOpacity activeOpacity={0.5} onPress={handlePress}>
-                <Image source={{ uri: item.img }} nativeID={`${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_from_${item.id}`} style={{ width: itemWidth, height: itemWidth }} borderRadius={4} />
+                <Image url={item.img} nativeID={`${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_from_${item.id}`} style={{ width: itemWidth, height: itemWidth, borderRadius: 4 }} />
                 { showSource ? <Text style={styles.sourceLabel} size={9} color="#fff" >{item.source}</Text> : null }
               </TouchableOpacity>
             </View>

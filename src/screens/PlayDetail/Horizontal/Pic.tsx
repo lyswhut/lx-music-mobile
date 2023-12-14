@@ -1,5 +1,5 @@
 import { memo, useState } from 'react'
-import { View, Image } from 'react-native'
+import { View } from 'react-native'
 // import { useLayout } from '@/utils/hooks'
 import { useTheme } from '@/store/theme/hook'
 import { BorderRadius } from '@/theme'
@@ -13,6 +13,7 @@ import StatusBar from '@/components/common/StatusBar'
 import { HEADER_HEIGHT } from './components/Header'
 import { BTN_WIDTH } from './MoreBtn/Btn'
 import { marginLeft } from './constant'
+import Image from '@/components/common/Image'
 
 const EmptyPic = memo(({ width }: { width: number }) => {
   const theme = useTheme()
@@ -46,10 +47,11 @@ export default memo(({ componentId }: { componentId: string }) => {
         {
           musicInfo.pic
             ? (
-                <Image source={{ uri: musicInfo.pic }} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} progressiveRenderingEnabled={true} borderRadius={2} style={{
+                <Image url={musicInfo.pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={{
                   ...styles.img,
                   width: imgWidth,
                   height: imgWidth,
+                  borderRadius: 2,
                 }} />
               )
             : <EmptyPic width={imgWidth} />

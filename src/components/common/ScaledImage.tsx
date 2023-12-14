@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react'
-import { Image, StyleSheet, type ImageProps } from 'react-native'
+import { StyleSheet } from 'react-native'
+import Image, { getSize, type ImageProps } from '@/components/common/Image'
 
 export interface ScaledImageProps extends Pick<ImageProps, 'style'> {
-  uri: string
+  url: string
   width?: number
   height?: number
   maxWidth?: number
   maxHeight?: number
 }
 
-export default ({ uri, width, height, maxWidth, maxHeight, style }: ScaledImageProps) => {
+export default ({ url, width, height, maxWidth, maxHeight, style }: ScaledImageProps) => {
   const [wh, setWH] = useState({ width: 0, height: 0 })
 
   useEffect(() => {
-    Image.getSize(uri, (realWidth, realHeight) => {
+    getSize(url, (realWidth, realHeight) => {
       let w = width ?? 0
       let h = height ?? 0
 
@@ -37,12 +38,12 @@ export default ({ uri, width, height, maxWidth, maxHeight, style }: ScaledImageP
       }
       setWH({ width: w || realWidth, height: h || realHeight })
     })
-  }, [height, maxHeight, maxWidth, uri, width])
+  }, [height, maxHeight, maxWidth, url, width])
 
   return (
-    <Image
-      source={{ uri }}
+    wh.width ? (<Image
+      url={url}
       style={StyleSheet.compose({ height: wh.height, width: wh.width }, style)}
-    />
+    />) : null
   )
 }

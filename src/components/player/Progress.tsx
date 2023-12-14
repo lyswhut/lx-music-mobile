@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useRef } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { View, PanResponder } from 'react-native'
 import { useDrag } from '@/utils/hooks'
 import { createStyle } from '@/utils/tools'
@@ -26,22 +26,17 @@ const DefaultBar = memo(() => {
 //   return <View style={{ ...styles.progressBar, backgroundColor: theme.secondary45, position: 'absolute', width: bufferedProgress + '%', left: 0, top: 0 }}></View>
 // })
 
-const PreassBar = memo(({ duration }: { duration: number }) => {
-  const theme = useTheme()
-  const durationRef = useRef(duration)
-  useEffect(() => {
-    durationRef.current = duration
-  }, [duration])
+const PreassBar = memo(({ onDragState, setDragProgress, onSetProgress }: {
+  onDragState: (drag: boolean) => void
+  setDragProgress: (progress: number) => void
+  onSetProgress: (progress: number) => void
+}) => {
   const {
     onLayout,
-    draging,
-    dragProgress,
     onDragStart,
     onDragEnd,
     onDrag,
-  } = useDrag(useCallback((progress: number) => {
-    global.app_event.setProgress(progress * durationRef.current)
-  }, []))
+  } = useDrag(onSetProgress, onDragState, setDragProgress)
   // const handlePress = useCallback((event: GestureResponderEvent) => {
   //   onPress(event.nativeEvent.locationX)
   // }, [onPress])
@@ -68,22 +63,7 @@ const PreassBar = memo(({ duration }: { duration: number }) => {
     }),
   ).current
 
-
-  return <View
-    onLayout={onLayout}
-    style={styles.pressBar}
-    // on={handleScrollBeginDrag}
-    // onScrollEndDrag={onScrollEndDrag}
-    {...panResponder.panHandlers}
-  >
-    <View
-      style={{
-        ...styles.progressBar,
-        backgroundColor: draging ? theme['c-primary-light-200-alpha-900'] : 'transparent',
-        width: `${dragProgress * 100}%`,
-      }}
-    />
-    </View>
+  return <View onLayout={onLayout} style={styles.pressBar} {...panResponder.panHandlers} />
 })
 
 
@@ -93,22 +73,37 @@ const Progress = ({ progress, duration }: {
 }) => {
   // const { progress } = usePlayTimeBuffer()
   const theme = useTheme()
+  const [draging, setDraging] = useState(false)
+  const [dragProgress, setDragProgress] = useState(0)
   // console.log(progress)
   const progressStr: `${number}%` = `${progress * 100}%`
 
+  const durationRef = useRef(duration)
+  useEffect(() => {
+    durationRef.current = duration
+  }, [duration])
+  const onSetProgress = useCallback((progress: number) => {
+    global.app_event.setProgress(progress * durationRef.current)
+  }, [])
+
   return (
     <View style={styles.progress}>
-      <View>
+      <View style={{ flex: 1 }}>
         <DefaultBar />
         {/* <BufferedBar bufferedProgress={bufferedProgress} /> */}
-        <View style={{
-          ...styles.progressBar,
-          backgroundColor: theme['c-primary-alpha-900'],
-          width: progressStr,
-        }}>
-        </View>
+        {
+          draging
+            ? (
+                <>
+                  <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-light-200-alpha-900'], width: progressStr, position: 'absolute', left: 0, top: 0 }} />
+                  <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-light-100-alpha-800'], width: `${dragProgress * 100}%`, position: 'absolute', left: 0, top: 0 }} />
+                </>
+              ) : (
+                <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-alpha-900'], width: progressStr, position: 'absolute', left: 0, top: 0 }} />
+              )
+        }
       </View>
-      <PreassBar duration={duration} />
+      <PreassBar onDragState={setDraging} setDragProgress={setDragProgress} onSetProgress={onSetProgress} />
       {/* <View style={{ ...styles.progressBar, height: '100%', width: progressStr }}><Pressable style={styles.progressDot}></Pressable></View> */}
     </View>
   )

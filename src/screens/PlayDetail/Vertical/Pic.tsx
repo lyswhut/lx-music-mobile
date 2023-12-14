@@ -1,5 +1,5 @@
 import { memo, useState } from 'react'
-import { View, Image } from 'react-native'
+import { View } from 'react-native'
 // import { useLayout } from '@/utils/hooks'
 import { createStyle } from '@/utils/tools'
 import { usePlayerMusicInfo } from '@/store/player/hook'
@@ -11,6 +11,7 @@ import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 import { useNavigationComponentDidAppear } from '@/navigation'
 import StatusBar from '@/components/common/StatusBar'
 import { HEADER_HEIGHT } from './components/Header'
+import Image from '@/components/common/Image'
 
 const EmptyPic = memo(({ width }: { width: number }) => {
   const theme = useTheme()
@@ -42,10 +43,11 @@ export default ({ componentId }: { componentId: string }) => {
         {
           musicInfo.pic
             ? (
-                <Image source={{ uri: musicInfo.pic }} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} progressiveRenderingEnabled={true} borderRadius={2} style={{
+                <Image url={musicInfo.pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={{
                   ...styles.img,
                   width: imgWidth,
                   height: imgWidth,
+                  borderRadius: 2,
                 }} />
               )
             : <EmptyPic width={imgWidth} />

@@ -69,6 +69,7 @@ const styles = createStyle({
   container: {
     width: '100%',
     paddingHorizontal: 2,
-    paddingBottom: 4,
+    paddingBottom: 2,
+    // backgroundColor: 'rgba(0, 0, 0, .1)',
   },
 })

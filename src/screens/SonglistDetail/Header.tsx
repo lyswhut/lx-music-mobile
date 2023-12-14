@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useState } from 'react'
-import { View, Image } from 'react-native'
+import { View } from 'react-native'
 import { BorderWidths } from '@/theme'
 import ButtonBar from './ActionBar'
 import { useNavigationComponentDidAppear } from '@/navigation'
@@ -10,6 +10,7 @@ import Text from '@/components/common/Text'
 import { createStyle } from '@/utils/tools'
 import StatusBar from '@/components/common/StatusBar'
 import songlistState from '@/store/songlist/state'
+import Image from '@/components/common/Image'
 
 const IMAGE_WIDTH = scaleSizeW(70)
 
@@ -26,7 +27,7 @@ const Pic = ({ componentId, playCount, imgUrl }: {
 
   return (
     <View style={{ ...styles.listItemImg, width: IMAGE_WIDTH, height: IMAGE_WIDTH }}>
-      <Image nativeID={`${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_to_${songlistState.selectListInfo.id}`} source={{ uri: imgUrl }} borderRadius={4} style={{ flex: 1, resizeMode: 'cover', justifyContent: 'flex-end' }} />
+      <Image nativeID={`${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_to_${songlistState.selectListInfo.id}`} url={imgUrl} style={{ flex: 1, justifyContent: 'flex-end', borderRadius: 4 }} />
         {
           playCount && animated
             ? <Text style={styles.playCount} numberOfLines={ 1 }>{playCount}</Text>

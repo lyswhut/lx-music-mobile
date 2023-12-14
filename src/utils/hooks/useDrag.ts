@@ -1,9 +1,7 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef } from 'react'
 import { type LayoutChangeEvent } from 'react-native'
 
-export const useDrag = (onSetProgress: (progress: number) => void) => {
-  const [draging, setDraging] = useState(false)
-  const [dragProgress, setDragProgress] = useState(0)
+export const useDrag = (onSetProgress: (progress: number) => void, onDragState: (drag: boolean) => void, setDragProgress: (progress: number) => void) => {
   const info = useRef({
     isDraging: false,
     dragStartX: 0,
@@ -22,13 +20,13 @@ export const useDrag = (onSetProgress: (progress: number) => void) => {
 
     setDragProgress(info.current.dragStartProgress = info.current.dragProgress = val)
     // dragProgress.value = msEvent.msDownProgress = val
-    setDraging(true)
-  }, [])
+    onDragState(true)
+  }, [onDragState, setDragProgress])
   const onDragEnd = useCallback(() => {
     if (info.current.isDraging) onSetProgress(info.current.dragProgress)
     info.current.isDraging = false
-    setDraging(false)
-  }, [onSetProgress])
+    onDragState(false)
+  }, [onDragState, onSetProgress])
   const onDrag = useCallback((offsetX: number) => {
     if (!info.current.isDraging) return
     // dragging.value ||= true
@@ -37,7 +35,7 @@ export const useDrag = (onSetProgress: (progress: number) => void) => {
     if (progress > 1) progress = 1
     else if (progress < 0) progress = 0
     setDragProgress(info.current.dragProgress = progress)
-  }, [])
+  }, [setDragProgress])
 
   const onLayout = useCallback((e: LayoutChangeEvent) => {
     info.current.progressWidth = e.nativeEvent.layout.width
@@ -49,8 +47,6 @@ export const useDrag = (onSetProgress: (progress: number) => void) => {
 
   return {
     onLayout,
-    draging,
-    dragProgress,
     onDragStart,
     onDragEnd,
     onDrag,

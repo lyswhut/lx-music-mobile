@@ -72,6 +72,7 @@ const styles = createStyle({
     height: '100%',
     // justifyContent: 'space-evenly',
     // height: 48,
+    // backgroundColor: 'rgba(0, 0, 0, .1)',
   },
   right: {
     flexDirection: 'row',

@@ -36,7 +36,7 @@ export default ({ children }: Props) => {
     <View style={{ flex: 1, overflow: 'hidden' }}>
       <ImageBackground
         style={{ position: 'absolute', left: 0, top: 0, height: windowSize.height, width: windowSize.width, backgroundColor: theme['c-content-background'] }}
-        source={theme['bg-image']}
+        url={theme['bg-image']}
         resizeMode="cover"
       >
       </ImageBackground>

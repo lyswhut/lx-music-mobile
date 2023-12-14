@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { View, Image, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import { navigations } from '@/navigation'
 import { usePlayerMusicInfo } from '@/store/player/hook'
 import { useTheme } from '@/store/theme/hook'
@@ -10,6 +10,7 @@ import commonState from '@/store/common/state'
 import playerState from '@/store/player/state'
 import Text from '@/components/common/Text'
 import { LIST_IDS, NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
+import Image from '@/components/common/Image'
 
 const PIC_HEIGHT = scaleSizeH(46)
 
@@ -63,11 +64,12 @@ export default ({ isHome }: { isHome: boolean }) => {
       {
         musicInfo.pic
           ? (
-              <Image source={{ uri: musicInfo.pic }} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} progressiveRenderingEnabled={true} borderRadius={2} style={{
+              <Image url={musicInfo.pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={{
                 // ...styles.playInfoImg,
                 // backgroundColor: theme.primary,
                 width: PIC_HEIGHT,
                 height: PIC_HEIGHT,
+                borderRadius: 2,
               }} />
             )
           : <EmptyPic />

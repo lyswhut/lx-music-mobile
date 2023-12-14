@@ -12,6 +12,55 @@ import {
 import { getLocalFilePath } from '@/utils/music'
 import { readLyric, readPic } from '@/utils/localMediaMetadata'
 
+const getOtherSourceByLocal = async(musicInfo: LX.Music.MusicInfoLocal) => {
+  let result: LX.Music.MusicInfoOnline[] = []
+  result = await getOtherSource(musicInfo)
+  if (result.length) return result
+  if (musicInfo.name.includes('-')) {
+    const [name, singer] = musicInfo.name.split('-').map(val => val.trim())
+    result = await getOtherSource({
+      ...musicInfo,
+      name,
+      singer,
+    })
+    if (result.length) return result
+    result = await getOtherSource({
+      ...musicInfo,
+      name: singer,
+      singer: name,
+    })
+    if (result.length) return result
+  }
+  let fileName = musicInfo.meta.filePath.split('/').at(-1)
+  if (fileName) {
+    fileName = fileName.substring(0, fileName.lastIndexOf('.'))
+    if (fileName != musicInfo.name) {
+      if (fileName.includes('-')) {
+        const [name, singer] = fileName.split('-').map(val => val.trim())
+        result = await getOtherSource({
+          ...musicInfo,
+          name,
+          singer,
+        })
+        if (result.length) return result
+        result = await getOtherSource({
+          ...musicInfo,
+          name: singer,
+          singer: name,
+        })
+      } else {
+        result = await getOtherSource({
+          ...musicInfo,
+          name: fileName,
+          singer: '',
+        })
+      }
+      if (result.length) return result
+    }
+  }
+
+  return result
+}
 
 export const getMusicUrl = async({ musicInfo, isRefresh, onToggleSource = () => {} }: {
   musicInfo: LX.Music.MusicInfoLocal
@@ -24,7 +73,7 @@ export const getMusicUrl = async({ musicInfo, isRefresh, onToggleSource = () => 
     if (path) return path
   }
   onToggleSource()
-  const otherSource = await getOtherSource(musicInfo)
+  const otherSource = await getOtherSourceByLocal(musicInfo)
   if (!otherSource.length) throw new Error('source not found')
   return getOnlineOtherSourceMusicUrl({ musicInfos: [...otherSource], onToggleSource, isRefresh }).then(({ url, quality: targetQuality, musicInfo: targetMusicInfo, isFromCache }) => {
     // saveLyric(musicInfo, data.lyricInfo)
@@ -49,7 +98,7 @@ export const getPicUrl = async({ musicInfo, listId, isRefresh, onToggleSource = 
   }
 
   onToggleSource()
-  const otherSource = await getOtherSource(musicInfo)
+  const otherSource = await getOtherSourceByLocal(musicInfo)
   if (!otherSource.length) throw new Error('source not found')
   return getOnlineOtherSourcePicUrl({ musicInfos: [...otherSource], onToggleSource, isRefresh }).then(({ url, musicInfo: targetMusicInfo, isFromCache }) => {
     if (listId) {
@@ -86,7 +135,7 @@ export const getLyricInfo = async({ musicInfo, isRefresh, onToggleSource = () =>
   }
 
   onToggleSource()
-  const otherSource = await getOtherSource(musicInfo)
+  const otherSource = await getOtherSourceByLocal(musicInfo)
   if (!otherSource.length) throw new Error('source not found')
   // eslint-disable-next-line @typescript-eslint/promise-function-async
   return getOnlineOtherSourceLyricInfo({ musicInfos: [...otherSource], onToggleSource, isRefresh }).then(({ lyricInfo, musicInfo: targetMusicInfo, isFromCache }) => {

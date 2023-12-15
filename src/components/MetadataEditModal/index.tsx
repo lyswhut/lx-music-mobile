@@ -13,6 +13,7 @@ import {
 } from '@/utils/localMediaMetadata'
 import { useUnmounted } from '@/utils/hooks'
 import MetadataForm, { defaultData, type Metadata, type MetadataFormType } from './MetadataForm'
+import { log } from '@/utils/log'
 
 export type {
   Metadata,
@@ -78,27 +79,34 @@ export default forwardRef<MetadataEditType, MetadataEditProps>((props, ref) => {
     }
     setProcessing(true)
     let isUpdated = false
-    if (
-      _metadata.name != metadata.current.name ||
-      _metadata.singer != metadata.current.singer ||
-      _metadata.albumName != metadata.current.albumName
-    ) {
-      isUpdated ||= true
-      await writeMetadata(filePath.current, {
-        name: _metadata.name,
-        singer: _metadata.singer,
-        albumName: _metadata.albumName,
-      })
+    try {
+      if (
+        _metadata.name != metadata.current.name ||
+        _metadata.singer != metadata.current.singer ||
+        _metadata.albumName != metadata.current.albumName
+      ) {
+        isUpdated ||= true
+        await writeMetadata(filePath.current, {
+          name: _metadata.name,
+          singer: _metadata.singer,
+          albumName: _metadata.albumName,
+        })
+      }
+      if (_metadata.pic != metadata.current.pic) {
+        isUpdated ||= true
+        await writePic(filePath.current, _metadata.pic)
+      }
+      if (_metadata.lyric != metadata.current.lyric) {
+        isUpdated ||= true
+        await writeLyric(filePath.current, _metadata.lyric)
+      }
+    } catch (err: any) {
+      log.error(`save (${filePath.current}) metadata failed: \n${err.message}`)
+      toast(global.i18n.t('metadata_edit_modal_failed'), 'long')
+      return
+    } finally {
+      setProcessing(false)
     }
-    if (_metadata.pic != metadata.current.pic) {
-      isUpdated ||= true
-      await writePic(filePath.current, _metadata.pic)
-    }
-    if (_metadata.lyric != metadata.current.lyric) {
-      isUpdated ||= true
-      await writeLyric(filePath.current, _metadata.lyric)
-    }
-    setProcessing(false)
     if (isUpdated) toast(global.i18n.t('metadata_edit_modal_success'), 'long')
     alertRef.current?.setVisible(false)
     props.onUpdate(_metadata)

@@ -108,6 +108,7 @@
   "location": "来自{location}",
   "lyric__load_error": "歌词获取失败",
   "metadata_edit_modal_confirm": "保存",
+  "metadata_edit_modal_failed": "保存失败，详情可查看错误日志",
   "metadata_edit_modal_file_path": "文件路径",
   "metadata_edit_modal_form_album_name": "专辑名",
   "metadata_edit_modal_form_lyric": "LRC 歌词",

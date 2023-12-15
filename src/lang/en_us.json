@@ -108,6 +108,7 @@
   "location": "From {location}",
   "lyric__load_error": "Failed to get lyrics",
   "metadata_edit_modal_confirm": "Save",
+  "metadata_edit_modal_failed": "Saving failed, please view the error log for details.",
   "metadata_edit_modal_file_path": "File path",
   "metadata_edit_modal_form_album_name": "Album name",
   "metadata_edit_modal_form_lyric": "LRC Lyrics",

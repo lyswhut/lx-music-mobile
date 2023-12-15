@@ -240,7 +240,7 @@ const styles = createStyle({
   inputContent: {
     marginTop: 8,
     flex: 1,
-    flexDirection: 'row',
+    // flexDirection: 'row',
     alignItems: 'center',
   },
   input: {

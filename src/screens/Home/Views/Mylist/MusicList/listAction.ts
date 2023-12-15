@@ -1,4 +1,4 @@
-import { removeListMusics, updateListMusicPosition } from '@/core/list'
+import { removeListMusics, updateListMusicPosition, updateListMusics } from '@/core/list'
 import { playList, playNext } from '@/core/player/player'
 import { addTempPlayList } from '@/core/player/tempPlayList'
 import settingState from '@/store/setting/state'
@@ -8,6 +8,7 @@ import { addDislikeInfo, hasDislike } from '@/core/dislikeList'
 import playerState from '@/store/player/state'
 
 import type { SelectInfo } from './ListMenu'
+import { type Metadata } from '@/components/MetadataEditModal'
 
 export const handlePlay = (listId: SelectInfo['listId'], index: SelectInfo['index']) => {
   void playList(listId, index)
@@ -44,6 +45,23 @@ export const handleUpdateMusicPosition = (position: number, listId: SelectInfo['
     // console.log(listId, position, [musicInfo.id])
     void updateListMusicPosition(listId, position, [musicInfo.id])
   }
+}
+
+export const handleUpdateMusicInfo = (listId: SelectInfo['listId'], musicInfo: LX.Music.MusicInfoLocal, newInfo: Metadata) => {
+  void updateListMusics([
+    {
+      id: listId,
+      musicInfo: {
+        ...musicInfo,
+        name: newInfo.name,
+        singer: newInfo.singer,
+        meta: {
+          ...musicInfo.meta,
+          albumName: newInfo.albumName,
+        },
+      },
+    },
+  ])
 }
 
 

@@ -100,14 +100,6 @@ declare namespace LX {
       lyrics: LyricInfo
     }
 
-    interface MusicFileMeta {
-      title: string
-      artist: string | null
-      album: string | null
-      APIC: string | null
-      lyrics: string | null
-    }
-
     interface MusicUrlInfo {
       id: string
       url: string

@@ -12,7 +12,11 @@ const defaultHeaders = {
 }
 
 const Image = ({ url, resizeMode = FastImage.resizeMode.cover, ...props }: ImageProps) => {
-  let uri = typeof url == 'number' ? _Image.resolveAssetSource(url).uri : url
+  let uri = typeof url == 'number'
+    ? _Image.resolveAssetSource(url).uri
+    : url?.startsWith('/')
+      ? 'file://' + url
+      : url
   return (
     <FastImage
       {...props}

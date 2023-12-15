@@ -1,5 +1,14 @@
 import { scanFiles } from 'react-native-local-media-metadata'
-export { type MusicMetadata, readMetadata, readPic, readLyric } from 'react-native-local-media-metadata'
+export {
+  type MusicMetadata,
+  type MusicMetadataFull,
+  readMetadata,
+  writeMetadata,
+  readPic,
+  writePic,
+  readLyric,
+  writeLyric,
+} from 'react-native-local-media-metadata'
 
 export const scanAudioFiles = async(dirPath: string): Promise<string[]> => {
   return scanFiles(dirPath, ['mp3', 'flac', 'ogg', 'wav'])

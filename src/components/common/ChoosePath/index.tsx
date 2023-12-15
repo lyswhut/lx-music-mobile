@@ -8,7 +8,7 @@ import ConfirmAlert, { type ConfirmAlertType } from '@/components/common/Confirm
 import { checkStoragePermissions, requestStoragePermission, toast } from '@/utils/tools'
 import { useI18n } from '@/lang'
 
-interface ReadOptions {
+export interface ReadOptions {
   title: string
   dirOnly?: boolean
   filter?: RegExp

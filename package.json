@@ -58,7 +58,7 @@
     "react-native-exception-handler": "^2.10.10",
     "react-native-fast-image": "^8.6.3",
     "react-native-fs": "^2.20.0",
-    "react-native-local-media-metadata": "github:lyswhut/react-native-local-media-metadata#8c6525e20f5787dbcd2962e83b635787341e5be5",
+    "react-native-local-media-metadata": "github:lyswhut/react-native-local-media-metadata#c2b993093ddd141b4b88673baba7cb4d7b565d04",
     "react-native-navigation": "^7.37.2",
     "react-native-pager-view": "^6.2.3",
     "react-native-quick-base64": "^2.0.8",

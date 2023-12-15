@@ -63,6 +63,7 @@ export interface ConfirmAlertProps {
   cancelText?: string
   confirmText?: string
   showConfirm?: boolean
+  disabledConfirm?: boolean
   reverseBtn?: boolean
   children?: React.ReactNode | React.ReactNode[]
 }
@@ -83,6 +84,7 @@ export default forwardRef<ConfirmAlertType, ConfirmAlertProps>(({
   cancelText = '',
   confirmText = '',
   showConfirm = true,
+  disabledConfirm = false,
   children,
   reverseBtn = false,
 }: ConfirmAlertProps, ref) => {
@@ -114,7 +116,7 @@ export default forwardRef<ConfirmAlertType, ConfirmAlertProps>(({
           <Text color={theme['c-button-font']}>{cancelText || t('cancel')}</Text>
         </Button>
         {showConfirm
-          ? <Button style={{ ...styles.btn, ...(reverseBtn ? styles.btnReversedDirection : styles.btnDirection), backgroundColor: theme['c-button-background'] }} onPress={onConfirm}>
+          ? <Button style={{ ...styles.btn, ...(reverseBtn ? styles.btnReversedDirection : styles.btnDirection), backgroundColor: theme['c-button-background'] }} onPress={onConfirm} disabled={disabledConfirm}>
               <Text color={theme['c-button-font']}>{confirmText || t('confirm')}</Text>
             </Button>
           : null}

@@ -64,9 +64,9 @@ public class Utils {
   private static void writeToFile(String filePath, String dataString) throws IOException {
     File file = new File(filePath);
     deletePath(file);
-    FileOutputStream fileOutputStream = new FileOutputStream(file);
-    fileOutputStream.write(dataString.getBytes());
-    fileOutputStream.close();
+    try (FileOutputStream fileOutputStream = new FileOutputStream(file)){
+      fileOutputStream.write(dataString.getBytes());
+    }
   }
 
   static class WriteStringToFile implements Callable<Object> {

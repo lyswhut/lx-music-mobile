@@ -16,7 +16,7 @@ export interface InputItemProps extends InputProps {
 export default memo(({ value, label, onChanged, ...props }: InputItemProps) => {
   const theme = useTheme()
   return (
-    <View style={styles.container} onStartShouldSetResponder={() => true}>
+    <View style={styles.container}>
       <Text style={styles.label} size={14}>{label}</Text>
       <Input
         value={value}

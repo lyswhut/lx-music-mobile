@@ -5,7 +5,7 @@ import Text from '@/components/common/Text'
 import { useTheme } from '@/store/theme/hook'
 import { createStyle } from '@/utils/tools'
 
-type ButtonProps = BtnProps
+export type ButtonProps = BtnProps
 
 export default memo(({ disabled, onPress, children }: ButtonProps) => {
   const theme = useTheme()

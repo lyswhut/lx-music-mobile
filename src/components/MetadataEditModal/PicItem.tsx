@@ -31,7 +31,7 @@ export default memo(({ value, label, onChanged }: PicItemProps) => {
     })
   }, [onChanged])
   return (
-    <View style={styles.container} onStartShouldSetResponder={() => true}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.label} size={14}>{label}</Text>
         <View style={styles.btns}>

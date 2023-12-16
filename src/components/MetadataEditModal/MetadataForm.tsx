@@ -5,8 +5,8 @@ import InputItem from './InputItem'
 import { useI18n } from '@/lang'
 import TextAreaItem from './TextAreaItem'
 import PicItem from './PicItem'
-import Text from '@/components/common/Text'
 import { useTheme } from '@/store/theme/hook'
+import ParseName from './ParseName'
 
 export interface Metadata {
   name: string // 歌曲名
@@ -79,10 +79,13 @@ export default forwardRef<MetadataFormType, {}>((props, ref) => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text size={14}>{global.i18n.t('metadata_edit_modal_file_path')}</Text>
-        <Text size={14} selectable color={theme['c-primary-font']} style={styles.pathText}>{path}</Text>
-      </View>
+      <TextAreaItem
+        value={path}
+        label={global.i18n.t('metadata_edit_modal_file_path')}
+        numberOfLines={3}
+        scrollEnabled
+        style={{ ...styles.pathText, color: theme['c-primary-font'] }}
+      />
 
       <InputItem
         value={data.name}
@@ -94,11 +97,17 @@ export default forwardRef<MetadataFormType, {}>((props, ref) => {
         label={t('metadata_edit_modal_form_singer')}
         onChanged={handleUpdateSinger}
         keyboardType="name-phone-pad" />
+      <ParseName
+        path={path}
+        onNameChanged={handleUpdateName}
+        onSingerChanged={handleUpdateSinger}
+      />
       <InputItem
         value={data.albumName}
         label={t('metadata_edit_modal_form_album_name')}
         onChanged={handleUpdateAlbumName}
         keyboardType="name-phone-pad" />
+
       <PicItem
         value={data.pic}
         label={t('metadata_edit_modal_form_pic')}
@@ -107,6 +116,7 @@ export default forwardRef<MetadataFormType, {}>((props, ref) => {
         value={data.lyric}
         label={t('metadata_edit_modal_form_lyric')}
         onChanged={handleUpdateLyric}
+        numberOfLines={6}
         keyboardType="default" />
     </View>
   )
@@ -121,7 +131,7 @@ const styles = createStyle({
     maxWidth: '100%',
   },
   pathText: {
-    marginBottom: 10,
+    height: 60,
   },
 })
 

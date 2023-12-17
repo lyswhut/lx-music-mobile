@@ -74,10 +74,12 @@ const LrcLine = memo(({ line, lineNum, activeLine, onLayout }: LineProps) => {
     return active ? [
       theme['c-primary'],
       theme['c-primary-alpha-200'],
-    ] : [
+      1,
+    ] as const : [
       theme['c-350'],
       theme['c-300'],
-    ]
+      0.6,
+    ] as const
   }, [activeLine, lineNum, theme])
 
   const handleLayout = ({ nativeEvent }: LayoutChangeEvent) => {
@@ -93,14 +95,14 @@ const LrcLine = memo(({ line, lineNum, activeLine, onLayout }: LineProps) => {
         ...styles.lineText,
         textAlign,
         lineHeight,
-      }} textBreakStrategy="simple" color={colors[0]} size={size}>{line.text}</AnimatedColorText>
+      }} textBreakStrategy="simple" color={colors[0]} opacity={colors[2]} size={size}>{line.text}</AnimatedColorText>
       {
         line.extendedLyrics.map((lrc, index) => {
           return (<AnimatedColorText style={{
             ...styles.lineTranslationText,
             textAlign,
             lineHeight: lineHeight * 0.8,
-          }} textBreakStrategy="simple" key={index} color={colors[1]} size={size * 0.8}>{lrc}</AnimatedColorText>)
+          }} textBreakStrategy="simple" key={index} color={colors[1]} opacity={colors[2]} size={size * 0.8}>{lrc}</AnimatedColorText>)
         })
       }
     </View>

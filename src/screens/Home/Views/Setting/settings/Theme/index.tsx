@@ -12,8 +12,8 @@ export default memo(() => {
     <>
       <Theme />
       <IsAutoTheme />
-      <IsDynamicBg />
       <IsHideBgDark />
+      <IsDynamicBg />
     </>
   )
 })

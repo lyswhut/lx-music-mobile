@@ -4,15 +4,15 @@ import { Animated } from 'react-native'
 
 const ANIMATION_DURATION = 800
 
-export const useAnimateColor = (color: string) => {
-  const anim = useMemo(() => new Animated.Value(0), [color])
+export const useAnimateNumber = (val: number) => {
+  const anim = useMemo(() => new Animated.Value(0), [val])
   const [finished, setFinished] = useState(true)
-  const currentColor = useRef(color)
-  const nextColor = useMemo(() => color, [color])
+  const currentNumber = useRef(val)
+  const nextNumber = useMemo(() => val, [val])
 
-  const animColor = anim.interpolate({
+  const animNumber = anim.interpolate({
     inputRange: [0, 1],
-    outputRange: [currentColor.current, nextColor],
+    outputRange: [currentNumber.current, nextNumber],
   })
 
   useEffect(() => {
@@ -23,13 +23,13 @@ export const useAnimateColor = (color: string) => {
       useNativeDriver: false,
     }).start((finished) => {
       if (!finished) return
-      // currentColor.current = nextColor
+      // currentNumber.current = nextNumber
       setFinished(true)
     })
     requestAnimationFrame(() => {
-      currentColor.current = nextColor
+      currentNumber.current = nextNumber
     })
-  }, [nextColor])
+  }, [nextNumber])
 
-  return [animColor, finished] as const
+  return [animNumber, finished] as const
 }

@@ -3,6 +3,7 @@ import { Text, type TextProps as _TextProps, StyleSheet, Animated, type ColorVal
 import { useTheme } from '@/store/theme/hook'
 import { setSpText } from '@/utils/pixelRatio'
 import { useAnimateColor } from '@/utils/hooks/useAnimateColor'
+import { useAnimateNumber } from '@/utils/hooks/useAnimateNumber'
 // import { AppColors } from '@/theme'
 
 export interface TextProps extends _TextProps {
@@ -38,15 +39,20 @@ export interface AnimatedColorTextProps extends _AnimatedTextProps {
    * 字体颜色
    */
   color?: string
+  /**
+   * 字体透明度
+   */
+  opacity?: number
 }
-export const AnimatedColorText = ({ style, size = 15, color: _color, children, ...props }: AnimatedColorTextProps) => {
+export const AnimatedColorText = ({ style, size = 15, opacity: _opacity, color: _color, children, ...props }: AnimatedColorTextProps) => {
   const theme = useTheme()
 
   const [color] = useAnimateColor(_color ?? theme['c-font'])
+  const [opacity] = useAnimateNumber(_opacity ?? 1)
 
   return (
     <Animated.Text
-      style={StyleSheet.compose({ fontSize: setSpText(size), color: color as unknown as ColorValue }, style as TextStyle)}
+      style={StyleSheet.compose({ fontSize: setSpText(size), color: color as unknown as ColorValue, opacity }, style as TextStyle)}
       {...props}
     >{children}</Animated.Text>
   )

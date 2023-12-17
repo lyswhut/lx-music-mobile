@@ -51,6 +51,6 @@ export const styles = createStyle({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: BorderWidths.normal2,
+    borderWidth: BorderWidths.normal1,
   },
 })

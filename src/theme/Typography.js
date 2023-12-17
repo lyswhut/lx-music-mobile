@@ -40,6 +40,7 @@ export const FontSizes = {
 
 export const BorderWidths = {
   normal: 0.4,
+  normal1: 0.6,
   normal2: 1,
   normal3: 1.4,
   normal4: 2,

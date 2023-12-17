@@ -5,14 +5,14 @@ import settingState from '@/store/setting/state'
 import themeState from '@/store/theme/state'
 import { isUrl } from '@/utils'
 import { externalDirectoryPath } from '@/utils/fs'
-import { type ImageSourceType } from '@/components/common/ImageBackground'
+import { type ImageSourcePropType } from 'react-native'
 
 export const BG_IMAGES = {
-  'china_ink.jpg': require('./images/china_ink.jpg') as ImageSourceType,
-  'jqbg.jpg': require('./images/jqbg.jpg') as ImageSourceType,
-  'landingMoon.png': require('./images/landingMoon2.png') as ImageSourceType,
-  'myzcbg.jpg': require('./images/myzcbg.jpg') as ImageSourceType,
-  'xnkl.png': require('./images/xnkl.png') as ImageSourceType,
+  'china_ink.jpg': require('./images/china_ink.jpg') as ImageSourcePropType,
+  'jqbg.jpg': require('./images/jqbg.jpg') as ImageSourcePropType,
+  'landingMoon.png': require('./images/landingMoon2.png') as ImageSourcePropType,
+  'myzcbg.jpg': require('./images/myzcbg.jpg') as ImageSourcePropType,
+  'xnkl.png': require('./images/xnkl.png') as ImageSourcePropType,
 } as const
 
 
@@ -46,7 +46,7 @@ type ColorsKey = keyof LX.Theme['config']['themeColors']
 type ExtInfoKey = keyof LX.Theme['config']['extInfo']
 const varColorRxp = /^var\((.+)\)$/
 export const buildActiveThemeColors = (theme: LX.Theme): LX.ActiveTheme => {
-  let bgImg: ImageSourceType | undefined
+  let bgImg: ImageSourcePropType | undefined
   if (theme.isCustom) {
     if (theme.config.extInfo['bg-image']) {
       theme.config.extInfo['bg-image'] =
@@ -57,7 +57,7 @@ export const buildActiveThemeColors = (theme: LX.Theme): LX.ActiveTheme => {
   } else {
     const extInfo = (theme as LocalTheme).config.extInfo
     if (extInfo['bg-image']) {
-      if (theme.id != 'black' || !settingState.setting['theme.hideBgDark']) bgImg = BG_IMAGES[extInfo['bg-image']]
+      if (!theme.isDark || !settingState.setting['theme.hideBgDark']) bgImg = BG_IMAGES[extInfo['bg-image']]
     }
   }
 

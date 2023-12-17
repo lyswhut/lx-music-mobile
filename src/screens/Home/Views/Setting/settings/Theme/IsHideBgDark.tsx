@@ -16,7 +16,7 @@ export default memo(() => {
   const setIsAutoTheme = (isHideBgDark: boolean) => {
     updateSetting({ 'theme.hideBgDark': isHideBgDark })
     void getTheme().then(theme => {
-      if (theme.id != 'black' && !settingState.setting['common.isAutoTheme']) return
+      if (!theme.isDark && !settingState.setting['common.isAutoTheme']) return
       applyTheme(theme)
     })
   }

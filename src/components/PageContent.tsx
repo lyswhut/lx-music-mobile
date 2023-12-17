@@ -44,18 +44,20 @@ export default ({ children }: Props) => {
     let isUnmounted = false
     let isDynamicBg = settingState.setting['theme.dynamicBg']
     const handlePicUpdate = () => {
-      if (playerState.musicInfo.pic && playerState.musicInfo.pic != playerState.loadErrorPicUrl) {
-        console.log('picUpdated', playerState.musicInfo.pic)
-        pic = playerState.musicInfo.pic
-        if (!isDynamicBg) return
-        void Image.prefetch(formatUri(playerState.musicInfo.pic)).then(() => {
-          if (pic != playerState.musicInfo.pic || isUnmounted) return
-          setPic(playerState.musicInfo.pic)
-        }).catch(() => {
-          if (isUnmounted) return
-          setPic(null)
-        })
-      } else if (playerState.loadErrorPicUrl == pic) {
+      if (playerState.musicInfo.pic) {
+        if (playerState.musicInfo.pic != playerState.loadErrorPicUrl) {
+          console.log('picUpdated', playerState.musicInfo.pic)
+          pic = playerState.musicInfo.pic
+          if (!isDynamicBg) return
+          void Image.prefetch(formatUri(playerState.musicInfo.pic)).then(() => {
+            if (pic != playerState.musicInfo.pic || isUnmounted) return
+            setPic(playerState.musicInfo.pic)
+          }).catch(() => {
+            if (isUnmounted) return
+            setPic(null)
+          })
+        }
+      } else {
         if (!isDynamicBg) return
         setPic(null)
       }

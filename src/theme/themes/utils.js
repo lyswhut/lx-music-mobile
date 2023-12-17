@@ -22,7 +22,7 @@ exports.createThemeColors = (rgbaColor, fontRgbaColor, isDark) => {
       colors[`c-primary-light-${i * 100}-alpha-${j * 100}`] = RGB_Alpha_Shade(0.1 * j, preColor)
     }
   }
-  preColor = RGB_Linear_Shade(isDark ? -0.2 : 1, preColor)
+  preColor = RGB_Linear_Shade(isDark ? -0.35 : 1, preColor)
   colors[`c-primary-light-${1000}`] = preColor
   for (let j = 1; j < 10; j += 1) {
     colors[`c-primary-light-${1000}-alpha-${j * 100}`] = RGB_Alpha_Shade(0.1 * j, preColor)

@@ -79,3 +79,12 @@ export function scaleSizeW(size: number) {
   size = Math.floor(scaleWidth / pixelRatio)
   return size * global.lx.fontSize
 }
+
+
+export const scaleSizeWR = (size: number) => {
+  return size * 2 - scaleSizeW(size)
+}
+
+export const scaleSizeHR = (size: number) => {
+  return size * 2 - scaleSizeH(size)
+}

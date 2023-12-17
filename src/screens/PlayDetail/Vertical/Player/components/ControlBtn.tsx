@@ -5,8 +5,9 @@ import { useTheme } from '@/store/theme/hook'
 import { playNext, playPrev, togglePlay } from '@/core/player/player'
 import { useIsPlay } from '@/store/player/hook'
 import { createStyle } from '@/utils/tools'
-import { useLayout } from '@/utils/hooks'
+import { useLayout, useWindowSize } from '@/utils/hooks'
 import { BTN_WIDTH } from './MoreBtn/Btn'
+import { useMemo } from 'react'
 
 const PrevBtn = ({ size }: { size: number }) => {
   const theme = useTheme()
@@ -41,14 +42,23 @@ const TogglePlayBtn = ({ size }: { size: number }) => {
   )
 }
 
+const MAX_SIZE = BTN_WIDTH * 1.6
 const MIN_SIZE = BTN_WIDTH * 1.2
 
 export default () => {
-  const { onLayout, height, width } = useLayout()
-  const size = Math.max(Math.min(height * 0.5, width * 0.4 * 0.33) * global.lx.fontSize, MIN_SIZE)
+  const winSize = useWindowSize()
+  const { onLayout, width } = useLayout()
+  const maxHeight = Math.max(winSize.height * 0.11, MIN_SIZE)
+  const containerStyle = useMemo(() => {
+    return {
+      ...styles.conatiner,
+      maxHeight,
+    }
+  }, [maxHeight])
+  const size = Math.min(Math.max(width * 0.33 * global.lx.fontSize * 0.4, MIN_SIZE), MAX_SIZE, maxHeight)
 
   return (
-    <View style={styles.conatiner} onLayout={onLayout}>
+    <View style={containerStyle} onLayout={onLayout}>
       <PrevBtn size={size} />
       <TogglePlayBtn size={size}/>
       <NextBtn size={size} />
@@ -65,7 +75,7 @@ const styles = createStyle({
     flexGrow: 1,
     flexShrink: 1,
     paddingHorizontal: '4%',
-    paddingVertical: 12,
+    paddingVertical: 22,
     // backgroundColor: 'rgba(0, 0, 0, .1)',
   },
   cotrolBtn: {

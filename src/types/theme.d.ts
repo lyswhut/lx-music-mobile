@@ -1,5 +1,4 @@
-import type { ImageSourceType } from '@/components/common/ImageBackground'
-
+import type { ImageSourcePropType } from 'react-native'
 
 declare global {
   namespace LX {
@@ -280,7 +279,7 @@ declare global {
       'c-list-header-border-bottom': string
       'c-content-background': string
       'c-border-background': string
-      'bg-image'?: ImageSourceType
+      'bg-image'?: ImageSourcePropType
     }
 
     interface Theme {

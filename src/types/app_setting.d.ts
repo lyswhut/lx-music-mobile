@@ -77,6 +77,11 @@ declare global {
       'theme.hideBgDark': boolean
 
       /**
+       * 动态背景
+       */
+      'theme.dynamicBg': boolean
+
+      /**
            * 启动时自动播放歌曲
            */
       'player.startupAutoPlay': boolean

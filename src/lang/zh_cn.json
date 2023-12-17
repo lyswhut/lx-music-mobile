@@ -247,6 +247,7 @@
   "setting_basic_startup_auto_play": "启动后自动播放音乐",
   "setting_basic_theme": "主题颜色",
   "setting_basic_theme_auto_theme": "跟随系统亮、暗模式切换主题",
+  "setting_basic_theme_dynamic_bg": "使用动态背景",
   "setting_basic_theme_hide_bg_dark": "隐藏黑色主题背景",
   "setting_basic_theme_more_btn_show": "更多主题",
   "setting_dislike_list_input_tip": "歌曲名@歌手名\n歌曲名\n@歌手名",

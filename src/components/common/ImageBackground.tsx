@@ -13,9 +13,9 @@ import { forwardRef } from 'react'
 import {
   View,
   StyleSheet,
+  Image,
 } from 'react-native'
-import type { ViewProps } from 'react-native'
-import Image, { type ImageProps } from './Image'
+import type { ImageBackgroundProps as _ImageBackgroundProps } from 'react-native'
 
 
 /**
@@ -45,32 +45,32 @@ import Image, { type ImageProps } from './Image'
 
 export type ImageBackgroundType = View
 
-export type ImageSourceType = string | number
-
-export interface ImageBackgroundProps extends Omit<ImageProps, 'style'> {
-  style: ViewProps['style']
-  imageStyle?: ImageProps['style']
+export interface ImageBackgroundProps extends Omit<_ImageBackgroundProps, 'source'> {
+  source?: _ImageBackgroundProps['source'] | null
 }
 
-export default forwardRef<ImageBackgroundType, ImageBackgroundProps>(({
+export default forwardRef<View, ImageBackgroundProps>(({
   children,
   style,
   imageStyle,
-  url,
+  imageRef,
+  importantForAccessibility,
+  source,
   ...props
 }, ref) => {
   const flattenedStyle = StyleSheet.flatten(style)
   return (
     <View
       accessibilityIgnoresInvertColors={true}
-      importantForAccessibility={'no'}
+      importantForAccessibility={importantForAccessibility}
       ref={ref}
       style={style}>
       {
-        url == null ? null : (
+        source == null ? null : (
           <Image
             {...props}
-            url={url}
+            source={source}
+            importantForAccessibility={importantForAccessibility}
             style={[
               StyleSheet.absoluteFill,
               {
@@ -86,6 +86,7 @@ export default forwardRef<ImageBackgroundType, ImageBackgroundProps>(({
               },
               imageStyle,
             ]}
+            ref={imageRef}
           />
         )
       }

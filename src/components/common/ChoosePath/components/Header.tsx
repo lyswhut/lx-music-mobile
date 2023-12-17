@@ -1,4 +1,4 @@
-import { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import Input, { type InputType } from '@/components/common/Input'
 import Text from '@/components/common/Text'
@@ -9,6 +9,8 @@ import { createStyle, toast } from '@/utils/tools'
 import { mkdir, readDir } from '@/utils/fs'
 import { useTheme } from '@/store/theme/hook'
 import { scaleSizeH } from '@/utils/pixelRatio'
+import { getExternalStoragePath } from '@/utils/nativeModules/utils'
+import { useUnmounted } from '@/utils/hooks'
 const filterFileName = /[\\/:*?#"<>|]/
 
 
@@ -45,8 +47,6 @@ const NameInput = forwardRef<NameInputType, {}>((props, ref) => {
   )
 })
 
-const storagePath = '/storage'
-
 export default memo(({
   title,
   path,
@@ -59,26 +59,34 @@ export default memo(({
   const theme = useTheme()
   const confirmAlertRef = useRef<ConfirmAlertType>(null)
   const nameInputRef = useRef<NameInputType>(null)
+  const storagePathRef = useRef('')
   const [isShowStorage, setIsShowStorage] = useState(false)
+  const isUnmounted = useUnmounted()
 
+  const checkExternalStoragePath = useCallback(() => {
+    void getExternalStoragePath().then((storagePath) => {
+      if (storagePath) {
+        void readDir(storagePath).then(() => {
+          if (isUnmounted.current) return
+          storagePathRef.current = storagePath
+          setIsShowStorage(true)
+        }).catch(() => {
+          setIsShowStorage(false)
+        })
+      } else setIsShowStorage(false)
+    })
+  }, [])
   useEffect(() => {
-    let isUnmounted = false
-    void readDir(storagePath).then(() => {
-      if (isUnmounted) return
-      setIsShowStorage(true)
-    }).catch(_ => _)
-
-    return () => {
-      isUnmounted = true
-    }
+    checkExternalStoragePath()
   }, [])
 
   const refresh = () => {
     void onRefreshDir(path)
+    checkExternalStoragePath()
   }
 
   const toggleStorageDir = () => {
-    void onRefreshDir(storagePath)
+    void onRefreshDir(storagePathRef.current)
   }
 
   const handleShow = () => {

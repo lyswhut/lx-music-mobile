@@ -395,5 +395,10 @@ public class UtilsModule extends ReactContextBaseJavaModule {
   public void requestIgnoreBatteryOptimization(Promise promise) {
     promise.resolve(BatteryOptimizationUtil.requestIgnoreBatteryOptimization(reactContext.getApplicationContext(), reactContext.getPackageName()));
   }
+
+  @ReactMethod
+  public void getExternalStoragePath(Promise promise) {
+    promise.resolve(Utils.getExternalStoragePath(reactContext, true));
+  }
 }
 

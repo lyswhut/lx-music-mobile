@@ -9,5 +9,5 @@ export function useUnmounted() {
     }
   }, [])
 
-  return isUnmountedRef.current
+  return isUnmountedRef
 }

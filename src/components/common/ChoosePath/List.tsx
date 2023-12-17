@@ -126,6 +126,7 @@ export default forwardRef<ListType, ListProps>(({
       // console.log('prevPath', prevPath)
       // if (isReadingDir.current) return
       // setPath(prevPath)
+      throw err
     }).finally(() => {
       isReadingDir.current = false
     })
@@ -134,7 +135,7 @@ export default forwardRef<ListType, ListProps>(({
   const onSetPath = (pathInfo: PathItem) => {
     // console.log('onSetPath')
     if (pathInfo.isDir) {
-      void readDir(pathInfo.path, readOptions.current.dirOnly, readOptions.current.filter)
+      void readDir(pathInfo.path, readOptions.current.dirOnly, readOptions.current.filter).catch(_ => _)
     } else {
       onConfirm(pathInfo.path)
       // setPath(pathInfo.path)
@@ -143,7 +144,9 @@ export default forwardRef<ListType, ListProps>(({
 
   const toParentDir = () => {
     const parentPath = path.substring(0, path.lastIndexOf('/'))
-    void readDir(parentPath.length ? parentPath : externalStorageDirectoryPath, readOptions.current.dirOnly, readOptions.current.filter)
+    void readDir(parentPath.length ? parentPath : externalStorageDirectoryPath, readOptions.current.dirOnly, readOptions.current.filter).catch(() => {
+      void readDir(externalStorageDirectoryPath, readOptions.current.dirOnly, readOptions.current.filter).catch(_ => _)
+    })
   }
 
   const handleHide = () => {

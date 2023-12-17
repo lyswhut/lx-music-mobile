@@ -44,7 +44,7 @@ export default forwardRef<MetadataEditType, MetadataEditProps>((props, ref) => {
       readLyric(filePath),
     ]).then(([_metadata, pic, lyric]) => {
       if (!_metadata) return
-      if (isUnmounted) return
+      if (isUnmounted.current) return
       metadata.current = {
         name: _metadata.name,
         singer: _metadata.singer,

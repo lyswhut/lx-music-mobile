@@ -1,6 +1,11 @@
 package cn.toside.music.mobile.utils;
 
 
+import android.content.Context;
+import android.os.storage.StorageManager;
+
+import com.facebook.react.bridge.ReactApplicationContext;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,6 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
 public class Utils {
@@ -24,6 +31,31 @@ public class Utils {
 
     // The directory is now empty so delete it
     return dir.delete();
+  }
+
+  // https://gist.github.com/PauloLuan/4bcecc086095bce28e22?permalink_comment_id=2591001#gistcomment-2591001
+  public static String getExternalStoragePath(ReactApplicationContext mContext, boolean is_removable) {
+    StorageManager mStorageManager = (StorageManager) mContext.getSystemService(Context.STORAGE_SERVICE);
+    Class<?> storageVolumeClazz;
+    try {
+      storageVolumeClazz = Class.forName("android.os.storage.StorageVolume");
+      Method getVolumeList = mStorageManager.getClass().getMethod("getVolumeList");
+      Method getPath = storageVolumeClazz.getMethod("getPath");
+      Method isRemovable = storageVolumeClazz.getMethod("isRemovable");
+      Object result = getVolumeList.invoke(mStorageManager);
+      final int length = Array.getLength(result);
+      for (int i = 0; i < length; i++) {
+        Object storageVolumeElement = Array.get(result, i);
+        String path = (String) getPath.invoke(storageVolumeElement);
+        boolean removable = (Boolean) isRemovable.invoke(storageVolumeElement);
+        if (is_removable == removable) {
+          return path;
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   public static String convertStreamToString(InputStream is) throws Exception {

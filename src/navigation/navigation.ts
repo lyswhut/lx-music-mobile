@@ -13,6 +13,7 @@ import themeState from '@/store/theme/state'
 import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 import { getStatusBarStyle } from './utils'
 import { windowSizeTools } from '@/utils/windowSizeTools'
+import { type ListInfoItem } from '@/store/songlist/state'
 
 // const store = getStore()
 // const getTheme = () => getter('common', 'theme')(store.getState())
@@ -211,7 +212,7 @@ export function pushPlayDetailScreen(componentId: string) {
     })
   })
 }
-export function pushSonglistDetailScreen(componentId: string, id: string) {
+export function pushSonglistDetailScreen(componentId: string, info: ListInfoItem) {
   const theme = themeState.theme
 
   requestAnimationFrame(() => {
@@ -219,6 +220,9 @@ export function pushSonglistDetailScreen(componentId: string, id: string) {
       void Navigation.push(componentId, {
         component: {
           name: SONGLIST_DETAIL_SCREEN,
+          passProps: {
+            info,
+          },
           options: {
             topBar: {
               visible: false,
@@ -242,8 +246,8 @@ export function pushSonglistDetailScreen(componentId: string, id: string) {
               push: {
                 sharedElementTransitions: [
                   {
-                    fromId: `${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_from_${id}`,
-                    toId: `${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_to_${id}`,
+                    fromId: `${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_from_${info.id}`,
+                    toId: `${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_to_${info.id}`,
                     interpolation: { type: 'spring' },
                   },
                 ],
@@ -281,8 +285,8 @@ export function pushSonglistDetailScreen(componentId: string, id: string) {
               pop: {
                 sharedElementTransitions: [
                   {
-                    fromId: `${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_to_${id}`,
-                    toId: `${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_from_${id}`,
+                    fromId: `${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_to_${info.id}`,
+                    toId: `${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_from_${info.id}`,
                     interpolation: { type: 'spring' },
                   },
                 ],

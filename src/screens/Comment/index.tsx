@@ -69,12 +69,20 @@ const NewCommentPage = memo(({ activeId, musicInfo, onUpdateTotal }: {
   }
 })
 
+const TABS = [
+  'hot',
+  'new',
+] as const
+const getMusicInfo = (musicInfo: LX.Player.PlayMusic | null) => {
+  if (!musicInfo) return null
+  return 'progress' in musicInfo ? musicInfo.metadata.musicInfo : musicInfo
+}
 export default memo(({ componentId }: {
   componentId: string
 }) => {
   const pagerViewRef = useRef<PagerView>(null)
   const [activeId, setActiveId] = useState<ActiveId>('hot')
-  const [musicInfo, setMusicInfo] = useState<LX.Music.MusicInfo | null>(null)
+  const [musicInfo, setMusicInfo] = useState<LX.Music.MusicInfo | null>(getMusicInfo(playerState.playMusicInfo.musicInfo))
   const t = useI18n()
   const theme = useTheme()
   const [total, setTotal] = useState({ hot: 0, new: 0 })
@@ -86,21 +94,21 @@ export default memo(({ componentId }: {
 
   const tabs = useMemo(() => {
     return [
-      { id: 'hot', label: t('comment_tab_hot', { total: total.hot ? `(${total.hot})` : '' }) },
-      { id: 'new', label: t('comment_tab_new', { total: total.new ? `(${total.new})` : '' }) },
+      { id: TABS[0], label: t('comment_tab_hot', { total: total.hot ? `(${total.hot})` : '' }) },
+      { id: TABS[1], label: t('comment_tab_new', { total: total.new ? `(${total.new})` : '' }) },
     ] as const
   }, [total, t])
 
-  const toggleTab = (id: ActiveId) => {
+  const toggleTab = useCallback((id: ActiveId) => {
     setActiveId(id)
-    pagerViewRef.current?.setPage(tabs.findIndex(tab => tab.id == id))
-  }
+    pagerViewRef.current?.setPage(TABS.findIndex(tab => tab == id))
+  }, [])
 
-  const onPageSelected = ({ nativeEvent }: PagerViewOnPageSelectedEvent) => {
-    setActiveId(tabs[nativeEvent.position].id)
-  }
+  const onPageSelected = useCallback(({ nativeEvent }: PagerViewOnPageSelectedEvent) => {
+    setActiveId(TABS[nativeEvent.position])
+  }, [])
 
-  const refreshComment = () => {
+  const refreshComment = useCallback(() => {
     if (!playerState.playMusicInfo.musicInfo) return
     let playerMusicInfo = playerState.playMusicInfo.musicInfo
     if ('progress' in playerMusicInfo) playerMusicInfo = playerMusicInfo.metadata.musicInfo
@@ -110,7 +118,7 @@ export default memo(({ componentId }: {
       return
     }
     setMusicInfo(playerMusicInfo)
-  }
+  }, [musicInfo, t])
 
   const setHotTotal = useCallback((total: number) => {
     setTotal(totalInfo => ({ ...totalInfo, hot: total }))
@@ -119,14 +127,35 @@ export default memo(({ componentId }: {
     setTotal(totalInfo => ({ ...totalInfo, new: total }))
   }, [])
 
-  useEffect(() => {
-    setTimeout(() => {
-      if (!playerState.playMusicInfo.musicInfo) return
-      let playerMusicInfo = playerState.playMusicInfo.musicInfo
-      if ('progress' in playerMusicInfo) playerMusicInfo = playerMusicInfo.metadata.musicInfo
-      setMusicInfo(playerMusicInfo)
-    }, 300)
-  }, [])
+  const commentComponent = useMemo(() => {
+    return (
+      <View style={styles.container}>
+        <View style={{ ...styles.tabHeader, borderBottomColor: theme['c-border-background'], height: BAR_HEIGHT }}>
+          <View style={styles.left}>
+            {tabs.map(({ id, label }) => <HeaderItem id={id} label={label} key={id} isActive={activeId == id} onPress={toggleTab} />)}
+          </View>
+          <View>
+            <TouchableOpacity onPress={refreshComment} style={{ ...styles.btn, width: BAR_HEIGHT }}>
+              <Icon name="available_updates" size={20} color={theme['c-600']} />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <PagerView
+          ref={pagerViewRef}
+          onPageSelected={onPageSelected}
+          // onPageScrollStateChanged={onPageScrollStateChanged}
+          style={styles.pagerView}
+        >
+          <View collapsable={false} style={styles.pageStyle}>
+            <HotCommentPage activeId={activeId} musicInfo={musicInfo as LX.Music.MusicInfoOnline} onUpdateTotal={setHotTotal} />
+          </View>
+          <View collapsable={false} style={styles.pageStyle}>
+            <NewCommentPage activeId={activeId} musicInfo={musicInfo as LX.Music.MusicInfoOnline} onUpdateTotal={setNewTotal} />
+          </View>
+        </PagerView>
+      </View>
+    )
+  }, [activeId, musicInfo, onPageSelected, refreshComment, setHotTotal, setNewTotal, tabs, theme, toggleTab])
 
   return (
     <PageContent>
@@ -142,33 +171,7 @@ export default memo(({ componentId }: {
                   <Text>{t('comment_not support')}</Text>
                 </View>
                   )
-                : (
-                <View style={styles.container}>
-                  <View style={{ ...styles.tabHeader, borderBottomColor: theme['c-border-background'], height: BAR_HEIGHT }}>
-                    <View style={styles.left}>
-                      {tabs.map(({ id, label }) => <HeaderItem id={id} label={label} key={id} isActive={activeId == id} onPress={toggleTab} />)}
-                    </View>
-                    <View>
-                      <TouchableOpacity onPress={refreshComment} style={{ ...styles.btn, width: BAR_HEIGHT }}>
-                        <Icon name="available_updates" size={20} color={theme['c-600']} />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                  <PagerView
-                    ref={pagerViewRef}
-                    onPageSelected={onPageSelected}
-                    // onPageScrollStateChanged={onPageScrollStateChanged}
-                    style={styles.pagerView}
-                  >
-                    <View collapsable={false} style={styles.pageStyle}>
-                      <HotCommentPage activeId={activeId} musicInfo={musicInfo} onUpdateTotal={setHotTotal} />
-                    </View>
-                    <View collapsable={false} style={styles.pageStyle}>
-                      <NewCommentPage activeId={activeId} musicInfo={musicInfo} onUpdateTotal={setNewTotal} />
-                    </View>
-                  </PagerView>
-                </View>
-                  )
+                : commentComponent
             }
         </>
       }

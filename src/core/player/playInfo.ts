@@ -10,6 +10,10 @@ export const setMusicInfo = (musicInfo: Partial<LX.Player.MusicInfo>) => {
   playerActions.setMusicInfo(musicInfo)
 }
 
+export const setLoadErrorPicUrl = (url: string) => {
+  playerActions.setLoadErrorPicUrl(url)
+}
+
 export const setPlayListId = (listId: string | null) => {
   playerActions.setPlayListId(listId)
 }

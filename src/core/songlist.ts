@@ -19,7 +19,6 @@ const LIST_LOAD_LIMIT = 30
  */
 export const setSelectListInfo = (info: ListInfoItem) => {
   songlistActions.clearListDetail()
-  songlistActions.setSelectListInfo(info)
 }
 
 /**

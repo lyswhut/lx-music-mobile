@@ -104,4 +104,7 @@ export default {
 
     global.state_event.playTempPlayListChanged({ ...state.tempPlayList })
   },
+  setLoadErrorPicUrl(url: string) {
+    state.loadErrorPicUrl = url
+  },
 }

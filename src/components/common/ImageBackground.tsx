@@ -56,7 +56,6 @@ export default forwardRef<ImageBackgroundType, ImageBackgroundProps>(({
   children,
   style,
   imageStyle,
-  importantForAccessibility,
   url,
   ...props
 }, ref) => {
@@ -64,7 +63,7 @@ export default forwardRef<ImageBackgroundType, ImageBackgroundProps>(({
   return (
     <View
       accessibilityIgnoresInvertColors={true}
-      importantForAccessibility={importantForAccessibility}
+      importantForAccessibility={'no'}
       ref={ref}
       style={style}>
       {
@@ -72,7 +71,6 @@ export default forwardRef<ImageBackgroundType, ImageBackgroundProps>(({
           <Image
             {...props}
             url={url}
-            importantForAccessibility={importantForAccessibility}
             style={[
               StyleSheet.absoluteFill,
               {

@@ -1,42 +1,22 @@
-import { memo } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import { navigations } from '@/navigation'
 import { usePlayerMusicInfo } from '@/store/player/hook'
-import { useTheme } from '@/store/theme/hook'
 import { scaleSizeH } from '@/utils/pixelRatio'
-import { createStyle } from '@/utils/tools'
-import { BorderRadius } from '@/theme'
 import commonState from '@/store/common/state'
 import playerState from '@/store/player/state'
-import Text from '@/components/common/Text'
 import { LIST_IDS, NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 import Image from '@/components/common/Image'
+import { useCallback } from 'react'
+import { setLoadErrorPicUrl, setMusicInfo } from '@/core/player/playInfo'
 
 const PIC_HEIGHT = scaleSizeH(46)
 
-const styles = createStyle({
-  // content: {
-  // marginBottom: 3,
-  // },/
-  emptyPic: {
-    borderRadius: BorderRadius.normal,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+const styles = StyleSheet.create({
+  image: {
+    width: PIC_HEIGHT,
+    height: PIC_HEIGHT,
+    borderRadius: 2,
   },
-  text: {
-    paddingLeft: 2,
-  },
-})
-
-const EmptyPic = memo(() => {
-  const theme = useTheme()
-  return (
-    <View nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={{ ...styles.emptyPic, width: PIC_HEIGHT, height: PIC_HEIGHT, backgroundColor: theme['c-primary-light-900-alpha-200'] }}>
-      <Text size={20} color={theme['c-primary-light-400-alpha-200']}>L</Text>
-      <Text size={20} color={theme['c-primary-light-400-alpha-200']} style={styles.text}>X</Text>
-    </View>
-  )
 })
 
 export default ({ isHome }: { isHome: boolean }) => {
@@ -57,23 +37,16 @@ export default ({ isHome }: { isHome: boolean }) => {
     global.app_event.jumpListPosition()
   }
 
-  // console.log('render pic')
+  const handleError = useCallback((url: string | number) => {
+    setLoadErrorPicUrl(url as string)
+    setMusicInfo({
+      pic: null,
+    })
+  }, [])
 
   return (
     <TouchableOpacity onLongPress={handleLongPress} onPress={handlePress} activeOpacity={0.7} >
-      {
-        musicInfo.pic
-          ? (
-              <Image url={musicInfo.pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={{
-                // ...styles.playInfoImg,
-                // backgroundColor: theme.primary,
-                width: PIC_HEIGHT,
-                height: PIC_HEIGHT,
-                borderRadius: 2,
-              }} />
-            )
-          : <EmptyPic />
-      }
+      <Image url={musicInfo.pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={styles.image} onError={handleError} />
     </TouchableOpacity>
   )
 }

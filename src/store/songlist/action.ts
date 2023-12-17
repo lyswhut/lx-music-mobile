@@ -1,4 +1,4 @@
-import type { TagInfo, ListDetailInfo, ListInfo, ListInfoItem, Source } from './state'
+import type { TagInfo, ListDetailInfo, ListInfo, Source } from './state'
 import state from './state'
 
 export default {
@@ -57,14 +57,5 @@ export default {
     state.listDetailInfo.key = null
     state.listDetailInfo.info = {}
     state.listDetailInfo.maxPage = 1
-  },
-  setSelectListInfo(info: ListInfoItem) {
-    state.selectListInfo.author = info.author
-    state.selectListInfo.desc = info.desc
-    state.selectListInfo.id = info.id
-    state.selectListInfo.img = info.img
-    state.selectListInfo.name = info.name
-    state.selectListInfo.play_count = info.play_count
-    state.selectListInfo.source = info.source
   },
 }

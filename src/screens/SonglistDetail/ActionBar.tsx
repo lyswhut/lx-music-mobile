@@ -10,11 +10,13 @@ import Text from '@/components/common/Text'
 import { handleCollect, handlePlay } from './listAction'
 import songlistState from '@/store/songlist/state'
 import { useI18n } from '@/lang'
+import { useListInfo } from './state'
 // import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 
 export default memo(() => {
   const theme = useTheme()
   const t = useI18n()
+  const info = useListInfo()
 
   const back = () => {
     void pop(commonState.componentIds.songlistDetail!)
@@ -22,12 +24,12 @@ export default memo(() => {
 
   const handlePlayAll = () => {
     if (!songlistState.listDetailInfo.info.name) return
-    void handlePlay(songlistState.selectListInfo.id, songlistState.selectListInfo.source, songlistState.listDetailInfo.list)
+    void handlePlay(info.id, info.source, songlistState.listDetailInfo.list)
   }
 
   const handleCollection = () => {
     if (!songlistState.listDetailInfo.info.name) return
-    void handleCollect(songlistState.selectListInfo.id, songlistState.selectListInfo.source, songlistState.listDetailInfo.info.name || songlistState.selectListInfo.name)
+    void handleCollect(info.id, info.source, songlistState.listDetailInfo.info.name || info.name)
   }
 
   return (

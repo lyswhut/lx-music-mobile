@@ -5,11 +5,12 @@ import PageContent from '@/components/PageContent'
 import StatusBar from '@/components/common/StatusBar'
 import { setComponentId } from '@/core/common'
 import { COMPONENT_IDS } from '@/config/constant'
-import songlistState from '@/store/songlist/state'
+import { type ListInfoItem } from '@/store/songlist/state'
 import PlayerBar from '@/components/player/PlayerBar'
+import { ListInfoContext } from './state'
 
 
-export default ({ componentId }: { componentId: string }) => {
+export default ({ componentId, info }: { componentId: string, info: ListInfoItem }) => {
   const musicListRef = useRef<MusicListType>(null)
   const isUnmountedRef = useRef(false)
 
@@ -18,7 +19,7 @@ export default ({ componentId }: { componentId: string }) => {
 
     isUnmountedRef.current = false
 
-    musicListRef.current?.loadList(songlistState.selectListInfo.source, songlistState.selectListInfo.id)
+    musicListRef.current?.loadList(info.source, info.id)
 
 
     return () => {
@@ -31,7 +32,9 @@ export default ({ componentId }: { componentId: string }) => {
   return (
     <PageContent>
       <StatusBar />
-      <MusicList ref={musicListRef} componentId={componentId} />
+      <ListInfoContext.Provider value={info}>
+        <MusicList ref={musicListRef} componentId={componentId} />
+      </ListInfoContext.Provider>
       <PlayerBar />
     </PageContent>
   )

@@ -67,9 +67,10 @@ const PreassBar = memo(({ onDragState, setDragProgress, onSetProgress }: {
 })
 
 
-const Progress = ({ progress, duration }: {
+const Progress = ({ progress, duration, paddingTop }: {
   progress: number
   duration: number
+  paddingTop?: number
 }) => {
   // const { progress } = usePlayTimeBuffer()
   const theme = useTheme()
@@ -87,7 +88,7 @@ const Progress = ({ progress, duration }: {
   }, [])
 
   return (
-    <View style={styles.progress}>
+    <View style={{ ...styles.progress, paddingTop }}>
       <View style={{ flex: 1 }}>
         <DefaultBar />
         {/* <BufferedBar bufferedProgress={bufferedProgress} /> */}
@@ -120,7 +121,7 @@ const styles = createStyle({
   },
   progressBar: {
     height: '100%',
-    borderRadius: 3,
+    borderRadius: 2,
   },
   pressBar: {
     position: 'absolute',

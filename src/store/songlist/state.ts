@@ -79,7 +79,6 @@ export interface InitState {
   sortList: Partial<Record<Source, SortInfo[]>>
   tags: Tags
   listInfo: ListInfo
-  selectListInfo: ListInfoItem
   listDetailInfo: ListDetailInfo
 }
 
@@ -98,17 +97,6 @@ const state: InitState = {
     source: 'kw',
     tagId: '',
     sortId: '',
-  },
-  selectListInfo: {
-    play_count: '',
-    id: '',
-    author: '',
-    name: '',
-    time: '',
-    img: '',
-    // grade: basic.favorcnt / 10,
-    desc: '',
-    source: 'kw',
   },
   listDetailInfo: {
     list: [],

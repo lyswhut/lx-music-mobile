@@ -1,9 +1,6 @@
 import { memo, useState } from 'react'
 import { View } from 'react-native'
 // import { useLayout } from '@/utils/hooks'
-import { useTheme } from '@/store/theme/hook'
-import { BorderRadius } from '@/theme'
-import Text from '@/components/common/Text'
 import { usePlayerMusicInfo } from '@/store/player/hook'
 import { useWindowSize } from '@/utils/hooks'
 import { useNavigationComponentDidAppear } from '@/navigation'
@@ -15,16 +12,6 @@ import { BTN_WIDTH } from './MoreBtn/Btn'
 import { marginLeft } from './constant'
 import Image from '@/components/common/Image'
 
-const EmptyPic = memo(({ width }: { width: number }) => {
-  const theme = useTheme()
-  const size = width * 0.2
-  return (
-    <View style={{ ...styles.emptyPic, width, height: width, backgroundColor: theme['c-primary-light-900-alpha-200'] }}>
-      <Text size={size} color={theme['c-primary-light-400-alpha-200']}>L</Text>
-      <Text size={size} color={theme['c-primary-light-400-alpha-200']} style={styles.text}>X</Text>
-    </View>
-  )
-})
 
 export default memo(({ componentId }: { componentId: string }) => {
   const musicInfo = usePlayerMusicInfo()
@@ -44,18 +31,11 @@ export default memo(({ componentId }: { componentId: string }) => {
   return (
     <View style={{ ...styles.container, height: contentHeight }}>
       <View style={{ ...styles.content, elevation: animated ? 3 : 0 }}>
-        {
-          musicInfo.pic
-            ? (
-                <Image url={musicInfo.pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={{
-                  ...styles.img,
-                  width: imgWidth,
-                  height: imgWidth,
-                  borderRadius: 2,
-                }} />
-              )
-            : <EmptyPic width={imgWidth} />
-        }
+        <Image url={musicInfo.pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={{
+          width: imgWidth,
+          height: imgWidth,
+          borderRadius: 2,
+        }} />
       </View>
     </View>
   )
@@ -74,18 +54,5 @@ const styles = createStyle({
     // elevation: 3,
     backgroundColor: 'rgba(0,0,0,0)',
     borderRadius: 4,
-  },
-  img: {
-    borderRadius: 4,
-    // opacity: 0,
-  },
-  emptyPic: {
-    borderRadius: BorderRadius.normal,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    paddingLeft: 2,
   },
 })

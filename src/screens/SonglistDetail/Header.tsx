@@ -9,8 +9,8 @@ import { useTheme } from '@/store/theme/hook'
 import Text from '@/components/common/Text'
 import { createStyle } from '@/utils/tools'
 import StatusBar from '@/components/common/StatusBar'
-import songlistState from '@/store/songlist/state'
 import Image from '@/components/common/Image'
+import { useListInfo } from './state'
 
 const IMAGE_WIDTH = scaleSizeW(70)
 
@@ -20,6 +20,7 @@ const Pic = ({ componentId, playCount, imgUrl }: {
   imgUrl?: string
 }) => {
   const [animated, setAnimated] = useState(false)
+  const info = useListInfo()
 
   useNavigationComponentDidAppear(componentId, () => {
     setAnimated(true)
@@ -27,7 +28,7 @@ const Pic = ({ componentId, playCount, imgUrl }: {
 
   return (
     <View style={{ ...styles.listItemImg, width: IMAGE_WIDTH, height: IMAGE_WIDTH }}>
-      <Image nativeID={`${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_to_${songlistState.selectListInfo.id}`} url={imgUrl} style={{ flex: 1, justifyContent: 'flex-end', borderRadius: 4 }} />
+      <Image nativeID={`${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_to_${info.id}`} url={imgUrl} style={{ flex: 1, justifyContent: 'flex-end', borderRadius: 4 }} />
         {
           playCount && animated
             ? <Text style={styles.playCount} numberOfLines={ 1 }>{playCount}</Text>
@@ -53,7 +54,8 @@ export interface DetailInfo {
 
 export default forwardRef<HeaderType, HeaderProps>(({ componentId }: { componentId: string }, ref) => {
   const theme = useTheme()
-  const [detailInfo, setDetailInfo] = useState<DetailInfo>({ name: '', desc: '', playCount: '' })
+  const info = useListInfo()
+  const [detailInfo, setDetailInfo] = useState<DetailInfo>({ name: '', desc: '', playCount: '', imgUrl: info.img })
 
   useImperativeHandle(ref, () => ({
     setInfo(info) {

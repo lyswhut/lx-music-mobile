@@ -1,5 +1,5 @@
 import { memo, useState, useMemo, useCallback } from 'react'
-import { View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { BorderWidths } from '@/theme'
 import { Icon } from '@/components/common/Icon'
 import { createStyle } from '@/utils/tools'
@@ -65,7 +65,7 @@ const CommentFloor = memo(({ comment, isLast }: {
           <Image
             url={comment.avatar && !isAvatarError ? comment.avatar : defaultUser}
             onError={handleAvatarError}
-            style={{ height: avatarWidth, width: avatarWidth, borderRadius: 4 }} />
+            style={stylesRaw.avatar} />
         </View>
         <View style={styles.right}>
           <View style={styles.info}>
@@ -149,6 +149,14 @@ const styles = createStyle({
     borderTopWidth: BorderWidths.normal,
     // backgroundColor: 'rgba(0,0,0,0.1)',
     borderStyle: 'dashed',
+  },
+})
+
+const stylesRaw = StyleSheet.create({
+  avatar: {
+    height: avatarWidth,
+    width: avatarWidth,
+    borderRadius: 4,
   },
 })
 

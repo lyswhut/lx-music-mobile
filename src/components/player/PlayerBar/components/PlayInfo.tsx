@@ -9,8 +9,11 @@ import { createStyle } from '@/utils/tools'
 import Text from '@/components/common/Text'
 import { COMPONENT_IDS } from '@/config/constant'
 import { usePageVisible } from '@/store/common/hook'
+import { scaleSizeH } from '@/utils/pixelRatio'
 
 const FONT_SIZE = 13
+const PADDING_TOP_RAW = 3
+const PADDING_TOP = scaleSizeH(PADDING_TOP_RAW)
 
 const PlayTimeCurrent = ({ timeStr }: { timeStr: string }) => {
   const theme = useTheme()
@@ -42,7 +45,9 @@ export default ({ isHome }: { isHome: boolean }) => {
         <Text size={FONT_SIZE} color={theme['c-500']}> / </Text>
         <PlayTimeMax timeStr={maxPlayTimeStr} />
       </View>
-      <View style={[StyleSheet.absoluteFill, styles.progress]}><Progress progress={progress} duration={maxPlayTime} /></View>
+      <View style={[StyleSheet.absoluteFill, styles.progress]}>
+        <Progress progress={progress} duration={maxPlayTime} paddingTop={PADDING_TOP} />
+      </View>
     </View>
   )
 }
@@ -64,7 +69,7 @@ const styles = createStyle({
     // position: 'absolute',
     // width: '100%',
     // top: 0,
-    paddingVertical: 2,
+    paddingTop: PADDING_TOP_RAW,
     paddingHorizontal: 3,
     flexDirection: 'row',
     alignItems: 'center',
@@ -78,5 +83,6 @@ const styles = createStyle({
     flexGrow: 1,
     flexShrink: 1,
     paddingRight: 5,
+    // backgroundColor: '#ccc',
   },
 })

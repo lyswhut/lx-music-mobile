@@ -11,6 +11,9 @@ interface Props {
   children: React.ReactNode
 }
 
+const formatUri = <T extends string | null>(url: T) => {
+  return (typeof url == 'string' && url.startsWith('/')) ? `file://${url}` : url
+}
 
 export default ({ children }: Props) => {
   const theme = useTheme()
@@ -45,7 +48,7 @@ export default ({ children }: Props) => {
         console.log('picUpdated', playerState.musicInfo.pic)
         pic = playerState.musicInfo.pic
         if (!isDynamicBg) return
-        void Image.prefetch(playerState.musicInfo.pic).then(() => {
+        void Image.prefetch(formatUri(playerState.musicInfo.pic)).then(() => {
           if (pic != playerState.musicInfo.pic || isUnmounted) return
           setPic(playerState.musicInfo.pic)
         }).catch(() => {
@@ -90,21 +93,23 @@ export default ({ children }: Props) => {
       </View>
     </View>
   ), [children, theme, windowSize.height, windowSize.width])
-  const picComponent = useMemo(() => (
-    <View style={{ flex: 1, overflow: 'hidden' }}>
-      <ImageBackground
-        style={{ position: 'absolute', left: 0, top: 0, height: windowSize.height, width: windowSize.width, backgroundColor: theme['c-content-background'] }}
-        source={{ uri: pic! }}
-        resizeMode="cover"
-        blurRadius={30}
-      >
-        <View style={{ flex: 1, flexDirection: 'column', backgroundColor: theme['c-content-background'], opacity: 0.8 }}></View>
-      </ImageBackground>
-      <View style={{ flex: 1, flexDirection: 'column' }}>
-        {children}
+  const picComponent = useMemo(() => {
+    return (
+      <View style={{ flex: 1, overflow: 'hidden' }}>
+        <ImageBackground
+          style={{ position: 'absolute', left: 0, top: 0, height: windowSize.height, width: windowSize.width, backgroundColor: theme['c-content-background'] }}
+          source={{ uri: formatUri(pic!) }}
+          resizeMode="cover"
+          blurRadius={30}
+        >
+          <View style={{ flex: 1, flexDirection: 'column', backgroundColor: theme['c-content-background'], opacity: 0.8 }}></View>
+        </ImageBackground>
+        <View style={{ flex: 1, flexDirection: 'column' }}>
+          {children}
+        </View>
       </View>
-    </View>
-  ), [children, pic, theme, windowSize.height, windowSize.width])
+    )
+  }, [children, pic, theme, windowSize.height, windowSize.width])
 
   return pic ? picComponent : themeComponent
 }

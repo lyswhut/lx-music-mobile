@@ -7,7 +7,6 @@ import { type Source } from '@/store/songlist/state'
 import { createStyle } from '@/utils/tools'
 import Text from '@/components/common/Text'
 import { useI18n } from '@/lang'
-import { setSelectListInfo } from '@/core/songlist'
 import { navigations } from '@/navigation'
 import commonState from '@/store/common/state'
 
@@ -32,7 +31,7 @@ export default forwardRef<OpenListType, {}>((props, ref) => {
 
   const handleOpenSonglist = (id: string) => {
     // console.log(id, songlistInfoRef.current.source)
-    setSelectListInfo({
+    navigations.pushSonglistDetailScreen(commonState.componentIds.home!, {
       play_count: undefined,
       id,
       author: '',
@@ -41,7 +40,6 @@ export default forwardRef<OpenListType, {}>((props, ref) => {
       desc: undefined,
       source: songlistInfoRef.current.source,
     })
-    navigations.pushSonglistDetailScreen(commonState.componentIds.home!, id)
   }
 
   // const handleSourceChange: ModalProps['onSourceChange'] = (source) => {

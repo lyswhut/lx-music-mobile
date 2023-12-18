@@ -1,4 +1,4 @@
-import songlistState, { type TagInfo, type ListDetailInfo, type ListInfo, type ListInfoItem } from '@/store/songlist/state'
+import songlistState, { type TagInfo, type ListDetailInfo, type ListInfo } from '@/store/songlist/state'
 import songlistActions from '@/store/songlist/action'
 import { deduplicationList, toNewMusicInfo } from '@/utils'
 import musicSdk from '@/utils/musicSdk'
@@ -11,15 +11,6 @@ type CacheValue = LimitDetailCache | ListInfo
 const cache = new Map<string, CacheValue>()
 const LIST_LOAD_LIMIT = 30
 
-
-/**
- * 设置要打开的歌单详情信息
- * @param source
- * @returns
- */
-export const setSelectListInfo = (info: ListInfoItem) => {
-  songlistActions.clearListDetail()
-}
 
 /**
  * 获取排序列表

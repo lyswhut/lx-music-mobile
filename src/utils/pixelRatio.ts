@@ -88,3 +88,8 @@ export const scaleSizeWR = (size: number) => {
 export const scaleSizeHR = (size: number) => {
   return size * 2 - scaleSizeH(size)
 }
+
+export const scaleSizeAbsHR = (size: number) => {
+  let scaleHeight = size * scale
+  return size * 2 - Math.floor(scaleHeight / pixelRatio)
+}

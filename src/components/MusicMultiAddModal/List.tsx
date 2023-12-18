@@ -63,7 +63,7 @@ export default ({ listId, onPress }: {
 
   return (
     <ScrollView style={{ flexGrow: 0 }}>
-      <View style={{ ...styles.list }}>
+      <View style={{ ...styles.list }} onStartShouldSetResponder={() => true}>
         { allList.map(info => <ListItem key={info.id} listInfo={info} onPress={onPress} width={itemWidth} />) }
         <EditListItem itemWidth={itemWidth} />
       </View>

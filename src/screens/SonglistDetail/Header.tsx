@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useState } from 'react'
+import { forwardRef, memo, useImperativeHandle, useState } from 'react'
 import { View } from 'react-native'
 import { BorderWidths } from '@/theme'
 import ButtonBar from './ActionBar'
@@ -6,13 +6,30 @@ import { useNavigationComponentDidAppear } from '@/navigation'
 import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 import { scaleSizeW } from '@/utils/pixelRatio'
 import { useTheme } from '@/store/theme/hook'
-import Text from '@/components/common/Text'
+import Text, { AnimatedText } from '@/components/common/Text'
 import { createStyle } from '@/utils/tools'
 import StatusBar from '@/components/common/StatusBar'
 import Image from '@/components/common/Image'
 import { useListInfo } from './state'
+import { useAnimateOnecNumber } from '@/utils/hooks/useAnimateNumber'
 
 const IMAGE_WIDTH = scaleSizeW(70)
+
+const CountText = memo(({ count }: { count: string }) => {
+  const [animFade] = useAnimateOnecNumber(0, 1, 250, false)
+  const [animTranslateY] = useAnimateOnecNumber(10, 0, 250, false)
+  return (
+    <AnimatedText style={{
+      ...styles.playCount,
+      opacity: animFade,
+      transform: [
+        { translateY: animTranslateY },
+      ],
+    }} numberOfLines={ 1 }>{count}</AnimatedText>
+  )
+}, (prevProps, nextProps) => {
+  return true
+})
 
 const Pic = ({ componentId, playCount, imgUrl }: {
   componentId: string
@@ -28,12 +45,10 @@ const Pic = ({ componentId, playCount, imgUrl }: {
 
   return (
     <View style={{ ...styles.listItemImg, width: IMAGE_WIDTH, height: IMAGE_WIDTH }}>
-      <Image nativeID={`${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_to_${info.id}`} url={imgUrl} style={{ flex: 1, justifyContent: 'flex-end', borderRadius: 4 }} />
-        {
-          playCount && animated
-            ? <Text style={styles.playCount} numberOfLines={ 1 }>{playCount}</Text>
-            : null
-        }
+      <Image nativeID={`${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_to_${info.id}`} url={imgUrl} style={{ flex: 1, borderRadius: 4 }} />
+      {
+        playCount && animated ? <CountText count={playCount} /> : null
+      }
     </View>
   )
 }
@@ -95,6 +110,7 @@ const styles = createStyle({
     // backgroundColor: '#eee',
     flexGrow: 0,
     flexShrink: 0,
+    overflow: 'hidden',
     // width: 70,
     // height: 70,
     // ...Platform.select({

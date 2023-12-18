@@ -2,9 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Animated } from 'react-native'
 
 
-const ANIMATION_DURATION = 800
+export const DEFAULT_DURATION = 800
 
-export const useAnimateNumber = (val: number) => {
+export const useAnimateNumber = (val: number, duration = DEFAULT_DURATION, useNativeDriver = true) => {
   const anim = useMemo(() => new Animated.Value(0), [val])
   const [finished, setFinished] = useState(true)
   const currentNumber = useRef(val)
@@ -19,8 +19,8 @@ export const useAnimateNumber = (val: number) => {
     setFinished(false)
     Animated.timing(anim, {
       toValue: 1,
-      duration: ANIMATION_DURATION,
-      useNativeDriver: false,
+      duration,
+      useNativeDriver,
     }).start((finished) => {
       if (!finished) return
       // currentNumber.current = nextNumber
@@ -30,6 +30,31 @@ export const useAnimateNumber = (val: number) => {
       currentNumber.current = nextNumber
     })
   }, [nextNumber])
+
+  return [animNumber, finished] as const
+}
+
+export const useAnimateOnecNumber = (val: number, toVal: number, duration = DEFAULT_DURATION, useNativeDriver = true) => {
+  const anim = useMemo(() => new Animated.Value(0), [])
+  const [finished, setFinished] = useState(true)
+
+  const animNumber = anim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [val, toVal],
+  })
+
+  useEffect(() => {
+    setFinished(false)
+    Animated.timing(anim, {
+      toValue: 1,
+      duration,
+      useNativeDriver,
+    }).start((finished) => {
+      if (!finished) return
+      // currentNumber.current = nextNumber
+      setFinished(true)
+    })
+  }, [])
 
   return [animNumber, finished] as const
 }

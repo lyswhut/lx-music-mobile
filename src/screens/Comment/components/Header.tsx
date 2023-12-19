@@ -11,6 +11,7 @@ import Text from '@/components/common/Text'
 import { HEADER_HEIGHT as _HEADER_HEIGHT } from '@/config/constant'
 import { scaleSizeH } from '@/utils/pixelRatio'
 import commonState from '@/store/common/state'
+import { useStatusbarHeight } from '@/store/common/hook'
 
 const HEADER_HEIGHT = scaleSizeH(_HEADER_HEIGHT)
 
@@ -18,13 +19,14 @@ export default memo(({ musicInfo }: {
   musicInfo: LX.Music.MusicInfo
 }) => {
   const t = useI18n()
+  const statusBarHeight = useStatusbarHeight()
 
   const back = () => {
     void pop(commonState.componentIds.comment!)
   }
 
   return (
-    <View style={{ height: HEADER_HEIGHT + StatusBar.currentHeight, paddingTop: StatusBar.currentHeight }}>
+    <View style={{ height: HEADER_HEIGHT + statusBarHeight, paddingTop: statusBarHeight }}>
       <StatusBar />
       <View style={{ ...styles.container }}>
         <TouchableOpacity onPress={back} style={{ ...styles.button, width: HEADER_HEIGHT }}>

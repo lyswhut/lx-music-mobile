@@ -7,6 +7,10 @@ export default {
     state.fontSize = size
     global.state_event.fontSizeUpdated(size)
   },
+  setStatusbarHeight(size: number) {
+    state.statusbarHeight = size
+    global.state_event.statusbarHeightUpdated(size)
+  },
   setComponentId(name: COMPONENT_IDS, id: string) {
     state.componentIds[name] = id
     global.state_event.componentIdsUpdated({ ...state.componentIds })

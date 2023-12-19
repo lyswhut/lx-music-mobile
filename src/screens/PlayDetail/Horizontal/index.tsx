@@ -16,9 +16,12 @@ import Lyric from './Lyric'
 import Player from './Player'
 import { createStyle } from '@/utils/tools'
 import { marginLeftRaw } from './constant'
+import { useStatusbarHeight } from '@/store/common/hook'
 // import MoreBtn from './MoreBtn2'
 
 export default memo(({ componentId }: { componentId: string }) => {
+  const statusBarHeight = useStatusbarHeight()
+
   useEffect(() => {
     setComponentId(COMPONENT_IDS.playDetail, componentId)
     screenkeepAwake()
@@ -51,7 +54,7 @@ export default memo(({ componentId }: { componentId: string }) => {
   return (
     <PageContent>
       <StatusBar />
-      <View style={{ ...styles.container, paddingTop: StatusBar.currentHeight }}>
+      <View style={{ ...styles.container, paddingTop: statusBarHeight }}>
         <View style={styles.left}>
           <Header />
           <View style={styles.leftContent}>

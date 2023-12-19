@@ -2,7 +2,7 @@ import { View } from 'react-native'
 // import Button from '@/components/common/Button'
 // import { navigations } from '@/navigation'
 // import { BorderWidths } from '@/theme'
-import { useNavActiveId } from '@/store/common/hook'
+import { useNavActiveId, useStatusbarHeight } from '@/store/common/hook'
 import { useI18n } from '@/lang'
 import { createStyle } from '@/utils/tools'
 import Text from '@/components/common/Text'
@@ -29,12 +29,13 @@ const HEADER_HEIGHT = _HEADER_HEIGHT * 0.8
 const LeftHeader = () => {
   const id = useNavActiveId()
   const t = useI18n()
+  const statusBarHeight = useStatusbarHeight()
 
   return (
     <View style={{
       ...styles.container,
-      height: scaleSizeH(HEADER_HEIGHT) + StatusBar.currentHeight,
-      paddingTop: StatusBar.currentHeight,
+      height: scaleSizeH(HEADER_HEIGHT) + statusBarHeight,
+      paddingTop: statusBarHeight,
     }}>
       <View style={styles.left}>
         <Text style={styles.leftTitle} size={18}>{t(id)}</Text>
@@ -58,12 +59,13 @@ const LeftHeader = () => {
 const RightHeader = () => {
   const t = useI18n()
   const id = useNavActiveId()
+  const statusBarHeight = useStatusbarHeight()
 
   return (
     <View style={{
       ...styles.container,
-      height: scaleSizeH(HEADER_HEIGHT) + StatusBar.currentHeight,
-      paddingTop: StatusBar.currentHeight,
+      height: scaleSizeH(HEADER_HEIGHT) + statusBarHeight,
+      paddingTop: statusBarHeight,
     }}>
       <View style={styles.left}>
         <Text style={styles.rightTitle} size={18}>{t(id)}</Text>

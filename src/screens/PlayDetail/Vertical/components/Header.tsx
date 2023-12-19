@@ -12,6 +12,7 @@ import { scaleSizeH } from '@/utils/pixelRatio'
 import { HEADER_HEIGHT as _HEADER_HEIGHT, NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 import commonState from '@/store/common/state'
 import SettingPopup, { type SettingPopupType } from '../../components/SettingPopup'
+import { useStatusbarHeight } from '@/store/common/hook'
 
 export const HEADER_HEIGHT = scaleSizeH(_HEADER_HEIGHT)
 
@@ -31,6 +32,7 @@ const Title = () => {
 
 export default memo(() => {
   const popupRef = useRef<SettingPopupType>(null)
+  const statusBarHeight = useStatusbarHeight()
 
   const back = () => {
     void pop(commonState.componentIds.playDetail!)
@@ -40,7 +42,7 @@ export default memo(() => {
   }
 
   return (
-    <View style={{ height: HEADER_HEIGHT + StatusBar.currentHeight, paddingTop: StatusBar.currentHeight }} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_header}>
+    <View style={{ height: HEADER_HEIGHT + statusBarHeight, paddingTop: statusBarHeight }} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_header}>
       <StatusBar />
       <View style={styles.container}>
         <TouchableOpacity onPress={back} style={{ ...styles.button, width: HEADER_HEIGHT }}>

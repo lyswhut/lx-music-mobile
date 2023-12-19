@@ -68,6 +68,10 @@ export const setFontSize = (size: number) => {
   void saveFontSize(size)
 }
 
+export const setStatusbarHeight = (size: number) => {
+  commonActions.setStatusbarHeight(size)
+}
+
 export const setComponentId = (name: keyof CommonStateType['componentIds'], id: string) => {
   commonActions.setComponentId(name, id)
 }

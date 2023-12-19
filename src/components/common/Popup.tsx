@@ -7,7 +7,7 @@ import { useKeyboard } from '@/utils/hooks'
 import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import Text from './Text'
-import StatusBar from './StatusBar'
+import { useStatusbarHeight } from '@/store/common/hook'
 
 const styles = createStyle({
   centeredView: {
@@ -72,6 +72,7 @@ export default forwardRef<PopupType, PopupProps>(({
 }: PopupProps, ref) => {
   const theme = useTheme()
   const { keyboardShown, keyboardHeight } = useKeyboard()
+  const statusBarHeight = useStatusbarHeight()
 
   const modalRef = useRef<ModalType>(null)
 
@@ -121,7 +122,7 @@ export default forwardRef<PopupType, PopupProps>(({
             minWidth: '45%',
             maxWidth: '78%',
             height: '100%',
-            paddingTop: StatusBar.currentHeight,
+            paddingTop: statusBarHeight,
             // backgroundColor: 'white',
           },
         ] as const
@@ -140,7 +141,7 @@ export default forwardRef<PopupType, PopupProps>(({
             minWidth: '45%',
             maxWidth: '78%',
             height: '100%',
-            paddingTop: StatusBar.currentHeight,
+            paddingTop: statusBarHeight,
             // backgroundColor: 'white',
           },
         ] as const

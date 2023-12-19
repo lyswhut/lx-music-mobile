@@ -3,7 +3,6 @@ import { View, TouchableOpacity } from 'react-native'
 import Input, { type InputType } from '@/components/common/Input'
 import Text from '@/components/common/Text'
 import { Icon } from '@/components/common/Icon'
-import StatusBar from '@/components/common/StatusBar'
 import ConfirmAlert, { type ConfirmAlertType } from '@/components/common/ConfirmAlert'
 import { createStyle, toast } from '@/utils/tools'
 import { mkdir, readDir } from '@/utils/fs'
@@ -11,6 +10,7 @@ import { useTheme } from '@/store/theme/hook'
 import { scaleSizeH } from '@/utils/pixelRatio'
 import { getExternalStoragePath } from '@/utils/nativeModules/utils'
 import { useUnmounted } from '@/utils/hooks'
+import { useStatusbarHeight } from '@/store/common/hook'
 const filterFileName = /[\\/:*?#"<>|]/
 
 
@@ -62,6 +62,7 @@ export default memo(({
   const storagePathRef = useRef('')
   const [isShowStorage, setIsShowStorage] = useState(false)
   const isUnmounted = useUnmounted()
+  const statusBarHeight = useStatusbarHeight()
 
   const checkExternalStoragePath = useCallback(() => {
     void getExternalStoragePath().then((storagePath) => {
@@ -124,8 +125,8 @@ export default memo(({
     <>
       <View style={{
         ...styles.header,
-        height: scaleSizeH(50) + StatusBar.currentHeight,
-        paddingTop: StatusBar.currentHeight,
+        height: scaleSizeH(50) + statusBarHeight,
+        paddingTop: statusBarHeight,
         backgroundColor: theme['c-content-background'],
       }} onStartShouldSetResponder={() => true}>
         <View style={styles.titleContent}>

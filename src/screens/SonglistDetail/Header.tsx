@@ -8,10 +8,10 @@ import { scaleSizeW } from '@/utils/pixelRatio'
 import { useTheme } from '@/store/theme/hook'
 import Text, { AnimatedText } from '@/components/common/Text'
 import { createStyle } from '@/utils/tools'
-import StatusBar from '@/components/common/StatusBar'
 import Image from '@/components/common/Image'
 import { useListInfo } from './state'
 import { useAnimateOnecNumber } from '@/utils/hooks/useAnimateNumber'
+import { useStatusbarHeight } from '@/store/common/hook'
 
 const IMAGE_WIDTH = scaleSizeW(70)
 
@@ -68,6 +68,7 @@ export interface DetailInfo {
 }
 
 export default forwardRef<HeaderType, HeaderProps>(({ componentId }: { componentId: string }, ref) => {
+  const statusBarHeight = useStatusbarHeight()
   const theme = useTheme()
   const info = useListInfo()
   const [detailInfo, setDetailInfo] = useState<DetailInfo>({ name: '', desc: '', playCount: '', imgUrl: info.img })
@@ -79,7 +80,7 @@ export default forwardRef<HeaderType, HeaderProps>(({ componentId }: { component
   }), [])
 
   return (
-    <View style={{ ...styles.container, paddingTop: StatusBar.currentHeight, borderBottomColor: theme['c-border-background'] }}>
+    <View style={{ ...styles.container, paddingTop: statusBarHeight, borderBottomColor: theme['c-border-background'] }}>
       <View style={{ flexDirection: 'row', flexGrow: 0, flexShrink: 0, padding: 10 }}>
         <Pic componentId={componentId} playCount={detailInfo.playCount} imgUrl={detailInfo.imgUrl} />
         <View style={{ flexDirection: 'column', flexGrow: 1, flexShrink: 1, paddingLeft: 5 }} nativeID={NAV_SHEAR_NATIVE_IDS.songlistDetail_title}>

@@ -28,6 +28,10 @@ export class StateEvent extends Event {
     this.emit('fontSizeUpdated', size)
   }
 
+  statusbarHeightUpdated(size: number) {
+    this.emit('statusbarHeightUpdated', size)
+  }
+
   apiSourceUpdated(source: LX.AppSetting['common.apiSource']) {
     this.emit('apiSourceUpdated', source)
   }

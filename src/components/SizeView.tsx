@@ -1,12 +1,12 @@
-import { memo, useCallback, useEffect, useRef } from 'react'
-import { type LayoutChangeEvent, StyleSheet, View, StatusBar, Dimensions } from 'react-native'
+import { memo, useCallback, useRef } from 'react'
+import { type LayoutChangeEvent, StyleSheet, View, StatusBar } from 'react-native'
 import commonState from '@/store/common/state'
 import { setStatusbarHeight } from '@/core/common'
 import { windowSizeTools, getWindowSize } from '@/utils/windowSizeTools'
 
 
 export default memo(() => {
-  const viewRef = useRef<View>(null)
+  // const viewRef = useRef<View>(null)
   const currentHeightRef = useRef(commonState.statusbarHeight)
   const handleLayout = useCallback(({ nativeEvent: { layout } }: LayoutChangeEvent | { nativeEvent: { layout: { width: number, height: number } } }) => {
     // console.log('handleLayout')
@@ -27,18 +27,18 @@ export default memo(() => {
       }
     })
   }, [])
-  useEffect(() => {
-    let timeout: NodeJS.Timeout | null = null
-    Dimensions.addEventListener('change', () => {
-      if (timeout) clearTimeout(timeout)
-      timeout = setTimeout(() => {
-        timeout = null
-        viewRef.current?.measureInWindow((x, y, width, height) => {
-          handleLayout({ nativeEvent: { layout: { width, height } } })
-        })
-      }, 100)
-    })
-  }, [])
-  return (<View ref={viewRef} style={StyleSheet.absoluteFill} onLayout={handleLayout} />)
+  // useEffect(() => {
+  //   let timeout: NodeJS.Timeout | null = null
+  //   Dimensions.addEventListener('change', () => {
+  //     if (timeout) clearTimeout(timeout)
+  //     timeout = setTimeout(() => {
+  //       timeout = null
+  //       viewRef.current?.measureInWindow((x, y, width, height) => {
+  //         handleLayout({ nativeEvent: { layout: { width, height } } })
+  //       })
+  //     }, 100)
+  //   })
+  // }, [])
+  return (<View style={StyleSheet.absoluteFill} onLayout={handleLayout} />)
 }, () => true)
 

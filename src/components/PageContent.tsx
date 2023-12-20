@@ -8,6 +8,7 @@ import playerState from '@/store/player/state'
 import settingState from '@/store/setting/state'
 import { scaleSizeAbsHR } from '@/utils/pixelRatio'
 import { defaultHeaders } from './common/Image'
+import SizeView from './SizeView'
 
 interface Props {
   children: React.ReactNode
@@ -117,5 +118,10 @@ export default ({ children }: Props) => {
     )
   }, [children, pic, theme, windowSize.height, windowSize.width])
 
-  return pic ? picComponent : themeComponent
+  return (
+    <>
+      <SizeView />
+      {pic ? picComponent : themeComponent}
+    </>
+  )
 }

@@ -91,8 +91,11 @@ export const getPicUrl = async({ musicInfo, listId, isRefresh, onToggleSource = 
   onToggleSource?: (musicInfo?: LX.Music.MusicInfoOnline) => void
 }): Promise<string> => {
   if (!isRefresh) {
-    const pic = await readPic(musicInfo.meta.filePath)
-    if (pic) return pic
+    let pic = await readPic(musicInfo.meta.filePath)
+    if (pic) {
+      if (pic.startsWith('/')) pic = `file://${pic}`
+      return pic
+    }
 
     if (musicInfo.meta.picUrl) return musicInfo.meta.picUrl
   }

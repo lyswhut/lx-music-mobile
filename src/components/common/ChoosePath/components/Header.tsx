@@ -35,7 +35,6 @@ export default memo(({
           await readDir(path)
         } catch { continue }
         storagePathsRef.current.push(path)
-        break
       }
     })
   }, [])

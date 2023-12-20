@@ -4,7 +4,9 @@ package cn.toside.music.mobile.utils;
 import android.content.Context;
 import android.os.storage.StorageManager;
 
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactMethod;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,6 +18,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 
 public class Utils {
@@ -115,6 +118,32 @@ public class Utils {
     @Override
     public Object call() throws Exception {
       writeToFile(filePath, dataString);
+      return null;
+    }
+  }
+
+  private static void deleteRecursive(File fileOrDirectory) {
+    if (fileOrDirectory.isDirectory()) {
+      for (File child : Objects.requireNonNull(fileOrDirectory.listFiles())) {
+        deleteRecursive(child);
+      }
+    }
+
+    fileOrDirectory.delete();
+  }
+  public static void unlink(String filepath) {
+    deleteRecursive(new File(filepath));
+  }
+  static class Unlink implements Callable<Object> {
+    private final String filePath;
+
+    public Unlink(String filePath) {
+      this.filePath = filePath;
+    }
+
+    @Override
+    public Object call() {
+      unlink(filePath);
       return null;
     }
   }

@@ -5,7 +5,7 @@ export const externalDirectoryPath = RNFS.ExternalDirectoryPath
 export const temporaryDirectoryPath = RNFS.TemporaryDirectoryPath
 export const externalStorageDirectoryPath = RNFS.ExternalStorageDirectoryPath
 
-export const unlink = async(path: string) => RNFS.unlink(path)
+// export const unlink = async(path: string) => RNFS.unlink(path)
 
 export const readDir = async(path: string) => RNFS.readDir(path)
 

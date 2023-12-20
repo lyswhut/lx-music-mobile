@@ -54,6 +54,9 @@ export const writeFile = async(filePath: string, data: string): Promise<void> =>
 export const readFile = async(filePath: string): Promise<string> => {
   return UtilsModule.getStringFromFile(filePath)
 }
+export const unlink = async(filePath: string): Promise<void> => {
+  return UtilsModule.unlink(filePath)
+}
 export const getSystemLocales = async(): Promise<string> => {
   return UtilsModule.getSystemLocales()
 }

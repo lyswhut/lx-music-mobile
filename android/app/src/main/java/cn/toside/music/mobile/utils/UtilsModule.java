@@ -315,6 +315,11 @@ public class UtilsModule extends ReactContextBaseJavaModule {
     AsyncTask.runTask(new Utils.WriteStringToFile(filePath, dataStr), promise);
   }
 
+  @ReactMethod
+  public void unlink(String filePath, Promise promise) {
+    AsyncTask.runTask(new Utils.Unlink(filePath), promise);
+  }
+
   // https://stackoverflow.com/questions/73463341/in-per-app-language-how-to-get-app-locale-in-api-33-if-system-locale-is-diffe
   @ReactMethod
   public void getSystemLocales(Promise promise) {

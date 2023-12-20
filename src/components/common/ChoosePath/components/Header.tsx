@@ -1,51 +1,16 @@
-import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef } from 'react'
 import { View, TouchableOpacity } from 'react-native'
-import Input, { type InputType } from '@/components/common/Input'
 import Text from '@/components/common/Text'
 import { Icon } from '@/components/common/Icon'
-import ConfirmAlert, { type ConfirmAlertType } from '@/components/common/ConfirmAlert'
-import { createStyle, toast } from '@/utils/tools'
-import { mkdir, readDir } from '@/utils/fs'
+import { createStyle } from '@/utils/tools'
+import { readDir } from '@/utils/fs'
 import { useTheme } from '@/store/theme/hook'
 import { scaleSizeH } from '@/utils/pixelRatio'
 import { getExternalStoragePath } from '@/utils/nativeModules/utils'
-import { useUnmounted } from '@/utils/hooks'
 import { useStatusbarHeight } from '@/store/common/hook'
-const filterFileName = /[\\/:*?#"<>|]/
+import NewFolderModal, { type NewFolderType } from './NewFolderModal'
+import OpenStorageModal, { type OpenDirModalType } from './OpenStorageModal'
 
-
-interface NameInputType {
-  setName: (text: string) => void
-  getText: () => string
-  focus: () => void
-}
-const NameInput = forwardRef<NameInputType, {}>((props, ref) => {
-  const theme = useTheme()
-  const [text, setText] = useState('')
-  const inputRef = useRef<InputType>(null)
-
-  useImperativeHandle(ref, () => ({
-    getText() {
-      return text.trim()
-    },
-    setName(text) {
-      setText(text)
-    },
-    focus() {
-      inputRef.current?.focus()
-    },
-  }))
-
-  return (
-    <Input
-      ref={inputRef}
-      placeholder={global.i18n.t('create_new_folder_tip')}
-      value={text}
-      onChangeText={setText}
-      style={{ ...styles.input, backgroundColor: theme['c-primary-input-background'] }}
-    />
-  )
-})
 
 export default memo(({
   title,
@@ -57,24 +22,21 @@ export default memo(({
   onRefreshDir: (dir: string) => Promise<void>
 }) => {
   const theme = useTheme()
-  const confirmAlertRef = useRef<ConfirmAlertType>(null)
-  const nameInputRef = useRef<NameInputType>(null)
-  const storagePathRef = useRef('')
-  const [isShowStorage, setIsShowStorage] = useState(false)
-  const isUnmounted = useUnmounted()
+  const newFolderTypeRef = useRef<NewFolderType>(null)
+  const openDirModalTypeRef = useRef<OpenDirModalType>(null)
+  const storagePathsRef = useRef<string[]>([])
   const statusBarHeight = useStatusbarHeight()
 
   const checkExternalStoragePath = useCallback(() => {
-    void getExternalStoragePath().then((storagePath) => {
-      if (storagePath) {
-        void readDir(storagePath).then(() => {
-          if (isUnmounted.current) return
-          storagePathRef.current = storagePath
-          setIsShowStorage(true)
-        }).catch(() => {
-          setIsShowStorage(false)
-        })
-      } else setIsShowStorage(false)
+    // storagePathsRef.current = []
+    void getExternalStoragePath().then(async(storagePaths) => {
+      for (const path of storagePaths) {
+        try {
+          await readDir(path)
+        } catch { continue }
+        storagePathsRef.current.push(path)
+        break
+      }
     })
   }, [])
   useEffect(() => {
@@ -87,38 +49,18 @@ export default memo(({
   }
 
   const toggleStorageDir = () => {
-    void onRefreshDir(storagePathRef.current)
-  }
-
-  const handleShow = () => {
-    confirmAlertRef.current?.setVisible(true)
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        nameInputRef.current?.focus()
-      }, 300)
-    })
-  }
-
-  const handleHideNewFolderAlert = () => {
-    nameInputRef.current?.setName('')
-  }
-  const handleConfirmNewFolderAlert = () => {
-    const text = nameInputRef.current?.getText() ?? ''
-    if (!text) return
-    if (filterFileName.test(text)) {
-      toast(global.i18n.t('create_new_folder_error_tip'), 'long')
+    if (storagePathsRef.current.length) {
+      void onRefreshDir(storagePathsRef.current[0])
       return
     }
-    const newPath = `${path}/${text}`
-    mkdir(newPath).then(() => {
-      void onRefreshDir(path).then(() => {
-        void onRefreshDir(newPath)
-      })
-      nameInputRef.current?.setName('')
-    }).catch((err: any) => {
-      toast('Create failed: ' + (err.message as string))
-    })
-    confirmAlertRef.current?.setVisible(false)
+    openStorage()
+  }
+  const openStorage = () => {
+    openDirModalTypeRef.current?.show(storagePathsRef.current)
+  }
+
+  const handleShowNewFolderModal = () => {
+    newFolderTypeRef.current?.show(path)
   }
 
   return (
@@ -134,14 +76,10 @@ export default memo(({
           <Text style={styles.subTitle} color={theme['c-primary-font']} size={13} numberOfLines={1}>{path}</Text>
         </View>
         <View style={styles.actions}>
-          {
-            isShowStorage ? (
-              <TouchableOpacity style={styles.actionBtn} onPress={toggleStorageDir}>
-                <Icon name="sd-card" color={theme['c-primary-font']} size={22} />
-              </TouchableOpacity>
-            ) : null
-          }
-          <TouchableOpacity style={styles.actionBtn} onPress={handleShow}>
+          <TouchableOpacity style={styles.actionBtn} onPress={toggleStorageDir} onLongPress={openStorage}>
+            <Icon name="sd-card" color={theme['c-primary-font']} size={22} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionBtn} onPress={handleShowNewFolderModal}>
             <Icon name="add_folder" color={theme['c-primary-font']} size={22} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionBtn} onPress={refresh}>
@@ -149,16 +87,8 @@ export default memo(({
           </TouchableOpacity>
         </View>
       </View>
-      <ConfirmAlert
-        onHide={handleHideNewFolderAlert}
-        onConfirm={handleConfirmNewFolderAlert}
-        ref={confirmAlertRef}
-      >
-        <View style={styles.newFolderContent}>
-          <Text style={styles.newFolderTitle}>{global.i18n.t('create_new_folder')}</Text>
-          <NameInput ref={nameInputRef} />
-        </View>
-      </ConfirmAlert>
+      <OpenStorageModal ref={openDirModalTypeRef} onRefreshDir={onRefreshDir} />
+      <NewFolderModal ref={newFolderTypeRef} onRefreshDir={onRefreshDir} />
     </>
   )
 })

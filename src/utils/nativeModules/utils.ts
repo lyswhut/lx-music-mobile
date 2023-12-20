@@ -70,7 +70,7 @@ export const onScreenStateChange = (handler: (state: 'ON' | 'OFF') => void): () 
   }
 }
 
-export const getExternalStoragePath = async(): Promise<string | null> => {
+export const getExternalStoragePath = async(): Promise<string[]> => {
   return UtilsModule.getExternalStoragePath()
 }
 

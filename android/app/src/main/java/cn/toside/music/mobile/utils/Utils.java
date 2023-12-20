@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 public class Utils {
@@ -34,9 +35,10 @@ public class Utils {
   }
 
   // https://gist.github.com/PauloLuan/4bcecc086095bce28e22?permalink_comment_id=2591001#gistcomment-2591001
-  public static String getExternalStoragePath(ReactApplicationContext mContext, boolean is_removable) {
+  public static ArrayList<String> getExternalStoragePath(ReactApplicationContext mContext, boolean is_removable) {
     StorageManager mStorageManager = (StorageManager) mContext.getSystemService(Context.STORAGE_SERVICE);
     Class<?> storageVolumeClazz;
+    ArrayList<String> paths = new ArrayList<>();
     try {
       storageVolumeClazz = Class.forName("android.os.storage.StorageVolume");
       Method getVolumeList = mStorageManager.getClass().getMethod("getVolumeList");
@@ -49,13 +51,13 @@ public class Utils {
         String path = (String) getPath.invoke(storageVolumeElement);
         boolean removable = (Boolean) isRemovable.invoke(storageVolumeElement);
         if (is_removable == removable) {
-          return path;
+          paths.add(path);
         }
       }
     } catch (Exception e) {
       e.printStackTrace();
     }
-    return null;
+    return paths;
   }
 
   public static String convertStreamToString(InputStream is) throws Exception {

@@ -27,6 +27,7 @@ const syncHostHistoryPrefix = storageDataPrefix.syncHostHistory
 const listPrefix = storageDataPrefix.list
 const dislikeListPrefix = storageDataPrefix.dislikeList
 const userApiPrefix = storageDataPrefix.userApi
+const openStoragePathPrefix = storageDataPrefix.openStoragePath
 
 // const defaultListKey = listPrefix + 'default'
 // const loveListKey = listPrefix + 'love'
@@ -195,6 +196,25 @@ export const getIgnoreVersionFailTipTime = async() => {
   return ignoreVersionFailTipTime ?? 0
 }
 
+let openStoragePath: string | null = ''
+export const saveOpenStoragePath = async(path: string) => {
+  if (path) {
+    openStoragePath = path
+    await saveData(openStoragePathPrefix, path)
+  } else {
+    if (!openStoragePath) return
+    openStoragePath = null
+    await removeData(openStoragePathPrefix)
+  }
+}
+// 获取上次打开的存储路径
+export const getOpenStoragePath = async() => {
+  if (openStoragePath === '') {
+    // eslint-disable-next-line require-atomic-updates
+    openStoragePath = await getData<string | null>(openStoragePathPrefix)
+  }
+  return openStoragePath
+}
 
 export const getSearchSetting = async() => {
   // eslint-disable-next-line require-atomic-updates

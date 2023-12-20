@@ -55,6 +55,7 @@ export const storageDataPrefix = {
   syncHost: '@sync_host',
   syncHostHistory: '@sync_host_history',
 
+  openStoragePath: '@open_storage_path',
   notificationTipEnable: '@notification_tip_enable',
   ignoringBatteryOptimizationTipEnable: '@ignoring_battery_optimization_tip_enable',
 

@@ -35,6 +35,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -398,7 +399,10 @@ public class UtilsModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void getExternalStoragePath(Promise promise) {
-    promise.resolve(Utils.getExternalStoragePath(reactContext, true));
+    WritableArray arr = Arguments.createArray();
+    ArrayList<String> paths = Utils.getExternalStoragePath(reactContext, true);
+    for (String p: paths) arr.pushString(p);
+    promise.resolve(arr);
   }
 }
 

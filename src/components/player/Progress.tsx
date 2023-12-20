@@ -20,11 +20,11 @@ const DefaultBar = memo(() => {
   }}></View>
 })
 
-// const BufferedBar = memo(({ bufferedProgress }) => {
-//   // console.log(bufferedProgress)
-//   const theme = useTheme()
-//   return <View style={{ ...styles.progressBar, backgroundColor: theme.secondary45, position: 'absolute', width: bufferedProgress + '%', left: 0, top: 0 }}></View>
-// })
+const BufferedBar = memo(({ progress }: { progress: number }) => {
+  // console.log(bufferedProgress)
+  const theme = useTheme()
+  return <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-light-600-alpha-900'], position: 'absolute', width: `${progress * 100}%`, left: 0, top: 0 }}></View>
+})
 
 const PreassBar = memo(({ onDragState, setDragProgress, onSetProgress }: {
   onDragState: (drag: boolean) => void
@@ -67,9 +67,10 @@ const PreassBar = memo(({ onDragState, setDragProgress, onSetProgress }: {
 })
 
 
-const Progress = ({ progress, duration, paddingTop }: {
+const Progress = ({ progress, duration, buffered, paddingTop }: {
   progress: number
   duration: number
+  buffered: number
   paddingTop?: number
 }) => {
   // const { progress } = usePlayTimeBuffer()
@@ -91,7 +92,7 @@ const Progress = ({ progress, duration, paddingTop }: {
     <View style={{ ...styles.progress, paddingTop }}>
       <View style={{ flex: 1 }}>
         <DefaultBar />
-        {/* <BufferedBar bufferedProgress={bufferedProgress} /> */}
+        <BufferedBar progress={buffered} />
         {
           draging
             ? (

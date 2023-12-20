@@ -111,3 +111,78 @@ export function useProgress(updateInterval: number) {
 
   return state
 }
+
+export function useBufferProgress() {
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    let isUnmounted = false
+    let preBuffered = 0
+    let duration = 0
+    let interval: NodeJS.Timer | null = null
+
+    const clearItv = () => {
+      if (!interval) return
+      clearInterval(interval)
+      interval = null
+    }
+    const updateBuffer = async() => {
+      const buffered = await (duration ? TrackPlayer.getBufferedPosition() : Promise.all([TrackPlayer.getBufferedPosition(), TrackPlayer.getDuration()]).then(([buffered, _duration]) => {
+        duration = _duration
+        return buffered
+      }))
+      // console.log('updateBuffer', buffered, duration, buffered > 0, buffered == duration)
+      // After the asynchronous code is executed, if the component has been uninstalled, do not update the status
+      if (buffered > 0 && buffered == duration) clearItv()
+      if (buffered == preBuffered || isUnmounted) return
+      preBuffered = buffered
+      setProgress(duration ? (buffered / duration) : 0)
+    }
+
+    const sub = TrackPlayer.addEventListener(Event.PlaybackState, data => {
+      switch (data.state) {
+        case State.None:
+          // console.log('state', 'None')
+          setProgress(0)
+          break
+        // case State.Ready:
+        //   console.log('state', 'Ready')
+        //   break
+        // case State.Stopped:
+        //   console.log('state', 'Stopped')
+        //   break
+        // case State.Paused:
+        //   console.log('state', 'Paused')
+        //   break
+        // case State.Playing:
+        //   console.log('state', 'Playing')
+        //   break
+        case State.Buffering:
+          // console.log('state', 'Buffering')
+          clearItv()
+          duration = 0
+          interval = setInterval(updateBuffer, 1000)
+          void updateBuffer()
+          break
+        // case State.Connecting:
+        //   console.log('state', 'Connecting')
+        //   break
+        // default:
+        //   console.log('playback-state', data)
+        //   break
+      }
+    })
+
+    void updateBuffer()
+    void TrackPlayer.getState().then((state) => {
+      if (state == State.Buffering) interval = setInterval(updateBuffer, 1000)
+    })
+    return () => {
+      isUnmounted = true
+      sub.remove()
+      clearItv()
+    }
+  }, [])
+
+  return progress
+}

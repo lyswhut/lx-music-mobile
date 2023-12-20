@@ -228,7 +228,7 @@ const debounceUpdateMetaInfoTools = {
           if (!musicInfo) return
           // isDelayRun = false
           void fn(musicInfo)
-        }, 1500)
+        }, 1000)
       } else {
         isDelayRun = true
         void fn(musicInfo)

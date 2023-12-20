@@ -10,6 +10,7 @@ import Text from '@/components/common/Text'
 import { COMPONENT_IDS } from '@/config/constant'
 import { usePageVisible } from '@/store/common/hook'
 import { scaleSizeH, scaleSizeW, scaleSizeWR } from '@/utils/pixelRatio'
+import { useBufferProgress } from '@/plugins/player'
 
 const FONT_SIZE = 13
 const PADDING_TOP_RAW = 1.8
@@ -32,6 +33,7 @@ export default ({ isHome }: { isHome: boolean }) => {
   const theme = useTheme()
   const [autoUpdate, setAutoUpdate] = useState(true)
   const { maxPlayTimeStr, nowPlayTimeStr, progress, maxPlayTime } = useProgress(autoUpdate)
+  const buffered = useBufferProgress()
   usePageVisible([COMPONENT_IDS.home], useCallback((visible) => {
     if (isHome) setAutoUpdate(visible)
   }, [isHome]))
@@ -48,7 +50,7 @@ export default ({ isHome }: { isHome: boolean }) => {
         <PlayTimeMax timeStr={maxPlayTimeStr} />
       </View>
       <View style={[StyleSheet.absoluteFill, stylesRaw.progress]}>
-        <Progress progress={progress} duration={maxPlayTime} paddingTop={PADDING_TOP_PROGRESS} />
+        <Progress progress={progress} duration={maxPlayTime} buffered={buffered} paddingTop={PADDING_TOP_PROGRESS} />
       </View>
     </View>
   )

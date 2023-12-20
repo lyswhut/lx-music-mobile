@@ -13,7 +13,7 @@ const logTools = {
   async initLogFile() {
     try {
       let isExists = await existsFile(logPath)
-      console.log(isExists)
+      // console.log(isExists)
       if (!isExists) await writeFile(logPath, '')
       if (this.tempLog?.length) this.writeLog(this.tempLog.map(m => `${m.time} ${m.type} ${m.text}`).join('\n----lx log----\n'))
       this.tempLog = null

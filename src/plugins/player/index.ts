@@ -65,4 +65,5 @@ export {
   updateMetaData,
   onStateChange,
   isEmpty,
+  useBufferProgress,
 } from './utils'

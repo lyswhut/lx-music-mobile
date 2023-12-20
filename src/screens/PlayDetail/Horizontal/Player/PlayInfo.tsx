@@ -7,6 +7,7 @@ import { useProgress } from '@/store/player/hook'
 import { useTheme } from '@/store/theme/hook'
 import { createStyle } from '@/utils/tools'
 import Text from '@/components/common/Text'
+import { useBufferProgress } from '@/plugins/player'
 
 // const FONT_SIZE = 13
 
@@ -24,6 +25,7 @@ const PlayTimeMax = memo(({ timeStr }: { timeStr: string }) => {
 export default () => {
   const theme = useTheme()
   const { maxPlayTimeStr, nowPlayTimeStr, progress, maxPlayTime } = useProgress()
+  const buffered = useBufferProgress()
   // console.log('render playInfo')
 
   return (
@@ -36,7 +38,7 @@ export default () => {
         <Text color={theme['c-500']}> / </Text>
         <PlayTimeMax timeStr={maxPlayTimeStr} />
       </View>
-      <View style={[StyleSheet.absoluteFill, styles.progress]}><Progress progress={progress} duration={maxPlayTime} /></View>
+      <View style={[StyleSheet.absoluteFill, styles.progress]}><Progress progress={progress} duration={maxPlayTime} buffered={buffered} /></View>
     </View>
   )
 }

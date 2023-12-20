@@ -28,7 +28,7 @@ export default memo(({
   const statusBarHeight = useStatusbarHeight()
 
   const checkExternalStoragePath = useCallback(() => {
-    // storagePathsRef.current = []
+    storagePathsRef.current = []
     void getExternalStoragePath().then(async(storagePaths) => {
       for (const path of storagePaths) {
         try {

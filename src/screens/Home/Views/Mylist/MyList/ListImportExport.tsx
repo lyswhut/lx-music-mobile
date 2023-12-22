@@ -89,6 +89,7 @@ export default forwardRef<ListImportExportType, {}>((props, ref) => {
         choosePathRef.current?.show({
           title: global.i18n.t('list_select_local_file_desc'),
           dirOnly: true,
+          isPersist: true,
         })
       } else {
         setVisible(true)
@@ -96,6 +97,7 @@ export default forwardRef<ListImportExportType, {}>((props, ref) => {
           choosePathRef.current?.show({
             title: global.i18n.t('list_select_local_file_desc'),
             dirOnly: true,
+            isPersist: true,
           })
         })
       }

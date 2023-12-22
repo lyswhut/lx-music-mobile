@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react'
 import { View } from 'react-native'
-import { readDir, externalStorageDirectoryPath } from '@/utils/fs'
+import { externalStorageDirectoryPath, readDir } from '@/utils/fs'
 import { createStyle, toast } from '@/utils/tools'
 // import { useTranslation } from '@/plugins/i18n'
 import Modal, { type ModalType } from '@/components/common/Modal'
@@ -11,11 +11,14 @@ import Footer from './components/Footer'
 import { sizeFormate } from '@/utils'
 import { useTheme } from '@/store/theme/hook'
 import { type PathItem } from './components/ListItem'
+// import { getSelectedManagedFolder } from '@/utils/data'
 // let prevPath = externalStorageDirectoryPath
 
+const parentDirInfo = new Map<string, string>()
 const caches = new Map<string, PathItem[]>()
 
-const handleReadDir = async(path: string, dirOnly: boolean, filter?: RegExp, isRefresh = false) => {
+const handleReadDir = async(path: string, dirOnly: boolean, filter?: string[], isRefresh = false) => {
+  let filterRxp = filter ? new RegExp(`\\.(${filter.join('|')})$`, 'i') : null
   const cacheKey = `${path}_${dirOnly ? 'true' : 'false'}_${filter ? filter.toString() : 'null'}`
   if (!isRefresh && caches.has(cacheKey)) return caches.get(cacheKey)!
   return readDir(path).then(paths => {
@@ -25,27 +28,27 @@ const handleReadDir = async(path: string, dirOnly: boolean, filter?: RegExp, isR
     // console.log(paths)
     for (const path of paths) {
       // console.log(path)
-      if (filter != null && path.isFile() && !filter.test(path.name)) continue
+      if (filterRxp != null && path.isFile && !filterRxp.test(path.name)) continue
 
-      const isDirectory = path.isDirectory()
+      const isDirectory = path.isDirectory
       if (dirOnly) {
         list.push({
           name: path.name,
           path: path.path,
-          mtime: path.mtime,
+          mtime: new Date(path.lastModified),
           size: path.size,
           isDir: isDirectory,
-          sizeText: isDirectory ? '' : sizeFormate(path.size),
-          disabled: !isDirectory,
+          sizeText: isDirectory ? '' : sizeFormate(path.size ?? 0),
+          disabled: path.isFile,
         })
       } else {
         list.push({
           name: path.name,
           path: path.path,
-          mtime: path.mtime,
+          mtime: new Date(path.lastModified),
           size: path.size,
           isDir: isDirectory,
-          sizeText: isDirectory ? '' : sizeFormate(path.size),
+          sizeText: isDirectory ? '' : sizeFormate(path.size ?? 0),
         })
       }
     }
@@ -67,7 +70,7 @@ const handleReadDir = async(path: string, dirOnly: boolean, filter?: RegExp, isR
 interface ReadOptions {
   title: string
   dirOnly: boolean
-  filter?: RegExp
+  filter?: string[]
 }
 const initReadOptions = {}
 export interface ListProps {
@@ -76,7 +79,7 @@ export interface ListProps {
 }
 
 export interface ListType {
-  show: (title: string, dirOnly?: boolean, filter?: RegExp) => void
+  show: (title: string, dir?: string, dirOnly?: boolean, filter?: string[]) => void
   hide: () => void
 }
 
@@ -84,23 +87,28 @@ export default forwardRef<ListType, ListProps>(({
   onConfirm,
   onHide = () => {},
 }: ListProps, ref) => {
-  const [path, setPath] = useState(externalStorageDirectoryPath)
+  const [path, setPath] = useState('')
   const [list, setList] = useState<PathItem[]>([])
   const isUnmountedRef = useRef(true)
   const readOptions = useRef<ReadOptions>(initReadOptions as ReadOptions)
-  const isReadingDir = useRef(false)
+  const [isReading, setIsReading] = useState(false)
   const modalRef = useRef<ModalType>(null)
   const theme = useTheme()
 
   useImperativeHandle(ref, () => ({
-    show(title, dirOnly = false, filter) {
+    show(title, dir = '', dirOnly = false, filter) {
       readOptions.current = {
         title,
         dirOnly,
         filter,
       }
       modalRef.current?.setVisible(true)
-      void readDir(path, dirOnly, filter)
+      // void getSelectedManagedFolder().then(uri => {
+      //   if (!uri) return
+      //   void readDir(uri, dirOnly, filter)
+      // })
+      if (dir) void readDir(dir, dirOnly, filter)
+      else void readDir(externalStorageDirectoryPath, dirOnly, filter)
     },
     hide() {
       modalRef.current?.setVisible(false)
@@ -114,39 +122,45 @@ export default forwardRef<ListType, ListProps>(({
     }
   }, [])
 
-  const readDir = async(path: string, dirOnly: boolean, filter?: RegExp, isRefresh?: boolean) => {
-    if (isReadingDir.current) return
-    isReadingDir.current = true
-    return handleReadDir(path, dirOnly, filter, isRefresh).then(list => {
+  const readDir = async(newPath: string, dirOnly: boolean, filter?: string[], isRefresh?: boolean, isOpen?: boolean) => {
+    if (isReading) return
+    setIsReading(true)
+    return handleReadDir(newPath, dirOnly, filter, isRefresh).then(list => {
       if (isUnmountedRef.current) return
+      if (!isOpen && newPath != path && newPath.startsWith(path)) parentDirInfo.set(newPath, path)
       setList(list)
-      setPath(path)
+      setPath(newPath)
     }).catch((err: any) => {
       toast(`Read dir error: ${err.message as string}`, 'long')
       // console.log('prevPath', prevPath)
       // if (isReadingDir.current) return
       // setPath(prevPath)
-      throw err
     }).finally(() => {
-      isReadingDir.current = false
+      setIsReading(false)
     })
   }
 
   const onSetPath = (pathInfo: PathItem) => {
     // console.log('onSetPath')
     if (pathInfo.isDir) {
-      void readDir(pathInfo.path, readOptions.current.dirOnly, readOptions.current.filter).catch(_ => _)
+      void readDir(pathInfo.path, readOptions.current.dirOnly, readOptions.current.filter)
     } else {
       onConfirm(pathInfo.path)
       // setPath(pathInfo.path)
     }
   }
+  const handleConfirm = () => {
+    if (!path) return
+    onConfirm(path)
+  }
 
   const toParentDir = () => {
-    const parentPath = path.substring(0, path.lastIndexOf('/'))
-    void readDir(parentPath.length ? parentPath : externalStorageDirectoryPath, readOptions.current.dirOnly, readOptions.current.filter).catch(() => {
-      void readDir(externalStorageDirectoryPath, readOptions.current.dirOnly, readOptions.current.filter).catch(_ => _)
-    })
+    const parentPath = parentDirInfo.get(path)
+    if (parentPath) {
+      void readDir(parentPath, readOptions.current.dirOnly, readOptions.current.filter)
+    } else {
+      toast('Permission denied')
+    }
   }
 
   const handleHide = () => {
@@ -161,10 +175,11 @@ export default forwardRef<ListType, ListProps>(({
       <View style={{ ...styles.container, backgroundColor: theme['c-content-background'] }}>
         <Header
           onRefreshDir={async(path) => readDir(path, readOptions.current.dirOnly, readOptions.current.filter, true)}
+          onOpenDir={async(path) => readDir(path, readOptions.current.dirOnly, readOptions.current.filter, false, true)}
           title={readOptions.current.title}
           path={path} />
-        <Main list={list} toParentDir={toParentDir} onSetPath={onSetPath} />
-        <Footer onConfirm={() => { onConfirm(path) }} onHide={handleHide} dirOnly={readOptions.current.dirOnly} />
+        <Main list={list} toParentDir={toParentDir} onSetPath={onSetPath} loading={isReading} />
+        <Footer onConfirm={handleConfirm} onHide={handleHide} dirOnly={readOptions.current.dirOnly} />
       </View>
     </Modal>
   )

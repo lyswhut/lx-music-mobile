@@ -3,7 +3,7 @@ import { Animated } from 'react-native'
 import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'
 import { createStyle } from '@/utils/tools'
-import Text from './Text'
+import Loading from './Loading'
 
 // interface LoadingMaskProps {
 
@@ -21,6 +21,7 @@ export default forwardRef<LoadingMaskType, {}>((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     setVisible(visible: boolean) {
+      if (maskVisible == visible) return
       visible ? handleShow() : handleHide()
     },
   }))
@@ -57,7 +58,7 @@ export default forwardRef<LoadingMaskType, {}>((props, ref) => {
 
   const maskComponent = useMemo(() => (
     <Animated.View style={{ ...styles.container, backgroundColor: theme['c-main-background'], opacity: animFade }}>
-      <Text size={20} color={theme['c-font-label']}>{t('list_loading')}</Text>
+      <Loading size={25} label={t('list_loading')} />
     </Animated.View>
   ), [animFade, t, theme])
 
@@ -74,5 +75,6 @@ const styles = createStyle({
     zIndex: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    gap: 10,
   },
 })

@@ -1,6 +1,6 @@
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import type { InputProps } from '@/components/common/Input'
 import Input from '@/components/common/Input'
 import { useTheme } from '@/store/theme/hook'
@@ -11,14 +11,33 @@ import { createStyle } from '@/utils/tools'
 export interface TextAreaItemProps extends InputProps {
   value: string
   label: string
+  onOnlineMatch?: () => void
   onChanged?: (text: string) => void
 }
 
-export default memo(({ value, label, onChanged, style, ...props }: TextAreaItemProps) => {
+export default memo(({ value, label, onOnlineMatch, onChanged, style, ...props }: TextAreaItemProps) => {
   const theme = useTheme()
+  const handleRemove = useCallback(() => {
+    onChanged?.('')
+  }, [onChanged])
+
   return (
     <View style={styles.container}>
-      <Text style={styles.label} size={14}>{label}</Text>
+      <View style={styles.header}>
+        <Text style={styles.label} size={14}>{label}</Text>
+        {
+          onChanged ? (
+            <View style={styles.btns}>
+              <TouchableOpacity onPress={handleRemove}>
+                <Text size={13} color={theme['c-button-font']}>{global.i18n.t('metadata_edit_modal_form_remove_lyric')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={onOnlineMatch}>
+                <Text size={13} color={theme['c-button-font']}>{global.i18n.t('metadata_edit_modal_form_match_lyric')}</Text>
+              </TouchableOpacity>
+            </View>
+          ) : null
+        }
+      </View>
       <Input
         value={value}
         onChangeText={onChanged}
@@ -37,8 +56,18 @@ const styles = createStyle({
     // paddingLeft: 25,
     marginBottom: 15,
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 30,
+  },
   label: {
     marginBottom: 2,
+  },
+  btns: {
+    flexDirection: 'row',
+    gap: 15,
   },
   textarea: {
     flexGrow: 1,

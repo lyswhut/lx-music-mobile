@@ -3,10 +3,9 @@ import { View, TouchableOpacity } from 'react-native'
 import Text from '@/components/common/Text'
 import { Icon } from '@/components/common/Icon'
 import { createStyle } from '@/utils/tools'
-import { readDir } from '@/utils/fs'
+import { getExternalStoragePaths, stat } from '@/utils/fs'
 import { useTheme } from '@/store/theme/hook'
 import { scaleSizeH } from '@/utils/pixelRatio'
-import { getExternalStoragePath } from '@/utils/nativeModules/utils'
 import { useStatusbarHeight } from '@/store/common/hook'
 import NewFolderModal, { type NewFolderType } from './NewFolderModal'
 import OpenStorageModal, { type OpenDirModalType } from './OpenStorageModal'
@@ -16,10 +15,12 @@ export default memo(({
   title,
   path,
   onRefreshDir,
+  onOpenDir,
 }: {
   title: string
   path: string
   onRefreshDir: (dir: string) => Promise<void>
+  onOpenDir: (dir: string) => Promise<void>
 }) => {
   const theme = useTheme()
   const newFolderTypeRef = useRef<NewFolderType>(null)
@@ -29,10 +30,10 @@ export default memo(({
 
   const checkExternalStoragePath = useCallback(() => {
     storagePathsRef.current = []
-    void getExternalStoragePath().then(async(storagePaths) => {
+    void getExternalStoragePaths().then(async(storagePaths) => {
       for (const path of storagePaths) {
         try {
-          await readDir(path)
+          if (!(await stat(path)).canRead) continue
         } catch { continue }
         storagePathsRef.current.push(path)
       }
@@ -47,13 +48,6 @@ export default memo(({
     checkExternalStoragePath()
   }
 
-  const toggleStorageDir = () => {
-    if (storagePathsRef.current.length) {
-      void onRefreshDir(storagePathsRef.current[0])
-      return
-    }
-    openStorage()
-  }
   const openStorage = () => {
     openDirModalTypeRef.current?.show(storagePathsRef.current)
   }
@@ -75,7 +69,7 @@ export default memo(({
           <Text style={styles.subTitle} color={theme['c-primary-font']} size={13} numberOfLines={1}>{path}</Text>
         </View>
         <View style={styles.actions}>
-          <TouchableOpacity style={styles.actionBtn} onPress={toggleStorageDir} onLongPress={openStorage}>
+          <TouchableOpacity style={styles.actionBtn} onPress={openStorage}>
             <Icon name="sd-card" color={theme['c-primary-font']} size={22} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionBtn} onPress={handleShowNewFolderModal}>
@@ -86,7 +80,7 @@ export default memo(({
           </TouchableOpacity>
         </View>
       </View>
-      <OpenStorageModal ref={openDirModalTypeRef} onRefreshDir={onRefreshDir} />
+      <OpenStorageModal ref={openDirModalTypeRef} onOpenDir={onOpenDir} />
       <NewFolderModal ref={newFolderTypeRef} onRefreshDir={onRefreshDir} />
     </>
   )
@@ -101,6 +95,7 @@ const styles = createStyle({
     paddingRight: 15,
     alignItems: 'center',
     elevation: 2,
+    zIndex: 2,
     // borderBottomWidth: BorderWidths.normal,
   },
   titleContent: {

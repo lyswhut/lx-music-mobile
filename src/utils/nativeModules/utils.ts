@@ -48,15 +48,6 @@ export const shareText = async(shareTitle: string, title: string, text: string):
   UtilsModule.shareText(shareTitle, title, text)
 }
 
-export const writeFile = async(filePath: string, data: string): Promise<void> => {
-  return UtilsModule.writeStringToFile(filePath, data)
-}
-export const readFile = async(filePath: string): Promise<string> => {
-  return UtilsModule.getStringFromFile(filePath)
-}
-export const unlink = async(filePath: string): Promise<void> => {
-  return UtilsModule.unlink(filePath)
-}
 export const getSystemLocales = async(): Promise<string> => {
   return UtilsModule.getSystemLocales()
 }
@@ -71,10 +62,6 @@ export const onScreenStateChange = (handler: (state: 'ON' | 'OFF') => void): () 
   return () => {
     eventListener.remove()
   }
-}
-
-export const getExternalStoragePath = async(): Promise<string[]> => {
-  return UtilsModule.getExternalStoragePath()
 }
 
 export const getWindowSize = async(): Promise<{ width: number, height: number }> => {

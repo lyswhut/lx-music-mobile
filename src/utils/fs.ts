@@ -1,29 +1,60 @@
 import RNFS from 'react-native-fs'
+import {
+  Dirs,
+  FileSystem,
+  AndroidScoped,
+  type OpenDocumentOptions,
+  type Encoding,
+  type HashAlgorithm,
+  getExternalStoragePaths as _getExternalStoragePaths,
+} from 'react-native-file-system'
 
-export const externalDirectoryPath = RNFS.ExternalDirectoryPath
+export type {
+  FileType,
+} from 'react-native-file-system'
 
-export const temporaryDirectoryPath = RNFS.TemporaryDirectoryPath
-export const externalStorageDirectoryPath = RNFS.ExternalStorageDirectoryPath
+// export const externalDirectoryPath = RNFS.ExternalDirectoryPath
 
-// export const unlink = async(path: string) => RNFS.unlink(path)
+export const temporaryDirectoryPath = Dirs.CacheDir
+export const externalStorageDirectoryPath = Dirs.SDCardDir
 
-export const readDir = async(path: string) => RNFS.readDir(path)
+export const getExternalStoragePaths = async(is_removable?: boolean) => _getExternalStoragePaths(is_removable)
 
-export const mkdir = async(path: string) => RNFS.mkdir(path)
+export const selectManagedFolder = async(isPersist: boolean = false) => AndroidScoped.openDocumentTree(isPersist)
+export const selectFile = async(options: OpenDocumentOptions) => AndroidScoped.openDocument(options)
+export const removeManagedFolder = async(path: string) => AndroidScoped.releasePersistableUriPermission(path)
+export const getManagedFolders = async() => AndroidScoped.getPersistedUriPermissions()
 
-export const stat = async(path: string) => RNFS.stat(path)
+export const getPersistedUriList = async() => AndroidScoped.getPersistedUriPermissions()
 
-// export const readFile = async(path: string, encoding = 'utf8') => RNFS.readFile(path, encoding)
 
-export const copyFile = async(fromPath: string, toPath: string) => RNFS.copyFile(fromPath, toPath)
+export const readDir = async(path: string) => FileSystem.ls(path)
 
-export const moveFile = async(fromPath: string, toPath: string) => RNFS.moveFile(fromPath, toPath)
+export const unlink = async(path: string) => FileSystem.unlink(path)
 
-export const existsFile = async(path: string) => RNFS.exists(path)
+export const mkdir = async(path: string) => FileSystem.mkdir(path)
 
-// export const writeFile = async(path: string, data: string, encoding = 'utf8') => RNFS.writeFile(path, data, encoding)
+export const stat = async(path: string) => FileSystem.stat(path)
+export const hash = async(path: string, algorithm: HashAlgorithm) => FileSystem.hash(path, algorithm)
 
-export const appendFile = async(path: string, data: string, encoding = 'utf8') => RNFS.appendFile(path, data, encoding)
+export const readFile = async(path: string, encoding?: Encoding) => FileSystem.readFile(path, encoding)
+
+
+// export const copyFile = async(fromPath: string, toPath: string) => FileSystem.cp(fromPath, toPath)
+
+// export const moveFile = async(fromPath: string, toPath: string) => FileSystem.mv(fromPath, toPath)
+export const gzipFile = async(fromPath: string, toPath: string) => FileSystem.gzipFile(fromPath, toPath)
+export const unGzipFile = async(fromPath: string, toPath: string) => FileSystem.unGzipFile(fromPath, toPath)
+export const gzipString = async(data: string, encoding?: Encoding) => FileSystem.gzipString(data, encoding)
+export const unGzipString = async(data: string, encoding?: Encoding) => FileSystem.unGzipString(data, encoding)
+
+export const existsFile = async(path: string) => FileSystem.exists(path)
+
+export const rename = async(path: string, name: string) => FileSystem.rename(path, name)
+
+export const writeFile = async(path: string, data: string, encoding?: Encoding) => FileSystem.writeFile(path, data, encoding)
+
+export const appendFile = async(path: string, data: string, encoding?: Encoding) => FileSystem.appendFile(path, data, encoding)
 
 export const downloadFile = (url: string, path: string, options: Omit<RNFS.DownloadFileOptions, 'fromUrl' | 'toFile'> = {}) => {
   if (!options.headers) {

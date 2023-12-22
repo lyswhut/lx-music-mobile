@@ -28,6 +28,7 @@ const listPrefix = storageDataPrefix.list
 const dislikeListPrefix = storageDataPrefix.dislikeList
 const userApiPrefix = storageDataPrefix.userApi
 const openStoragePathPrefix = storageDataPrefix.openStoragePath
+const selectedManagedFolderPrefix = storageDataPrefix.selectedManagedFolder
 
 // const defaultListKey = listPrefix + 'default'
 // const loveListKey = listPrefix + 'love'
@@ -427,6 +428,18 @@ export const savePlayInfo = async(playInfo: LX.Player.SavedPlayInfo) => {
 // 获取上次关闭时的当前歌曲播放信息
 export const getPlayInfo = async() => {
   return getData<LX.Player.SavedPlayInfo | null>(playInfoStorageKey)
+}
+
+let selectedManagedFolder: string | null = ''
+export const setSelectedManagedFolder = async(uri: string) => {
+  selectedManagedFolder = uri
+  return saveData(selectedManagedFolderPrefix, uri)
+}
+export const getSelectedManagedFolder = async() => {
+  if (selectedManagedFolder != '') return selectedManagedFolder
+  let uri = await getData<string>(selectedManagedFolderPrefix)
+  if (selectedManagedFolder != uri) selectedManagedFolder = uri
+  return selectedManagedFolder
 }
 
 export const getSyncAuthKey = async(serverId: string) => {

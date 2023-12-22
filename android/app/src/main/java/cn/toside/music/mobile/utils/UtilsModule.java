@@ -305,21 +305,6 @@ public class UtilsModule extends ReactContextBaseJavaModule {
     Objects.requireNonNull(reactContext.getCurrentActivity()).startActivity(Intent.createChooser(shareIntent, shareTitle));
   }
 
-  @ReactMethod
-  public void getStringFromFile(String filePath, Promise promise) {
-    AsyncTask.runTask(new Utils.ReadStringFromFile(filePath), promise);
-  }
-
-  @ReactMethod
-  public void writeStringToFile(String filePath, String dataStr, Promise promise) {
-    AsyncTask.runTask(new Utils.WriteStringToFile(filePath, dataStr), promise);
-  }
-
-  @ReactMethod
-  public void unlink(String filePath, Promise promise) {
-    AsyncTask.runTask(new Utils.Unlink(filePath), promise);
-  }
-
   // https://stackoverflow.com/questions/73463341/in-per-app-language-how-to-get-app-locale-in-api-33-if-system-locale-is-diffe
   @ReactMethod
   public void getSystemLocales(Promise promise) {
@@ -400,14 +385,6 @@ public class UtilsModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void requestIgnoreBatteryOptimization(Promise promise) {
     promise.resolve(BatteryOptimizationUtil.requestIgnoreBatteryOptimization(reactContext.getApplicationContext(), reactContext.getPackageName()));
-  }
-
-  @ReactMethod
-  public void getExternalStoragePath(Promise promise) {
-    WritableArray arr = Arguments.createArray();
-    ArrayList<String> paths = Utils.getExternalStoragePath(reactContext, true);
-    for (String p: paths) arr.pushString(p);
-    promise.resolve(arr);
   }
 }
 

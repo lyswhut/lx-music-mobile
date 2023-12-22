@@ -11,6 +11,7 @@ export type { OnLoadEvent } from 'react-native-fast-image'
 export interface ImageProps extends ViewProps {
   style: FastImageProps['style']
   url?: string | number | null
+  cache?: boolean
   resizeMode?: FastImageProps['resizeMode']
   onError?: (url: string | number) => void
 }
@@ -33,7 +34,7 @@ const EmptyPic = memo(({ style, nativeID }: { style: ImageProps['style'], native
   )
 })
 
-const Image = memo(({ url, resizeMode = FastImage.resizeMode.cover, style, onError, nativeID }: ImageProps) => {
+const Image = memo(({ url, cache, resizeMode = FastImage.resizeMode.cover, style, onError, nativeID }: ImageProps) => {
   const [isError, setError] = useState(false)
   const handleError = useCallback(() => {
     setError(true)
@@ -57,6 +58,7 @@ const Image = memo(({ url, resizeMode = FastImage.resizeMode.cover, style, onErr
               uri: uri!,
               headers: defaultHeaders,
               priority: FastImage.priority.normal,
+              cache: cache === false ? 'web' : 'immutable',
             }}
             onError={handleError}
             resizeMode={resizeMode}
@@ -72,6 +74,9 @@ const Image = memo(({ url, resizeMode = FastImage.resizeMode.cover, style, onErr
 
 export const getSize = (uri: string, success: (width: number, height: number) => void, failure?: (error: any) => void) => {
   _Image.getSize(uri, success, failure)
+}
+export const clearMemoryCache = async() => {
+  return Promise.all([FastImage.clearMemoryCache(), FastImage.clearDiskCache()])
 }
 export default Image
 

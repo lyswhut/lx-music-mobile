@@ -1,6 +1,5 @@
 // import { requestStoragePermission } from '@/utils/common'
-import { temporaryDirectoryPath, existsFile, appendFile } from '@/utils/fs'
-import { readFile, unlink, writeFile } from './nativeModules/utils'
+import { temporaryDirectoryPath, existsFile, appendFile, unlink, writeFile, readFile } from '@/utils/fs'
 
 const logPath = temporaryDirectoryPath + '/error.log'
 

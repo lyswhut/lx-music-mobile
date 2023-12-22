@@ -11,6 +11,7 @@ import {
 } from './utils'
 import { getLocalFilePath } from '@/utils/music'
 import { readLyric, readPic } from '@/utils/localMediaMetadata'
+import { stat } from '@/utils/fs'
 
 const getOtherSourceByLocal = async(musicInfo: LX.Music.MusicInfoLocal) => {
   let result: LX.Music.MusicInfoOnline[] = []
@@ -31,7 +32,7 @@ const getOtherSourceByLocal = async(musicInfo: LX.Music.MusicInfoLocal) => {
     })
     if (result.length) return result
   }
-  let fileName = musicInfo.meta.filePath.split('/').at(-1)
+  let fileName = (await stat(musicInfo.meta.filePath).catch(() => ({ name: null }))).name ?? musicInfo.meta.filePath.split('/').at(-1)
   if (fileName) {
     fileName = fileName.substring(0, fileName.lastIndexOf('.'))
     if (fileName != musicInfo.name) {
@@ -84,13 +85,14 @@ export const getMusicUrl = async({ musicInfo, isRefresh, onToggleSource = () => 
   })
 }
 
-export const getPicUrl = async({ musicInfo, listId, isRefresh, onToggleSource = () => {} }: {
+export const getPicUrl = async({ musicInfo, listId, isRefresh, skipFilePic, onToggleSource = () => {} }: {
   musicInfo: LX.Music.MusicInfoLocal
   listId?: string | null
   isRefresh: boolean
+  skipFilePic?: boolean
   onToggleSource?: (musicInfo?: LX.Music.MusicInfoOnline) => void
 }): Promise<string> => {
-  if (!isRefresh) {
+  if (!isRefresh && !skipFilePic) {
     let pic = await readPic(musicInfo.meta.filePath)
     if (pic) {
       if (pic.startsWith('/')) pic = `file://${pic}`
@@ -120,12 +122,13 @@ const getMusicFileLyric = async(filePath: string) => {
     lyric,
   }
 }
-export const getLyricInfo = async({ musicInfo, isRefresh, onToggleSource = () => {} }: {
+export const getLyricInfo = async({ musicInfo, isRefresh, skipFileLyric, onToggleSource = () => {} }: {
   musicInfo: LX.Music.MusicInfoLocal
+  skipFileLyric?: boolean
   isRefresh: boolean
   onToggleSource?: (musicInfo?: LX.Music.MusicInfoOnline) => void
 }): Promise<LX.Player.LyricInfo> => {
-  if (!isRefresh) {
+  if (!isRefresh && !skipFileLyric) {
     const lyricInfo = await getCachedLyricInfo(musicInfo)
     if (lyricInfo) {
       // 存在已编辑、原始歌词

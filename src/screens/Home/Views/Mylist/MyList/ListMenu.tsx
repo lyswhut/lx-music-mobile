@@ -4,6 +4,7 @@ import Menu, { type Menus, type MenuType, type Position } from '@/components/com
 import { LIST_IDS } from '@/config/constant'
 import musicSdk from '@/utils/musicSdk'
 import { scaleSizeW } from '@/utils/pixelRatio'
+import listState from '@/store/list/state'
 
 export interface SelectInfo {
   listInfo: LX.List.MyListInfo
@@ -65,6 +66,7 @@ export default forwardRef<ListMenuType, ListMenuProps>(({
     let rename = false
     let sync = false
     let remove = false
+    let local_file = !listState.fetchingListStatus[listInfo.id]
     let userList: LX.List.UserListInfo
     switch (listInfo.id) {
       case LIST_IDS.DEFAULT:
@@ -80,8 +82,8 @@ export default forwardRef<ListMenuType, ListMenuProps>(({
 
     setMenus([
       { action: 'rename', disabled: !rename, label: t('list_rename') },
-      { action: 'local_file', label: t('list_select_local_file') },
-      { action: 'sync', disabled: !sync, label: t('list_sync') },
+      { action: 'local_file', disabled: !local_file, label: t('list_select_local_file') },
+      { action: 'sync', disabled: !sync || !local_file, label: t('list_sync') },
       { action: 'import', label: t('list_import') },
       { action: 'export', label: t('list_export') },
       // { action: 'changePosition', label: t('change_position') },

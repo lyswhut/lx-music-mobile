@@ -84,8 +84,7 @@ export const useListFetching = (listId: string) => {
     return () => {
       global.state_event.off('fetchingListStatusUpdated', handleUpdate)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [listId])
 
   return fetching
 }

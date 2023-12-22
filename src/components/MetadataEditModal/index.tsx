@@ -2,7 +2,7 @@ import { useRef, useImperativeHandle, forwardRef, useState } from 'react'
 import ConfirmAlert, { type ConfirmAlertType } from '@/components/common/ConfirmAlert'
 import Text from '@/components/common/Text'
 import { View } from 'react-native'
-import { createStyle, toast } from '@/utils/tools'
+import { TEMP_FILE_PATH, createStyle, toast } from '@/utils/tools'
 import {
   readMetadata,
   readPic,
@@ -14,6 +14,8 @@ import {
 import { useUnmounted } from '@/utils/hooks'
 import MetadataForm, { defaultData, type Metadata, type MetadataFormType } from './MetadataForm'
 import { log } from '@/utils/log'
+import { formatPlayTime2 } from '@/utils'
+import { unlink } from '@/utils/fs'
 
 export type {
   Metadata,
@@ -41,8 +43,8 @@ export default forwardRef<MetadataEditType, MetadataEditProps>((props, ref) => {
     void Promise.all([
       readMetadata(filePath),
       readPic(filePath),
-      readLyric(filePath),
-    ]).then(([_metadata, pic, lyric]) => {
+      readLyric(filePath, false),
+    ]).then(async([_metadata, pic, lyric]) => {
       if (!_metadata) return
       if (isUnmounted.current) return
       metadata.current = {
@@ -50,6 +52,7 @@ export default forwardRef<MetadataEditType, MetadataEditProps>((props, ref) => {
         singer: _metadata.singer,
         albumName: _metadata.albumName,
         pic,
+        interval: formatPlayTime2(_metadata.interval),
         lyric,
       }
       requestAnimationFrame(() => {
@@ -95,6 +98,7 @@ export default forwardRef<MetadataEditType, MetadataEditProps>((props, ref) => {
       if (_metadata.pic != metadata.current.pic) {
         isUpdated ||= true
         await writePic(filePath.current, _metadata.pic)
+        if (_metadata.pic.startsWith(TEMP_FILE_PATH)) void unlink(_metadata.pic)
       }
       if (_metadata.lyric != metadata.current.lyric) {
         isUpdated ||= true

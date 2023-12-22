@@ -12,10 +12,11 @@ import { BorderWidths } from '@/theme'
 export interface PicItemProps {
   value: string
   label: string
+  onOnlineMatch: () => void
   onChanged: (text: string) => void
 }
 
-export default memo(({ value, label, onChanged }: PicItemProps) => {
+export default memo(({ value, label, onOnlineMatch, onChanged }: PicItemProps) => {
   const theme = useTheme()
   const fileSelectRef = useRef<FileSelectType>(null)
   const handleRemoveFile = useCallback(() => {
@@ -25,7 +26,7 @@ export default memo(({ value, label, onChanged }: PicItemProps) => {
     fileSelectRef.current?.show({
       title: global.i18n.t('metadata_edit_modal_form_select_pic_title'),
       dirOnly: false,
-      filter: /jpg|jpeg|png/,
+      filter: ['jpg', 'jpeg', 'png'],
     }, (path) => {
       onChanged(path)
     })
@@ -38,6 +39,9 @@ export default memo(({ value, label, onChanged }: PicItemProps) => {
           <TouchableOpacity onPress={handleRemoveFile}>
             <Text size={13} color={theme['c-button-font']}>{global.i18n.t('metadata_edit_modal_form_remove_pic')}</Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={onOnlineMatch}>
+            <Text size={13} color={theme['c-button-font']}>{global.i18n.t('metadata_edit_modal_form_match_pic')}</Text>
+          </TouchableOpacity>
           <TouchableOpacity onPress={handleShowSelectFile}>
             <Text size={13} color={theme['c-button-font']}>{global.i18n.t('metadata_edit_modal_form_select_pic')}</Text>
           </TouchableOpacity>
@@ -46,6 +50,7 @@ export default memo(({ value, label, onChanged }: PicItemProps) => {
       <View style={styles.picContent}>
         <Image
           url={value}
+          cache={false}
           style={{ ...styles.pic, borderColor: theme['c-border-background'] }}
         />
       </View>

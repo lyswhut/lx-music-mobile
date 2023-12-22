@@ -2,9 +2,8 @@ import { Platform, ToastAndroid, BackHandler, Linking, Dimensions, Alert, Appear
 // import ExtraDimensions from 'react-native-extra-dimensions-android'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { storageDataPrefix } from '@/config/constant'
-import { gzipFile, unGzipFile } from '@/utils/nativeModules/gzip'
-import { temporaryDirectoryPath } from '@/utils/fs'
-import { getSystemLocales, isIgnoringBatteryOptimization, isNotificationsEnabled, requestNotificationPermission, readFile, requestIgnoreBatteryOptimization, shareText, writeFile, unlink } from '@/utils/nativeModules/utils'
+import { gzipFile, readFile, temporaryDirectoryPath, unGzipFile, unlink, writeFile } from '@/utils/fs'
+import { getSystemLocales, isIgnoringBatteryOptimization, isNotificationsEnabled, requestNotificationPermission, requestIgnoreBatteryOptimization, shareText } from '@/utils/nativeModules/utils'
 import musicSdk from '@/utils/musicSdk'
 import { getData, removeData, saveData } from '@/plugins/storage'
 import BackgroundTimer from 'react-native-background-timer'
@@ -30,6 +29,8 @@ export const isAndroid = Platform.OS === 'android'
 export const osVer = Platform.constants.Release as string
 
 export const isActive = () => AppState.currentState == 'active'
+
+export const TEMP_FILE_PATH = temporaryDirectoryPath + '/tempFile'
 
 // fix https://github.com/facebook/react-native/issues/4934
 // export const getWindowSise = (windowDimensions?: ReturnType<(typeof Dimensions)['get']>) => {

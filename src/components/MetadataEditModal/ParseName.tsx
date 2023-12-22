@@ -8,25 +8,25 @@ import { useI18n } from '@/lang'
 
 
 export interface ParseNameProps {
-  path: string
+  fileName: string
   onNameChanged: (text: string) => void
   onSingerChanged: (text: string) => void
 }
 
-const parsePath = (path: string) => {
-  return path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.')).split('-').map(name => name.trim())
+const parsePath = (fileName: string) => {
+  return fileName.substring(0, fileName.lastIndexOf('.')).split('-').map(name => name.trim())
 }
 
-export default memo(({ path, onNameChanged, onSingerChanged }: ParseNameProps) => {
+export default memo(({ fileName, onNameChanged, onSingerChanged }: ParseNameProps) => {
   const theme = useTheme()
   const t = useI18n()
   const handleParseNameSinger = () => {
-    const [name, singer] = parsePath(path)
+    const [name, singer] = parsePath(fileName)
     onNameChanged(name)
     if (singer) onSingerChanged(singer)
   }
   const handleParseSingerName = () => {
-    const [singer, name] = parsePath(path)
+    const [singer, name] = parsePath(fileName)
     onSingerChanged(singer)
     if (name) onNameChanged(name)
   }

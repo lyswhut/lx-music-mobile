@@ -96,6 +96,19 @@ export const useNavActiveId = () => {
   return value
 }
 
+export const useBgPic = () => {
+  const [value, update] = useState(state.bgPic)
+
+  useEffect(() => {
+    global.state_event.on('bgPicUpdated', update)
+    return () => {
+      global.state_event.off('bgPicUpdated', update)
+    }
+  }, [])
+
+  return value
+}
+
 
 export const useSourceNames = () => {
   const [value, update] = useState(state.sourceNames)

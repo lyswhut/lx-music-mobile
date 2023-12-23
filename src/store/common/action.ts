@@ -29,6 +29,10 @@ export default {
   setLastNavActiveId(id: InitState['navActiveId']) {
     state.lastNavActiveId = id
   },
+  setBgPic(pic: string | null) {
+    state.bgPic = pic
+    global.state_event.bgPicUpdated(pic)
+  },
   setSourceNames(names: InitState['sourceNames']) {
     state.sourceNames = names
     global.state_event.sourceNamesUpdated(names)

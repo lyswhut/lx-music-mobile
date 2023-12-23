@@ -59,7 +59,7 @@
     "react-native-fast-image": "^8.6.3",
     "react-native-file-system": "github:lyswhut/react-native-file-system#291582cd202053246458bf9376efe27fbb75afb6",
     "react-native-fs": "^2.20.0",
-    "react-native-local-media-metadata": "github:lyswhut/react-native-local-media-metadata#35d7df1f68f19492749a9ea0541f02be77c0a675",
+    "react-native-local-media-metadata": "github:lyswhut/react-native-local-media-metadata#fbf7c7d07475c6adb398b05653fa3cadc722d4ea",
     "react-native-navigation": "^7.37.2",
     "react-native-pager-view": "^6.2.3",
     "react-native-quick-base64": "^2.0.8",

@@ -94,3 +94,7 @@ export default forwardRef<View, ImageBackgroundProps>(({
     </View>
   )
 })
+
+export const prefetch = async(url: string) => {
+  return Image.prefetch(url)
+}

@@ -40,6 +40,10 @@ export class StateEvent extends Event {
     this.emit('themeUpdated', theme)
   }
 
+  bgPicUpdated(bgPic: string | null) {
+    this.emit('bgPicUpdated', bgPic)
+  }
+
   playerMusicInfoChanged(musicInfo: PlayerState['musicInfo']) {
     this.emit('playerMusicInfoChanged', musicInfo)
   }

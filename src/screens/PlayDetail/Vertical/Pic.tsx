@@ -35,7 +35,7 @@ export default ({ componentId }: { componentId: string }) => {
   return (
     <View style={styles.container}>
       <View style={{ ...styles.content, elevation: animated ? 3 : 0 }}>
-        <Image url={musicInfo.pic} cache={false} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={style} />
+        <Image url={musicInfo.pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={style} />
       </View>
     </View>
   )

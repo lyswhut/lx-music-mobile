@@ -6,7 +6,7 @@ import initUserApi from './userApi'
 import initPlayer from './player'
 import dataInit from './dataInit'
 import initSync from './sync'
-// import syncSetting from './syncSetting'
+import initCommonState from './common'
 import { setApiSource } from '@/core/apiSource'
 import commonActions from '@/store/common/action'
 import settingState from '@/store/setting/state'
@@ -55,6 +55,10 @@ export default async() => {
   bootLog('Player inited.')
   await dataInit(setting)
   bootLog('Data inited.')
+  await dataInit(setting)
+  bootLog('Data inited.')
+  await initCommonState(setting)
+  bootLog('Common State inited.')
 
   void initSync(setting)
   bootLog('Sync inited.')

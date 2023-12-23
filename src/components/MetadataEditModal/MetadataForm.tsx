@@ -10,6 +10,7 @@ import ParseName from './ParseName'
 import { downloadFile, mkdir, stat } from '@/utils/fs'
 import { useUnmounted } from '@/utils/hooks'
 import { getLyricInfo, getPicUrl } from '@/core/music/local'
+import settingState from '@/store/setting/state'
 
 export interface Metadata {
   name: string // 歌曲名
@@ -146,11 +147,16 @@ export default forwardRef<MetadataFormType, {}>((props, ref) => {
         source: 'local',
       },
       isRefresh: false,
-    }).then(async({ lyric }) => {
+    }).then(async({ lyric, tlyric, rlyric }) => {
       if (isUnmounted.current || path != filePath.current) return
       toast(t('metadata_edit_modal_form_match_lyric_success'))
+      let lrc = [
+        lyric,
+        settingState.setting['player.isShowLyricTranslation'] && tlyric ? tlyric : '',
+        settingState.setting['player.isShowLyricRoma'] && rlyric ? rlyric : '',
+      ]
       setData(data => {
-        return { ...data, lyric }
+        return { ...data, lyric: lrc.join('\n\n').trim() }
       })
     }).catch(() => {
       if (isUnmounted.current || path != filePath.current) return

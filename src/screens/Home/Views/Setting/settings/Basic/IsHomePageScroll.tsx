@@ -10,14 +10,14 @@ import CheckBoxItem from '../../components/CheckBoxItem'
 
 export default memo(() => {
   const t = useI18n()
-  const autoHidePlayBar = useSettingValue('common.autoHidePlayBar')
-  const setAutoHidePlayBar = (autoHidePlayBar: boolean) => {
-    updateSetting({ 'common.autoHidePlayBar': autoHidePlayBar })
+  const homePageScroll = useSettingValue('common.homePageScroll')
+  const setHomePageScroll = (homePageScroll: boolean) => {
+    updateSetting({ 'common.homePageScroll': homePageScroll })
   }
 
   return (
     <View style={styles.content}>
-      <CheckBoxItem check={autoHidePlayBar} label={t('setting_basic_auto_hide_play_bar')} onChange={setAutoHidePlayBar} />
+      <CheckBoxItem check={homePageScroll} label={t('setting_basic_home_page_scroll')} onChange={setHomePageScroll} />
     </View>
   )
 })
@@ -26,6 +26,6 @@ export default memo(() => {
 const styles = createStyle({
   content: {
     marginTop: 5,
-    // marginBottom: 15,
+    marginBottom: 15,
   },
 })

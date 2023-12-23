@@ -47,6 +47,11 @@ declare global {
       'common.drawerLayoutPosition': 'left' | 'right'
 
       /**
+       * 启用首页滑动
+       */
+      'common.homePageScroll': boolean
+
+      /**
        * 是否显示返回按钮
        */
       'common.showBackBtn': boolean

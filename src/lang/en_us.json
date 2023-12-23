@@ -240,6 +240,7 @@
   "setting_basic_font_size_80": "smaller",
   "setting_basic_font_size_90": "Small",
   "setting_basic_font_size_preview": "LX Music Font Size Preview",
+  "setting_basic_home_page_scroll": "Enable horizontal scrolling on the vertical home page",
   "setting_basic_lang": "Language",
   "setting_basic_share_type": "Share",
   "setting_basic_share_type_clipboard": "copy to clipboard",

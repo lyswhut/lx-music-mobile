@@ -73,7 +73,7 @@ export default forwardRef<ListMenuType, ListMenuProps>((props, ref) => {
     if (musicInfo.source == 'local') menu.splice(4, 0, { action: 'editMetadata', disabled: !edit_metadata, label: t('edit_metadata') })
     setMenus(menu)
     void Promise.all([hasEditMetadata(musicInfo)]).then(([_edit_metadata]) => {
-      console.log(_edit_metadata)
+      // console.log(_edit_metadata)
       let isUpdated = true
       if (edit_metadata != _edit_metadata) {
         edit_metadata = _edit_metadata

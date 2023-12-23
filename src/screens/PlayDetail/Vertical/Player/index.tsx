@@ -12,13 +12,9 @@ import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 export default memo(() => {
   return (
     <View style={styles.container} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_player}>
-      <View style={styles.status}>
-        <PlayInfo />
-      </View>
+      <PlayInfo />
       <ControlBtn />
-      <View style={{ ...styles.info }} >
-        <MoreBtn />
-      </View>
+      <MoreBtn />
     </View>
   )
 })
@@ -37,12 +33,6 @@ const styles = createStyle({
     // backgroundColor: AppColors.primary,
     // backgroundColor: 'red',
     flexDirection: 'column',
-  },
-  info: {
-    flex: 0,
-    flexDirection: 'row',
-    // paddingBottom: 5,
-    // justifyContent: 'flex-end',
   },
   status: {
     marginTop: 10,

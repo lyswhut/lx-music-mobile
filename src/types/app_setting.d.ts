@@ -82,6 +82,11 @@ declare global {
       'theme.dynamicBg': boolean
 
       /**
+       * 字体阴影
+       */
+      'theme.fontShadow': boolean
+
+      /**
            * 启动时自动播放歌曲
            */
       'player.startupAutoPlay': boolean

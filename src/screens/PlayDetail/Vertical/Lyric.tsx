@@ -67,7 +67,7 @@ const LrcLine = memo(({ line, lineNum, activeLine, onLayout }: LineProps) => {
   const lrcFontSize = useSettingValue('playDetail.vertical.style.lrcFontSize')
   const textAlign = useSettingValue('playDetail.style.align')
   const size = lrcFontSize / 10
-  const lineHeight = setSpText(size) * 1.25
+  const lineHeight = setSpText(size) * 1.3
 
   const colors = useMemo(() => {
     const active = activeLine == lineNum

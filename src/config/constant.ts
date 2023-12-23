@@ -30,7 +30,7 @@ export enum COMPONENT_IDS {
 export enum NAV_SHEAR_NATIVE_IDS {
   playDetail_pic = 'playDetail_pic',
   playDetail_header = 'playDetail_header',
-  playDetail_pageIndicator = 'playDetail_pageIndicator',
+  // playDetail_pageIndicator = 'playDetail_pageIndicator',
   playDetail_player = 'playDetail_player',
   songlistDetail_pic = 'songlistDetail_pic',
   songlistDetail_title = 'songlistDetail_title',

@@ -166,17 +166,6 @@ export function pushPlayDetailScreen(componentId: string) {
                     },
                   },
                   {
-                    id: NAV_SHEAR_NATIVE_IDS.playDetail_pageIndicator,
-                    alpha: {
-                      from: 0, // We don't declare 'to' value as that is the element's current alpha value, here we're essentially animating from 0 to 1
-                      duration: 300,
-                    },
-                    translationX: {
-                      from: -32, // Animate translationY from 16dp to 0dp
-                      duration: 300,
-                    },
-                  },
-                  {
                     id: NAV_SHEAR_NATIVE_IDS.playDetail_player,
                     alpha: {
                       from: 0, // We don't declare 'to' value as that is the element's current alpha value, here we're essentially animating from 0 to 1

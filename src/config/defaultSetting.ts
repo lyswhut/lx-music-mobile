@@ -30,9 +30,9 @@ const defaultSetting: LX.AppSetting = {
 
   // 'playDetail.isZoomActiveLrc': false,
   // 'playDetail.isShowLyricProgressSetting': false,
-  'playDetail.style.align': 'center',
-  'playDetail.vertical.style.lrcFontSize': 176,
-  'playDetail.horizontal.style.lrcFontSize': 180,
+  'playDetail.style.align': 'left',
+  'playDetail.vertical.style.lrcFontSize': 210,
+  'playDetail.horizontal.style.lrcFontSize': 220,
   'playDetail.isShowLyricProgressSetting': false,
 
   'desktopLyric.enable': false,
@@ -71,6 +71,7 @@ const defaultSetting: LX.AppSetting = {
   'theme.darkId': 'black',
   'theme.hideBgDark': false,
   'theme.dynamicBg': false,
+  'theme.fontShadow': true,
 }
 
 

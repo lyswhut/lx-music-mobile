@@ -264,6 +264,7 @@
   "setting_basic_theme": "Theme",
   "setting_basic_theme_auto_theme": "Follow the system light and dark mode to switch themes",
   "setting_basic_theme_dynamic_bg": "Use dynamic backgrounds",
+  "setting_basic_theme_font_shadow": "Enable font shadow",
   "setting_basic_theme_hide_bg_dark": "Hide black theme",
   "setting_basic_theme_more_btn_show": "Expand themes",
   "setting_dislike_list_input_tip": "song name@artist name\nSong name\n@ singer name",

@@ -9,15 +9,14 @@ import { useSettingValue } from '@/store/setting/hook'
 
 export default memo(() => {
   const t = useI18n()
-  const isDynamicBg = useSettingValue('theme.dynamicBg')
-  const setIsDynamicBg = (isDynamicBg: boolean) => {
-    updateSetting({ 'theme.dynamicBg': isDynamicBg })
+  const isFontShadow = useSettingValue('theme.fontShadow')
+  const setIsFontShadow = (isFontShadow: boolean) => {
+    updateSetting({ 'theme.fontShadow': isFontShadow })
   }
-
 
   return (
     <View style={styles.content}>
-      <CheckBoxItem check={isDynamicBg} label={t('setting_basic_theme_dynamic_bg')} onChange={setIsDynamicBg} />
+      <CheckBoxItem check={isFontShadow} label={t('setting_basic_theme_font_shadow')} onChange={setIsFontShadow} />
     </View>
   )
 })
@@ -25,6 +24,6 @@ export default memo(() => {
 const styles = createStyle({
   content: {
     marginTop: 5,
-    // marginBottom: 15,
+    marginBottom: 15,
   },
 })

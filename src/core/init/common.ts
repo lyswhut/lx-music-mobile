@@ -44,7 +44,6 @@ export default async(setting: LX.AppSetting) => {
   const handlePicUpdate = () => {
     if (playerState.musicInfo.pic && playerState.musicInfo.pic != playerState.loadErrorPicUrl) {
       // if (playerState.musicInfo.pic != playerState.loadErrorPicUrl) {
-      console.log('picUpdated', playerState.musicInfo.pic)
       pic = playerState.musicInfo.pic
       if (!isDynamicBg) return
       handleUpdatePic(pic)

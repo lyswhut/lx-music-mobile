@@ -12,7 +12,7 @@ export const handleImport = (path: string) => {
     toast(global.i18n.t('user_api_import_success_tip'))
   }).catch((error: any) => {
     log.error(error.stack)
-    toast(global.i18n.t('user_api_import_failed_tip'))
+    toast(global.i18n.t('user_api_import_failed_tip') + '\n' + error.message)
   })
 }
 

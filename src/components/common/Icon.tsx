@@ -37,8 +37,8 @@ export const Icon = memo(({ size = 15, rawSize, color, style, ...props }: IconPr
   const theme = useTheme()
   const textShadow = useTextShadow()
   const newStyle = textShadow ? StyleSheet.compose({
-    textShadowColor: theme['c-primary-alpha-700'],
-    textShadowOffset: { width: 0, height: 0.2 },
+    textShadowColor: theme['c-primary-dark-300-alpha-800'],
+    textShadowOffset: { width: 0.2, height: 0.2 },
     textShadowRadius: 2,
   }, style) : style
   return (

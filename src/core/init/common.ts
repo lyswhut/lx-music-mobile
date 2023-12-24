@@ -37,7 +37,7 @@ export default async(setting: LX.AppSetting) => {
     if (!pic) return
     const picUrl = formatUri(pic)
     void prefetch(picUrl).then(() => {
-      if (pic != playerState.musicInfo.pic) return
+      if (pic != playerState.musicInfo.pic || !isDynamicBg) return
       setBgPic(picUrl)
     })
   }

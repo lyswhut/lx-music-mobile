@@ -1,4 +1,4 @@
-import { type ComponentProps } from 'react'
+import { memo, type ComponentProps } from 'react'
 import { Text, type TextProps as _TextProps, StyleSheet, Animated, type ColorValue, type TextStyle } from 'react-native'
 import { useTextShadow, useTheme } from '@/store/theme/hook'
 import { setSpText } from '@/utils/pixelRatio'
@@ -29,13 +29,13 @@ export interface TextProps extends _TextProps {
 //   }
 // }
 
-export default ({ style, size = 15, color, children, ...props }: TextProps) => {
+export default memo(({ style, size = 15, color, children, ...props }: TextProps) => {
   const theme = useTheme()
   const textShadow = useTextShadow()
   style = StyleSheet.compose(textShadow ? {
     fontFamily: 'System',
-    textShadowColor: theme['c-primary-alpha-700'],
-    textShadowOffset: { width: 0, height: 0.2 },
+    textShadowColor: theme['c-primary-dark-300-alpha-800'],
+    textShadowOffset: { width: 0.2, height: 0.2 },
     textShadowRadius: 2,
     fontSize: setSpText(size),
     color: color ?? theme['c-font'],
@@ -51,7 +51,7 @@ export default ({ style, size = 15, color, children, ...props }: TextProps) => {
       {...props}
     >{children}</Text>
   )
-}
+})
 
 export interface AnimatedTextProps extends _AnimatedTextProps {
   /**
@@ -68,8 +68,8 @@ export const AnimatedText = ({ style, size = 15, color, children, ...props }: An
   const textShadow = useTextShadow()
   style = StyleSheet.compose(textShadow ? {
     fontFamily: 'System',
-    textShadowColor: theme['c-primary-alpha-700'],
-    textShadowOffset: { width: 0, height: 0.2 },
+    textShadowColor: theme['c-primary-dark-300-alpha-800'],
+    textShadowOffset: { width: 0.2, height: 0.2 },
     textShadowRadius: 2,
     fontSize: setSpText(size),
     color: color ?? theme['c-font'],
@@ -107,8 +107,8 @@ export const AnimatedColorText = ({ style, size = 15, opacity: _opacity, color: 
 
   style = StyleSheet.compose(textShadow ? {
     fontFamily: 'System',
-    textShadowColor: theme['c-primary-alpha-700'],
-    textShadowOffset: { width: 0, height: 0.2 },
+    textShadowColor: theme['c-primary-dark-300-alpha-800'],
+    textShadowOffset: { width: 0.2, height: 0.2 },
     textShadowRadius: 2,
     fontSize: setSpText(size),
     color: color as unknown as ColorValue,

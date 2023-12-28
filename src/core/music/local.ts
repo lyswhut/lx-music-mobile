@@ -129,15 +129,18 @@ export const getLyricInfo = async({ musicInfo, isRefresh, skipFileLyric, onToggl
   onToggleSource?: (musicInfo?: LX.Music.MusicInfoOnline) => void
 }): Promise<LX.Player.LyricInfo> => {
   if (!isRefresh && !skipFileLyric) {
-    const lyricInfo = await getCachedLyricInfo(musicInfo)
-    if (lyricInfo) {
-      // 存在已编辑、原始歌词
-      if (lyricInfo.rawlrcInfo.lyric) return buildLyricInfo(lyricInfo)
-    }
+    // const lyricInfo = await getCachedLyricInfo(musicInfo)
+    // if (lyricInfo?.rawlrcInfo.lyric && lyricInfo.lyric != lyricInfo.rawlrcInfo.lyric) {
+    //   // 存在已编辑歌词
+    //   return buildLyricInfo(lyricInfo)
+    // }
 
     // 尝试读取文件内歌词
     const rawlrcInfo = await getMusicFileLyric(musicInfo.meta.filePath)
-    if (rawlrcInfo) return buildLyricInfo(lyricInfo ? { ...lyricInfo, rawlrcInfo } : rawlrcInfo)
+    if (rawlrcInfo) return buildLyricInfo(rawlrcInfo)
+
+    const lyricInfo = await getCachedLyricInfo(musicInfo)
+    if (lyricInfo?.lyric) return buildLyricInfo(lyricInfo)
   }
 
   onToggleSource()

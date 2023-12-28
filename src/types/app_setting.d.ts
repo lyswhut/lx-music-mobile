@@ -62,6 +62,11 @@ declare global {
       'common.showExitBtn': boolean
 
       /**
+       * 使用系统文件选择器
+       */
+      'common.useSystemFileSelector': boolean
+
+      /**
        * 主题id
        */
       'theme.id': string

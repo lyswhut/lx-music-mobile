@@ -9,6 +9,7 @@ import { toast, TEMP_FILE_PATH, checkStoragePermissions, requestStoragePermissio
 import { useI18n } from '@/lang'
 import { selectFile, unlink } from '@/utils/fs'
 import { useUnmounted } from '@/utils/hooks'
+import settingState from '@/store/setting/state'
 
 export interface ReadOptions {
   title: string
@@ -38,7 +39,7 @@ export default forwardRef<ChoosePathType, ChoosePathProps>(({
 
   useImperativeHandle(ref, () => ({
     show(options) {
-      if (options.dirOnly) {
+      if (!settingState.setting['common.useSystemFileSelector'] || options.dirOnly) {
         // if (options.isPersist) {
         void checkStoragePermissions().then(isGranted => {
           readOptions.current = options

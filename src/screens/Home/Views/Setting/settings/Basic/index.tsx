@@ -10,6 +10,7 @@ import ShareType from './ShareType'
 import IsStartupAutoPlay from './IsStartupAutoPlay'
 import IsAutoHidePlayBar from './IsAutoHidePlayBar'
 import IsHomePageScroll from './IsHomePageScroll'
+import IsUseSystemFileSelector from './IsUseSystemFileSelector'
 import IsShowBackBtn from './IsShowBackBtn'
 import IsShowExitBtn from './IsShowExitBtn'
 import DrawerLayoutPosition from './DrawerLayoutPosition'
@@ -26,6 +27,7 @@ export default memo(() => {
       <IsShowExitBtn />
       <IsAutoHidePlayBar />
       <IsHomePageScroll />
+      <IsUseSystemFileSelector />
       <Theme />
       <DrawerLayoutPosition />
       <Language />

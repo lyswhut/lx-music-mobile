@@ -11,6 +11,7 @@ const defaultSetting: LX.AppSetting = {
   'common.homePageScroll': true,
   'common.showBackBtn': false,
   'common.showExitBtn': true,
+  'common.useSystemFileSelector': true,
 
   'player.startupAutoPlay': false,
   'player.togglePlayMethod': 'listLoop',

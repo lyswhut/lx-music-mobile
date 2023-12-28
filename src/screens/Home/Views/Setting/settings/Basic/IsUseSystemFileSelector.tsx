@@ -10,14 +10,18 @@ import CheckBoxItem from '../../components/CheckBoxItem'
 
 export default memo(() => {
   const t = useI18n()
-  const homePageScroll = useSettingValue('common.homePageScroll')
-  const setHomePageScroll = (homePageScroll: boolean) => {
-    updateSetting({ 'common.homePageScroll': homePageScroll })
+  const val = useSettingValue('common.useSystemFileSelector')
+  const update = (useSystemFileSelector: boolean) => {
+    updateSetting({ 'common.useSystemFileSelector': useSystemFileSelector })
   }
 
   return (
     <View style={styles.content}>
-      <CheckBoxItem check={homePageScroll} label={t('setting_basic_home_page_scroll')} onChange={setHomePageScroll} />
+      <CheckBoxItem
+      check={val}
+      label={t('setting_basic_use_system_file_selector')}
+      helpDesc={t('setting_basic_use_system_file_selector_tip')}
+      onChange={update} />
     </View>
   )
 })
@@ -26,5 +30,6 @@ export default memo(() => {
 const styles = createStyle({
   content: {
     marginTop: 5,
+    marginBottom: 15,
   },
 })

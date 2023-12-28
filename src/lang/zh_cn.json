@@ -268,6 +268,8 @@
   "setting_basic_theme_font_shadow": "启用字体阴影",
   "setting_basic_theme_hide_bg_dark": "隐藏黑色主题背景",
   "setting_basic_theme_more_btn_show": "更多主题",
+  "setting_basic_use_system_file_selector": "使用系统文件选择器",
+  "setting_basic_use_system_file_selector_tip": "启用该选项后，导入备份文件、自定义源等操作将不需要申请存储权限，但可能在某些系统上不可用。\n若启用该设置后无法导入文件，则可关闭该设置，回退到软件内置文件选择器。",
   "setting_dislike_list_input_tip": "歌曲名@歌手名\n歌曲名\n@歌手名",
   "setting_dislike_list_tips": "1. 每条一行，若歌曲或者歌手名字中存在“@”符号，需要将其替换成“#”\n2. 指定某歌手的某首歌：歌曲名@歌手名\n3. 指定某首歌：歌曲名\n4. 指定某歌手：@歌手名",
   "setting_list": "列表设置",

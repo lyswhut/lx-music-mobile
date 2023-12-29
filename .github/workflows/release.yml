@@ -95,6 +95,7 @@ jobs:
       - name: Upload Artifact
         uses: ./.github/actions/upload-artifact
         env:
+          PACKAGE_TYPE: 'Android_SL'
           PACKAGE_VERSION: ${{ env.PACKAGE_VERSION }}
 
   Android_5:
@@ -143,6 +144,7 @@ jobs:
       - name: Upload Artifact
         uses: ./.github/actions/upload-artifact
         env:
+          PACKAGE_TYPE: 'Android_5'
           PACKAGE_VERSION: ${{ env.PACKAGE_VERSION }}
 
   Release:

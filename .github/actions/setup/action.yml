@@ -13,7 +13,7 @@ runs:
       uses: actions/setup-java@v4
       with:
         distribution: 'microsoft'
-        java-version: '17'
+        java-version: ${{ env.JAVA_VERSION }}
         cache: gradle
 
     - name: Cache node modules

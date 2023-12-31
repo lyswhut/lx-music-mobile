@@ -41,6 +41,7 @@ export default () => {
           <ListImportExport ref={listImportExportRef} />
           <ListMenu
             ref={listMenuRef}
+            onNew={index => listNameEditRef.current?.showCreate(index)}
             onRename={info => listNameEditRef.current?.show(info)}
             onImport={(info, position) => listImportExportRef.current?.import(info, position)}
             onExport={(info, position) => listImportExportRef.current?.export(info, position)}

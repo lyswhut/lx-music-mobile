@@ -19,6 +19,7 @@ const menuItemWidth = scaleSizeW(110)
 
 
 export interface ListMenuProps {
+  onNew: (position: number) => void
   onRename: (listInfo: LX.List.UserListInfo) => void
   onImport: (listInfo: LX.List.MyListInfo, index: number) => void
   onExport: (listInfo: LX.List.MyListInfo, index: number) => void
@@ -35,6 +36,7 @@ export type {
 }
 
 export default forwardRef<ListMenuType, ListMenuProps>(({
+  onNew,
   onRename,
   onImport,
   onExport,
@@ -81,6 +83,7 @@ export default forwardRef<ListMenuType, ListMenuProps>(({
     }
 
     setMenus([
+      { action: 'new', label: t('list_create') },
       { action: 'rename', disabled: !rename, label: t('list_rename') },
       { action: 'local_file', disabled: !local_file, label: t('list_select_local_file') },
       { action: 'sync', disabled: !sync || !local_file, label: t('list_sync') },
@@ -94,6 +97,9 @@ export default forwardRef<ListMenuType, ListMenuProps>(({
   const handleMenuPress = ({ action }: typeof menus[number]) => {
     const selectInfo = selectInfoRef.current
     switch (action) {
+      case 'new':
+        onNew(Math.max(selectInfo.index - 1, 0))
+        break
       case 'rename':
         onRename(selectInfo.listInfo as LX.List.UserListInfo)
         break

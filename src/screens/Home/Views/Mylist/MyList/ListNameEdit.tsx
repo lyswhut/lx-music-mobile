@@ -3,7 +3,7 @@ import ConfirmAlert, { type ConfirmAlertType } from '@/components/common/Confirm
 import Text from '@/components/common/Text'
 import { View } from 'react-native'
 import Input, { type InputType } from '@/components/common/Input'
-import { updateUserList } from '@/core/list'
+import { createUserList, updateUserList } from '@/core/list'
 import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 
@@ -24,7 +24,7 @@ const NameInput = forwardRef<NameInputType, {}>((props, ref) => {
     },
     setName(text) {
       setText(text)
-      setPlaceholder(text)
+      setPlaceholder(text || global.i18n.t('list_create_input_placeholder'))
     },
     focus() {
       inputRef.current?.focus()
@@ -44,6 +44,7 @@ const NameInput = forwardRef<NameInputType, {}>((props, ref) => {
 
 
 export interface ListNameEditType {
+  showCreate: (position: number) => void
   show: (listInfo: LX.List.UserListInfo) => void
 }
 const initSelectInfo = {}
@@ -52,20 +53,33 @@ const initSelectInfo = {}
 export default forwardRef<ListNameEditType, {}>((props, ref) => {
   const alertRef = useRef<ConfirmAlertType>(null)
   const nameInputRef = useRef<NameInputType>(null)
+  const [position, setPosition] = useState(0)
   const selectedListInfo = useRef<LX.List.UserListInfo>(initSelectInfo as LX.List.UserListInfo)
   const [visible, setVisible] = useState(false)
 
   const handleShow = () => {
     alertRef.current?.setVisible(true)
+    const name = position == -1 ? '' : (selectedListInfo.current.name ?? '')
     requestAnimationFrame(() => {
-      nameInputRef.current?.setName(selectedListInfo.current.name ?? '')
+      nameInputRef.current?.setName(name)
       setTimeout(() => {
         nameInputRef.current?.focus()
       }, 300)
     })
   }
   useImperativeHandle(ref, () => ({
+    showCreate(position) {
+      setPosition(position)
+      if (visible) handleShow()
+      else {
+        setVisible(true)
+        requestAnimationFrame(() => {
+          handleShow()
+        })
+      }
+    },
     show(listInfo) {
+      setPosition(-1)
       selectedListInfo.current = listInfo
       if (visible) handleShow()
       else {
@@ -81,7 +95,12 @@ export default forwardRef<ListNameEditType, {}>((props, ref) => {
     let name = nameInputRef.current?.getText() ?? ''
     if (!name.length) return
     if (name.length > 100) name = name.substring(0, 100)
-    void updateUserList([{ ...selectedListInfo.current, name }])
+    if (position == -1) {
+      void updateUserList([{ ...selectedListInfo.current, name }])
+    } else {
+      const now = Date.now()
+      void createUserList(position, [{ id: `userlist_${now}`, name, locationUpdateTime: now }])
+    }
     alertRef.current?.setVisible(false)
   }
 
@@ -92,7 +111,7 @@ export default forwardRef<ListNameEditType, {}>((props, ref) => {
           onConfirm={handleRename}
         >
           <View style={styles.renameContent}>
-            <Text style={{ marginBottom: 5 }}>{global.i18n.t('list_rename_title')}</Text>
+            <Text style={{ marginBottom: 5 }}>{ position == -1 ? global.i18n.t('list_rename_title') : global.i18n.t('list_create')}</Text>
             <NameInput ref={nameInputRef} />
           </View>
         </ConfirmAlert>

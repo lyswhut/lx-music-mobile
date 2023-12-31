@@ -325,7 +325,7 @@ export const playNext = async(isAutoToggle = false): Promise<void> => {
     }
   }
   // const isCheckFile = findNum > 2 // 针对下载列表，如果超过两次都碰到无效歌曲，则过滤整个列表内的无效歌曲
-  let { filteredList, playerIndex } = filterList({ // 过滤已播放歌曲
+  let { filteredList, playerIndex } = await filterList({ // 过滤已播放歌曲
     listId: currentListId,
     list: currentList,
     playedList,
@@ -419,7 +419,7 @@ export const playPrev = async(isAutoToggle = false): Promise<void> => {
   }
 
   // const isCheckFile = findNum > 2
-  let { filteredList, playerIndex } = filterList({ // 过滤已播放歌曲
+  let { filteredList, playerIndex } = await filterList({ // 过滤已播放歌曲
     listId: currentListId,
     list: currentList,
     playedList,

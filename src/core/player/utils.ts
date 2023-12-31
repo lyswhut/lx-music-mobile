@@ -1,6 +1,7 @@
 import { clearPlayedList } from './playedList'
 import { SPLIT_CHAR } from '@/config/constant'
 import { state } from '@/store/dislikeList'
+import { InteractionManager } from 'react-native'
 
 /**
  * 过滤列表中已播放的歌曲
@@ -105,7 +106,7 @@ export const filterMusicList = ({ playedList, listId, list, playerMusicInfo, dis
 /**
  * 过滤列表中已播放的歌曲
  */
-export const filterList = ({ playedList, listId, list, playerMusicInfo, isNext }: {
+export const filterList = async({ playedList, listId, list, playerMusicInfo, isNext }: {
   playedList: LX.Player.PlayMusicInfo[] | readonly LX.Player.PlayMusicInfo[]
   listId: string
   list: Array<LX.Music.MusicInfo | LX.Download.ListItem>
@@ -114,20 +115,24 @@ export const filterList = ({ playedList, listId, list, playerMusicInfo, isNext }
 }) => {
   // if (this.list.listName === null) return
   // console.log(isCheckFile)
-  let { filteredList, canPlayList, playerIndex } = filterMusicList({
-    listId,
-    list,
-    playedList,
-    // savePath: global.lx.setting['download.savePath'],
-    playerMusicInfo,
-    dislikeInfo: { names: state.dislikeInfo.names, musicNames: state.dislikeInfo.musicNames, singerNames: state.dislikeInfo.singerNames },
-    isNext,
-  })
+  return new Promise<{ filteredList: Array<LX.Music.MusicInfo | LX.Download.ListItem>, playerIndex: number }>((resolve) => {
+    void InteractionManager.runAfterInteractions(() => {
+      let { filteredList, canPlayList, playerIndex } = filterMusicList({
+        listId,
+        list,
+        playedList,
+        // savePath: global.lx.setting['download.savePath'],
+        playerMusicInfo,
+        dislikeInfo: { names: state.dislikeInfo.names, musicNames: state.dislikeInfo.musicNames, singerNames: state.dislikeInfo.singerNames },
+        isNext,
+      })
 
-  if (!filteredList.length && playedList.length) {
-    clearPlayedList()
-    return { filteredList: canPlayList, playerIndex }
-  }
-  return { filteredList, playerIndex }
+      if (!filteredList.length && playedList.length) {
+        clearPlayedList()
+        resolve({ filteredList: canPlayList, playerIndex }); return
+      }
+      resolve({ filteredList, playerIndex })
+    })
+  })
 }
 

@@ -16,6 +16,8 @@ export const popToRoot = async(compId: string) => Navigation.popToRoot(compId)
 export const popTo = async(compId: string) => Navigation.popTo(compId)
 
 export const showPactModal = () => {
+  const theme = themeState.theme
+
   void Navigation.showOverlay({
     component: {
       name: PACT_MODAL,
@@ -29,8 +31,12 @@ export const showPactModal = () => {
         statusBar: {
           drawBehind: true,
           visible: true,
-          style: getStatusBarStyle(themeState.theme.isDark),
+          style: getStatusBarStyle(theme.isDark),
           backgroundColor: 'transparent',
+        },
+        navigationBar: {
+          // visible: false,
+          backgroundColor: theme['c-content-background'],
         },
         // animations: {
 
@@ -59,6 +65,8 @@ export const showPactModal = () => {
 }
 
 export const showVersionModal = () => {
+  const theme = themeState.theme
+
   void Navigation.showOverlay({
     component: {
       name: VERSION_MODAL,
@@ -72,9 +80,12 @@ export const showVersionModal = () => {
         statusBar: {
           drawBehind: true,
           visible: true,
-          style: getStatusBarStyle(themeState.theme.isDark),
+          style: getStatusBarStyle(theme.isDark),
           backgroundColor: 'transparent',
-          // animate: true,
+        },
+        navigationBar: {
+          // visible: false,
+          backgroundColor: theme['c-content-background'],
         },
         // animations: {
 
@@ -103,6 +114,8 @@ export const showVersionModal = () => {
 }
 
 export const showSyncModeModal = () => {
+  const theme = themeState.theme
+
   void Navigation.showOverlay({
     component: {
       name: SYNC_MODE_MODAL,
@@ -116,9 +129,12 @@ export const showSyncModeModal = () => {
         statusBar: {
           drawBehind: true,
           visible: true,
-          style: getStatusBarStyle(themeState.theme.isDark),
+          style: getStatusBarStyle(theme.isDark),
           backgroundColor: 'transparent',
-          // animate: true,
+        },
+        navigationBar: {
+          // visible: false,
+          backgroundColor: theme['c-content-background'],
         },
         // animations: {
 

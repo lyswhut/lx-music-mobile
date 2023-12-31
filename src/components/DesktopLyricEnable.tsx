@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 
 import ConfirmAlert, { type ConfirmAlertType } from '@/components/common/ConfirmAlert'
 
@@ -14,6 +14,7 @@ export interface DesktopLyricEnableType {
 
 export default forwardRef<DesktopLyricEnableType, {}>((props, ref) => {
   const t = useI18n()
+  const [visible, setVisible] = useState(false)
   // const setIsShowDesktopLyric = useDispatch('common', 'setIsShowDesktopLyric')
   const confirmAlertRef = useRef<ConfirmAlertType>(null)
 
@@ -23,6 +24,15 @@ export default forwardRef<DesktopLyricEnableType, {}>((props, ref) => {
     },
   }))
 
+  const handleShowModal = () => {
+    if (visible) confirmAlertRef.current?.setVisible(true)
+    else {
+      setVisible(true)
+      requestAnimationFrame(() => {
+        confirmAlertRef.current?.setVisible(true)
+      })
+    }
+  }
   const handleChangeEnableDesktopLyric = async(isEnable: boolean) => {
     if (isEnable) {
       try {
@@ -30,7 +40,7 @@ export default forwardRef<DesktopLyricEnableType, {}>((props, ref) => {
         await showDesktopLyric()
       } catch (err) {
         console.log(err)
-        confirmAlertRef.current?.setVisible(true)
+        handleShowModal()
         // return false
       }
     } else await hideDesktopLyric()
@@ -48,14 +58,18 @@ export default forwardRef<DesktopLyricEnableType, {}>((props, ref) => {
   }
 
   return (
-    <ConfirmAlert
-      ref={confirmAlertRef}
-      onCancel={handleTipsCancel}
-      onConfirm={handleTipsConfirm}
-      bgHide={false}
-      closeBtn={false}
-      cancelText={t('disagree')}
-      confirmText={t('agree_go')}
-      text={t('setting_lyric_dektop_permission_tip')} />
+    visible
+      ? (
+          <ConfirmAlert
+            ref={confirmAlertRef}
+            onCancel={handleTipsCancel}
+            onConfirm={handleTipsConfirm}
+            bgHide={false}
+            closeBtn={false}
+            cancelText={t('disagree')}
+            confirmText={t('agree_go')}
+            text={t('setting_lyric_dektop_permission_tip')} />
+        )
+      : null
   )
 })

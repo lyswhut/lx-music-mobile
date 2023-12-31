@@ -1,8 +1,7 @@
 import { memo, useRef } from 'react'
 
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 
-import { Icon } from '@/components/common/Icon'
 import { pop } from '@/navigation'
 import StatusBar from '@/components/common/StatusBar'
 import { useTheme } from '@/store/theme/hook'
@@ -13,6 +12,8 @@ import { HEADER_HEIGHT as _HEADER_HEIGHT, NAV_SHEAR_NATIVE_IDS } from '@/config/
 import commonState from '@/store/common/state'
 import SettingPopup, { type SettingPopupType } from '../../components/SettingPopup'
 import { useStatusbarHeight } from '@/store/common/hook'
+import Btn from './Btn'
+import TimeoutExitBtn from './TimeoutExitBtn'
 
 export const HEADER_HEIGHT = scaleSizeH(_HEADER_HEIGHT)
 
@@ -45,13 +46,10 @@ export default memo(() => {
     <View style={{ height: HEADER_HEIGHT + statusBarHeight, paddingTop: statusBarHeight }} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_header}>
       <StatusBar />
       <View style={styles.container}>
-        <TouchableOpacity onPress={back} style={{ ...styles.button, width: HEADER_HEIGHT }}>
-          <Icon name="chevron-left" size={18} />
-        </TouchableOpacity>
+        <Btn icon="chevron-left" onPress={back} />
         <Title />
-        <TouchableOpacity onPress={showSetting} style={{ ...styles.button, width: HEADER_HEIGHT }}>
-          <Icon name="slider" size={19} />
-        </TouchableOpacity>
+        <TimeoutExitBtn />
+        <Btn icon="slider" onPress={showSetting} />
       </View>
       <SettingPopup ref={popupRef} direction="vertical" />
     </View>
@@ -65,15 +63,10 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     height: '100%',
   },
-  button: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-    flex: 0,
-  },
   titleContent: {
     flex: 1,
-    alignItems: 'center',
+    paddingHorizontal: 5,
+    // alignItems: 'center',
     justifyContent: 'center',
   },
   title: {

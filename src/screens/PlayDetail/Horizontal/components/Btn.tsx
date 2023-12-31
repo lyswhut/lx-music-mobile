@@ -8,15 +8,16 @@ import { HEADER_HEIGHT } from '@/config/constant'
 export const BTN_WIDTH = scaleSizeW(HEADER_HEIGHT)
 export const BTN_ICON_SIZE = 20
 
-export default ({ icon, size, color, onPress }: {
+export default ({ icon, size, color, onPress, onLongPress }: {
   icon: string
   size?: number
   color?: string
   onPress: () => void
+  onLongPress?: () => void
 }) => {
   const theme = useTheme()
   return (
-    <TouchableOpacity style={{ ...styles.cotrolBtn, width: BTN_WIDTH, height: BTN_WIDTH }} activeOpacity={0.5} onPress={onPress}>
+    <TouchableOpacity style={{ ...styles.cotrolBtn, width: BTN_WIDTH, height: BTN_WIDTH }} activeOpacity={0.5} onPress={onPress} onLongPress={onLongPress}>
       <Icon name={icon} color={color ?? theme['c-550']} size={size ?? BTN_ICON_SIZE} />
     </TouchableOpacity>
   )

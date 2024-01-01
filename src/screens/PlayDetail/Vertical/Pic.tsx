@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { View } from 'react-native'
 // import { useLayout } from '@/utils/hooks'
 import { createStyle } from '@/utils/tools'
@@ -17,6 +17,10 @@ export default ({ componentId }: { componentId: string }) => {
   const statusBarHeight = useStatusbarHeight()
 
   const [animated, setAnimated] = useState(false)
+  const [pic, setPic] = useState(musicInfo.pic)
+  useEffect(() => {
+    if (animated) setPic(musicInfo.pic)
+  }, [musicInfo.pic, animated])
 
   useNavigationComponentDidAppear(componentId, () => {
     setAnimated(true)
@@ -35,7 +39,7 @@ export default ({ componentId }: { componentId: string }) => {
   return (
     <View style={styles.container}>
       <View style={{ ...styles.content, elevation: animated ? 3 : 0 }}>
-        <Image url={musicInfo.pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={style} />
+        <Image url={pic} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_pic} style={style} />
       </View>
     </View>
   )

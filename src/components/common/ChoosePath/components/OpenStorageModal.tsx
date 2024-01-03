@@ -114,6 +114,8 @@ export default forwardRef<OpenDirModalType, { onOpenDir: (dir: string) => Promis
       if (!dir || isUnmounted.current) return
       void onOpenDir(dir.path)
       confirmAlertRef.current?.setVisible(false)
+    }).catch((err) => {
+      toast(global.i18n.t('open_storage_select_managed_folder_failed_tip', { msg: err.message }))
     })
   }
 

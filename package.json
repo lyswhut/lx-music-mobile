@@ -57,7 +57,7 @@
     "react-native-background-timer": "github:lyswhut/react-native-background-timer#f49f41d0283a796e3e38cb3d505198b5953dc249",
     "react-native-exception-handler": "^2.10.10",
     "react-native-fast-image": "^8.6.3",
-    "react-native-file-system": "github:lyswhut/react-native-file-system#8124117c164d8f4d5298f9b695df570c04e7197a",
+    "react-native-file-system": "github:lyswhut/react-native-file-system#cb3b807ac68c5cdb2c32ca10fdbb5e5209154ece",
     "react-native-fs": "^2.20.0",
     "react-native-local-media-metadata": "github:lyswhut/react-native-local-media-metadata#c8377d82c04aecf5ee79d446276ab9d0c1f167be",
     "react-native-navigation": "^7.37.2",
@@ -68,11 +68,11 @@
     "react-native-vector-icons": "^10.0.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.6",
+    "@babel/core": "^7.23.7",
     "@babel/eslint-parser": "^7.23.3",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
-    "@babel/preset-env": "^7.23.6",
-    "@babel/runtime": "^7.23.6",
+    "@babel/preset-env": "^7.23.7",
+    "@babel/runtime": "^7.23.7",
     "@react-native/babel-preset": "^0.74.0",
     "@react-native/metro-config": "^0.73.2",
     "@react-native/typescript-config": "^0.74.0",

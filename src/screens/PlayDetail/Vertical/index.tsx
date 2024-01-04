@@ -9,7 +9,6 @@ import PagerView, { type PagerViewOnPageSelectedEvent } from 'react-native-pager
 import Pic from './Pic'
 import Lyric from './Lyric'
 import { screenkeepAwake, screenUnkeepAwake } from '@/utils/nativeModules/utils'
-import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 import commonState, { type InitState as CommonState } from '@/store/common/state'
 import { createStyle } from '@/utils/tools'
 // import { useTheme } from '@/store/theme/hook'
@@ -91,9 +90,7 @@ export default memo(({ componentId }: { componentId: string }) => {
           <View style={{ ...styles.pageIndicatorItem, backgroundColor: pageIndex == 0 ? theme['c-primary-light-100-alpha-700'] : theme['c-primary-alpha-900'] }}></View>
           <View style={{ ...styles.pageIndicatorItem, backgroundColor: pageIndex == 1 ? theme['c-primary-light-100-alpha-700'] : theme['c-primary-alpha-900'] }}></View>
         </View> */}
-        <View style={styles.footer} nativeID={NAV_SHEAR_NATIVE_IDS.playDetail_player}>
-          <Player />
-        </View>
+        <Player />
       </View>
     </>
   )
@@ -106,9 +103,6 @@ const styles = createStyle({
   },
   pagerView: {
     flex: 1,
-  },
-  footer: {
-    flex: 0,
   },
   // pageIndicator: {
   //   flex: 0,

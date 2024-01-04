@@ -21,8 +21,7 @@ export default memo(() => {
 
 const styles = createStyle({
   container: {
-    flexShrink: 1,
-    flexGrow: 1,
+    flex: 0,
     width: '100%',
     // paddingTop: progressContentPadding,
     // marginTop: -progressContentPadding,

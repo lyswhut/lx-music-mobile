@@ -59,6 +59,7 @@ export default memo(() => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 0,
     // backgroundColor: '#ccc',
     flexDirection: 'row',
     // justifyContent: 'center',

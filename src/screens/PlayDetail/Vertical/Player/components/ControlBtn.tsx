@@ -5,7 +5,7 @@ import { useTheme } from '@/store/theme/hook'
 import { playNext, playPrev, togglePlay } from '@/core/player/player'
 import { useIsPlay } from '@/store/player/hook'
 import { createStyle } from '@/utils/tools'
-import { useLayout, useWindowSize } from '@/utils/hooks'
+import { useWindowSize } from '@/utils/hooks'
 import { BTN_WIDTH } from './MoreBtn/Btn'
 import { useMemo } from 'react'
 
@@ -47,7 +47,6 @@ const MIN_SIZE = BTN_WIDTH * 1.2
 
 export default () => {
   const winSize = useWindowSize()
-  const { onLayout, width } = useLayout()
   const maxHeight = Math.max(winSize.height * 0.11, MIN_SIZE)
   const containerStyle = useMemo(() => {
     return {
@@ -55,10 +54,10 @@ export default () => {
       maxHeight,
     }
   }, [maxHeight])
-  const size = Math.min(Math.max(width * 0.33 * global.lx.fontSize * 0.4, MIN_SIZE), MAX_SIZE, maxHeight)
+  const size = Math.min(Math.max(winSize.width * 0.33 * global.lx.fontSize * 0.4, MIN_SIZE), MAX_SIZE, maxHeight)
 
   return (
-    <View style={containerStyle} onLayout={onLayout}>
+    <View style={containerStyle}>
       <PrevBtn size={size} />
       <TogglePlayBtn size={size}/>
       <NextBtn size={size} />

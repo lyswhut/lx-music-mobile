@@ -5,6 +5,7 @@ import Text from '@/components/common/Text'
 import { useTheme } from '@/store/theme/hook'
 
 const TEXT_LIMIT = 160
+const SUB_TEXT_LIMIT = TEXT_LIMIT * 1.2
 // const CHAR_RXP = /\n/g
 
 export default memo(({ text }: { text: string }) => {
@@ -15,6 +16,7 @@ export default memo(({ text }: { text: string }) => {
     // text.length + (text.match(CHAR_RXP)?.length ?? 0) * 40
     let count = 0
     let bCount = 0
+    let subLength = 0
     for (let i = 0; i < text.length; i++) {
       let char = text.charAt(i)
       if (char == '\n') {
@@ -24,7 +26,8 @@ export default memo(({ text }: { text: string }) => {
         count++
         if (char.trim() != '') bCount &&= 0
       }
-      if (count >= TEXT_LIMIT) return i
+      if (!subLength && count > TEXT_LIMIT) subLength = i
+      if (count >= SUB_TEXT_LIMIT) return subLength
     }
     return 0
   }, [text])

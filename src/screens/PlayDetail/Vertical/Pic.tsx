@@ -9,6 +9,7 @@ import { useNavigationComponentDidAppear } from '@/navigation'
 import { HEADER_HEIGHT } from './components/Header'
 import Image from '@/components/common/Image'
 import { useStatusbarHeight } from '@/store/common/hook'
+import commonState from '@/store/common/state'
 
 
 export default ({ componentId }: { componentId: string }) => {
@@ -19,7 +20,9 @@ export default ({ componentId }: { componentId: string }) => {
   const [animated, setAnimated] = useState(false)
   const [pic, setPic] = useState(musicInfo.pic)
   useEffect(() => {
-    if (animated) setPic(musicInfo.pic)
+    if (commonState.componentIds.playDetail) setAnimated(true)
+    else if (!animated) return
+    setPic(musicInfo.pic)
   }, [musicInfo.pic, animated])
 
   useNavigationComponentDidAppear(componentId, () => {

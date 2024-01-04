@@ -11,6 +11,7 @@ import { BTN_WIDTH } from './MoreBtn/Btn'
 import { marginLeft } from './constant'
 import Image from '@/components/common/Image'
 import { useStatusbarHeight } from '@/store/common/hook'
+import commonState from '@/store/common/state'
 
 
 export default memo(({ componentId }: { componentId: string }) => {
@@ -21,7 +22,9 @@ export default memo(({ componentId }: { componentId: string }) => {
   const [animated, setAnimated] = useState(false)
   const [pic, setPic] = useState(musicInfo.pic)
   useEffect(() => {
-    if (animated) setPic(musicInfo.pic)
+    if (commonState.componentIds.playDetail) setAnimated(true)
+    else if (!animated) return
+    setPic(musicInfo.pic)
   }, [musicInfo.pic, animated])
 
   useNavigationComponentDidAppear(componentId, () => {

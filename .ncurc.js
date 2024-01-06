@@ -2,6 +2,7 @@ module.exports = {
   upgrade: true,
   reject: [
     '@types/react-native',
+    'message2call',
     'react',
   ],
 

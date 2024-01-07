@@ -93,7 +93,7 @@ export const getPicUrl = async({ musicInfo, listId, isRefresh, skipFilePic, onTo
   onToggleSource?: (musicInfo?: LX.Music.MusicInfoOnline) => void
 }): Promise<string> => {
   if (!isRefresh && !skipFilePic) {
-    let pic = await readPic(musicInfo.meta.filePath)
+    let pic = await readPic(musicInfo.meta.filePath).catch(() => null)
     if (pic) {
       if (pic.startsWith('/')) pic = `file://${pic}`
       return pic
@@ -116,7 +116,7 @@ export const getPicUrl = async({ musicInfo, listId, isRefresh, skipFilePic, onTo
 }
 
 const getMusicFileLyric = async(filePath: string) => {
-  const lyric = await readLyric(filePath)
+  const lyric = await readLyric(filePath).catch(() => null)
   if (!lyric) return null
   return {
     lyric,

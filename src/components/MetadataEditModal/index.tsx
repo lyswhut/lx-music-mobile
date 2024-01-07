@@ -42,8 +42,8 @@ export default forwardRef<MetadataEditType, MetadataEditProps>((props, ref) => {
     alertRef.current?.setVisible(true)
     void Promise.all([
       readMetadata(filePath),
-      readPic(filePath),
-      readLyric(filePath, false),
+      readPic(filePath).catch(() => ''),
+      readLyric(filePath, false).catch(() => ''),
     ]).then(async([_metadata, pic, lyric]) => {
       if (!_metadata) return
       if (isUnmounted.current) return

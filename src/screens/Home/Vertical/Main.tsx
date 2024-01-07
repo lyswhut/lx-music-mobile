@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { InteractionManager, View } from 'react-native'
+import { View } from 'react-native'
 import Search from '../Views/Search'
 import SongList from '../Views/SongList'
 import Mylist from '../Views/Mylist'
@@ -26,9 +26,7 @@ const SearchPage = () => {
       currentId = id
       if (id == 'nav_search') {
         requestAnimationFrame(() => {
-          void InteractionManager.runAfterInteractions(() => {
-            setVisible(true)
-          })
+          setVisible(true)
         })
       }
     }
@@ -63,9 +61,7 @@ const SongListPage = () => {
       currentId = id
       if (id == 'nav_songlist') {
         requestAnimationFrame(() => {
-          void InteractionManager.runAfterInteractions(() => {
-            setVisible(true)
-          })
+          setVisible(true)
         })
       }
     }
@@ -101,9 +97,7 @@ const LeaderboardPage = () => {
       currentId = id
       if (id == 'nav_top') {
         requestAnimationFrame(() => {
-          void InteractionManager.runAfterInteractions(() => {
-            setVisible(true)
-          })
+          setVisible(true)
         })
       }
     }
@@ -138,9 +132,7 @@ const MylistPage = () => {
       currentId = id
       if (id == 'nav_love') {
         requestAnimationFrame(() => {
-          void InteractionManager.runAfterInteractions(() => {
-            setVisible(true)
-          })
+          setVisible(true)
         })
       }
     }
@@ -173,9 +165,7 @@ const SettingPage = () => {
     const handleNavIdUpdate = (id: CommonState['navActiveId']) => {
       if (id == 'nav_setting') {
         requestAnimationFrame(() => {
-          void InteractionManager.runAfterInteractions(() => {
-            setVisible(true)
-          })
+          setVisible(true)
         })
       }
     }

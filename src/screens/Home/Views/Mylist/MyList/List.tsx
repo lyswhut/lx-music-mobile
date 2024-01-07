@@ -1,5 +1,5 @@
 import { memo, useEffect, useRef } from 'react'
-import { View, TouchableOpacity, FlatList, InteractionManager, type NativeScrollEvent, type NativeSyntheticEvent, type FlatListProps } from 'react-native'
+import { View, TouchableOpacity, FlatList, type NativeScrollEvent, type NativeSyntheticEvent, type FlatListProps } from 'react-native'
 
 import { Icon } from '@/components/common/Icon'
 
@@ -80,7 +80,7 @@ export default ({ onShowMenu }: {
   const handleToggleList = (item: LX.List.MyListInfo) => {
     // setVisiblePanel(false)
     global.app_event.changeLoveListVisible(false)
-    void InteractionManager.runAfterInteractions(() => {
+    requestAnimationFrame(() => {
       setActiveList(item.id)
     })
   }

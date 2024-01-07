@@ -1,5 +1,5 @@
 import { memo, useState, useEffect } from 'react'
-import { StyleSheet, View, InteractionManager } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 // import { gzip, ungzip } from 'pako'
 
@@ -34,18 +34,16 @@ export default memo(() => {
     }).then(confirm => {
       if (!confirm) return
       setCleaning(true)
-      void InteractionManager.runAfterInteractions(() => {
-        void Promise.all([
-          clearAppCache(),
-          clearMusicUrl(),
-          resetNotificationPermissionCheck(),
-          resetIgnoringBatteryOptimizationCheck(),
-        ]).then(() => {
-          toast(t('setting_other_cache_clear_success_tip'))
-        }).finally(() => {
-          handleGetAppCacheSize()
-          setCleaning(false)
-        })
+      void Promise.all([
+        clearAppCache(),
+        clearMusicUrl(),
+        resetNotificationPermissionCheck(),
+        resetIgnoringBatteryOptimizationCheck(),
+      ]).then(() => {
+        toast(t('setting_other_cache_clear_success_tip'))
+      }).finally(() => {
+        handleGetAppCacheSize()
+        setCleaning(false)
       })
     })
   }

@@ -1,7 +1,6 @@
 import { clearPlayedList } from './playedList'
 import { SPLIT_CHAR } from '@/config/constant'
 import { state } from '@/store/dislikeList'
-import { InteractionManager } from 'react-native'
 
 /**
  * 过滤列表中已播放的歌曲
@@ -115,24 +114,20 @@ export const filterList = async({ playedList, listId, list, playerMusicInfo, isN
 }) => {
   // if (this.list.listName === null) return
   // console.log(isCheckFile)
-  return new Promise<{ filteredList: Array<LX.Music.MusicInfo | LX.Download.ListItem>, playerIndex: number }>((resolve) => {
-    void InteractionManager.runAfterInteractions(() => {
-      let { filteredList, canPlayList, playerIndex } = filterMusicList({
-        listId,
-        list,
-        playedList,
-        // savePath: global.lx.setting['download.savePath'],
-        playerMusicInfo,
-        dislikeInfo: { names: state.dislikeInfo.names, musicNames: state.dislikeInfo.musicNames, singerNames: state.dislikeInfo.singerNames },
-        isNext,
-      })
-
-      if (!filteredList.length && playedList.length) {
-        clearPlayedList()
-        resolve({ filteredList: canPlayList, playerIndex }); return
-      }
-      resolve({ filteredList, playerIndex })
-    })
+  let { filteredList, canPlayList, playerIndex } = filterMusicList({
+    listId,
+    list,
+    playedList,
+    // savePath: global.lx.setting['download.savePath'],
+    playerMusicInfo,
+    dislikeInfo: { names: state.dislikeInfo.names, musicNames: state.dislikeInfo.musicNames, singerNames: state.dislikeInfo.singerNames },
+    isNext,
   })
+
+  if (!filteredList.length && playedList.length) {
+    clearPlayedList()
+    return { filteredList: canPlayList, playerIndex }
+  }
+  return { filteredList, playerIndex }
 }
 

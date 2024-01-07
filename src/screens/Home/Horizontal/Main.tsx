@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react'
-import { InteractionManager } from 'react-native'
 import Search from '../Views/Search'
 import SongList from '../Views/SongList'
 import Mylist from '../Views/Mylist'
@@ -14,9 +13,7 @@ const Main = () => {
   useEffect(() => {
     const handleUpdate = (id: CommonState['navActiveId']) => {
       requestAnimationFrame(() => {
-        void InteractionManager.runAfterInteractions(() => {
-          setId(id)
-        })
+        setId(id)
       })
     }
     global.state_event.on('navActiveIdUpdated', handleUpdate)

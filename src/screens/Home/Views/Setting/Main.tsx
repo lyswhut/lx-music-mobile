@@ -1,5 +1,4 @@
 import { forwardRef, useImperativeHandle, useMemo, useState } from 'react'
-import { InteractionManager } from 'react-native'
 
 import Basic from './settings/Basic'
 import Player from './settings/Player'
@@ -40,7 +39,7 @@ const Main = forwardRef<MainType, {}>((props, ref) => {
   useImperativeHandle(ref, () => ({
     setActiveId(id) {
       requestAnimationFrame(() => {
-        void InteractionManager.runAfterInteractions(() => {
+        requestAnimationFrame(() => {
           setId(id)
         })
       })

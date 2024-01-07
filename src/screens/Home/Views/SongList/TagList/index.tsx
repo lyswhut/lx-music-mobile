@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { InteractionManager } from 'react-native'
 
 import { type Source } from '@/store/songlist/state'
 import List, { type ListProps, type ListType } from './List'
@@ -18,11 +17,9 @@ export default () => {
         listRef.current?.loadTag(source, id)
       } else {
         requestAnimationFrame(() => {
-          void InteractionManager.runAfterInteractions(() => {
-            setVisible(true)
-            requestAnimationFrame(() => {
-              listRef.current?.loadTag(source, id)
-            })
+          setVisible(true)
+          requestAnimationFrame(() => {
+            listRef.current?.loadTag(source, id)
           })
         })
         isInited = true

@@ -4,7 +4,7 @@ import themes from '@/theme/themes/themes'
 import settingState from '@/store/setting/state'
 import themeState from '@/store/theme/state'
 import { isUrl } from '@/utils'
-import { externalDirectoryPath } from '@/utils/fs'
+import { privateStorageDirectoryPath } from '@/utils/fs'
 import { type ImageSourcePropType } from 'react-native'
 
 export const BG_IMAGES = {
@@ -23,7 +23,7 @@ export const getAllThemes = async() => {
   return {
     themes,
     userThemes,
-    dataPath: externalDirectoryPath + '/theme_images',
+    dataPath: privateStorageDirectoryPath + '/theme_images',
   }
 }
 
@@ -52,7 +52,7 @@ export const buildActiveThemeColors = (theme: LX.Theme): LX.ActiveTheme => {
       theme.config.extInfo['bg-image'] =
         isUrl(theme.config.extInfo['bg-image'])
           ? theme.config.extInfo['bg-image']
-          : `${externalDirectoryPath}/theme_images/${theme.config.extInfo['bg-image']}`
+          : `${privateStorageDirectoryPath}/theme_images/${theme.config.extInfo['bg-image']}`
     }
   } else {
     const extInfo = (theme as LocalTheme).config.extInfo

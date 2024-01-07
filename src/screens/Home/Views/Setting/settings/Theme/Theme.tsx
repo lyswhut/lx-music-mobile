@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { View, TouchableOpacity, InteractionManager, type ImageSourcePropType } from 'react-native'
+import { View, TouchableOpacity, type ImageSourcePropType } from 'react-native'
 import { setTheme } from '@/core/theme'
 import { useI18n } from '@/lang'
 import { useSettingValue } from '@/store/setting/hook'
@@ -78,7 +78,7 @@ export default memo(() => {
   const t = useI18n()
   const [themeInfo, setThemeInfo] = useState(initInfo)
   const setThemeId = useCallback((id: string) => {
-    void InteractionManager.runAfterInteractions(() => {
+    requestAnimationFrame(() => {
       setTheme(id)
     })
   }, [])

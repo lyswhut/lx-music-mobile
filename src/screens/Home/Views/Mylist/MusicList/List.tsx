@@ -1,6 +1,6 @@
 import { playList } from '@/core/player/player'
 import { useMemo, useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react'
-import { FlatList, type NativeScrollEvent, type NativeSyntheticEvent, InteractionManager, type FlatListProps } from 'react-native'
+import { FlatList, type NativeScrollEvent, type NativeSyntheticEvent, type FlatListProps } from 'react-native'
 
 import listState from '@/store/list/state'
 import playerState from '@/store/player/state'
@@ -109,25 +109,23 @@ const List = forwardRef<ListType, ListProps>(({ onShowMenu, onMuiltSelectMode, o
       currentListIdRef.current = id
       void Promise.all([getListMusics(id), getListPosition(id)]).then(([list, position]) => {
         requestAnimationFrame(() => {
-          void InteractionManager.runAfterInteractions(() => {
-            if (currentListIdRef.current != id) return
-            selectedListRef.current = []
-            setSelectedList([])
-            setList([...list])
-            requestAnimationFrame(() => {
-              isUpdateingList = false
-              listFirstScrollRef.current = true
-              if (waitJumpListPositionRef.current) {
-                waitJumpListPositionRef.current = false
-                if (playerState.playMusicInfo.listId == id && playerState.playInfo.playIndex > -1) {
-                  try {
-                    flatListRef.current?.scrollToIndex({ index: Math.floor(playerState.playInfo.playIndex / (rowInfo.current.rowNum ?? 1)), viewPosition: 0.3, animated: false })
-                    return
-                  } catch {}
-                }
+          if (currentListIdRef.current != id) return
+          selectedListRef.current = []
+          setSelectedList([])
+          setList([...list])
+          requestAnimationFrame(() => {
+            isUpdateingList = false
+            listFirstScrollRef.current = true
+            if (waitJumpListPositionRef.current) {
+              waitJumpListPositionRef.current = false
+              if (playerState.playMusicInfo.listId == id && playerState.playInfo.playIndex > -1) {
+                try {
+                  flatListRef.current?.scrollToIndex({ index: Math.floor(playerState.playInfo.playIndex / (rowInfo.current.rowNum ?? 1)), viewPosition: 0.3, animated: false })
+                  return
+                } catch {}
               }
-              flatListRef.current?.scrollToOffset({ offset: position, animated: false })
-            })
+            }
+            flatListRef.current?.scrollToOffset({ offset: position, animated: false })
           })
         })
       })

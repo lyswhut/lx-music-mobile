@@ -1,5 +1,5 @@
 import { Navigation } from 'react-native-navigation'
-import { InteractionManager } from 'react-native'
+// import { InteractionManager } from 'react-native'
 
 import {
   HOME_SCREEN,
@@ -119,64 +119,63 @@ export function pushPlayDetailScreen(componentId: string) {
     })
   */
   requestAnimationFrame(() => {
-    void InteractionManager.runAfterInteractions(() => {
-      const theme = themeState.theme
+    const theme = themeState.theme
 
-      void Navigation.push(componentId, {
-        component: {
-          name: PLAY_DETAIL_SCREEN,
-          options: {
-            topBar: {
-              visible: false,
-              height: 0,
-              drawBehind: false,
-            },
-            statusBar: {
-              drawBehind: true,
-              visible: true,
-              style: getStatusBarStyle(theme.isDark),
-              backgroundColor: 'transparent',
-            },
-            navigationBar: {
-              // visible: false,
-              backgroundColor: theme['c-content-background'],
-            },
-            layout: {
-              componentBackgroundColor: theme['c-content-background'],
-            },
-            animations: {
-              push: {
-                sharedElementTransitions: [
-                  {
-                    fromId: NAV_SHEAR_NATIVE_IDS.playDetail_pic,
-                    toId: NAV_SHEAR_NATIVE_IDS.playDetail_pic,
-                    interpolation: { type: 'spring' },
+    void Navigation.push(componentId, {
+      component: {
+        name: PLAY_DETAIL_SCREEN,
+        options: {
+          topBar: {
+            visible: false,
+            height: 0,
+            drawBehind: false,
+          },
+          statusBar: {
+            drawBehind: true,
+            visible: true,
+            style: getStatusBarStyle(theme.isDark),
+            backgroundColor: 'transparent',
+          },
+          navigationBar: {
+            // visible: false,
+            backgroundColor: theme['c-content-background'],
+          },
+          layout: {
+            componentBackgroundColor: theme['c-content-background'],
+          },
+          animations: {
+            push: {
+              sharedElementTransitions: [
+                {
+                  fromId: NAV_SHEAR_NATIVE_IDS.playDetail_pic,
+                  toId: NAV_SHEAR_NATIVE_IDS.playDetail_pic,
+                  interpolation: { type: 'spring' },
+                },
+              ],
+              elementTransitions: [
+                {
+                  id: NAV_SHEAR_NATIVE_IDS.playDetail_header,
+                  alpha: {
+                    from: 0, // We don't declare 'to' value as that is the element's current alpha value, here we're essentially animating from 0 to 1
+                    duration: 300,
                   },
-                ],
-                elementTransitions: [
-                  {
-                    id: NAV_SHEAR_NATIVE_IDS.playDetail_header,
-                    alpha: {
-                      from: 0, // We don't declare 'to' value as that is the element's current alpha value, here we're essentially animating from 0 to 1
-                      duration: 300,
-                    },
-                    translationY: {
-                      from: -32, // Animate translationY from 16dp to 0dp
-                      duration: 300,
-                    },
+                  translationY: {
+                    from: -32, // Animate translationY from 16dp to 0dp
+                    duration: 300,
                   },
-                  {
-                    id: NAV_SHEAR_NATIVE_IDS.playDetail_player,
-                    alpha: {
-                      from: 0, // We don't declare 'to' value as that is the element's current alpha value, here we're essentially animating from 0 to 1
-                      duration: 300,
-                    },
-                    translationY: {
-                      from: 32, // Animate translationY from 16dp to 0dp
-                      duration: 300,
-                    },
+                },
+                {
+                  id: NAV_SHEAR_NATIVE_IDS.playDetail_player,
+                  alpha: {
+                    from: 0, // We don't declare 'to' value as that is the element's current alpha value, here we're essentially animating from 0 to 1
+                    duration: 300,
                   },
-                ],
+                  translationY: {
+                    from: 32, // Animate translationY from 16dp to 0dp
+                    duration: 300,
+                  },
+                },
+              ],
               // content: {
               //   translationX: {
               //     from: windowSizeTools.getSize().width,
@@ -184,20 +183,19 @@ export function pushPlayDetailScreen(componentId: string) {
               //     duration: 300,
               //   },
               // },
-              },
-              pop: {
-                content: {
-                  translationX: {
-                    from: 0,
-                    to: windowSizeTools.getSize().width,
-                    duration: 300,
-                  },
+            },
+            pop: {
+              content: {
+                translationX: {
+                  from: 0,
+                  to: windowSizeTools.getSize().width,
+                  duration: 300,
                 },
               },
             },
           },
         },
-      })
+      },
     })
   })
 }
@@ -205,54 +203,53 @@ export function pushSonglistDetailScreen(componentId: string, info: ListInfoItem
   const theme = themeState.theme
 
   requestAnimationFrame(() => {
-    void InteractionManager.runAfterInteractions(() => {
-      void Navigation.push(componentId, {
-        component: {
-          name: SONGLIST_DETAIL_SCREEN,
-          passProps: {
-            info,
+    void Navigation.push(componentId, {
+      component: {
+        name: SONGLIST_DETAIL_SCREEN,
+        passProps: {
+          info,
+        },
+        options: {
+          topBar: {
+            visible: false,
+            height: 0,
+            drawBehind: false,
           },
-          options: {
-            topBar: {
-              visible: false,
-              height: 0,
-              drawBehind: false,
-            },
-            statusBar: {
-              drawBehind: true,
-              visible: true,
-              style: getStatusBarStyle(theme.isDark),
-              backgroundColor: 'transparent',
-            },
-            navigationBar: {
-              // visible: false,
-              backgroundColor: theme['c-content-background'],
-            },
-            layout: {
-              componentBackgroundColor: theme['c-content-background'],
-            },
-            animations: {
-              push: {
-                sharedElementTransitions: [
-                  {
-                    fromId: `${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_from_${info.id}`,
-                    toId: `${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_to_${info.id}`,
-                    interpolation: { type: 'spring' },
+          statusBar: {
+            drawBehind: true,
+            visible: true,
+            style: getStatusBarStyle(theme.isDark),
+            backgroundColor: 'transparent',
+          },
+          navigationBar: {
+            // visible: false,
+            backgroundColor: theme['c-content-background'],
+          },
+          layout: {
+            componentBackgroundColor: theme['c-content-background'],
+          },
+          animations: {
+            push: {
+              sharedElementTransitions: [
+                {
+                  fromId: `${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_from_${info.id}`,
+                  toId: `${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_to_${info.id}`,
+                  interpolation: { type: 'spring' },
+                },
+              ],
+              elementTransitions: [
+                {
+                  id: NAV_SHEAR_NATIVE_IDS.songlistDetail_title,
+                  alpha: {
+                    from: 0, // We don't declare 'to' value as that is the element's current alpha value, here we're essentially animating from 0 to 1
+                    duration: 300,
                   },
-                ],
-                elementTransitions: [
-                  {
-                    id: NAV_SHEAR_NATIVE_IDS.songlistDetail_title,
-                    alpha: {
-                      from: 0, // We don't declare 'to' value as that is the element's current alpha value, here we're essentially animating from 0 to 1
-                      duration: 300,
-                    },
-                    translationX: {
-                      from: 16, // Animate translationX from 16dp to 0dp
-                      duration: 300,
-                    },
+                  translationX: {
+                    from: 16, // Animate translationX from 16dp to 0dp
+                    duration: 300,
                   },
-                ],
+                },
+              ],
               // content: {
               //   scaleX: {
               //     from: 1.2,
@@ -270,28 +267,28 @@ export function pushSonglistDetailScreen(componentId: string, info: ListInfoItem
               //     duration: 200,
               //   },
               // },
-              },
-              pop: {
-                sharedElementTransitions: [
-                  {
-                    fromId: `${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_to_${info.id}`,
-                    toId: `${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_from_${info.id}`,
-                    interpolation: { type: 'spring' },
+            },
+            pop: {
+              sharedElementTransitions: [
+                {
+                  fromId: `${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_to_${info.id}`,
+                  toId: `${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_from_${info.id}`,
+                  interpolation: { type: 'spring' },
+                },
+              ],
+              elementTransitions: [
+                {
+                  id: NAV_SHEAR_NATIVE_IDS.songlistDetail_title,
+                  alpha: {
+                    to: 0, // We don't declare 'to' value as that is the element's current alpha value, here we're essentially animating from 0 to 1
+                    duration: 300,
                   },
-                ],
-                elementTransitions: [
-                  {
-                    id: NAV_SHEAR_NATIVE_IDS.songlistDetail_title,
-                    alpha: {
-                      to: 0, // We don't declare 'to' value as that is the element's current alpha value, here we're essentially animating from 0 to 1
-                      duration: 300,
-                    },
-                    translationX: {
-                      to: 16, // Animate translationX from 16dp to 0dp
-                      duration: 300,
-                    },
+                  translationX: {
+                    to: 16, // Animate translationX from 16dp to 0dp
+                    duration: 300,
                   },
-                ],
+                },
+              ],
               // content: {
               //   alpha: {
               //     from: 1,
@@ -299,11 +296,10 @@ export function pushSonglistDetailScreen(componentId: string, info: ListInfoItem
               //     duration: 200,
               //   },
               // },
-              },
             },
           },
         },
-      })
+      },
     })
   })
 }
@@ -341,54 +337,52 @@ export function pushCommentScreen(componentId: string) {
     })
   */
   requestAnimationFrame(() => {
-    void InteractionManager.runAfterInteractions(() => {
-      const theme = themeState.theme
+    const theme = themeState.theme
 
-      void Navigation.push(componentId, {
-        component: {
-          name: COMMENT_SCREEN,
-          options: {
-            topBar: {
-              visible: false,
-              height: 0,
-              drawBehind: false,
-            },
-            statusBar: {
-              drawBehind: true,
-              visible: true,
-              style: getStatusBarStyle(theme.isDark),
-              backgroundColor: 'transparent',
-            },
-            navigationBar: {
-              // visible: false,
-              backgroundColor: theme['c-content-background'],
-            },
-            layout: {
-              componentBackgroundColor: theme['c-content-background'],
-            },
-            animations: {
-              push: {
-                content: {
-                  translationX: {
-                    from: windowSizeTools.getSize().width,
-                    to: 0,
-                    duration: 300,
-                  },
+    void Navigation.push(componentId, {
+      component: {
+        name: COMMENT_SCREEN,
+        options: {
+          topBar: {
+            visible: false,
+            height: 0,
+            drawBehind: false,
+          },
+          statusBar: {
+            drawBehind: true,
+            visible: true,
+            style: getStatusBarStyle(theme.isDark),
+            backgroundColor: 'transparent',
+          },
+          navigationBar: {
+            // visible: false,
+            backgroundColor: theme['c-content-background'],
+          },
+          layout: {
+            componentBackgroundColor: theme['c-content-background'],
+          },
+          animations: {
+            push: {
+              content: {
+                translationX: {
+                  from: windowSizeTools.getSize().width,
+                  to: 0,
+                  duration: 300,
                 },
               },
-              pop: {
-                content: {
-                  translationX: {
-                    from: 0,
-                    to: windowSizeTools.getSize().width,
-                    duration: 300,
-                  },
+            },
+            pop: {
+              content: {
+                translationX: {
+                  from: 0,
+                  to: windowSizeTools.getSize().width,
+                  duration: 300,
                 },
               },
             },
           },
         },
-      })
+      },
     })
   })
 }
@@ -426,7 +420,6 @@ export function pushCommentScreen(componentId: string) {
 //       },
 //     })
 //   */
-//   void InteractionManager.runAfterInteractions(() => {
 //     const theme = themeState.theme
 
 //     void Navigation.push(componentId, {
@@ -473,7 +466,6 @@ export function pushCommentScreen(componentId: string) {
 //           },
 //         },
 //       },
-//     })
 //   })
 // }
 

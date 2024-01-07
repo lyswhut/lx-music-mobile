@@ -5,7 +5,6 @@ import ListNameEdit, { type ListNameEditType } from './ListNameEdit'
 import List from './List'
 import ListImportExport, { type ListImportExportType } from './ListImportExport'
 import { handleRemove, handleSync } from './listAction'
-import { InteractionManager } from 'react-native'
 import ListMusicSort, { type ListMusicSortType } from './ListMusicSort'
 
 
@@ -21,9 +20,7 @@ export default () => {
     const changeVisible = (visibleList: boolean) => {
       if (visibleList && !isInited) {
         requestAnimationFrame(() => {
-          void InteractionManager.runAfterInteractions(() => {
-            setVisible(true)
-          })
+          setVisible(true)
         })
         isInited = true
       }

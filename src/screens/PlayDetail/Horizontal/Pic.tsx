@@ -19,12 +19,10 @@ export default memo(({ componentId }: { componentId: string }) => {
   const { width: winWidth, height: winHeight } = useWindowSize()
   const statusBarHeight = useStatusbarHeight()
 
-  const [animated, setAnimated] = useState(false)
+  const [animated, setAnimated] = useState(!!commonState.componentIds.playDetail)
   const [pic, setPic] = useState(musicInfo.pic)
   useEffect(() => {
-    if (commonState.componentIds.playDetail) setAnimated(true)
-    else if (!animated) return
-    setPic(musicInfo.pic)
+    if (animated) setPic(musicInfo.pic)
   }, [musicInfo.pic, animated])
 
   useNavigationComponentDidAppear(componentId, () => {

@@ -44,7 +44,7 @@ public class JavaScriptThread extends HandlerThread {
           case HandlerWhat.INIT: break;
           case HandlerWhat.ACTION: {
             Object[] data = (Object[]) message.obj;
-            Log.d("UserApi [handler]", "handler action: " + data[0]);
+            // Log.d("UserApi [handler]", "handler action: " + data[0]);
             javaScriptExecutor.callJS((String) data[0], data[1]);
             return;
           }

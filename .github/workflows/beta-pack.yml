@@ -15,8 +15,6 @@ jobs:
 
       - name: Setup Env
         uses: ./.github/actions/setup
-        env:
-          JAVA_VERSION: '17'
 
       - name: Build Packages
         shell: bash

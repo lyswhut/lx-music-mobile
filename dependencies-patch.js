@@ -7,11 +7,6 @@ const rootPath = path.join(__dirname, './')
 
 const patchs = [
   [
-    path.join(rootPath, './node_modules/@react-native-community/cli-tools/build/findDevServerPort.js'),
-    'let startPackager = true;',
-    'let startPackager = false;',
-  ],
-  [
     path.join(rootPath, './node_modules/react-native-navigation/lib/android/app/build.gradle'),
     `
     compileOptions {

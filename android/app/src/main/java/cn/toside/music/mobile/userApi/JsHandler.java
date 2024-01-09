@@ -57,7 +57,7 @@ public class JsHandler extends Handler {
       case HandlerWhat.ACTION:
         Object[] action = (Object[]) msg.obj;
         sendActionEvent((String) action[0], (String) action[1]);
-        Log.d("UserApi [api call]", "action: " + action[0]);
+        // Log.d("UserApi [api call]", "action: " + action[0]);
         break;
       case HandlerWhat.LOG:
         sendLogEvent((Object[]) msg.obj);

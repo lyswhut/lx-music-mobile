@@ -525,6 +525,9 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
   globalThis.eval = function() {
     throw new Error('eval is not available')
   }
+  globalThis.Function = function() {
+    throw new Error('Function is not available')
+  }
 
   const excludes = [
     Function.prototype.toString,

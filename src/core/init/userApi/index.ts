@@ -26,7 +26,7 @@ export default async(setting: LX.AppSetting) => {
         if (!target) return
         requestQueue.delete(data.requestKey)
         target.reject(new Error('request timeout'))
-      }, 30_000),
+      }, 25_000),
     })
     sendAction('request', data)
   })

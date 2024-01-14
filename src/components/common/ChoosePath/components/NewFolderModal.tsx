@@ -6,6 +6,7 @@ import ConfirmAlert, { type ConfirmAlertType } from '@/components/common/Confirm
 import { createStyle, toast } from '@/utils/tools'
 import { mkdir } from '@/utils/fs'
 import { useTheme } from '@/store/theme/hook'
+import type { PathItem } from './ListItem'
 const filterFileName = /[\\/:*?#"<>|]/
 
 
@@ -45,7 +46,7 @@ const NameInput = forwardRef<NameInputType, {}>((props, ref) => {
 export interface NewFolderType {
   show: (path: string) => void
 }
-export default forwardRef<NewFolderType, { onRefreshDir: (dir: string) => Promise<void> }>(({ onRefreshDir }, ref) => {
+export default forwardRef<NewFolderType, { onRefreshDir: (dir: string) => Promise<PathItem[]> }>(({ onRefreshDir }, ref) => {
   const confirmAlertRef = useRef<ConfirmAlertType>(null)
   const nameInputRef = useRef<NameInputType>(null)
   const pathRef = useRef<string>('')
@@ -74,8 +75,9 @@ export default forwardRef<NewFolderType, { onRefreshDir: (dir: string) => Promis
     }
     const newPath = `${pathRef.current}/${text}`
     mkdir(newPath).then(() => {
-      void onRefreshDir(pathRef.current).then(() => {
-        void onRefreshDir(newPath)
+      void onRefreshDir(pathRef.current).then((list) => {
+        const target = list.find(item => item.name == text)
+        if (target) void onRefreshDir(target.path)
       })
       nameInputRef.current?.setName('')
     }).catch((err: any) => {

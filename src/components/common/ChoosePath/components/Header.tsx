@@ -9,6 +9,7 @@ import { scaleSizeH } from '@/utils/pixelRatio'
 import { useStatusbarHeight } from '@/store/common/hook'
 import NewFolderModal, { type NewFolderType } from './NewFolderModal'
 import OpenStorageModal, { type OpenDirModalType } from './OpenStorageModal'
+import type { PathItem } from './ListItem'
 
 
 export default memo(({
@@ -19,8 +20,8 @@ export default memo(({
 }: {
   title: string
   path: string
-  onRefreshDir: (dir: string) => Promise<void>
-  onOpenDir: (dir: string) => Promise<void>
+  onRefreshDir: (dir: string) => Promise<PathItem[]>
+  onOpenDir: (dir: string) => Promise<PathItem[]>
 }) => {
   const theme = useTheme()
   const newFolderTypeRef = useRef<NewFolderType>(null)

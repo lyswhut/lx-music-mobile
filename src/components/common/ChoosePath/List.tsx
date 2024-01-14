@@ -122,19 +122,21 @@ export default forwardRef<ListType, ListProps>(({
     }
   }, [])
 
-  const readDir = async(newPath: string, dirOnly: boolean, filter?: string[], isRefresh?: boolean, isOpen?: boolean) => {
-    if (isReading) return
+  const readDir = async(newPath: string, dirOnly: boolean, filter?: string[], isRefresh?: boolean, isOpen?: boolean): Promise<PathItem[]> => {
+    if (isReading) return []
     setIsReading(true)
     return handleReadDir(newPath, dirOnly, filter, isRefresh).then(list => {
-      if (isUnmountedRef.current) return
+      if (isUnmountedRef.current) return []
       if (!isOpen && newPath != path && newPath.startsWith(path)) parentDirInfo.set(newPath, path)
       setList(list)
       setPath(newPath)
+      return list
     }).catch((err: any) => {
       toast(`Read dir error: ${err.message as string}`, 'long')
       // console.log('prevPath', prevPath)
       // if (isReadingDir.current) return
       // setPath(prevPath)
+      return []
     }).finally(() => {
       setIsReading(false)
     })

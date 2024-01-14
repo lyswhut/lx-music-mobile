@@ -11,6 +11,7 @@ import Button from '@/components/common/Button'
 import ButtonPrimary from '@/components/common/ButtonPrimary'
 import { useUnmounted } from '@/utils/hooks'
 import { Icon } from '@/components/common/Icon'
+import type { PathItem } from './ListItem'
 const filterFileName = /[\\:*?#"<>|]/
 
 
@@ -53,7 +54,7 @@ const PathInput = forwardRef<PathInputType, {}>((props, ref) => {
 export interface OpenDirModalType {
   show: (paths: string[]) => void
 }
-export default forwardRef<OpenDirModalType, { onOpenDir: (dir: string) => Promise<void> }>(({
+export default forwardRef<OpenDirModalType, { onOpenDir: (dir: string) => Promise<PathItem[]> }>(({
   onOpenDir,
 }, ref) => {
   const confirmAlertRef = useRef<ConfirmAlertType>(null)

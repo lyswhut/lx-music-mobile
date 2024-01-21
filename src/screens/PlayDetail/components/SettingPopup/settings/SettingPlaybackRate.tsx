@@ -17,7 +17,7 @@ import settingState from '@/store/setting/state'
 const MIN_VALUE = 60
 const MAX_VALUE = 200
 
-const Volume = () => {
+export default () => {
   const theme = useTheme()
   const playbackRate = Math.trunc(useSettingValue('player.playbackRate') * 100)
   const [sliderSize, setSliderSize] = useState(playbackRate)
@@ -71,4 +71,3 @@ const Volume = () => {
   )
 }
 
-export default Volume

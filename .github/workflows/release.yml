@@ -178,7 +178,7 @@ jobs:
             android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86_64.apk
             android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86.apk
             android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-universal.apk
-            android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-android_5-universal.apk
             android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-sl-arm64-v8a.apk
+          # android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-android_5-universal.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

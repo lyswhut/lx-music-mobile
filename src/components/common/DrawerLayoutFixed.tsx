@@ -18,7 +18,7 @@ export interface DrawerLayoutFixedType {
 
 const DrawerLayoutFixed = forwardRef<DrawerLayoutFixedType, Props>(({ visibleNavNames, widthPercentage, widthPercentageMax, children, ...props }, ref) => {
   const drawerLayoutRef = useRef<DrawerLayoutAndroid>(null)
-  const [w, setW] = useState<number | string>('100%')
+  const [w, setW] = useState<number | `${number}%`>('100%')
   const [drawerWidth, setDrawerWidth] = useState(0)
   const changedRef = useRef({ width: 0, changed: false })
 

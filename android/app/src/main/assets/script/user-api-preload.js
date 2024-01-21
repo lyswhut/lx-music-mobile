@@ -66,7 +66,10 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
     if (timeoutId > 90000000000) throw new Error('max timeout')
     const id = timeoutId++
     callbacks.set(id, {
-      callback,
+      callback(...args) {
+        // eslint-disable-next-line n/no-callback-literal
+        callback(...args)
+      },
       params,
     })
     nativeFuncs.set_timeout(id, parseInt(timeout))

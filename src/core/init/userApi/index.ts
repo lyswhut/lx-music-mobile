@@ -1,4 +1,4 @@
-import { type InitParams, onScriptAction, sendAction, type ResponseParams, type UpdateInfoParams } from '@/utils/nativeModules/userApi'
+import { type InitParams, onScriptAction, sendAction, type ResponseParams, type UpdateInfoParams, type RequestParams } from '@/utils/nativeModules/userApi'
 import { log, setUserApiList, setUserApiStatus } from '@/core/userApi'
 import settingState from '@/store/setting/state'
 import BackgroundTimer from 'react-native-background-timer'
@@ -8,32 +8,65 @@ import { confirmDialog, openUrl, tipDialog } from '@/utils/tools'
 
 
 export default async(setting: LX.AppSetting) => {
-  const requestQueue = new Map<string, { resolve: (value: ResponseParams['result']) => void, reject: (error: Error) => void, timeout: number }>()
+  const userApiRequestMap = new Map<string, { resolve: (value: ResponseParams['result']) => void, reject: (error: Error) => void, timeout: number }>()
+  const scriptRequestMap = new Map<string, { request: Promise<any>, abort: () => void }>()
 
   const cancelRequest = (requestKey: string, message: string) => {
-    const target = requestQueue.get(requestKey)
+    const target = scriptRequestMap.get(requestKey)
     if (!target) return
-    requestQueue.delete(requestKey)
-    BackgroundTimer.clearTimeout(target.timeout)
-    target.reject(new Error(message))
+    scriptRequestMap.delete(requestKey)
+    target.abort()
   }
-  const sendUserApiRequest = async(data: LX.UserApi.UserApiRequestParams) => new Promise<ResponseParams['result']>((resolve, reject) => {
-    requestQueue.set(data.requestKey, {
-      resolve,
-      reject,
-      timeout: BackgroundTimer.setTimeout(() => {
-        const target = requestQueue.get(data.requestKey)
-        if (!target) return
-        requestQueue.delete(data.requestKey)
-        target.reject(new Error('request timeout'))
-      }, 25_000),
+  const sendScriptRequest = (requestKey: string, url: string, options: RequestParams['options']) => {
+    let req = fetchData(url, options)
+    req.request.then(response => {
+      // console.log(response)
+      sendAction('response', {
+        error: null,
+        requestKey,
+        response,
+      })
+    }).catch(err => {
+      sendAction('response', {
+        error: err.message,
+        requestKey,
+        response: null,
+      })
+    }).finally(() => {
+      scriptRequestMap.delete(requestKey)
     })
-    sendAction('request', data)
-  })
+    scriptRequestMap.set(requestKey, req)
+  }
+  const sendUserApiRequest = async(data: LX.UserApi.UserApiRequestParams) => {
+    const handleApiUpdate = () => {
+      const target = userApiRequestMap.get(data.requestKey)
+      if (!target) return
+      userApiRequestMap.delete(data.requestKey)
+      BackgroundTimer.clearTimeout(target.timeout)
+      target.reject(new Error('request failed'))
+    }
+    const requestPromise = new Promise<ResponseParams['result']>((resolve, reject) => {
+      userApiRequestMap.set(data.requestKey, {
+        resolve,
+        reject,
+        timeout: BackgroundTimer.setTimeout(() => {
+          const target = userApiRequestMap.get(data.requestKey)
+          if (!target) return
+          userApiRequestMap.delete(data.requestKey)
+          target.reject(new Error('request timeout'))
+        }, 20_000),
+      })
+      sendAction('request', data)
+    }).finally(() => {
+      global.state_event.off('apiSourceUpdated', handleApiUpdate)
+    })
+    global.state_event.on('apiSourceUpdated', handleApiUpdate)
+    return requestPromise
+  }
   const handleUserApiResponse = ({ status, result, requestKey, errorMessage }: ResponseParams) => {
-    const target = requestQueue.get(requestKey)
+    const target = userApiRequestMap.get(requestKey)
     if (!target) return
-    requestQueue.delete(requestKey)
+    userApiRequestMap.delete(requestKey)
     BackgroundTimer.clearTimeout(target.timeout)
     if (status) target.resolve(result)
     else target.reject(new Error(errorMessage ?? 'failed'))
@@ -71,11 +104,11 @@ export default async(setting: LX.AppSetting) => {
                       // eslint-disable-next-line @typescript-eslint/promise-function-async
                     }).then(res => {
                       // console.log(res)
-                      if (!/^https?:/.test(res.data.url as string)) return Promise.reject(new Error('Get url failed'))
+                      if (!/^https?:/.test(res.data.url as string)) throw new Error('Get url failed')
                       return { type, url: res.data.url }
-                    }).catch(async err => {
+                    }).catch(err => {
                       console.log(err.message)
-                      return Promise.reject(err)
+                      throw err
                     }),
                   }
                 }
@@ -135,20 +168,7 @@ export default async(setting: LX.AppSetting) => {
         handleUserApiResponse(event.data)
         break
       case 'request':
-        fetchData(event.data.url, event.data.options).request.then(response => {
-          // console.log(response)
-          sendAction('response', {
-            error: null,
-            requestKey: event.data.requestKey,
-            response,
-          })
-        }).catch(err => {
-          sendAction('response', {
-            error: err.message,
-            requestKey: event.data.requestKey,
-            response: null,
-          })
-        })
+        sendScriptRequest(event.data.requestKey, event.data.url, event.data.options)
         break
       case 'cancelRequest':
         cancelRequest(event.data, 'request canceled')

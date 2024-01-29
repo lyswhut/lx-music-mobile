@@ -4,8 +4,9 @@ import Text from '@/components/common/Text'
 import { View } from 'react-native'
 import Input, { type InputType } from '@/components/common/Input'
 import { createUserList, updateUserList } from '@/core/list'
-import { createStyle } from '@/utils/tools'
+import { confirmDialog, createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
+import listState from '@/store/list/state'
 
 interface NameInputType {
   setName: (text: string) => void
@@ -98,8 +99,13 @@ export default forwardRef<ListNameEditType, {}>((props, ref) => {
     if (position == -1) {
       void updateUserList([{ ...selectedListInfo.current, name }])
     } else {
-      const now = Date.now()
-      void createUserList(position, [{ id: `userlist_${now}`, name, locationUpdateTime: now }])
+      void (listState.userList.some(l => l.name == name) ? confirmDialog({
+        message: global.i18n.t('list_duplicate_tip'),
+      }) : Promise.resolve(true)).then(confirmed => {
+        if (!confirmed) return
+        const now = Date.now()
+        void createUserList(position, [{ id: `userlist_${now}`, name, locationUpdateTime: now }])
+      })
     }
     alertRef.current?.setVisible(false)
   }

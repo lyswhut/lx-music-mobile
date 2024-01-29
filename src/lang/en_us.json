@@ -55,6 +55,7 @@
   "list_add_title_last": "to...",
   "list_create": "Create a new list",
   "list_create_input_placeholder": "What name do you think of...",
+  "list_duplicate_tip": "A list with the same name already exists. Do you want to continue creating it?",
   "list_edit_action_tip_add_failed": "add failed",
   "list_edit_action_tip_add_success": "Added successfully",
   "list_edit_action_tip_exist": "This song already exists in this list",

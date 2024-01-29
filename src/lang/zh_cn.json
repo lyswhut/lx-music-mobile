@@ -55,6 +55,7 @@
   "list_add_title_last": "到...",
   "list_create": "新建列表",
   "list_create_input_placeholder": "你想起啥名...",
+  "list_duplicate_tip": "已存在同名列表，是否继续创建？",
   "list_edit_action_tip_add_failed": "添加失败",
   "list_edit_action_tip_add_success": "添加成功",
   "list_edit_action_tip_exist": "该列表已经有这首歌啦",

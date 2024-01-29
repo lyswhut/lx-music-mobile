@@ -81,7 +81,7 @@ export default memo(() => {
         id: api.id,
         name: api.name,
         label: `${api.name}${statusLabel}`,
-        desc: [/^\d/.test(api.version) ? `v${api.version}` : api.version, api.author].filter(Boolean).join(', '),
+        desc: [/^\d/.test(api.version) ? `v${api.version}` : api.version].filter(Boolean).join(', '),
         statusLabel,
         // status: apiStatus.status,
         // message: apiStatus.message,

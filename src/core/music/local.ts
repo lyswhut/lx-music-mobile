@@ -4,8 +4,11 @@ import { updateListMusics } from '@/core/list'
 import {
   buildLyricInfo,
   getCachedLyricInfo,
+  getOnlineOtherSourceLyricByLocal,
   getOnlineOtherSourceLyricInfo,
   getOnlineOtherSourceMusicUrl,
+  getOnlineOtherSourceMusicUrlByLocal,
+  getOnlineOtherSourcePicByLocal,
   getOnlineOtherSourcePicUrl,
   getOtherSource,
 } from './utils'
@@ -73,6 +76,14 @@ export const getMusicUrl = async({ musicInfo, isRefresh, onToggleSource = () => 
     // console.log(path)
     if (path) return path
   }
+
+  try {
+    return await getOnlineOtherSourceMusicUrlByLocal(musicInfo, isRefresh).then(({ url, quality, isFromCache }) => {
+      if (!isFromCache) void saveMusicUrl(musicInfo, quality, url)
+      return url
+    })
+  } catch {}
+
   onToggleSource()
   const otherSource = await getOtherSourceByLocal(musicInfo)
   if (!otherSource.length) throw new Error('source not found')
@@ -101,6 +112,12 @@ export const getPicUrl = async({ musicInfo, listId, isRefresh, skipFilePic, onTo
 
     if (musicInfo.meta.picUrl) return musicInfo.meta.picUrl
   }
+
+  try {
+    return await getOnlineOtherSourcePicByLocal(musicInfo).then(({ url }) => {
+      return url
+    })
+  } catch {}
 
   onToggleSource()
   const otherSource = await getOtherSourceByLocal(musicInfo)
@@ -142,6 +159,14 @@ export const getLyricInfo = async({ musicInfo, isRefresh, skipFileLyric, onToggl
     const lyricInfo = await getCachedLyricInfo(musicInfo)
     if (lyricInfo?.lyric) return buildLyricInfo(lyricInfo)
   }
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/promise-function-async
+    return await getOnlineOtherSourceLyricByLocal(musicInfo, isRefresh).then(({ lyricInfo, isFromCache }) => {
+      if (!isFromCache) void saveLyric(musicInfo, lyricInfo)
+      return buildLyricInfo(lyricInfo)
+    })
+  } catch {}
 
   onToggleSource()
   const otherSource = await getOtherSourceByLocal(musicInfo)

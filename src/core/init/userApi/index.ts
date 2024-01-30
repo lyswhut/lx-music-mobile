@@ -104,7 +104,6 @@ export default async(setting: LX.AppSetting) => {
                       // eslint-disable-next-line @typescript-eslint/promise-function-async
                     }).then(res => {
                       // console.log(res)
-                      if (!/^https?:/.test(res.data.url as string)) throw new Error('Get url failed')
                       return { type, url: res.data.url }
                     }).catch(err => {
                       console.log(err.message)
@@ -113,7 +112,62 @@ export default async(setting: LX.AppSetting) => {
                   }
                 }
                 break
-
+              case 'lyric':
+                apis[source].getLyric = (songInfo: LX.Music.MusicInfo) => {
+                  const requestKey = `request__${Math.random().toString().substring(2)}`
+                  return {
+                    canceleFn() {
+                      // userApiRequestCancel(requestKey)
+                    },
+                    promise: sendUserApiRequest({
+                      requestKey,
+                      data: {
+                        source,
+                        action: 'lyric',
+                        info: {
+                          type,
+                          musicInfo: songInfo,
+                        },
+                      },
+                      // eslint-disable-next-line @typescript-eslint/promise-function-async
+                    }).then(res => {
+                      // console.log(res)
+                      return res.data
+                    }).catch(async err => {
+                      console.log(err.message)
+                      return Promise.reject(err)
+                    }),
+                  }
+                }
+                break
+              case 'pic':
+                apis[source].getPic = (songInfo: LX.Music.MusicInfo) => {
+                  const requestKey = `request__${Math.random().toString().substring(2)}`
+                  return {
+                    canceleFn() {
+                      // userApiRequestCancel(requestKey)
+                    },
+                    promise: sendUserApiRequest({
+                      requestKey,
+                      data: {
+                        source,
+                        action: 'pic',
+                        info: {
+                          type,
+                          musicInfo: songInfo,
+                        },
+                      },
+                      // eslint-disable-next-line @typescript-eslint/promise-function-async
+                    }).then(res => {
+                      // console.log(res)
+                      return res.data
+                    }).catch(async err => {
+                      console.log(err.message)
+                      return Promise.reject(err)
+                    }),
+                  }
+                }
+                break
               default:
                 break
             }

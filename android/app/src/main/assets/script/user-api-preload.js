@@ -232,18 +232,18 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
   const jsCall = (action, data) => {
     // console.log('jsCall', action, data)
     switch (action) {
+      case '__run_error__':
+        if (!isInitedApi) isInitedApi = true
+        return
       case '__set_timeout__':
         handleSetTimeout(data)
-        break
+        return
       case 'request':
         handleRequest(data)
-        break
+        return
       case 'response':
         handleNativeResponse(data)
-        break
-
-      default:
-        break
+        return
     }
     return 'Unknown action: ' + action
   }
@@ -254,7 +254,7 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
     writable: false,
     value: (_key, action, data) => {
       if (key != _key) return 'Invalid key'
-      return jsCall(action, JSON.parse(data))
+      return data == null ? jsCall(action) : jsCall(action, JSON.parse(data))
     },
   })
 
@@ -496,19 +496,6 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
 
   globalThis.setTimeout = _setTimeout
   globalThis.clearTimeout = _clearTimeout
-  globalThis.window = globalThis
-  globalThis.document = {
-    getElementsByTagName(name) {
-      if (name == 'script') {
-        return [
-          Object.freeze({
-            innerText: globalThis.lx.currentScriptInfo.rawScript,
-          }),
-        ]
-      }
-      return null
-    },
-  }
 
   const freezeObject = (obj) => {
     if (typeof obj != 'object') return

@@ -165,23 +165,29 @@ public class QuickJS {
         return "";
       } catch (Exception e) {
         Log.e("UserApi", "load script error: " + e.getMessage());
+        try {
+          callJS("__run_error__");
+        } catch (Exception ignored) {}
+        if (inited) return "";
+        inited = true;
         return e.getMessage();
       }
     }
     return "create JavaScript Env failed";
   }
 
+  public Object callJS(String action) {
+    Object[] params = new Object[]{this.key, action};
+    return callJS(params);
+  }
   public Object callJS(String action, Object... args) {
-    Object[] params;
-    if (args == null) {
-      params = new Object[]{this.key, action};
-    } else {
-      Object[] params2 = new Object[args.length + 2];
-      params2[0] = this.key;
-      params2[1] = action;
-      System.arraycopy(args, 0, params2, 2, args.length);
-      params = params2;
-    }
+    Object[] params = new Object[args.length + 2];
+    params[0] = this.key;
+    params[1] = action;
+    System.arraycopy(args, 0, params, 2, args.length);
+    return callJS(params);
+  }
+  public Object callJS(Object[] params) {
     try {
       return this.jsContext.getGlobalObject().getJSFunction("__lx_native__").call(params);
     } catch (Exception e) {

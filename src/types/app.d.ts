@@ -36,6 +36,7 @@ interface GlobalData {
 
   qualityList: LX.QualityList
   apis: Partial<LX.UserApi.UserApiSources>
+  apiInitPromise: [Promise<boolean>, boolean, (success: boolean) => void]
 
   jumpMyListPosition: boolean
 

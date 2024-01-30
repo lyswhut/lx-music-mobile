@@ -133,6 +133,7 @@ export default async(setting: LX.AppSetting) => {
         })
       }
     }
+    if (!global.lx.apiInitPromise[1]) global.lx.apiInitPromise[2](status)
   }
   const showUpdateAlert = ({ name, log, updateUrl }: UpdateInfoParams) => {
     if (updateUrl) {

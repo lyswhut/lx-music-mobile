@@ -53,7 +53,7 @@ export const getOtherSource = async(musicInfo: LX.Music.MusicInfo | LX.Download.
     let timeout: null | number = BackgroundTimer.setTimeout(() => {
       timeout = null
       reject(new Error('find music timeout'))
-    }, 20_000)
+    }, 15_000)
     findMusic(searchMusicInfo).then((otherSource) => {
       resolve(otherSource.map(toNewMusicInfo) as LX.Music.MusicInfoOnline[])
     }).catch(reject).finally(() => {
@@ -164,6 +164,8 @@ export const getOnlineOtherSourceMusicUrl = async({ musicInfos, quality, onToggl
   quality: LX.Quality
   isFromCache: boolean
 }> => {
+  if (!await global.lx.apiInitPromise[0]) throw new Error('source init failed')
+
   let musicInfo: LX.Music.MusicInfoOnline | null = null
   let itemQuality: LX.Quality | null = null
   // eslint-disable-next-line no-cond-assign
@@ -189,7 +191,7 @@ export const getOnlineOtherSourceMusicUrl = async({ musicInfos, quality, onToggl
   } catch (err: any) {
     reqPromise = Promise.reject(err)
   }
-  retryedSource.includes(musicInfo.source)
+  // retryedSource.includes(musicInfo.source)
   // eslint-disable-next-line @typescript-eslint/promise-function-async
   return reqPromise.then(({ url, type }: { url: string, type: LX.Quality }) => {
     return { musicInfo, url, quality: type, isFromCache: false }
@@ -216,6 +218,7 @@ export const handleGetOnlineMusicUrl = async({ musicInfo, quality, onToggleSourc
   quality: LX.Quality
   isFromCache: boolean
 }> => {
+  if (!await global.lx.apiInitPromise[0]) throw new Error('source init failed')
   // console.log(musicInfo.source)
   const targetQuality = quality ?? getPlayQuality(settingState.setting['player.isPlayHighQuality'], musicInfo)
 
@@ -279,7 +282,7 @@ export const getOnlineOtherSourcePicUrl = async({ musicInfos, onToggleSource, is
   } catch (err: any) {
     reqPromise = Promise.reject(err)
   }
-  retryedSource.includes(musicInfo.source)
+  // retryedSource.includes(musicInfo.source)
   return reqPromise.then((url: string) => {
     return { musicInfo, url, isFromCache: false }
     // eslint-disable-next-line @typescript-eslint/promise-function-async
@@ -366,7 +369,7 @@ export const getOnlineOtherSourceLyricInfo = async({ musicInfos, onToggleSource,
   } catch (err: any) {
     reqPromise = Promise.reject(err)
   }
-  retryedSource.includes(musicInfo.source)
+  // retryedSource.includes(musicInfo.source)
   return reqPromise.then(async(lyricInfo: LX.Music.LyricInfo) => {
     return existTimeExp.test(lyricInfo.lyric) ? {
       lyricInfo,

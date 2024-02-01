@@ -122,6 +122,14 @@ public class LyricModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void toggleAutoPause(boolean isAutoPause, Promise promise) {
+    if (lyric != null) {
+      lyric.toggleAutoPause(isAutoPause);
+    }
+    promise.resolve(null);
+  }
+
+  @ReactMethod
   public void toggleLock(boolean isLock, Promise promise) {
     if (lyric != null) {
       if (isLock) {

@@ -195,6 +195,8 @@ dependencies {
     // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation group: 'wang.harlon.quickjs', name: 'wrapper-android', version: '1.0.0'
 
+    implementation 'com.github.577fkj:StatusBarApiExample:v2.0'
+
   if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {

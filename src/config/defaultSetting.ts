@@ -40,6 +40,8 @@ const defaultSetting: LX.AppSetting = {
   'playDetail.isShowLyricProgressSetting': false,
 
   'desktopLyric.enable': false,
+  'desktopLyric.isUseDesktopLyric': true,
+  'desktopLyric.isAutoPause': true,
   'desktopLyric.isLock': false,
   'desktopLyric.width': 100,
   'desktopLyric.maxLineNum': 5,

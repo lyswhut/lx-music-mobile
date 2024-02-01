@@ -3,6 +3,7 @@ import { NativeModules, NativeEventEmitter } from 'react-native'
 const { LyricModule } = NativeModules
 
 let isShowLyric = false
+let isUseDesktopLyric = true
 
 // export const themes = [
 //   { id: 'green', value: '#07c556' },
@@ -34,26 +35,10 @@ let isShowLyric = false
 const getAlpha = (num: number) => num / 100
 const getTextSize = (num: number) => num / 10
 
-
-/**
- * show lyric
- */
-export const showLyric = async({
-  isShowToggleAnima,
-  isSingleLine,
-  width,
-  maxLineNum,
-  isLock,
-  unplayColor,
-  playedColor,
-  shadowColor,
-  opacity,
-  textSize,
-  positionX,
-  positionY,
-  textPositionX,
-  textPositionY,
-}: {
+interface Options {
+  enable: boolean
+  isUseDesktopLyric: boolean
+  isAutoPause: boolean
   isShowToggleAnima: boolean
   isSingleLine: boolean
   width: number
@@ -68,23 +53,31 @@ export const showLyric = async({
   positionY: number
   textPositionX: LX.AppSetting['desktopLyric.textPosition.x']
   textPositionY: LX.AppSetting['desktopLyric.textPosition.y']
-}): Promise<void> => {
-  if (isShowLyric) return Promise.resolve()
+}
+
+/**
+ * show lyric
+ */
+export const showLyric = async(options: Options): Promise<void> => {
+  // if (isShowLyric) return Promise.resolve()
+  isUseDesktopLyric = options.isUseDesktopLyric
   return LyricModule.showLyric({
-    isSingleLine,
-    isShowToggleAnima,
-    isLock,
-    unplayColor,
-    playedColor,
-    shadowColor,
-    alpha: getAlpha(opacity),
-    textSize: getTextSize(textSize),
-    lyricViewX: positionX,
-    lyricViewY: positionY,
-    textX: textPositionX.toUpperCase(),
-    textY: textPositionY.toUpperCase(),
-    width,
-    maxLineNum,
+    isUseDesktopLyric: options.isUseDesktopLyric,
+    isAutoPause: options.isAutoPause,
+    isSingleLine: options.isSingleLine,
+    isShowToggleAnima: options.isShowToggleAnima,
+    isLock: options.isLock,
+    unplayColor: options.unplayColor,
+    playedColor: options.playedColor,
+    shadowColor: options.shadowColor,
+    alpha: getAlpha(options.opacity),
+    textSize: getTextSize(options.textSize),
+    lyricViewX: options.positionX,
+    lyricViewY: options.positionY,
+    textX: options.textPositionX.toUpperCase(),
+    textY: options.textPositionY.toUpperCase(),
+    width: options.width,
+    maxLineNum: options.maxLineNum,
   }).then(() => {
     isShowLyric = true
   })
@@ -154,11 +147,20 @@ export const toggleRoma = async(isShowRoma: boolean): Promise<void> => {
 }
 
 /**
+ * toggle is auto pause lyric
+ * @param isAutoPause is auto pause lyric
+ */
+export const toggleAutoPause = async(isAutoPause: boolean): Promise<void> => {
+  // if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
+  return LyricModule.toggleAutoPause(isAutoPause)
+}
+
+/**
  * toggle is lock lyric window
  * @param isLock is lock lyric window
  */
 export const toggleLock = async(isLock: boolean): Promise<void> => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.toggleLock(isLock)
 }
 
@@ -169,7 +171,7 @@ export const toggleLock = async(isLock: boolean): Promise<void> => {
  * @param shadowColor
  */
 export const setColor = async(unplayColor: string, playedColor: string, shadowColor: string): Promise<void> => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setColor(unplayColor, playedColor, shadowColor)
 }
 
@@ -178,7 +180,7 @@ export const setColor = async(unplayColor: string, playedColor: string, shadowCo
  * @param alpha text alpha
  */
 export const setAlpha = async(alpha: number): Promise<void> => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setAlpha(getAlpha(alpha))
 }
 
@@ -187,42 +189,42 @@ export const setAlpha = async(alpha: number): Promise<void> => {
  * @param size text size
  */
 export const setTextSize = async(size: number): Promise<void> => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setTextSize(getTextSize(size))
 }
 
 export const setShowToggleAnima = async(isShowToggleAnima: boolean): Promise<void> => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setShowToggleAnima(isShowToggleAnima)
 }
 
 export const setSingleLine = async(isSingleLine: boolean): Promise<void> => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setSingleLine(isSingleLine)
 }
 
 export const setPosition = async(x: number, y: number): Promise<void> => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setPosition(x, y)
 }
 
 export const setMaxLineNum = async(maxLineNum: number): Promise<void> => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setMaxLineNum(maxLineNum)
 }
 
 export const setWidth = async(width: number): Promise<void> => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setWidth(width)
 }
 
 // export const fixViewPosition = async(): Promise<void> => {
-//   if (!isShowLyric) return Promise.resolve()
+//   if (!isShowLyric|| !isUseDesktopLyric) return Promise.resolve()
 //   return LyricModule.fixViewPosition()
 // }
 
 export const setLyricTextPosition = async(textX: LX.AppSetting['desktopLyric.textPosition.x'], textY: LX.AppSetting['desktopLyric.textPosition.y']): Promise<void> => {
-  if (!isShowLyric) return Promise.resolve()
+  if (!isShowLyric || !isUseDesktopLyric) return Promise.resolve()
   return LyricModule.setLyricTextPosition(textX.toUpperCase(), textY.toUpperCase())
 }
 

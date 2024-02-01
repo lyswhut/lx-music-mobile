@@ -173,12 +173,12 @@ jobs:
           draft: false
           tag_name: v${{ env.PACKAGE_VERSION }}
           files: |
-            android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-arm64-v8a.apk
-            android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-armeabi-v7a.apk
-            android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86_64.apk
-            android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86.apk
-            android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-universal.apk
-            android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-sl-arm64-v8a.apk
-          # android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-android_5-universal.apk
+            artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-arm64-v8a.apk
+            artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-armeabi-v7a.apk
+            artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86_64.apk
+            artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86.apk
+            artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-universal.apk
+            artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-sl-arm64-v8a.apk
+          # artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-android_5-universal.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

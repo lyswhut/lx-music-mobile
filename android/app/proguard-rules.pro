@@ -24,3 +24,7 @@
   **[] $VALUES;
   public *;
 }
+
+# 排除混淆墨•状态栏歌词相关API
+-keep class cn.lyric.getter.api.data.*{*;}
+-keep class cn.lyric.getter.api.API{*;}

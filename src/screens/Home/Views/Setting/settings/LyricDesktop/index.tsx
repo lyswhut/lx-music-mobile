@@ -2,6 +2,8 @@ import { memo } from 'react'
 
 import Section from '../../components/Section'
 import IsShowLyric from './IsShowLyric'
+import LyricType from './LyricType'
+import IsAutoPauseLyric from './IsAutoPauseLyric'
 import IsLockLyric from './IsLockLyric'
 import IsShowToggleAnima from './IsShowToggleAnima'
 import IsSingleLine from './IsSingleLine'
@@ -21,9 +23,11 @@ export default memo(() => {
   return (
     <Section title={t('setting_lyric_desktop')}>
       <IsShowLyric />
+      <IsAutoPauseLyric />
       <IsLockLyric />
       <IsShowToggleAnima />
       <IsSingleLine />
+      <LyricType />
       <Theme />
       <TextSize />
       <ViewWidth />

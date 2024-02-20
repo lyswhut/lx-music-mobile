@@ -1,6 +1,6 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.2.0",
+  "version": "1.2.1-beta.0",
   "versionCode": 63,
   "private": true,
   "scripts": {
@@ -19,7 +19,6 @@
     "clear": "cd android && gradlew.bat clean",
     "clear:full": "git clean -fdx -e android/keystore.properties -e android/app/*.keystore",
     "build:theme": "node src/theme/themes/createThemes.js",
-    "postinstall": "node ./dependencies-patch.js",
     "publish": "node publish"
   },
   "engines": {
@@ -45,7 +44,7 @@
   "homepage": "https://github.com/lyswhut/lx-music-mobile#readme",
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.0.5",
-    "@react-native-async-storage/async-storage": "^1.21.0",
+    "@react-native-async-storage/async-storage": "^1.22.0",
     "@react-native-clipboard/clipboard": "^1.13.2",
     "@react-native-community/slider": "^4.5.0",
     "iconv-lite": "^0.6.3",
@@ -60,7 +59,7 @@
     "react-native-file-system": "github:lyswhut/react-native-file-system#cb3b807ac68c5cdb2c32ca10fdbb5e5209154ece",
     "react-native-fs": "^2.20.0",
     "react-native-local-media-metadata": "github:lyswhut/react-native-local-media-metadata#c8377d82c04aecf5ee79d446276ab9d0c1f167be",
-    "react-native-navigation": "^7.37.2",
+    "react-native-navigation": "^7.38.1",
     "react-native-pager-view": "^6.2.3",
     "react-native-quick-base64": "^2.0.8",
     "react-native-quick-md5": "^3.0.6",
@@ -77,7 +76,7 @@
     "@react-native/metro-config": "^0.73.5",
     "@react-native/typescript-config": "^0.74.0",
     "@tsconfig/react-native": "^3.0.3",
-    "@types/react": "^18.2.55",
+    "@types/react": "^18.2.57",
     "@types/react-native": "^0.72.8",
     "@types/react-native-background-timer": "^2.0.2",
     "@types/react-native-vector-icons": "^6.4.18",

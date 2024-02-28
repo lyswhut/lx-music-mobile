@@ -137,7 +137,7 @@ export const getCachedLyricInfo = async(musicInfo: LX.Music.MusicInfo): Promise<
 export const getPlayQuality = (highQuality: boolean, musicInfo: LX.Music.MusicInfoOnline): LX.Quality => {
   let type: LX.Quality = '128k'
   let list = global.lx.qualityList[musicInfo.source]
-  if (highQuality && musicInfo.meta._qualitys['320k'] && list && list.includes('320k')) type = '320k'
+  if (highQuality && musicInfo.meta._qualitys['flac'] && list && list.includes('flac')) type = 'flac'
   return type
 }
 

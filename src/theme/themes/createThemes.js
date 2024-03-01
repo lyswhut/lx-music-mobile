@@ -78,6 +78,24 @@ const defaultThemes = [
     },
   },
   {
+    id: 'brown',
+    name: '泥牛入海',
+    isDark: false,
+    config: {
+      primary: 'rgba(188, 128, 68, 1)',
+      font: 'rgb(33, 33, 33)',
+      'c-app-background': 'var(c-primary-light-600-alpha-700)',
+      'c-main-background': 'rgba(255, 255, 255, 1)',
+      'bg-image': '',
+      'bg-image-position': 'center',
+      'bg-image-size': 'cover',
+
+      'c-badge-primary': 'var(c-primary)',
+      'c-badge-secondary': '#483472',
+      'c-badge-tertiary': '#647D39',
+    },
+  },
+  {
     id: 'red',
     name: '热情似火',
     isDark: false,

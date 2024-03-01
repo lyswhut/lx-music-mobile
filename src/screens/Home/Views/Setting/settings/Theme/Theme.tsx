@@ -128,6 +128,7 @@ const styles = createStyle({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 10,
+    marginTop: 5,
   },
   item: {
     // marginRight: 15,

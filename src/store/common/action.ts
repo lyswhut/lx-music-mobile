@@ -8,6 +8,7 @@ export default {
     global.state_event.fontSizeUpdated(size)
   },
   setStatusbarHeight(size: number) {
+    if (state.statusbarHeight == size) return
     state.statusbarHeight = size
     global.state_event.statusbarHeightUpdated(size)
   },

@@ -67,6 +67,11 @@ declare global {
       'common.useSystemFileSelector': boolean
 
       /**
+       * 总是保留状态栏高度
+       */
+      'common.alwaysKeepStatusbarHeight': boolean
+
+      /**
        * 主题id
        */
       'theme.id': string

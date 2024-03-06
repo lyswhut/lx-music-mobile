@@ -10,18 +10,18 @@ import CheckBoxItem from '../../components/CheckBoxItem'
 
 export default memo(() => {
   const t = useI18n()
-  const val = useSettingValue('common.useSystemFileSelector')
-  const update = (useSystemFileSelector: boolean) => {
-    updateSetting({ 'common.useSystemFileSelector': useSystemFileSelector })
+  const val = useSettingValue('common.alwaysKeepStatusbarHeight')
+  const update = (alwaysKeepStatusbarHeight: boolean) => {
+    updateSetting({ 'common.alwaysKeepStatusbarHeight': alwaysKeepStatusbarHeight })
   }
 
   return (
     <View style={styles.content}>
       <CheckBoxItem
-      check={val}
-      label={t('setting_basic_use_system_file_selector')}
-      helpDesc={t('setting_basic_use_system_file_selector_tip')}
-      onChange={update} />
+        check={val}
+        label={t('setting_basic_always_keep_statusbar_height')}
+        helpDesc={t('setting_basic_always_keep_statusbar_height_tip')}
+        onChange={update} />
     </View>
   )
 })
@@ -30,6 +30,6 @@ export default memo(() => {
 const styles = createStyle({
   content: {
     marginTop: 5,
-    // marginBottom: 15,
+    marginBottom: 15,
   },
 })

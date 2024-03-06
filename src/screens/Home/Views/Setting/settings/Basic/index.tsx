@@ -11,6 +11,7 @@ import IsStartupAutoPlay from './IsStartupAutoPlay'
 import IsAutoHidePlayBar from './IsAutoHidePlayBar'
 import IsHomePageScroll from './IsHomePageScroll'
 import IsUseSystemFileSelector from './IsUseSystemFileSelector'
+import IsAlwaysKeepStatusbarHeight from './IsAlwaysKeepStatusbarHeight'
 import IsShowBackBtn from './IsShowBackBtn'
 import IsShowExitBtn from './IsShowExitBtn'
 import DrawerLayoutPosition from './DrawerLayoutPosition'
@@ -28,6 +29,7 @@ export default memo(() => {
       <IsAutoHidePlayBar />
       <IsHomePageScroll />
       <IsUseSystemFileSelector />
+      <IsAlwaysKeepStatusbarHeight />
       <Theme />
       <DrawerLayoutPosition />
       <Language />

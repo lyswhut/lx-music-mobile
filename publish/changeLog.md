@@ -7,6 +7,7 @@
 
 - 不再丢弃kg源逐行歌词（@helloplhm-qwq）
 - 支持kw源排行榜显示大小（revert @Folltoshe #1460）
+- 优化本地歌曲换源匹配机制
 
 ### 修复
 

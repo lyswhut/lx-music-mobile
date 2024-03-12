@@ -1,14 +1,13 @@
 import { useRef, useImperativeHandle, forwardRef, useState } from 'react'
 import Text from '@/components/common/Text'
 import { View, TouchableOpacity } from 'react-native'
-import { createStyle, openUrl, tipDialog } from '@/utils/tools'
+import { createStyle, openUrl } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'
 import Dialog, { type DialogType } from '@/components/common/Dialog'
 import Button from '@/components/common/Button'
 import List from './List'
-import ScriptImportExport, { type ScriptImportExportType } from './ScriptImportExport'
-import { state } from '@/store/userApi'
+import ImportBtn from './ImportBtn'
 
 // interface UrlInputType {
 //   setText: (text: string) => void
@@ -64,7 +63,6 @@ export interface UserApiEditModalType {
 
 export default forwardRef<UserApiEditModalType, {}>((props, ref) => {
   const dialogRef = useRef<DialogType>(null)
-  const scriptImportExportRef = useRef<ScriptImportExportType>(null)
   // const sourceSelectorRef = useRef<SourceSelectorType>(null)
   // const inputRef = useRef<UrlInputType>(null)
   const [visible, setVisible] = useState(false)
@@ -96,16 +94,7 @@ export default forwardRef<UserApiEditModalType, {}>((props, ref) => {
   const handleCancel = () => {
     dialogRef.current?.setVisible(false)
   }
-  const handleImport = () => {
-    if (state.list.length > 20) {
-      void tipDialog({
-        message: t('user_api_max_tip'),
-        btnText: t('ok'),
-      })
-      return
-    }
-    scriptImportExportRef.current?.import()
-  }
+
   const openFAQPage = () => {
     void openUrl('https://lyswhut.github.io/lx-music-doc/mobile/custom-source')
   }
@@ -125,17 +114,16 @@ export default forwardRef<UserApiEditModalType, {}>((props, ref) => {
                 <TouchableOpacity onPress={openFAQPage}>
                   <Text style={{ ...styles.tipsText, textDecorationLine: 'underline' }} size={12} color={theme['c-primary-font']}>FAQ</Text>
                 </TouchableOpacity>
+                <View>
+                  <Text style={styles.tipsText} size={12}>{t('user_api_note')}</Text>
+                </View>
               </View>
-              <Text style={styles.tipsText} size={12}>{t('user_api_note')}</Text>
             </View>
             <View style={styles.btns}>
               <Button style={{ ...styles.btn, backgroundColor: theme['c-button-background'] }} onPress={handleCancel}>
                 <Text size={14} color={theme['c-button-font']}>{t('close')}</Text>
               </Button>
-              <Button style={{ ...styles.btn, backgroundColor: theme['c-button-background'] }} onPress={handleImport}>
-                <Text size={14} color={theme['c-button-font']}>{t('user_api_btn_import')}</Text>
-              </Button>
-              <ScriptImportExport ref={scriptImportExportRef} />
+              <ImportBtn btnStyle={{ ...styles.btn, backgroundColor: theme['c-button-background'] }} />
             </View>
           </Dialog>
         ) : null
@@ -147,7 +135,7 @@ const styles = createStyle({
   content: {
     // flexGrow: 1,
     flexShrink: 1,
-    paddingHorizontal: 15,
+    paddingHorizontal: 8,
     paddingTop: 15,
     paddingBottom: 10,
     flexDirection: 'column',
@@ -158,6 +146,7 @@ const styles = createStyle({
     // backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   tips: {
+    paddingHorizontal: 7,
     marginTop: 15,
     flexDirection: 'row',
     flexWrap: 'wrap',

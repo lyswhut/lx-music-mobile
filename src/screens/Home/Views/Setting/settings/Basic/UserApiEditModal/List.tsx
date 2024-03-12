@@ -125,6 +125,7 @@ export default () => {
 
 const styles = createStyle({
   scrollView: {
+    paddingHorizontal: 7,
     flexGrow: 0,
   },
   list: {

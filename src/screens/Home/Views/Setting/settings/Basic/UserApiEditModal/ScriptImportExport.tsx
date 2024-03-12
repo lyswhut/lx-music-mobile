@@ -1,7 +1,7 @@
 import ChoosePath, { type ChoosePathType } from '@/components/common/ChoosePath'
 import { USER_API_SOURCE_FILE_EXT_RXP } from '@/config/constant'
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
-import { handleImport } from './action'
+import { handleImportLocalFile } from './action'
 
 export interface SelectInfo {
   // listInfo: LX.List.MyListInfo
@@ -82,7 +82,7 @@ export default forwardRef<ScriptImportExportType, {}>((props, ref) => {
   const onConfirmPath = (path: string) => {
     switch (selectInfoRef.current.action) {
       case 'import':
-        handleImport(path)
+        handleImportLocalFile(path)
         break
       // case 'export':
       //   handleExport(selectInfoRef.current.listInfo, path)

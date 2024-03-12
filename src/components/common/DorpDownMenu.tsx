@@ -2,11 +2,12 @@ import { useRef } from 'react'
 // import { View } from 'react-native'
 
 import Menu, { type MenuType, type MenuProps, type Menus } from './Menu'
-import Button, { type BtnType } from './Button'
+import Button, { type BtnType, type BtnProps } from './Button'
 // import { useLayout } from '@/utils/hooks'
 
 export interface DorpDownMenuProps<T extends Menus> extends Omit<MenuProps<T>, 'width'> {
   children: React.ReactNode
+  btnStyle?: BtnProps['style']
 }
 
 export default <T extends Menus>({
@@ -17,6 +18,7 @@ export default <T extends Menus>({
   center,
   children,
   activeId,
+  btnStyle,
 }: DorpDownMenuProps<T>) => {
   const buttonRef = useRef<BtnType>(null)
   const menuRef = useRef<MenuType>(null)
@@ -32,7 +34,7 @@ export default <T extends Menus>({
   }
 
   return (
-    <Button ref={buttonRef} onPress={showMenu}>
+    <Button style={btnStyle} ref={buttonRef} onPress={showMenu}>
       {children}
       <Menu
         ref={menuRef}

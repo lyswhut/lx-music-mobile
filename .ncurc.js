@@ -1,7 +1,6 @@
 module.exports = {
   upgrade: true,
   reject: [
-    'react-native-navigation',
     '@types/react-native',
     'message2call',
     'react',

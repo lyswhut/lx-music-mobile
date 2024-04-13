@@ -21,7 +21,7 @@
 
 - Android
 
-注：不计划支持IOS
+注：由于没有相关开发环境及证书，所以不计划支持IOS
 
 软件变化请查看：[更新日志](https://github.com/lyswhut/lx-music-mobile/blob/master/CHANGELOG.md)<br>
 软件下载请转到：[发布页面](https://github.com/lyswhut/lx-music-mobile/releases)<br>

@@ -45,8 +45,8 @@
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.0.5",
     "@react-native-async-storage/async-storage": "^1.23.1",
-    "@react-native-clipboard/clipboard": "^1.13.2",
-    "@react-native-community/slider": "^4.5.0",
+    "@react-native-clipboard/clipboard": "^1.14.0",
+    "@react-native-community/slider": "^4.5.1",
     "iconv-lite": "^0.6.3",
     "lrc-file-parser": "^2.4.1",
     "message2call": "^0.1.3",
@@ -59,11 +59,11 @@
     "react-native-file-system": "github:lyswhut/react-native-file-system#cb3b807ac68c5cdb2c32ca10fdbb5e5209154ece",
     "react-native-fs": "^2.20.0",
     "react-native-local-media-metadata": "github:lyswhut/react-native-local-media-metadata#c8377d82c04aecf5ee79d446276ab9d0c1f167be",
-    "react-native-navigation": "^7.38.6",
+    "react-native-navigation": "^7.39.1",
     "react-native-pager-view": "^6.3.0",
-    "react-native-quick-base64": "^2.1.0",
+    "react-native-quick-base64": "^2.1.1",
     "react-native-quick-md5": "^3.0.6",
-    "react-native-track-player": "github:lyswhut/react-native-track-player#ddfb984ec12efb0d6ae84c924e027f872bb1481f",
+    "react-native-track-player": "github:lyswhut/react-native-track-player#f969fbb5d6fb132100d079eb5f7da701d2ce2780",
     "react-native-vector-icons": "^10.0.3"
   },
   "devDependencies": {
@@ -72,11 +72,11 @@
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@babel/preset-env": "^7.24.4",
     "@babel/runtime": "^7.24.4",
-    "@react-native/babel-preset": "^0.74.77",
-    "@react-native/metro-config": "^0.74.77",
-    "@react-native/typescript-config": "^0.74.77",
+    "@react-native/babel-preset": "^0.74.79",
+    "@react-native/metro-config": "^0.74.79",
+    "@react-native/typescript-config": "^0.74.79",
     "@tsconfig/react-native": "^3.0.5",
-    "@types/react": "^18.2.74",
+    "@types/react": "^18.2.77",
     "@types/react-native": "^0.72.8",
     "@types/react-native-background-timer": "^2.0.2",
     "@types/react-native-vector-icons": "^6.4.18",
@@ -86,6 +86,6 @@
     "eslint-config-standard-with-typescript": "^43.0.1",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "typescript": "^5.4.4"
+    "typescript": "^5.4.5"
   }
 }

@@ -6,6 +6,30 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [1.3.0](https://github.com/lyswhut/lx-music-mobile/compare/v1.2.0...v1.3.0) - 2024-04-14
+
+### 新增
+
+- 新增棕色主题“泥牛入海”
+- 新增设置-基本设置-总是保留状态栏高度设置，如果在你的设备上出现软件可交互内容与状态栏内容显示重叠的情况，可以启用该设置以始终为系统状态栏保留空间
+- 新增在线自定义源导入功能，允许通过http/https链接导入自定义源
+
+### 优化
+
+- 不再丢弃kg源逐行歌词（@helloplhm-qwq）
+- 支持kw源排行榜显示大小（revert @Folltoshe #1460）
+- 优化本地歌曲换源匹配机制
+
+### 修复
+
+- 修复mg歌词在某些情况下获取失败的问题
+- 修复mg歌单搜索（@helloplhm-qwq）
+- 修复kg最新评论无法获取的问题（@helloplhm-qwq）
+
+### 其他
+
+- 更新 React native 到 v0.73.6
+
 ## [1.2.0](https://github.com/lyswhut/lx-music-mobile/compare/v1.1.1...v1.2.0) - 2024-02-01
 
 提前祝大家新年快乐！

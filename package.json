@@ -1,7 +1,7 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.3.0-beta.1",
-  "versionCode": 63,
+  "version": "1.3.0",
+  "versionCode": 64,
   "private": true,
   "scripts": {
     "dev": "react-native run-android --active-arch-only",
@@ -46,7 +46,7 @@
     "@craftzdog/react-native-buffer": "^6.0.5",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-clipboard/clipboard": "^1.14.0",
-    "@react-native-community/slider": "^4.5.1",
+    "@react-native-community/slider": "^4.5.2",
     "iconv-lite": "^0.6.3",
     "lrc-file-parser": "^2.4.1",
     "message2call": "^0.1.3",
@@ -76,7 +76,7 @@
     "@react-native/metro-config": "^0.74.79",
     "@react-native/typescript-config": "^0.74.79",
     "@tsconfig/react-native": "^3.0.5",
-    "@types/react": "^18.2.77",
+    "@types/react": "^18.2.78",
     "@types/react-native": "^0.72.8",
     "@types/react-native-background-timer": "^2.0.2",
     "@types/react-native-vector-icons": "^6.4.18",

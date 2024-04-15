@@ -338,7 +338,7 @@
   "setting_play_handle_audio_focus": "其他应用播放声音时，自动暂停播放",
   "setting_play_handle_audio_focus_tip": "重启应用后生效",
   "setting_play_lyric_transition": "显示歌词翻译",
-  "setting_play_quality": "优先播放320K品质的歌曲（如果支持）",
+  "setting_play_play_quality": "优先播放的音质（如果支持）",
   "setting_play_s2t": "将播放的歌词转繁体",
   "setting_play_save_play_time": "记住播放进度",
   "setting_play_show_notification_image": "在通知栏显示歌曲图片",

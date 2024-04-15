@@ -338,7 +338,7 @@
   "setting_play_handle_audio_focus": "When other apps play sound, automatically pause the playback",
   "setting_play_handle_audio_focus_tip": "Take effect after restarting the application",
   "setting_play_lyric_transition": "Show lyrics translation",
-  "setting_play_quality": "Play 320K quality songs first (if supported)",
+  "setting_play_play_quality": "Prioritize playback sound quality (if supported)",
   "setting_play_s2t": "Convert the played lyrics to Traditional Chinese",
   "setting_play_save_play_time": "Remember playback progress",
   "setting_play_show_notification_image": "Show song picture in notification bar",

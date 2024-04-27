@@ -4,6 +4,7 @@ module.exports = {
     '@types/react-native',
     'message2call',
     'react',
+    'react-native',
   ],
 
   // target: 'newest',
@@ -15,6 +16,7 @@ module.exports = {
   // filter: [
   //   '@types/react-native',
   //   'react',
+  //   'react-native',
   //   '@react-native/metro-config',
   // ],
 }

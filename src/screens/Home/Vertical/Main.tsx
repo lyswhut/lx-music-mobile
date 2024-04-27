@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ComponentRef } from 'react'
 import { View } from 'react-native'
 import Search from '../Views/Search'
 import SongList from '../Views/SongList'
@@ -194,7 +194,7 @@ const indexMap = [
 ] as const
 
 const Main = () => {
-  const pagerViewRef = useRef<PagerView>(null)
+  const pagerViewRef = useRef<ComponentRef<typeof PagerView>>(null)
   let activeIndexRef = useRef(viewMap[commonState.navActiveId])
   // const isScrollingRef = useRef(false)
   // const scrollPositionRef = useRef(-1)

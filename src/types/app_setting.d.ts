@@ -107,6 +107,11 @@ declare global {
       'player.startupAutoPlay': boolean
 
       /**
+           * 启动后打开歌曲详细界面
+           */
+      'player.startupPushPlayDetailScreen': boolean
+
+      /**
        * 切歌模式
        */
       'player.togglePlayMethod': 'listLoop' | 'random' | 'list' | 'singleLoop' | 'none'

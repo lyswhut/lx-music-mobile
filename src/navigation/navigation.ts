@@ -85,7 +85,7 @@ export async function pushHomeScreen() {
     },
   })
 }
-export function pushPlayDetailScreen(componentId: string) {
+export function pushPlayDetailScreen(componentId: string, skipAnimation = false) {
   /*
     Navigation.setDefaultOptions({
       topBar: {
@@ -144,7 +144,7 @@ export function pushPlayDetailScreen(componentId: string) {
             componentBackgroundColor: theme['c-content-background'],
           },
           animations: {
-            push: {
+            push: skipAnimation ? {} : {
               sharedElementTransitions: [
                 {
                   fromId: NAV_SHEAR_NATIVE_IDS.playDetail_pic,

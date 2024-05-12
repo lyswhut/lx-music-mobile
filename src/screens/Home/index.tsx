@@ -20,7 +20,9 @@ export default ({ componentId }: Props) => {
     setComponentId(COMPONENT_IDS.home, componentId)
     // eslint-disable-next-line react-hooks/exhaustive-deps
 
-    if (settingState.setting['player.startupPushPlayDetailScreen']) {navigations.pushPlayDetailScreen(componentId!)}
+    if (settingState.setting['player.startupPushPlayDetailScreen']) {
+      navigations.pushPlayDetailScreen(componentId, true)
+    }
   }, [])
 
   return (

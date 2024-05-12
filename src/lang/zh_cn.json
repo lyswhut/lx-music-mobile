@@ -277,6 +277,7 @@
   "setting_basic_sourcename_real": "原名",
   "setting_basic_sourcename_title": "选择音源名字类型",
   "setting_basic_startup_auto_play": "启动后自动播放音乐",
+  "setting_basic_startup_push_play_detail_screen": "启动后打开播放详情界面",
   "setting_basic_theme": "主题颜色",
   "setting_basic_theme_auto_theme": "跟随系统亮、暗模式切换主题",
   "setting_basic_theme_dynamic_bg": "使用动态背景",

@@ -277,6 +277,7 @@
   "setting_basic_sourcename_real": "Original",
   "setting_basic_sourcename_title": "Select the name of music source",
   "setting_basic_startup_auto_play": "Play music automatically after startup",
+  "setting_basic_startup_push_play_detail_screen": "Open the playback details interface after startup",
   "setting_basic_theme": "Theme",
   "setting_basic_theme_auto_theme": "Follow the system light and dark mode to switch themes",
   "setting_basic_theme_dynamic_bg": "Use dynamic backgrounds",

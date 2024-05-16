@@ -2,6 +2,8 @@ import playerActions from '@/store/player/action'
 import playerState from '@/store/player/state'
 import { playNext } from './player'
 
+import {preloadNext} from '@/plugins/player/playList'
+
 
 /**
  * 添加歌曲到稍后播放列表
@@ -10,6 +12,7 @@ import { playNext } from './player'
 export const addTempPlayList = (list: LX.Player.TempPlayListItem[]) => {
   playerActions.addTempPlayList(list)
   if (!playerState.playMusicInfo.musicInfo) void playNext()
+  else void preloadNext()
 }
 /**
  * 从稍后播放列表移除歌曲

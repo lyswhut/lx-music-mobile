@@ -211,7 +211,7 @@ const debouncePlay = debounceBackgroundTimer((musicInfo: LX.Player.PlayMusic) =>
 
 // 处理音乐播放
 const handlePlay = async() => {
-  if (!isInitialized()) {
+  if (!isInitialized()) { 
     await checkNotificationPermission()
     void checkIgnoringBatteryOptimization()
     await playerInitial({
@@ -374,6 +374,120 @@ export const playNext = async(isAutoToggle = false): Promise<void> => {
   await pause()
   setPlayMusicInfo(nextPlayMusicInfo.listId, nextPlayMusicInfo.musicInfo)
   await handlePlay()
+
+  
+}
+
+/**
+ * 获取下一曲
+ */
+export const getNext = async(): Promise<{musicInfo:any,url:any}> => {
+  if (playerState.tempPlayList.length) { // 如果稍后播放列表存在歌曲则直接播放改列表的歌曲
+    const playMusicInfo = playerState.tempPlayList[0]
+
+    const musicInfo = playMusicInfo.musicInfo
+    const url = await getMusicUrl({musicInfo})
+    console.log(musicInfo,"nextMusicInfo")
+    console.log(url,"NextUrl")
+    return {musicInfo:musicInfo,url:url}
+  }
+
+  const playMusicInfo = playerState.playMusicInfo
+  const playInfo = playerState.playInfo
+  if (playMusicInfo.musicInfo == null)  return {musicInfo:null,url:null}
+
+  // console.log(playInfo.playerListId)
+  const currentListId = playInfo.playerListId
+  if (!currentListId) return {musicInfo:null,url:null}
+  const currentList = getList(currentListId)
+
+  const playedList = playerState.playedList
+
+  if (playedList.length) { // 移除已播放列表内不存在原列表的歌曲
+    let currentId: string
+    if (playMusicInfo.isTempPlay) {
+      const musicInfo = currentList[playInfo.playerPlayIndex]
+      if (musicInfo) currentId = musicInfo.id
+    } else {
+      currentId = playMusicInfo.musicInfo.id
+    }
+    // 从已播放列表移除播放列表已删除的歌曲
+    let index
+    for (index = playedList.findIndex(m => m.musicInfo.id === currentId) + 1; index < playedList.length; index++) {
+      const playMusicInfo = playedList[index]
+      const currentId = playMusicInfo.musicInfo.id
+      if (playMusicInfo.listId == currentListId && !currentList.some(m => m.id === currentId)) {
+        removePlayedList(index)
+        continue
+      }
+      break
+    }
+
+    if (index < playedList.length) {
+      const playMusicInfo = playedList[index]
+
+      const musicInfo = playMusicInfo.musicInfo
+      const url = await getMusicUrl({musicInfo})
+      console.log(musicInfo,"nextMusicInfo")
+      console.log(url,"NextUrl")
+      return {musicInfo:musicInfo,url:url}
+    }
+  }
+  // const isCheckFile = findNum > 2 // 针对下载列表，如果超过两次都碰到无效歌曲，则过滤整个列表内的无效歌曲
+  let { filteredList, playerIndex } = await filterList({ // 过滤已播放歌曲
+    listId: currentListId,
+    list: currentList,
+    playedList,
+    playerMusicInfo: currentList[playInfo.playerPlayIndex],
+    isNext: true,
+  })
+
+  if (!filteredList.length) return {musicInfo:null,url:null}
+  // let currentIndex: number = filteredList.indexOf(currentList[playInfo.playerPlayIndex])
+  if (playerIndex == -1 && filteredList.length) playerIndex = 0
+  let nextIndex = playerIndex
+
+  let togglePlayMethod = settingState.setting['player.togglePlayMethod']
+  if (!false) {
+    switch (togglePlayMethod) {
+      case 'list':
+      case 'singleLoop':
+      case 'none':
+        togglePlayMethod = 'listLoop'
+    }
+  }
+  switch (togglePlayMethod) {
+    case 'listLoop':
+      nextIndex = playerIndex === filteredList.length - 1 ? 0 : playerIndex + 1
+      break
+    case 'random':
+      nextIndex = getRandom(0, filteredList.length)
+      break
+    case 'list':
+      nextIndex = playerIndex === filteredList.length - 1 ? -1 : playerIndex + 1
+      break
+    case 'singleLoop':
+      break
+    default:
+      nextIndex = -1
+      return {musicInfo:null,url:null}
+  }
+  if (nextIndex < 0) return {musicInfo:null,url:null}
+
+  const nextPlayMusicInfo = {
+    musicInfo: filteredList[nextIndex],
+    listId: currentListId,
+    isTempPlay: false,
+  }
+
+  const musicInfo = nextPlayMusicInfo.musicInfo
+  const url = await getMusicUrl({musicInfo})
+
+  if('random' == togglePlayMethod && musicInfo && url) addPlayedList(nextPlayMusicInfo)
+
+  console.log(musicInfo,"nextMusicInfo")
+  console.log(url,"nextUrl")
+  return {musicInfo:musicInfo,url:url}
 }
 
 /**

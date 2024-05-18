@@ -102,13 +102,13 @@ declare global {
       'theme.fontShadow': boolean
 
       /**
-           * 启动时自动播放歌曲
-           */
+       * 启动时自动播放歌曲
+       */
       'player.startupAutoPlay': boolean
 
       /**
-           * 启动后打开歌曲详细界面
-           */
+       * 启动后打开歌曲详细界面
+       */
       'player.startupPushPlayDetailScreen': boolean
 
       /**

@@ -5,6 +5,7 @@ module.exports = {
     'message2call',
     'react',
     'react-native',
+    'react-native-pager-view',
   ],
 
   // target: 'newest',

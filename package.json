@@ -1,7 +1,7 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.4.0-beta.0",
-  "versionCode": 64,
+  "version": "1.4.0-beta.1",
+  "versionCode": 65,
   "private": true,
   "scripts": {
     "dev": "react-native run-android --active-arch-only",
@@ -67,16 +67,16 @@
     "react-native-vector-icons": "^10.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.5",
-    "@babel/eslint-parser": "^7.24.5",
+    "@babel/core": "^7.24.6",
+    "@babel/eslint-parser": "^7.24.6",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
-    "@babel/preset-env": "^7.24.5",
-    "@babel/runtime": "^7.24.5",
+    "@babel/preset-env": "^7.24.6",
+    "@babel/runtime": "^7.24.6",
     "@react-native/babel-preset": "^0.74.83",
     "@react-native/metro-config": "^0.74.83",
     "@react-native/typescript-config": "^0.74.83",
     "@tsconfig/react-native": "^3.0.5",
-    "@types/react": "^18.3.2",
+    "@types/react": "^18.3.3",
     "@types/react-native": "^0.72.8",
     "@types/react-native-background-timer": "^2.0.2",
     "@types/react-native-vector-icons": "^6.4.18",

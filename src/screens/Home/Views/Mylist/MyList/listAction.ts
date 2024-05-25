@@ -48,7 +48,8 @@ export const handleImport = (path: string, position: number) => {
   void readListData(path).then(async listData => {
     if (listData == null) return
     void handleImportListPart(listData, position)
-  }).catch(() => {
+  }).catch((err) => {
+    log.error(err)
     toast(global.i18n.t('setting_backup_part_import_list_tip_error'))
   })
 }

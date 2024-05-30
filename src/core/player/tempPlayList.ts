@@ -2,7 +2,7 @@ import playerActions from '@/store/player/action'
 import playerState from '@/store/player/state'
 import { playNext } from './player'
 
-import {preloadNext} from '@/plugins/player/playList'
+import { preloadNext } from '@/plugins/player/playList'
 
 
 /**

@@ -4,7 +4,7 @@ import { defaultUrl } from '@/config'
 // import { action as playerAction } from '@/store/modules/player'
 import settingState from '@/store/setting/state'
 
-import {getNext} from '@/core/player/player'
+import { getNext } from '@/core/player/player'
 
 
 const list: LX.Player.Track[] = []
@@ -169,10 +169,10 @@ const handlePlayMusic = async(musicInfo: LX.Player.PlayMusic, url: string, time:
 
 export const preloadNext = async(): Promise<void> => {
   if (settingState.setting['player.isPreloadNext']) {
-    getNext().then(({musicInfo,url})=>{
-      if(musicInfo && url){
+    void getNext().then(({ musicInfo, url }) => {
+      if (musicInfo && url) {
         const tracks = buildTracks(musicInfo, url)
-        TrackPlayer.add(tracks).then(() => list.push(...tracks))
+        void TrackPlayer.add(tracks).then(() => list.push(...tracks))
       }
     })
   }

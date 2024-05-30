@@ -211,7 +211,7 @@ const debouncePlay = debounceBackgroundTimer((musicInfo: LX.Player.PlayMusic) =>
 
 // 处理音乐播放
 const handlePlay = async() => {
-  if (!isInitialized()) { 
+  if (!isInitialized()) {
     await checkNotificationPermission()
     void checkIgnoringBatteryOptimization()
     await playerInitial({
@@ -374,31 +374,29 @@ export const playNext = async(isAutoToggle = false): Promise<void> => {
   await pause()
   setPlayMusicInfo(nextPlayMusicInfo.listId, nextPlayMusicInfo.musicInfo)
   await handlePlay()
-
-  
 }
 
 /**
  * 获取下一曲
  */
-export const getNext = async(): Promise<{musicInfo: LX.Music.MusicInfo | LX.Download.ListItem | null,url: string | null}> => {
+export const getNext = async(): Promise<{ musicInfo: LX.Music.MusicInfo | LX.Download.ListItem | null, url: string | null }> => {
   if (playerState.tempPlayList.length) { // 如果稍后播放列表存在歌曲则直接播放改列表的歌曲
     const playMusicInfo = playerState.tempPlayList[0]
 
     const musicInfo = playMusicInfo.musicInfo
-    const url = await getMusicUrl({musicInfo})
-    console.log(musicInfo,"nextMusicInfo")
-    console.log(url,"NextUrl")
-    return {musicInfo:musicInfo,url:url}
+    const url = await getMusicUrl({ musicInfo })
+    console.log(musicInfo, 'nextMusicInfo')
+    console.log(url, 'NextUrl')
+    return { musicInfo, url }
   }
 
   const playMusicInfo = playerState.playMusicInfo
   const playInfo = playerState.playInfo
-  if (playMusicInfo.musicInfo == null)  return {musicInfo:null,url:null}
+  if (playMusicInfo.musicInfo == null) return { musicInfo: null, url: null }
 
   // console.log(playInfo.playerListId)
   const currentListId = playInfo.playerListId
-  if (!currentListId) return {musicInfo:null,url:null}
+  if (!currentListId) return { musicInfo: null, url: null }
   const currentList = getList(currentListId)
 
   const playedList = playerState.playedList
@@ -427,10 +425,10 @@ export const getNext = async(): Promise<{musicInfo: LX.Music.MusicInfo | LX.Down
       const playMusicInfo = playedList[index]
 
       const musicInfo = playMusicInfo.musicInfo
-      const url = await getMusicUrl({musicInfo})
-      console.log(musicInfo,"nextMusicInfo")
-      console.log(url,"NextUrl")
-      return {musicInfo:musicInfo,url:url}
+      const url = await getMusicUrl({ musicInfo })
+      console.log(musicInfo, 'nextMusicInfo')
+      console.log(url, 'NextUrl')
+      return { musicInfo, url }
     }
   }
   // const isCheckFile = findNum > 2 // 针对下载列表，如果超过两次都碰到无效歌曲，则过滤整个列表内的无效歌曲
@@ -442,19 +440,17 @@ export const getNext = async(): Promise<{musicInfo: LX.Music.MusicInfo | LX.Down
     isNext: true,
   })
 
-  if (!filteredList.length) return {musicInfo:null,url:null}
+  if (!filteredList.length) return { musicInfo: null, url: null }
   // let currentIndex: number = filteredList.indexOf(currentList[playInfo.playerPlayIndex])
   if (playerIndex == -1 && filteredList.length) playerIndex = 0
   let nextIndex = playerIndex
 
   let togglePlayMethod = settingState.setting['player.togglePlayMethod']
-  if (!false) {
-    switch (togglePlayMethod) {
-      case 'list':
-      case 'singleLoop':
-      case 'none':
-        togglePlayMethod = 'listLoop'
-    }
+  switch (togglePlayMethod) {
+    case 'list':
+    case 'singleLoop':
+    case 'none':
+      togglePlayMethod = 'listLoop'
   }
   switch (togglePlayMethod) {
     case 'listLoop':
@@ -463,16 +459,11 @@ export const getNext = async(): Promise<{musicInfo: LX.Music.MusicInfo | LX.Down
     case 'random':
       nextIndex = getRandom(0, filteredList.length)
       break
-    case 'list':
-      nextIndex = playerIndex === filteredList.length - 1 ? -1 : playerIndex + 1
-      break
-    case 'singleLoop':
-      break
     default:
       nextIndex = -1
-      return {musicInfo:null,url:null}
+      return { musicInfo: null, url: null }
   }
-  if (nextIndex < 0) return {musicInfo:null,url:null}
+  if (nextIndex < 0) return { musicInfo: null, url: null }
 
   const nextPlayMusicInfo = {
     musicInfo: filteredList[nextIndex],
@@ -481,13 +472,13 @@ export const getNext = async(): Promise<{musicInfo: LX.Music.MusicInfo | LX.Down
   }
 
   const musicInfo = nextPlayMusicInfo.musicInfo
-  const url = await getMusicUrl({musicInfo})
+  const url = await getMusicUrl({ musicInfo })
 
-  if('random' == togglePlayMethod && musicInfo && url) addPlayedList(nextPlayMusicInfo)
+  if (togglePlayMethod == 'random' && musicInfo && url) addPlayedList(nextPlayMusicInfo)
 
-  console.log(musicInfo,"nextMusicInfo")
-  console.log(url,"nextUrl")
-  return {musicInfo:musicInfo,url:url}
+  console.log(musicInfo, 'nextMusicInfo')
+  console.log(url, 'nextUrl')
+  return { musicInfo, url }
 }
 
 /**

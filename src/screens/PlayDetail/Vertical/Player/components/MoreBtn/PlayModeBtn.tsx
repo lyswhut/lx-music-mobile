@@ -6,7 +6,7 @@ import { useI18n } from '@/lang'
 import { updateSetting } from '@/core/common'
 import Btn from './Btn'
 
-import {preloadNext} from '@/plugins/player/playList'
+import { preloadNext } from '@/plugins/player/playList'
 
 
 export default memo(() => {

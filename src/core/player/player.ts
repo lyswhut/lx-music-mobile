@@ -381,7 +381,7 @@ export const playNext = async(isAutoToggle = false): Promise<void> => {
 /**
  * 获取下一曲
  */
-export const getNext = async(): Promise<{musicInfo:any,url:any}> => {
+export const getNext = async(): Promise<{musicInfo: LX.Music.MusicInfo | LX.Download.ListItem | null,url: string | null}> => {
   if (playerState.tempPlayList.length) { // 如果稍后播放列表存在歌曲则直接播放改列表的歌曲
     const playMusicInfo = playerState.tempPlayList[0]
 

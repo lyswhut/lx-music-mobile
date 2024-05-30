@@ -87,7 +87,7 @@ export default () => {
   const handleScrollToInfo = useCallback((info: LX.Music.MusicInfo) => {
     listRef.current?.scrollToInfo(info)
     handleExitSearch()
-  }, [])
+  }, [handleExitSearch])
   const onLayout = useCallback((e: LayoutChangeEvent) => {
     layoutHeightRef.current = e.nativeEvent.layout.height
   }, [])

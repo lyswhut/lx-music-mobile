@@ -13,6 +13,7 @@
     "rd": "react-devtools",
     "menu": "adb shell input keyevent 82",
     "bundle-android": "react-native bundle --platform android --dev true --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
+    "build-test": "react-native bundle --platform android --dev true --entry-file index.js --bundle-output index.android.bundle --assets-dest res",
     "pack:android:debug": "./gradlew assembleDebug",
     "pack": "npm run pack:android",
     "pack:android": "cd android && gradlew.bat assembleRelease",

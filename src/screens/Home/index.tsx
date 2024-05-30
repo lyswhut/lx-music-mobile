@@ -23,7 +23,7 @@ export default ({ componentId }: Props) => {
     if (settingState.setting['player.startupPushPlayDetailScreen']) {
       navigations.pushPlayDetailScreen(componentId, true)
     }
-  }, [])
+  }, [componentId])
 
   return (
     <PageContent>

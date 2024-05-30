@@ -42,7 +42,7 @@ export default memo(({
   }, [])
   useEffect(() => {
     checkExternalStoragePath()
-  }, [])
+  }, [checkExternalStoragePath])
 
   const refresh = () => {
     void onRefreshDir(path)

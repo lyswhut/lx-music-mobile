@@ -126,7 +126,7 @@ export default forwardRef<MetadataFormType, {}>((props, ref) => {
     }).finally(() => {
       matcheingPic.delete(path)
     })
-  }, [data.albumName, data.name, data.singer, t])
+  }, [data.albumName, data.interval, data.name, data.singer, isUnmounted, t])
   const handleOnlineMatchLyric = useCallback(() => {
     let path = filePath.current
     if (matcheingLrc.has(path)) return
@@ -164,7 +164,7 @@ export default forwardRef<MetadataFormType, {}>((props, ref) => {
     }).finally(() => {
       matcheingLrc.delete(path)
     })
-  }, [data.albumName, data.name, data.singer, t])
+  }, [data.albumName, data.interval, data.name, data.singer, isUnmounted, t])
   const handleUpdatePic = useCallback((path: string) => {
     setData(data => {
       return { ...data, pic: path }

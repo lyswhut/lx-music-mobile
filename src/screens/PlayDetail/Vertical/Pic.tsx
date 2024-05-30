@@ -35,7 +35,7 @@ export default ({ componentId }: { componentId: string }) => {
       height: imgWidth,
       borderRadius: 2,
     }
-  }, [winHeight, winWidth])
+  }, [statusBarHeight, winHeight, winWidth])
 
   return (
     <View style={styles.container}>

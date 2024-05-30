@@ -24,6 +24,8 @@ const buildData = (key: string, value: any, datas: Array<[string, string]>) => {
   datas.push([key, partKeyArrPrefix + JSON.stringify(partKeys)])
 }
 
+// 1.4.0 之前的数据分片存储方式，存在key的内容与分隔符冲突的问题
+// 1.4.0 开始改用数组存储，不再使用分隔符的方式
 const handleGetDataOld = async<T>(partKeys: string): Promise<T> => {
   const keys = partKeys.replace(partKeyPrefixRxp, '').split(keySplit)
 

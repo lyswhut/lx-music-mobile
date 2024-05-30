@@ -61,7 +61,7 @@ export default forwardRef<PlayLineType, PlayLineProps>(({ onPlayLine }, ref) => 
       })
       // setVisible()
     },
-  }), [])
+  }))
 
   const handlePlayLine = () => {
     onPlayLine(time / 1000)

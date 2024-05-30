@@ -5,6 +5,7 @@ import { Animated } from 'react-native'
 export const DEFAULT_DURATION = 800
 
 export const useAnimateNumber = (val: number, duration = DEFAULT_DURATION, useNativeDriver = true) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const anim = useMemo(() => new Animated.Value(0), [val])
   const [finished, setFinished] = useState(true)
   const currentNumber = useRef(val)
@@ -29,6 +30,7 @@ export const useAnimateNumber = (val: number, duration = DEFAULT_DURATION, useNa
     requestAnimationFrame(() => {
       currentNumber.current = nextNumber
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nextNumber])
 
   return [animNumber, finished] as const
@@ -54,6 +56,7 @@ export const useAnimateOnecNumber = (val: number, toVal: number, duration = DEFA
       // currentNumber.current = nextNumber
       setFinished(true)
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return [animNumber, finished] as const

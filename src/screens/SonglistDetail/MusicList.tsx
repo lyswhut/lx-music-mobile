@@ -67,7 +67,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
         })
       }
     },
-  }), [])
+  }))
 
   useEffect(() => {
     isUnmountedRef.current = false

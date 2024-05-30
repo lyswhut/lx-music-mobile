@@ -166,7 +166,7 @@ export default forwardRef<PopupType, PopupProps>(({
           },
         ] as const
     }
-  }, [position])
+  }, [position, statusBarHeight])
 
   return (
     <Modal onHide={onHide} keyHide={keyHide} bgHide={bgHide} bgColor="rgba(50,50,50,.2)" ref={modalRef}>

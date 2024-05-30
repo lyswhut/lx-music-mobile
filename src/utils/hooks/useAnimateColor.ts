@@ -5,6 +5,7 @@ import { Animated } from 'react-native'
 const ANIMATION_DURATION = 800
 
 export const useAnimateColor = (color: string) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const anim = useMemo(() => new Animated.Value(0), [color])
   const [finished, setFinished] = useState(true)
   const currentColor = useRef(color)
@@ -29,6 +30,7 @@ export const useAnimateColor = (color: string) => {
     requestAnimationFrame(() => {
       currentColor.current = nextColor
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nextColor])
 
   return [animColor, finished] as const

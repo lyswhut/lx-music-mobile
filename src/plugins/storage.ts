@@ -180,7 +180,7 @@ export const removeDataMultiple = async(keys: string[]) => {
       if (partKeyPrefixRxp.test(value)) {
         allKeys.push(...value.replace(partKeyPrefixRxp, '').split(keySplit))
       } else if (partKeyArrPrefixRxp.test(value)) {
-        allKeys.push(...JSON.parse(value.replace(partKeyPrefixRxp, '')) as string[])
+        allKeys.push(...JSON.parse(value.replace(partKeyArrPrefixRxp, '')) as string[])
       }
     }
   }

@@ -6,6 +6,28 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [1.4.0](https://github.com/lyswhut/lx-music-mobile/compare/v1.3.0...v1.4.0) - 2024-06-01
+
+我们发布了关于 LX Music 项目发展调整与新项目计划的说明，
+详情看： https://github.com/lyswhut/lx-music-desktop/issues/1912
+
+### 新增
+
+- 新增 设置-基本设置-启动后打开播放详情界面 设置，默认关闭（#502 @mingcc7）
+
+### 修复
+
+- 修复重复的数据初始化调用
+- 修复导入歌单时可能会导致歌单数据存储异常的问题（#500）
+
+### 变更
+
+- 设置-播放设置-优先播放320k音质选项改为“优先播放的音质”，允许选择更高优先播放的音质，如果歌曲及音源支持的话（#487）
+
+### 其他
+
+- 更新 React native 到 v0.73.8
+
 ## [1.3.0](https://github.com/lyswhut/lx-music-mobile/compare/v1.2.0...v1.3.0) - 2024-04-14
 
 ### 新增

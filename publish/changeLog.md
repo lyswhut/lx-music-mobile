@@ -1,3 +1,6 @@
+我们发布了关于 LX Music 项目发展调整与新项目计划的说明，
+详情看： https://github.com/lyswhut/lx-music-desktop/issues/1912
+
 ### 新增
 
 - 新增 设置-基本设置-启动后打开播放详情界面 设置，默认关闭（#502 @mingcc7）

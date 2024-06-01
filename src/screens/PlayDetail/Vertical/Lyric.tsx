@@ -141,7 +141,7 @@ export default () => {
   // }, [playMusicInfo])
 
   // const imgWidth = useMemo(() => layout.width * 0.75, [layout.width])
-  const handleScrollToActive = useCallback((index = lineRef.current.line) => {
+  const handleScrollToActive = (index = lineRef.current.line) => {
     if (index < 0) return
     if (flatListRef.current) {
       // console.log('handleScrollToActive', index)
@@ -170,7 +170,7 @@ export default () => {
         } catch {}
       }
     }
-  }, [line])
+  }
 
   const handleScroll = ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
     scrollInfoRef.current = nativeEvent
@@ -247,7 +247,8 @@ export default () => {
         }, 100)
       }
     })
-  }, [handleScrollToActive, lyricLines])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lyricLines])
 
   useEffect(() => {
     if (line < 0) return
@@ -264,7 +265,8 @@ export default () => {
       delayScrollTimeout.current = null
       handleScrollToActive()
     }, 600)
-  }, [handleScrollToActive, line])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [line])
 
   useEffect(() => {
     requestAnimationFrame(() => {

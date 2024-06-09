@@ -476,7 +476,7 @@
   "user_api_update_alert": "自定义源 [{name}] 发现新版本",
   "user_api_update_alert_open_url": "打开更新地址",
   "version_btn_close": "关闭",
-  "version_btn_downloading": "正在努力下载中...{total}/{current} ({progress}%)",
+  "version_btn_downloading": "正在努力下载中...{current}/{total} ({progress}%)",
   "version_btn_failed": "重试",
   "version_btn_ignore": "忽略",
   "version_btn_ignore_cancel": "取消忽略",

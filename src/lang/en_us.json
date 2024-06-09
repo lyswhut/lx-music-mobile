@@ -476,7 +476,7 @@
   "user_api_update_alert": "Custom source [{name}] found new version",
   "user_api_update_alert_open_url": "Open update address",
   "version_btn_close": "Close",
-  "version_btn_downloading": "I am trying to download...{total}/{current} ({progress}%)",
+  "version_btn_downloading": "I am trying to download...{current}/{total} ({progress}%)",
   "version_btn_failed": "Retry",
   "version_btn_ignore": "Ignore",
   "version_btn_ignore_cancel": "Cancel ignore",

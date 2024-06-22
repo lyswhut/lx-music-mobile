@@ -22,9 +22,7 @@ public class JsHandler extends Handler {
     params.putString("action", "init");
     params.putString("errorMessage", errorMessage);
     params.putString("data", "{ \"info\": null, \"status\": false, \"errorMessage\": \"Create JavaScript Env Failed\" }");
-    UtilsEvent utilsEvent = this.utilsEvent;
-    Objects.requireNonNull(utilsEvent);
-    utilsEvent.sendEvent("api-action", params);
+    this.utilsEvent.sendEvent(utilsEvent.API_ACTION, params);
     sendLogEvent(new Object[]{"error", errorMessage});
   }
 
@@ -33,18 +31,14 @@ public class JsHandler extends Handler {
     params.putString("action", "log");
     params.putString("type", (String) data[0]);
     params.putString("log", (String) data[1]);
-    UtilsEvent utilsEvent = this.utilsEvent;
-    Objects.requireNonNull(utilsEvent);
-    utilsEvent.sendEvent("api-action", params);
+    this.utilsEvent.sendEvent(utilsEvent.API_ACTION, params);
   }
 
   private void sendActionEvent(String action, String data) {
     WritableMap params = Arguments.createMap();
     params.putString("action", action);
     params.putString("data", data);
-    UtilsEvent utilsEvent = this.utilsEvent;
-    Objects.requireNonNull(utilsEvent);
-    utilsEvent.sendEvent("api-action", params);
+    this.utilsEvent.sendEvent(utilsEvent.API_ACTION, params);
   }
 
   @Override

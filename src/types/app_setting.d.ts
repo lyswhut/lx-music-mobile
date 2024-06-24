@@ -187,6 +187,11 @@ declare global {
       'player.isS2t': boolean
 
       /**
+       * 是否预加载下一首歌曲
+       */
+      'player.isPreloadNext': boolean
+
+      /**
        * 播放详情页-是否缩放当前播放的歌词行
        */
       // 'playDetail.isZoomActiveLrc': boolean

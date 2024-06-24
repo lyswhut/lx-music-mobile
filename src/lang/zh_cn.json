@@ -345,6 +345,7 @@
   "setting_play_show_notification_image": "在通知栏显示歌曲图片",
   "setting_play_show_roma": "显示歌词罗马音（如果可用）",
   "setting_play_show_translation": "显示歌词翻译（如果可用）",
+  "setting_play_preload_next": "预加载下一首歌曲",
   "setting_player": "播放设置",
   "setting_player_save_play_time": "记住播放进度",
   "setting_search": "搜索设置",

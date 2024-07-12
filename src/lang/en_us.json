@@ -115,6 +115,7 @@
   "list_update_error": "{name} failed to update",
   "list_update_success": "{name} updated successfully",
   "list_updating": "updating",
+  "lists__duplicate": "repeat song",
   "lists_dislike_music_add_tip": "Added",
   "lists_dislike_music_tip": "Do you really dislike {name}?",
   "load_failed": "Ah, loading failed 😥",

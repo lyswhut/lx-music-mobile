@@ -94,6 +94,7 @@ const variantRxp2 = /\s|'|\.|,|，|&|"|、|\(|\)|（|）|`|~|-|<|>|\||\/|\]|\[/g
 export interface DuplicateMusicItem {
   id: string
   index: number
+  group: string
   musicInfo: LX.Music.MusicInfo
 }
 /**
@@ -112,6 +113,7 @@ export const filterDuplicateMusic = async(list: LX.Music.MusicInfo[], isFilterVa
         id: musicInfo.id,
         index,
         musicInfo,
+        group: name,
       })
       duplicateList.add(name)
     } else {
@@ -119,6 +121,7 @@ export const filterDuplicateMusic = async(list: LX.Music.MusicInfo[], isFilterVa
         id: musicInfo.id,
         index,
         musicInfo,
+        group: name,
       }])
     }
   }

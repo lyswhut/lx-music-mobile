@@ -149,6 +149,7 @@
   "metadata_edit_modal_tip": "Song name cannot be empty",
   "metadata_edit_modal_title": "Edit song tags",
   "move_to": "Move to...",
+  "music_source_detail": "Song page",
   "name": "Name: {name}",
   "nav_exit": "Exit application",
   "nav_love": "Collection",

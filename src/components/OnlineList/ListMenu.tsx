@@ -16,6 +16,7 @@ export interface ListMenuProps {
   onPlayLater: (selectInfo: SelectInfo) => void
   onAdd: (selectInfo: SelectInfo) => void
   onCopyName: (selectInfo: SelectInfo) => void
+  onMusicSourceDetail: (selectInfo: SelectInfo) => void
   onDislikeMusic: (selectInfo: SelectInfo) => void
 }
 export interface ListMenuType {
@@ -54,6 +55,7 @@ export default forwardRef<ListMenuType, ListMenuProps>((props: ListMenuProps, re
       // { action: 'download', label: '下载' },
       { action: 'add', label: t('add_to') },
       { action: 'copyName', label: t('copy_name') },
+      { action: 'musicSourceDetail', label: t('music_source_detail') },
       { action: 'dislike', label: t('dislike'), disabled: isDislikeMusic },
     ] as const
   }, [t, isDislikeMusic])
@@ -72,6 +74,10 @@ export default forwardRef<ListMenuType, ListMenuProps>((props: ListMenuProps, re
         break
       case 'copyName':
         props.onCopyName(selectInfo)
+        break
+      case 'musicSourceDetail':
+        props.onMusicSourceDetail(selectInfo)
+        // setVIsibleMusicPosition(true)
         break
       case 'dislike':
         props.onDislikeMusic(selectInfo)

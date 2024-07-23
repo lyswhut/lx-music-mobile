@@ -21,179 +21,190 @@ import java.util.ArrayList;
 // https://github.com/Block-Network/StatusBarLyric/blob/main/app/src/main/java/statusbar/lyric/view/LyricSwitchView.kt
 @SuppressLint({"ViewConstructor"})
 public final class LyricSwitchView extends TextSwitcher {
-  private final TextView textView;
-  private final TextView textView2;
-  private final ArrayList<TextView> viewArray;
-  // private final boolean isSingleLine;
-  private boolean isShowAnima;
+    private final TextView textView;
+    private final TextView textView2;
+    private final ArrayList<TextView> viewArray;
+    private boolean isShowAnima;
+    private boolean isSingleLine;
 
-  private boolean isSingleLine;
+    public LyricSwitchView(Context context, boolean isSingleLine, boolean isShowAnima) {
+        super(context);
+        this.isShowAnima = isShowAnima;
+        this.isSingleLine = isSingleLine;
 
-  public LyricSwitchView(Context context, boolean isSingleLine, boolean isShowAnima) {
-    super(context);
-    // this.isSingleLine = isSingleLine;
-    this.isShowAnima = isShowAnima;
-    this.isSingleLine = isSingleLine;
+        viewArray = new ArrayList<>(2);
 
-    if (isSingleLine) {
-      viewArray = new ArrayList<>(2);
-      textView = new LyricTextView(context);
-      textView2 = new LyricTextView(context);
-      viewArray.add(textView);
-      viewArray.add(textView2);
-//      for (TextView v : viewArray) {
-//        v.setShadowLayer(0.1f, 0, 0, Color.BLACK);
-//      }
-    } else {
-      viewArray = new ArrayList<>(2);
-      textView = new TextView(context);
-      textView2 = new TextView(context);
-      viewArray.add(textView);
-      viewArray.add(textView2);
-      for (TextView v : viewArray) {
-//        v.setShadowLayer(0.2f, 0, 0, Color.BLACK);
-        v.setEllipsize(TextUtils.TruncateAt.END);
-      }
-    }
-    setAnima();
-    this.addView(textView);
-    this.addView(textView2);
-  }
+        if (isSingleLine) {
+            textView = new LyricTextView(context);
+            textView2 = new LyricTextView(context);
+        } else {
+            textView = new TextView(context);
+            textView2 = new TextView(context);
+        }
 
-  @Nullable
-  public Animation inAnim(String str, float height) {
-    AnimationSet animationSet = new AnimationSet(true);
-    if (str == null) return null;
+        viewArray.add(textView);
+        viewArray.add(textView2);
 
-    TranslateAnimation translateAnimation;
-    switch (str) {
-      case "top":
-        translateAnimation = new TranslateAnimation(0.0F, 0.0F, height, 0.0F);
-        break;
-      case "bottom":
-        translateAnimation = new TranslateAnimation(0.0F, 0.0F, -height, 0.0F);
-        break;
-      case "left":
-        translateAnimation = new TranslateAnimation(100.0F, 0.0F, 0.0F, 0.0F);
-        break;
-      case "right":
-        translateAnimation = new TranslateAnimation(-100.0F, 0.0F, 0.0F, 0.0F);
-        break;
-      default: return null;
+        for (TextView v : viewArray) {
+            if (v != null && !isSingleLine) v.setEllipsize(TextUtils.TruncateAt.END);
+        }
+
+        setAnima();
+        this.addView(textView);
+        this.addView(textView2);
     }
 
-    translateAnimation.setDuration(300L);
-    AlphaAnimation alphaAnimation = new AlphaAnimation(0.0F, 1.0F);
-    alphaAnimation.setDuration(300L);
-    animationSet.addAnimation(translateAnimation);
-    animationSet.addAnimation(alphaAnimation);
-    return animationSet;
-  }
+    @Nullable
+    public Animation inAnim(String str, float height) {
+        AnimationSet animationSet = new AnimationSet(true);
+        if (str == null) return null;
 
-  @Nullable
-  public Animation outAnim(String str, float height) {
-    AnimationSet animationSet = new AnimationSet(true);
-    if (str == null) return null;
+        TranslateAnimation translateAnimation;
+        switch (str) {
+            case "top":
+                translateAnimation = new TranslateAnimation(0.0F, 0.0F, height, 0.0F);
+                break;
+            case "bottom":
+                translateAnimation = new TranslateAnimation(0.0F, 0.0F, -height, 0.0F);
+                break;
+            case "left":
+                translateAnimation = new TranslateAnimation(100.0F, 0.0F, 0.0F, 0.0F);
+                break;
+            case "right":
+                translateAnimation = new TranslateAnimation(-100.0F, 0.0F, 0.0F, 0.0F);
+                break;
+            default:
+                return null;
+        }
 
-    TranslateAnimation translateAnimation;
-    switch (str) {
-      case "top":
-        translateAnimation = new TranslateAnimation(0.0F, 0.0F, 0.0F, -height);
-        break;
-      case "bottom":
-        translateAnimation = new TranslateAnimation(0.0F, 0.0F, 0.0F, height);
-        break;
-      case "left":
-        translateAnimation = new TranslateAnimation(0.0F, -100.0F, 0.0F, 0.0F);
-        break;
-      case "right":
-        translateAnimation = new TranslateAnimation(0.0F, 100.0F, 0.0F, 0.0F);
-        break;
-      default: return null;
+        translateAnimation.setDuration(300L);
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0F, 1.0F);
+        alphaAnimation.setDuration(300L);
+        animationSet.addAnimation(translateAnimation);
+        animationSet.addAnimation(alphaAnimation);
+        return animationSet;
     }
-    translateAnimation.setDuration(300L);
-    AlphaAnimation alphaAnimation = new AlphaAnimation(1.0F, 0.0F);
-    alphaAnimation.setDuration(300L);
-    animationSet.addAnimation(translateAnimation);
-    animationSet.addAnimation(alphaAnimation);
-    return animationSet;
-  }
 
-  private void setAnima() {
-    if (isShowAnima) {
-      float size = textView.getTextSize();
-      setInAnimation(inAnim("top", size));
-      setOutAnimation(outAnim("top", size));
-    } else {
-      setInAnimation(null);
-      setOutAnimation(null);
+    @Nullable
+    public Animation outAnim(String str, float height) {
+        AnimationSet animationSet = new AnimationSet(true);
+        if (str == null) return null;
+
+        TranslateAnimation translateAnimation;
+        switch (str) {
+            case "top":
+                translateAnimation = new TranslateAnimation(0.0F, 0.0F, 0.0F, -height);
+                break;
+            case "bottom":
+                translateAnimation = new TranslateAnimation(0.0F, 0.0F, 0.0F, height);
+                break;
+            case "left":
+                translateAnimation = new TranslateAnimation(0.0F, -100.0F, 0.0F, 0.0F);
+                break;
+            case "right":
+                translateAnimation = new TranslateAnimation(0.0F, 100.0F, 0.0F, 0.0F);
+                break;
+            default:
+                return null;
+        }
+        translateAnimation.setDuration(300L);
+        AlphaAnimation alphaAnimation = new AlphaAnimation(1.0F, 0.0F);
+        alphaAnimation.setDuration(300L);
+        animationSet.addAnimation(translateAnimation);
+        animationSet.addAnimation(alphaAnimation);
+        return animationSet;
     }
-  }
 
-  public void setShowAnima(boolean showAnima) {
-    isShowAnima = showAnima;
-    setAnima();
-  }
+    private void setAnima() {
+        if (isShowAnima && textView != null) {
+            float size = textView.getTextSize();
+            setInAnimation(inAnim("top", size));
+            setOutAnimation(outAnim("top", size));
+        } else {
+            setInAnimation(null);
+            setOutAnimation(null);
+        }
+    }
 
-  public CharSequence getText() {
-    View currentView = this.getCurrentView();
-    return currentView == null ? "" : ((TextView)currentView).getText();
-  }
+    public void setShowAnima(boolean showAnima) {
+        isShowAnima = showAnima;
+        setAnima();
+    }
 
-  public TextPaint getPaint() {
-    return ((TextView)this.getCurrentView()).getPaint();
-  }
+    public CharSequence getText() {
+        View currentView = this.getCurrentView();
+        return currentView == null ? "" : ((TextView) currentView).getText();
+    }
 
-  public void setWidth(int i) {
-    for (TextView v : viewArray) v.setWidth(i);
-  }
+    public TextPaint getPaint() {
+        View currentView = this.getCurrentView();
+        return currentView == null ? null : ((TextView) currentView).getPaint();
+    }
 
-  public void setTextColor(int i) {
-    for (TextView v : viewArray) v.setTextColor(i);
-  }
+    public void setWidth(int i) {
+        for (TextView v : viewArray) {
+            if (v != null) v.setWidth(i);
+        }
+    }
 
-  public void setShadowColor(int i) {
-    // float radius;
-    // if (isSingleLine) {
-    //   radius = 1.2f;
-    // } else {
-    //   radius = 2f;
-    // }
-    // https://stackoverflow.com/a/28367917
-    for (TextView v : viewArray) v.setShadowLayer(1.6f, 1.5f, 1.3f, i);
-  }
+    public void setTextColor(int i) {
+        for (TextView v : viewArray) {
+            if (v != null) v.setTextColor(i);
+        }
+    }
 
-  public void setSourceText(CharSequence str) {
-    for (TextView v : viewArray) v.setText(str);
-  }
+    public void setShadowColor(int i) {
+        for (TextView v : viewArray) {
+            if (v != null) v.setShadowLayer(1.6f, 1.5f, 1.3f, i);
+        }
+    }
 
-  public void setLetterSpacings(float letterSpacing) {
-    for (TextView v : viewArray) v.setLetterSpacing(letterSpacing);
-  }
+    public void setSourceText(CharSequence str) {
+        for (TextView v : viewArray) {
+            if (v != null) v.setText(str);
+        }
+    }
 
-  public void setHeight(int i) {
-    for (TextView v : viewArray) v.setHeight(i);
-  }
+    public void setLetterSpacings(float letterSpacing) {
+        for (TextView v : viewArray) {
+            if (v != null) v.setLetterSpacing(letterSpacing);
+        }
+    }
 
-  public void setTypeface(Typeface typeface) {
-    for (TextView v : viewArray) v.setTypeface(typeface);
-  }
+    public void setHeight(int i) {
+        for (TextView v : viewArray) {
+            if (v != null) v.setHeight(i);
+        }
+    }
 
-  public void setSingleLine(boolean bool) {
-    for (TextView v : viewArray) v.setSingleLine(bool);
-  }
+    public void setTypeface(Typeface typeface) {
+        for (TextView v : viewArray) {
+            if (v != null) v.setTypeface(typeface);
+        }
+    }
 
-  public void setMaxLines(int i) {
-    for (TextView v : viewArray) v.setMaxLines(i);
-  }
+    public void setSingleLine(boolean bool) {
+        for (TextView v : viewArray) {
+            if (v != null) v.setSingleLine(bool);
+        }
+    }
 
-  public void setTextSize(float f) {
-    for (TextView v : viewArray) v.setTextSize(f);
-    setAnima();
-  }
+    public void setMaxLines(int i) {
+        for (TextView v : viewArray) {
+            if (v != null) v.setMaxLines(i);
+        }
+    }
 
-  public void setGravity(int i) {
-    for (TextView v : viewArray) v.setGravity(i);
-  }
+    public void setTextSize(float f) {
+        for (TextView v : viewArray) {
+            if (v != null) v.setTextSize(f);
+        }
+        setAnima();
+    }
 
+    public void setGravity(int i) {
+        for (TextView v : viewArray) {
+            if (v != null) v.setGravity(i);
+        }
+    }
 }

@@ -138,6 +138,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
   }
 
   private void setLayoutParamsHeight() {
+    if (textView == null) return;
     int height = textView.getPaint().getFontMetricsInt(null) * maxLineNum;
     if (height > maxHeight - 100) height = maxHeight - 100;
     layoutParams.height = height;
@@ -166,7 +167,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
     int width = (int)(maxWidth * widthPercentage);
     if (layoutParams.width != width) {
       layoutParams.width = width;
-      textView.setWidth(width);
+      if (textView != null) textView.setWidth(width);
     }
 
     fixViewPosition();
@@ -382,6 +383,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
       }
       text = textBuilder.toString();
     }
+    if (textView == null) return;
     textView.setText(text);
   }
 

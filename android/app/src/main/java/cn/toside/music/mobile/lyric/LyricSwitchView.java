@@ -120,6 +120,7 @@ public final class LyricSwitchView extends TextSwitcher {
   }
 
   private void setAnima() {
+    if (textView == null) return;
     if (isShowAnima) {
       float size = textView.getTextSize();
       setInAnimation(inAnim("top", size));
@@ -141,7 +142,9 @@ public final class LyricSwitchView extends TextSwitcher {
   }
 
   public TextPaint getPaint() {
-    return ((TextView)this.getCurrentView()).getPaint();
+    TextView v = (TextView)this.getCurrentView();
+    if (v == null) return null;
+    return v.getPaint();
   }
 
   public void setWidth(int i) {

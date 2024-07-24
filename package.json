@@ -1,6 +1,6 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.5.0-beta.1",
+  "version": "1.5.0-beta.2",
   "versionCode": 67,
   "private": true,
   "scripts": {
@@ -45,7 +45,7 @@
   "homepage": "https://github.com/lyswhut/lx-music-mobile#readme",
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.0.5",
-    "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-async-storage/async-storage": "^1.24.0",
     "@react-native-clipboard/clipboard": "^1.14.1",
     "@react-native-community/slider": "^4.5.2",
     "iconv-lite": "^0.6.3",
@@ -68,7 +68,7 @@
     "react-native-vector-icons": "^10.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.8",
+    "@babel/core": "^7.24.9",
     "@babel/eslint-parser": "^7.24.8",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@babel/preset-env": "^7.24.8",
@@ -85,8 +85,8 @@
     "changelog-parser": "^3.0.1",
     "eslint-config-standard": "^17.1.0",
     "eslint-config-standard-with-typescript": "^43.0.1",
-    "eslint-plugin-react": "^7.34.3",
+    "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   }
 }

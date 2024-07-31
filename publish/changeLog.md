@@ -13,3 +13,4 @@
 ### 其他
 
 - 更新 React native 到 v0.73.9
+- 更新 exoplayer 到 v1.4.0

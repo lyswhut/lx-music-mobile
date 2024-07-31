@@ -6,6 +6,7 @@ module.exports = {
     'react',
     'react-native',
     'react-native-pager-view',
+    'react-native-navigation',
   ],
 
   // target: 'newest',

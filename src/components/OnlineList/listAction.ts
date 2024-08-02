@@ -40,7 +40,7 @@ export const handleShowMusicSourceDetail = async(minfo: LX.Music.MusicInfoOnline
 
 export const handleDislikeMusic = async(musicInfo: LX.Music.MusicInfoOnline) => {
   const confirm = await confirmDialog({
-    message: global.i18n.t('lists_dislike_music_tip', { name: musicInfo.name }),
+    message: musicInfo.singer ? global.i18n.t('lists_dislike_music_singer_tip', { name: musicInfo.name, singer: musicInfo.singer }) : global.i18n.t('lists_dislike_music_tip', { name: musicInfo.name }),
     cancelButtonText: global.i18n.t('cancel_button_text_2'),
     confirmButtonText: global.i18n.t('confirm_button_text'),
     bgClose: false,

@@ -117,6 +117,7 @@
   "list_updating": "updating",
   "lists__duplicate": "repeat song",
   "lists_dislike_music_add_tip": "Added",
+  "lists_dislike_music_singer_tip": "Do you really not like {singer}'s {name}?",
   "lists_dislike_music_tip": "Do you really dislike {name}?",
   "load_failed": "Ah, loading failed 😥",
   "loading": "Loading...",

@@ -1,7 +1,7 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.5.0-beta.3",
-  "versionCode": 67,
+  "version": "1.5.0",
+  "versionCode": 68,
   "private": true,
   "scripts": {
     "dev": "react-native run-android --active-arch-only",
@@ -71,7 +71,7 @@
     "@babel/core": "^7.25.2",
     "@babel/eslint-parser": "^7.25.1",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
-    "@babel/preset-env": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
     "@react-native/babel-preset": "^0.74.86",
     "@react-native/metro-config": "^0.74.86",

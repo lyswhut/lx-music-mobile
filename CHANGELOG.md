@@ -6,6 +6,25 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [1.5.0](https://github.com/lyswhut/lx-music-mobile/compare/v1.4.2...v1.5.0) - 2024-08-03
+
+我们发布了关于 LX Music 项目发展调整与新项目计划的说明，
+详情看： https://github.com/lyswhut/lx-music-desktop/issues/1912
+
+### 新增
+
+- 新增重复歌曲列表，可以方便移除我的列表中的重复歌曲，此列表会列出目标列表里歌曲名相同的歌曲，可在“我的列表”里的列表名菜单中使用（注：该功能与PC端的区别是可以点击歌曲名多选删除）
+- 新增打开当前歌曲详情页菜单，可以在歌曲菜单中使用
+
+### 修复
+
+- 修复潜在桌面歌词导致的崩溃问题
+
+### 其他
+
+- 更新 React native 到 v0.73.9
+- 更新 exoplayer 到 v1.4.0
+
 ## [1.4.2](https://github.com/lyswhut/lx-music-mobile/compare/v1.4.1...v1.4.2) - 2024-06-01
 
 我们发布了关于 LX Music 项目发展调整与新项目计划的说明，

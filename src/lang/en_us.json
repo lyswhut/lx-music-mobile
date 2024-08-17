@@ -455,6 +455,7 @@
   "timeout_exit_tip_max": "You can only set up to {num} minutes",
   "timeout_exit_tip_off": "Set timer to stop playing",
   "timeout_exit_tip_on": "Stop playing after {time}",
+  "toggle_source": "Source change",
   "toggle_source_failed": "Failed to change the source, please try to manually search for the song in other sources to play",
   "toggle_source_try": "Try switching to another source...",
   "understand": "Already understood 👌",

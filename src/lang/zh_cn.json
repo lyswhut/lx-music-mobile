@@ -455,6 +455,7 @@
   "timeout_exit_tip_max": "最多只能设置{num}分钟哦",
   "timeout_exit_tip_off": "设置定时停止播放",
   "timeout_exit_tip_on": "{time} 后停止播放",
+  "toggle_source": "歌曲换源",
   "toggle_source_failed": "换源失败，请尝试手动在其他源搜索该歌曲播放",
   "toggle_source_try": "尝试切换到其他源...",
   "understand": "已了解 👌",

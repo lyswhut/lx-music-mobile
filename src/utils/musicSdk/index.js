@@ -57,10 +57,24 @@ export const init = () => {
   return Promise.all(tasks)
 }
 
+
+export const searchMusic = async({ name, singer, source: s, limit = 25 }) => {
+  const trimStr = str => typeof str == 'string' ? str.trim() : str
+  const musicName = trimStr(name)
+  const tasks = []
+  const excludeSource = ['xm']
+  for (const source of sources.sources) {
+    if (!sources[source.id].musicSearch || source.id == s || excludeSource.includes(source.id)) continue
+    tasks.push(sources[source.id].musicSearch.search(`${musicName} ${singer || ''}`.trim(), 1, limit).catch(_ => null))
+  }
+  return (await Promise.all(tasks)).filter(s => s)
+}
+
 export const findMusic = async(musicInfo) => {
   const { name, singer, albumName, interval, source: s } = musicInfo
 
-  const tasks = []
+  const lists = await searchMusic({ name, singer, source: s, limit: 25 })
+
   const singersRxp = /、|&|;|；|\/|,|，|\|/
   const sortSingle = singer => singersRxp.test(singer)
     ? singer.split(singersRxp).sort((a, b) => a.localeCompare(b)).join('、')
@@ -86,44 +100,39 @@ export const findMusic = async(musicInfo) => {
   const sortedSinger = filterStr(String(sortSingle(singer)).toLowerCase())
   const lowerCaseName = filterStr(String(musicName).toLowerCase())
   const lowerCaseAlbumName = filterStr(String(albumName).toLowerCase())
-  const excludeSource = ['xm']
-  for (const source of sources.sources) {
-    if (!sources[source.id].musicSearch || source.id == s || excludeSource.includes(source.id)) continue
 
-    tasks.push(sources[source.id].musicSearch.search(`${musicName} ${singer || ''}`.trim(), 1, 25).then(res => {
-      for (const item of res.list) {
-        item.name = trimStr(item.name)
-        item.sortedSinger = filterStr(String(sortSingle(item.singer)).toLowerCase())
-        item.lowerCaseName = filterStr(String(item.name ?? '').toLowerCase())
-        item.lowerCaseAlbumName = filterStr(String(item.albumName ?? '').toLowerCase())
-        // console.log(lowerCaseName, item.lowerCaseName, item.source)
-        if (
+  const result = lists.map(source => {
+    for (const item of source.list) {
+      item.name = trimStr(item.name)
+      item.sortedSinger = filterStr(String(sortSingle(item.singer)).toLowerCase())
+      item.lowerCaseName = filterStr(String(item.name ?? '').toLowerCase())
+      item.lowerCaseAlbumName = filterStr(String(item.albumName ?? '').toLowerCase())
+      // console.log(lowerCaseName, item.lowerCaseName, item.source)
+      if (
+        (
+          item.sortedSinger == sortedSinger && item.lowerCaseName == lowerCaseName
+        ) ||
           (
-            item.sortedSinger == sortedSinger && item.lowerCaseName == lowerCaseName
+            (interval ? item.interval == interval : true) && item.lowerCaseName == lowerCaseName &&
+            (item.sortedSinger.includes(sortedSinger) || sortedSinger.includes(item.sortedSinger))
           ) ||
-            (
-              (interval ? item.interval == interval : true) && item.lowerCaseName == lowerCaseName &&
-              (item.sortedSinger.includes(sortedSinger) || sortedSinger.includes(item.sortedSinger))
-            ) ||
-            (
-              item.lowerCaseName == lowerCaseName && (lowerCaseAlbumName ? item.lowerCaseAlbumName == lowerCaseAlbumName : true) &&
-              (interval ? item.interval == interval : true)
-            ) ||
-            (
-              item.lowerCaseName == lowerCaseName && (lowerCaseAlbumName ? item.lowerCaseAlbumName == lowerCaseAlbumName : true) &&
-              (item.sortedSinger.includes(sortedSinger) || sortedSinger.includes(item.sortedSinger))
-            )
-        ) {
-          return item
-        }
-        if (!singer) {
-          if (item.lowerCaseName == lowerCaseName && (interval ? item.interval == interval : true)) return item
-        }
+          (
+            item.lowerCaseName == lowerCaseName && (lowerCaseAlbumName ? item.lowerCaseAlbumName == lowerCaseAlbumName : true) &&
+            (interval ? item.interval == interval : true)
+          ) ||
+          (
+            item.lowerCaseName == lowerCaseName && (lowerCaseAlbumName ? item.lowerCaseAlbumName == lowerCaseAlbumName : true) &&
+            (item.sortedSinger.includes(sortedSinger) || sortedSinger.includes(item.sortedSinger))
+          )
+      ) {
+        return item
       }
-      return null
-    }).catch(_ => null))
-  }
-  const result = (await Promise.all(tasks)).filter(s => s)
+      if (!singer) {
+        if (item.lowerCaseName == lowerCaseName && (interval ? item.interval == interval : true)) return item
+      }
+    }
+    return null
+  }).filter(s => s)
   const newResult = []
   if (result.length) {
     newResult.push(...sortMusic(result, item => item.sortedSinger == sortedSinger && item.lowerCaseName == lowerCaseName && item.interval == interval))

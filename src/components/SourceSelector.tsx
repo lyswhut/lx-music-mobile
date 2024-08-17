@@ -20,6 +20,15 @@ export interface SourceSelectorType<S extends Sources> {
   setSourceList: (list: S, activeSource: S[number]) => void
 }
 
+export const useSourceListI18n = (list: Sources) => {
+  const sourceNameType = useSettingValue('common.sourceNameType')
+  const t = useI18n()
+  return useMemo(() => {
+    return list.map(s => ({ label: t(`source_${sourceNameType}_${s}`), action: s }))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [list, sourceNameType, t])
+}
+
 const Component = <S extends Sources>({ fontSize = 15, center, onSourceChange }: SourceSelectorProps<S>, ref: Ref<SourceSelectorType<S>>) => {
   const sourceNameType = useSettingValue('common.sourceNameType')
   const [list, setList] = useState([] as unknown as S)
@@ -33,10 +42,7 @@ const Component = <S extends Sources>({ fontSize = 15, center, onSourceChange }:
     },
   }), [])
 
-  const sourceList_t = useMemo(() => {
-    return list.map(s => ({ label: t(`source_${sourceNameType}_${s}`), action: s }))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [list, sourceNameType, t])
+  const sourceList_t = useSourceListI18n(list)
 
   type DorpDownMenuProps = _DorpDownMenuProps<typeof sourceList_t>
 

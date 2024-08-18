@@ -209,6 +209,6 @@ export const handleMusicAction = async(action, info) => {
     case 'searchPlay':
       await handleSearchPlayMusic(info)
       break
-    default: throw new Error('Unknown action: ' + action)
+    // default: throw new Error('Unknown action: ' + action)
   }
 }

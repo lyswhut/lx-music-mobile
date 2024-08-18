@@ -35,10 +35,11 @@ const handleLinkAction = async(link: string) => {
     case 'player':
       await handlePlayerAction(action as PlayerAction)
       break
-    default: throw new Error('Unknown type: ' + type)
+    // default: throw new Error('Unknown type: ' + type)
   }
 }
 const runLinkAction = async(link: string) => {
+  if (!link.startsWith('lxmusic://')) return
   try {
     await handleLinkAction(link)
   } catch (err: any) {

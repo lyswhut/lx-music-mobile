@@ -90,6 +90,6 @@ export const handleSonglistAction = async(action, info) => {
     case 'play':
       await handlePlaySonglist(info)
       break
-    default: throw new Error('Unknown action: ' + action)
+    // default: throw new Error('Unknown action: ' + action)
   }
 }

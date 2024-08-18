@@ -28,6 +28,6 @@ export const handlePlayerAction = async(action: PlayerAction) => {
     case 'dislike':
       void dislikeMusic()
       break
-    default: throw new Error('Unknown action: ' + (action as any ?? ''))
+    // default: throw new Error('Unknown action: ' + (action as any ?? ''))
   }
 }

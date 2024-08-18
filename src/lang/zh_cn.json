@@ -36,6 +36,7 @@
   "date_format_hour": "{num}小时前",
   "date_format_minute": "{num}分钟前",
   "date_format_second": "{num}秒前",
+  "deep_link__handle_error_tip": "调用失败：{message}",
   "delete": "删除",
   "dialog_cancel": "我不",
   "dialog_confirm": "好的",

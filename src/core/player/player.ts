@@ -25,6 +25,9 @@ import { getRandom } from '@/utils/common'
 import { filterList } from './utils'
 import BackgroundTimer from 'react-native-background-timer'
 import { checkIgnoringBatteryOptimization, checkNotificationPermission, debounceBackgroundTimer } from '@/utils/tools'
+import { LIST_IDS } from '@/config/constant'
+import { addListMusics, removeListMusics } from '@/core/list'
+import { addDislikeInfo } from '@/core/dislikeList'
 
 // import { checkMusicFileAvailable } from '@renderer/utils/music'
 
@@ -520,3 +523,38 @@ export const togglePlay = () => {
     play()
   }
 }
+
+/**
+ * 收藏当前播放的歌曲
+ */
+export const collectMusic = () => {
+  if (!playerState.playMusicInfo.musicInfo) return
+  void addListMusics(LIST_IDS.LOVE, [
+    'progress' in playerState.playMusicInfo.musicInfo
+      ? playerState.playMusicInfo.musicInfo.metadata.musicInfo
+      : playerState.playMusicInfo.musicInfo,
+  ], settingState.setting['list.addMusicLocationType'])
+}
+
+/**
+ * 取消收藏当前播放的歌曲
+ */
+export const uncollectMusic = () => {
+  if (!playerState.playMusicInfo.musicInfo) return
+  void removeListMusics(LIST_IDS.LOVE, [
+    'progress' in playerState.playMusicInfo.musicInfo
+      ? playerState.playMusicInfo.musicInfo.metadata.musicInfo.id
+      : playerState.playMusicInfo.musicInfo.id,
+  ])
+}
+
+/**
+ * 不喜欢当前播放的歌曲
+ */
+export const dislikeMusic = async() => {
+  if (!playerState.playMusicInfo.musicInfo) return
+  const minfo = 'progress' in playerState.playMusicInfo.musicInfo ? playerState.playMusicInfo.musicInfo.metadata.musicInfo : playerState.playMusicInfo.musicInfo
+  await addDislikeInfo([{ name: minfo.name, singer: minfo.singer }])
+  await playNext(true)
+}
+

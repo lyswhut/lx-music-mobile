@@ -6,6 +6,13 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [1.6.0](https://github.com/lyswhut/lx-music-mobile/compare/v1.5.0...v1.6.0) - 2024-08-24
+
+### 新增
+
+- 新增 我的列表-歌曲右击菜单-歌曲换源 功能，换源后下次再播放该列表的该歌曲时将优先尝试播放所选源的歌曲，该功能允许你手动指定来源以解决自动换源失败或者换源不准确的问题
+- 新增 Scheme URL 调用支持，调用传参格式与PC端一致，详情看文档说明： https://lyswhut.github.io/lx-music-doc/mobile/scheme-url
+
 ## [1.5.0](https://github.com/lyswhut/lx-music-mobile/compare/v1.4.2...v1.5.0) - 2024-08-03
 
 我们发布了关于 LX Music 项目发展调整与新项目计划的说明，

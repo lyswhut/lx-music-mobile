@@ -550,7 +550,7 @@ export const cheatTip = async() => {
 2. 本软件完全无广告且无引流（如需要加群、关注公众号之类才能使用或者升级）的行为，若你使用过程中遇到广告或者引流的信息，则表明你当前运行的软件是第三方修改版。
 3. 目前本项目的原始发布地址只有 GitHub 及 蓝奏网盘 （在设置-关于有说明），其他渠道均为第三方转载发布，可信度请自行鉴别。`,
     btnText: '我知道了 (Close)',
-    bgClose: false,
+    bgClose: true,
   }).then(() => {
     void saveData(storageDataPrefix.cheatTip, true)
   })

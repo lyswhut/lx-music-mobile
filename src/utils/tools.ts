@@ -116,19 +116,23 @@ export const toast = (message: string, duration: 'long' | 'short' = 'short', pos
       break
   }
   let _position
+  let offset: number
   switch (position) {
     case 'top':
       _position = ToastAndroid.TOP
+      offset = 80
       break
     case 'center':
       _position = ToastAndroid.CENTER
+      offset = 0
       break
     case 'bottom':
     default:
       _position = ToastAndroid.BOTTOM
+      offset = 80
       break
   }
-  ToastAndroid.showWithGravity(message, _duration, _position)
+  ToastAndroid.showWithGravityAndOffset(message, _duration, _position, 0, offset)
 }
 
 export const openUrl = async(url: string): Promise<void> => Linking.canOpenURL(url).then(async() => Linking.openURL(url))

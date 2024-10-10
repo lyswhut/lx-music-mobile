@@ -120,7 +120,7 @@ export const toast = (message: string, duration: 'long' | 'short' = 'short', pos
   switch (position) {
     case 'top':
       _position = ToastAndroid.TOP
-      offset = 80
+      offset = 120
       break
     case 'center':
       _position = ToastAndroid.CENTER
@@ -129,7 +129,7 @@ export const toast = (message: string, duration: 'long' | 'short' = 'short', pos
     case 'bottom':
     default:
       _position = ToastAndroid.BOTTOM
-      offset = 80
+      offset = 120
       break
   }
   ToastAndroid.showWithGravityAndOffset(message, _duration, _position, 0, offset)

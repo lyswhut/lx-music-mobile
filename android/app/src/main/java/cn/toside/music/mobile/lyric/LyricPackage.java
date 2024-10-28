@@ -17,6 +17,6 @@ public class LyricPackage implements ReactPackage {
 
   @Override
   public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-    return Arrays.<NativeModule>asList(new LyricModule(reactContext));
+    return Arrays.<NativeModule>asList(new LyricModule(reactContext), new BluetoothLyricModule(reactContext));
   }
 }

@@ -1,6 +1,9 @@
 import { init as initLyricPlayer, toggleTranslation, toggleRoma, play, pause, stop, setLyric, setPlaybackRate } from '@/core/lyric'
 import { updateSetting } from '@/core/common'
 import { onDesktopLyricPositionChange, showDesktopLyric } from '@/core/desktopLyric'
+import { OnSetBluetoothLyric } from '@/core/bluetoothLyric'
+import TrackPlayer, { State } from 'react-native-track-player'
+import { toast } from '@/utils/tools'
 
 export default async(setting: LX.AppSetting) => {
   await initLyricPlayer()
@@ -20,6 +23,20 @@ export default async(setting: LX.AppSetting) => {
     })
   })
 
+  OnSetBluetoothLyric(async lyric => {
+    let isPlaying = await TrackPlayer.getState() == State.Playing
+    if (isPlaying) {
+      let etime = 0
+      etime = await TrackPlayer.getPosition()
+      await TrackPlayer.updateNowPlayingMetadata({
+        title: lyric.title,
+        artist: lyric.singer,
+        album: lyric.album,
+        elapsedTime: etime
+      }, isPlaying)
+      // toast("react lyric: " + etime + lyric.title, "short")
+    }
+  })
 
   global.app_event.on('play', play)
   global.app_event.on('pause', pause)

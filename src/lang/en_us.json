@@ -348,6 +348,7 @@
   "setting_play_save_play_time": "Remember playback progress",
   "setting_play_show_notification_image": "Show song picture in notification bar",
   "setting_play_show_roma": "Show lyrics roman (if available)",
+  "setting_play_send_bluetooth_lyric" : "Enable bluetooth lyric",
   "setting_play_show_translation": "Show lyrics translation (if available)",
   "setting_player": "Play",
   "setting_player_save_play_time": "Remember playback progress",

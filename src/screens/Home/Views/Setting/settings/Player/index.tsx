@@ -9,9 +9,11 @@ import IsAutoCleanPlayedList from './IsAutoCleanPlayedList'
 import IsShowNotificationImage from './IsShowNotificationImage'
 import IsShowLyricTranslation from './IsShowLyricTranslation'
 import IsShowLyricRoma from './IsShowLyricRoma'
+import IsSendBluetoothLyric from './IsSendBluetoothLyric'
 import IsS2T from './IsS2T'
 import MaxCache from './MaxCache'
 import { useI18n } from '@/lang'
+
 
 
 export default memo(() => {
@@ -27,6 +29,7 @@ export default memo(() => {
       <IsShowLyricTranslation />
       <IsShowLyricRoma />
       <IsS2T />
+      <IsSendBluetoothLyric />
       <MaxCache />
       <PlayHighQuality />
     </Section>

@@ -15,6 +15,12 @@ import {
   toggleDesktopLyricTranslation,
   toggleDesktopLyricRoma,
 } from '@/core/desktopLyric'
+import {
+  playBluetoothLyric,
+  pauseBluetoothLyric,
+  setBluetoothLyric,
+  setBluetoothLyricPlaybackRate
+} from '@/core/bluetoothLyric'
 import { getPosition } from '@/plugins/player'
 import playerState from '@/store/player/state'
 // import settingState from '@/store/setting/state'
@@ -31,8 +37,9 @@ export const init = async() => {
  * @param lyric lyric str
  * @param translation lyric translation
  */
-const handleSetLyric = async(lyric: string, translation = '', romalrc = '') => {
+const handleSetLyric = async(lyric: string, translation = '', romalrc = '', title = '', singer = '', album = '') => {
   lrcSetLyric(lyric, translation, romalrc)
+  await setBluetoothLyric(lyric, title, singer, album)
   await setDesktopLyric(lyric, translation, romalrc)
 }
 
@@ -42,6 +49,7 @@ const handleSetLyric = async(lyric: string, translation = '', romalrc = '') => {
  */
 export const handlePlay = (time: number) => {
   lrcPlay(time)
+  void playBluetoothLyric(time)
   void playDesktopLyric(time)
 }
 
@@ -50,6 +58,7 @@ export const handlePlay = (time: number) => {
  */
 export const pause = () => {
   lrcPause()
+  void pauseBluetoothLyric()
   void pauseDesktopLyric()
 }
 
@@ -66,6 +75,7 @@ export const stop = () => {
  */
 export const setPlaybackRate = async(playbackRate: number) => {
   lrcSetPlaybackRate(playbackRate)
+  await setBluetoothLyricPlaybackRate(playbackRate)
   await setDesktopLyricPlaybackRate(playbackRate)
   if (playerState.isPlay) {
     setTimeout(() => {
@@ -96,6 +106,11 @@ export const toggleRoma = async(isShowLyricRoma: boolean) => {
   if (playerState.isPlay) play()
 }
 
+export const toggleSendBluetoothLyric = async(isSendBluetoothLyric: boolean) => {
+  await toggleSendBluetoothLyric(isSendBluetoothLyric)
+  if (playerState.isPlay) play()
+}
+
 export const play = () => {
   void getPosition().then((position) => {
     handlePlay(position * 1000)
@@ -110,7 +125,10 @@ export const setLyric = async() => {
     let rlrc = ''
     if (playerState.musicInfo.tlrc) tlrc = playerState.musicInfo.tlrc
     if (playerState.musicInfo.rlrc) rlrc = playerState.musicInfo.rlrc
-    await handleSetLyric(playerState.musicInfo.lrc, tlrc, rlrc)
+    let name = playerState.musicInfo.name
+    let singer = playerState.musicInfo.singer
+    let album = playerState.musicInfo.album
+    await handleSetLyric(playerState.musicInfo.lrc, tlrc, rlrc, name, singer, album)
   }
 
   if (playerState.isPlay) play()

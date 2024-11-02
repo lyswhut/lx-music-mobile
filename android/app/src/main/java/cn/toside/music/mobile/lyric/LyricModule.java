@@ -66,14 +66,21 @@ public class LyricModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void showLyric(ReadableMap data, Promise promise) {
+  public void showDesktopLyric(ReadableMap data, Promise promise) {
     if (lyric == null) lyric = new Lyric(reactContext, isShowTranslation, isShowRoma, playbackRate);
-    lyric.showLyric(Arguments.toBundle(data), promise);
+    lyric.showDesktopLyric(Arguments.toBundle(data), promise);
   }
 
   @ReactMethod
-  public void hideLyric(Promise promise) {
-    if (lyric != null) lyric.hideLyric();
+  public void hideDesktopLyric(Promise promise) {
+    if (lyric != null) lyric.hideDesktopLyric();
+    promise.resolve(null);
+  }
+
+  @ReactMethod
+  public void setSendLyricTextEvent(boolean isSend, Promise promise) {
+    if (lyric == null) lyric = new Lyric(reactContext, isShowTranslation, isShowRoma, playbackRate);
+    lyric.setSendLyricTextEvent(isSend);
     promise.resolve(null);
   }
 

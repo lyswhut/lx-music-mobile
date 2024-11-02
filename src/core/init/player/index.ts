@@ -8,10 +8,10 @@ import initLyric from './lyric'
 
 export default async(setting: LX.AppSetting) => {
   await initPlayer(setting)
+  await initLyric(setting)
   await initPlayInfo(setting)
   initPlayStatus()
   initPlayerEvent()
   initWatchList()
   initPlayProgress()
-  await initLyric(setting)
 }

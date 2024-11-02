@@ -14,7 +14,7 @@ import { saveData } from '@/plugins/storage'
 import { throttle } from '@/utils/common'
 import { getSelectedManagedFolder, saveFontSize, saveViewPrevState, setSelectedManagedFolder } from '@/utils/data'
 import { showPactModal as handleShowPactModal } from '@/navigation'
-import { hideLyric } from '@/utils/nativeModules/lyricDesktop'
+import { hideDesktopLyricView } from '@/utils/nativeModules/lyricDesktop'
 import { getPersistedUriList, selectManagedFolder } from '@/utils/fs'
 
 
@@ -57,7 +57,7 @@ export const exitApp = (reason: string) => {
   void Promise.all([
     hideDesktopLyric(),
     destroyPlayer(),
-    hideLyric(),
+    hideDesktopLyricView(),
   ]).finally(() => {
     isDestroying = false
     utilExitApp()

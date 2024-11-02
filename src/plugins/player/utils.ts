@@ -166,6 +166,10 @@ export const setPause = async() => TrackPlayer.pause()
 export const setCurrentTime = async(time: number) => TrackPlayer.seekTo(time)
 export const setVolume = async(num: number) => TrackPlayer.setVolume(num)
 export const setPlaybackRate = async(num: number) => TrackPlayer.setRate(num)
+export const updateNowPlayingTitles = async(duration: number, title: string, artist: string, album: string) => {
+  console.log('set playing titles', duration, title, artist, album)
+  return TrackPlayer.updateNowPlayingTitles(duration, title, artist, album)
+}
 
 export const resetPlay = async() => Promise.all([setPause(), setCurrentTime(0)])
 

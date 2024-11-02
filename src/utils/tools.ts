@@ -559,3 +559,17 @@ export const cheatTip = async() => {
     void saveData(storageDataPrefix.cheatTip, true)
   })
 }
+
+export const remoteLyricTip = async() => {
+  const isRead = await getData<boolean>(storageDataPrefix.remoteLyricTip)
+  if (isRead) return
+
+  return tipDialog({
+    title: '有点温馨的提示',
+    message: '若你将本功能用于汽车，请记住这个：\n道路千万条，安全第一条！\n道路千万条，安全第一条！！\n道路千万条，安全第一条！！！',
+    btnText: '我知道了 (Close)',
+    bgClose: true,
+  }).then(() => {
+    void saveData(storageDataPrefix.remoteLyricTip, true)
+  })
+}

@@ -1,6 +1,7 @@
 import {
-  hideLyric,
-  showLyric,
+  hideDesktopLyricView,
+  showDesktopLyricView,
+  setSendLyricTextEvent,
   setLyric,
   play,
   pause,
@@ -25,10 +26,13 @@ import settingState from '@/store/setting/state'
 import playerState from '@/store/player/state'
 import { tranditionalize } from '@/utils/simplify-chinese-main'
 import { getPosition } from '@/plugins/player'
+export {
+  onLyricLinePlay,
+} from '@/utils/nativeModules/lyricDesktop'
 
 export const showDesktopLyric = async() => {
   const setting = settingState.setting
-  await showLyric({
+  await showDesktopLyricView({
     isShowToggleAnima: setting['desktopLyric.showToggleAnima'],
     isSingleLine: setting['desktopLyric.isSingleLine'],
     isLock: setting['desktopLyric.isLock'],
@@ -60,7 +64,7 @@ export const showDesktopLyric = async() => {
 }
 
 export const hideDesktopLyric = async() => {
-  return hideLyric()
+  return hideDesktopLyricView()
 }
 
 export const playDesktopLyric = play
@@ -91,3 +95,21 @@ export const openDesktopLyricOverlayPermissionActivity = openOverlayPermissionAc
 export const onDesktopLyricPositionChange = onPositionChange
 
 
+export const showRemoteLyric = async(isSend: boolean) => {
+  await setSendLyricTextEvent(isSend)
+  if (isSend) {
+    let lrc = playerState.musicInfo.lrc ?? ''
+    let tlrc = playerState.musicInfo.tlrc ?? ''
+    let rlrc = playerState.musicInfo.rlrc ?? ''
+    if (settingState.setting['player.isS2t']) {
+      lrc = tranditionalize(lrc)
+      tlrc = tranditionalize(tlrc)
+    }
+    await setLyric(lrc, tlrc, rlrc)
+    if (playerState.isPlay && !global.lx.gettingUrlId) {
+      void getPosition().then(position => {
+        void play(position * 1000)
+      })
+    }
+  }
+}

@@ -187,6 +187,11 @@ declare global {
       'player.isS2t': boolean
 
       /**
+       * 是否启用蓝牙歌词
+       */
+      'player.isShowBluetoothLyric': boolean
+
+      /**
        * 播放详情页-是否缩放当前播放的歌词行
        */
       // 'playDetail.isZoomActiveLrc': boolean

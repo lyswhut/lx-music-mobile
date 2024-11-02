@@ -10,8 +10,10 @@ const list: LX.Player.Track[] = []
 const defaultUserAgent = 'Mozilla/5.0 (Linux; Android 10; Pixel 3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Mobile Safari/537.36'
 const httpRxp = /^(https?:\/\/.+|\/.+)/
 
-let isPlaying = false
-let prevDuration = -1
+export const state = {
+  isPlaying: false,
+  prevDuration: -1,
+}
 
 const formatMusicInfo = (musicInfo: LX.Player.PlayMusic) => {
   return 'progress' in musicInfo ? {
@@ -106,22 +108,21 @@ export const getCurrentTrack = async() => {
   return list[currentTrackIndex]
 }
 
-export const updateMetaData = async(musicInfo: LX.Player.MusicInfo, isPlay: boolean, force = false) => {
-  if (!force && isPlay == isPlaying) {
+export const updateMetaData = async(musicInfo: LX.Player.MusicInfo, isPlay: boolean, lyric?: string, force = false) => {
+  if (!force && isPlay == state.isPlaying) {
     const duration = await TrackPlayer.getDuration()
-    // console.log('currentIsPlaying', prevDuration, duration)
-    if (prevDuration != duration) {
-      prevDuration = duration
+    if (state.prevDuration != duration) {
+      state.prevDuration = duration
       const trackInfo = await getCurrentTrack()
       if (trackInfo && musicInfo) {
-        delayUpdateMusicInfo(musicInfo)
+        delayUpdateMusicInfo(musicInfo, lyric)
       }
     }
   } else {
     const [duration, trackInfo] = await Promise.all([TrackPlayer.getDuration(), getCurrentTrack()])
-    prevDuration = duration
+    state.prevDuration = duration
     if (trackInfo && musicInfo) {
-      delayUpdateMusicInfo(musicInfo)
+      delayUpdateMusicInfo(musicInfo, lyric)
     }
   }
 }
@@ -175,7 +176,8 @@ export const playMusic = (musicInfo: LX.Player.PlayMusic, url: string, time: num
 // let musicId = null
 // let duration = 0
 let prevArtwork: string | undefined
-const updateMetaInfo = async(mInfo: LX.Player.MusicInfo) => {
+const updateMetaInfo = async(mInfo: LX.Player.MusicInfo, lyric?: string) => {
+  console.log('updateMetaInfo', lyric)
   const isShowNotificationImage = settingState.setting['player.isShowNotificationImage']
   // const mInfo = formatMusicInfo(musicInfo)
   // console.log('+++++updateMusicPic+++++', track.artwork, track.duration)
@@ -189,16 +191,25 @@ const updateMetaInfo = async(mInfo: LX.Player.MusicInfo) => {
   //   duration = global.playInfo.duration || 0
   // }
   // console.log('+++++updateMetaInfo+++++', mInfo.name)
-  isPlaying = await TrackPlayer.getState() == State.Playing
+  state.isPlaying = await TrackPlayer.getState() == State.Playing
   let artwork = isShowNotificationImage ? mInfo.pic ?? prevArtwork : undefined
   if (mInfo.pic) prevArtwork = mInfo.pic
+  let name: string
+  let singer: string
+  if (!state.isPlaying || lyric == null) {
+    name = mInfo.name ?? 'Unknow'
+    singer = mInfo.singer ?? 'Unknow'
+  } else {
+    name = lyric
+    singer = `${mInfo.name}${mInfo.singer ? ` - ${mInfo.singer}` : ''}`
+  }
   await TrackPlayer.updateNowPlayingMetadata({
-    title: mInfo.name ?? 'Unknow',
-    artist: mInfo.singer ?? 'Unknow',
+    title: name,
+    artist: singer,
     album: mInfo.album ?? undefined,
     artwork,
-    duration: prevDuration || 0,
-  }, isPlaying)
+    duration: state.prevDuration || 0,
+  }, state.isPlaying)
 }
 
 
@@ -206,12 +217,13 @@ const updateMetaInfo = async(mInfo: LX.Player.MusicInfo) => {
 const debounceUpdateMetaInfoTools = {
   updateMetaPromise: Promise.resolve(),
   musicInfo: null as LX.Player.MusicInfo | null,
-  debounce(fn: (musicInfo: LX.Player.MusicInfo) => void | Promise<void>) {
+  debounce(fn: (musicInfo: LX.Player.MusicInfo, lyric?: string) => void | Promise<void>) {
     // let delayTimer = null
     let isDelayRun = false
     let timer: number | null = null
     let _musicInfo: LX.Player.MusicInfo | null = null
-    return (musicInfo: LX.Player.MusicInfo) => {
+    let _lyric: string | undefined
+    return (musicInfo: LX.Player.MusicInfo, lyric?: string) => {
       // console.log('debounceUpdateMetaInfoTools', musicInfo)
       if (timer) {
         BackgroundTimer.clearTimeout(timer)
@@ -223,31 +235,34 @@ const debounceUpdateMetaInfoTools = {
       // }
       if (isDelayRun) {
         _musicInfo = musicInfo
+        _lyric = lyric
         timer = BackgroundTimer.setTimeout(() => {
           timer = null
           let musicInfo = _musicInfo
+          let lyric = _lyric
           _musicInfo = null
+          _lyric = undefined
           if (!musicInfo) return
           // isDelayRun = false
-          void fn(musicInfo)
-        }, 1000)
+          void fn(musicInfo, lyric)
+        }, 500)
       } else {
         isDelayRun = true
-        void fn(musicInfo)
+        void fn(musicInfo, lyric)
         BackgroundTimer.setTimeout(() => {
           // delayTimer = null
           isDelayRun = false
-        }, 1000)
+        }, 500)
       }
     }
   },
   init() {
-    return this.debounce(async(musicInfo: LX.Player.MusicInfo) => {
+    return this.debounce(async(musicInfo: LX.Player.MusicInfo, lyric?: string) => {
       this.musicInfo = musicInfo
       return this.updateMetaPromise.then(() => {
         // console.log('run')
         if (this.musicInfo?.id === musicInfo.id) {
-          this.updateMetaPromise = updateMetaInfo(musicInfo)
+          this.updateMetaPromise = updateMetaInfo(musicInfo, lyric)
         }
       })
     })

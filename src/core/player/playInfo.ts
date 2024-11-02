@@ -14,6 +14,10 @@ export const setLoadErrorPicUrl = (url: string) => {
   playerActions.setLoadErrorPicUrl(url)
 }
 
+export const setLastLyric = (lrc?: string) => {
+  playerActions.setLastLyric(lrc)
+}
+
 export const setPlayListId = (listId: string | null) => {
   playerActions.setPlayListId(listId)
 }

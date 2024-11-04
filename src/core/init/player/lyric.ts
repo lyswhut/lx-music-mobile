@@ -26,15 +26,16 @@ export default async(setting: LX.AppSetting) => {
   OnSetBluetoothLyric(async lyric => {
     let isPlaying = await TrackPlayer.getState() == State.Playing
     if (isPlaying) {
-      let etime = 0
-      etime = await TrackPlayer.getPosition()
+      let etime = await TrackPlayer.getPosition()
+      let duration = await TrackPlayer.getDuration()
+      await TrackPlayer.clearNowPlayingMetadata()
       await TrackPlayer.updateNowPlayingMetadata({
         title: lyric.title,
         artist: lyric.singer,
         album: lyric.album,
+        duration: duration,
         elapsedTime: etime
       }, isPlaying)
-      // toast("react lyric: " + etime + lyric.title, "short")
     }
   })
 

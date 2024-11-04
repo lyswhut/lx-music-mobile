@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class BluetoothLyric extends LyricPlayer {
-  LyricBluetoothSender lyricBluetoothSender = null;
   LyricEvent lyricEvent = null;
   ReactApplicationContext reactAppContext;
 

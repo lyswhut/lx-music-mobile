@@ -215,3 +215,13 @@ const fetchData = (url, { timeout = 15000, ...options }) => {
     },
   }
 }
+
+export const checkUrl = async(url, options = {}) => {
+  return fetchData(url, { method: 'head', ...options }).request.then(resp => {
+    if (resp.statusCode === 200) {
+      return Promise.resolve()
+    } else {
+      throw new Error(resp.statusCode)
+    }
+  })
+}

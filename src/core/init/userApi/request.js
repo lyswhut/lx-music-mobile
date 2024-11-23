@@ -71,7 +71,7 @@ const blobToBuffer = (blob) => {
   })
 }
 
-export const fetchData = (url, { timeout = 15000, ...options }) => {
+export const fetchData = (url, { timeout = 13_000, ...options }) => {
   // console.log('---start---', url)
 
   const controller = new global.AbortController()

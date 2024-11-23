@@ -7,6 +7,7 @@ import SubTitle from '../../components/SubTitle'
 import Button from '../../components/Button'
 import { toast, resetNotificationPermissionCheck, confirmDialog, resetIgnoringBatteryOptimizationCheck } from '@/utils/tools'
 import { getAppCacheSize, clearAppCache } from '@/utils/nativeModules/cache'
+import { getCacheSize, clearCache } from '@/plugins/player/utils'
 import { sizeFormate } from '@/utils'
 import { useI18n } from '@/lang'
 import Text from '@/components/common/Text'
@@ -21,8 +22,9 @@ export default memo(() => {
   // const clearCache = useDispatch('list', 'clearCache')
 
   const handleGetAppCacheSize = () => {
-    void getAppCacheSize().then(size => {
-      setCacheSize(sizeFormate(size))
+    void Promise.all([getAppCacheSize(), getCacheSize()]).then(([size, size2]) => {
+      const count = size + size2
+      setCacheSize(sizeFormate(count as number))
     })
   }
 
@@ -36,6 +38,7 @@ export default memo(() => {
       setCleaning(true)
       void Promise.all([
         clearAppCache(),
+        clearCache(),
         clearMusicUrl(),
         resetNotificationPermissionCheck(),
         resetIgnoringBatteryOptimizationCheck(),

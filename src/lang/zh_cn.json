@@ -201,6 +201,7 @@
   "player__geting_url_delay_retry": "服务器繁忙，{time}秒后重试...",
   "player__loading": "音乐加载中...",
   "player__refresh_url": "URL过期，正在刷新URL...",
+  "player_cache_migrating": "歌曲缓存迁移中，请稍等 ⌛️",
   "quality_high_quality": "HQ",
   "quality_lossless": "SQ",
   "quality_lossless_24bit": "Hires",

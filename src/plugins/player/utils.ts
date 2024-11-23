@@ -1,6 +1,8 @@
 import TrackPlayer, { Capability, Event, RepeatMode, State } from 'react-native-track-player'
 import BackgroundTimer from 'react-native-background-timer'
 import { playMusic as handlePlayMusic } from './playList'
+import { existsFile, moveFile, privateStorageDirectoryPath, temporaryDirectoryPath } from '@/utils/fs'
+import { toast } from '@/utils/tools'
 // import { PlayerMusicInfo } from '@/store/modules/player/playInfo'
 
 
@@ -172,6 +174,23 @@ export const updateNowPlayingTitles = async(duration: number, title: string, art
 }
 
 export const resetPlay = async() => Promise.all([setPause(), setCurrentTime(0)])
+
+export const isCached = async(url: string) => TrackPlayer.isCached(url)
+export const getCacheSize = async() => TrackPlayer.getCacheSize()
+export const clearCache = async() => TrackPlayer.clearCache()
+export const migratePlayerCache = async() => {
+  const newCachePath = privateStorageDirectoryPath + '/TrackPlayer'
+  if (await existsFile(newCachePath)) return
+  const oldCachePath = temporaryDirectoryPath + '/TrackPlayer'
+  if (!await existsFile(oldCachePath)) return
+  let timeout: number | null = BackgroundTimer.setTimeout(() => {
+    timeout = null
+    toast(global.i18n.t('player_cache_migrating'), 'long')
+  }, 2_000)
+  await moveFile(oldCachePath, newCachePath).finally(() => {
+    if (timeout) BackgroundTimer.clearTimeout(timeout)
+  })
+}
 
 export const destroy = async() => {
   if (global.lx.playerStatus.isIniting || !global.lx.playerStatus.isInitialized) return

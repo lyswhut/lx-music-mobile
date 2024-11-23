@@ -11,9 +11,9 @@ import { useI18n } from '@/lang'
 import Text from '@/components/common/Text'
 import { showPactModal } from '@/core/common'
 
-const qqGroupUrl = 'mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26jump_from%3Dwebapi%26k%3Du1zyxek8roQAwic44nOkBXtG9CfbAxFw'
+// const qqGroupUrl = 'mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26jump_from%3Dwebapi%26k%3Du1zyxek8roQAwic44nOkBXtG9CfbAxFw'
 // const qqGroupUrl2 = 'mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26jump_from%3Dwebapi%26k%3D-l4kNZ2bPQAuvfCQFFhl1UoibvF5wcrQ'
-const qqGroupWebUrl = 'https://qm.qq.com/cgi-bin/qm/qr?k=jRZkyFSZ4FmUuTHA3P_RAXbbUO_Rrn5e&jump_from=webapi'
+// const qqGroupWebUrl = 'https://qm.qq.com/cgi-bin/qm/qr?k=jRZkyFSZ4FmUuTHA3P_RAXbbUO_Rrn5e&jump_from=webapi'
 // const qqGroupWebUrl2 = 'https://qm.qq.com/cgi-bin/qm/qr?k=HPNJEfrZpBZ9T8szYWbe2d5JrAAeOt_l&jump_from=webapi'
 
 export default memo(() => {
@@ -21,6 +21,9 @@ export default memo(() => {
   const t = useI18n()
   const openHomePage = () => {
     void openUrl('https://github.com/lyswhut/lx-music-mobile#readme')
+  }
+  const openIssuePage = () => {
+    void openUrl('https://github.com/lyswhut/lx-music-mobile/issues')
   }
   const openNetdiskPage = () => {
     void openUrl('https://www.lanzoui.com/b0bf2cfa/')
@@ -38,11 +41,11 @@ export default memo(() => {
     void openUrl('https://github.com/lyswhut/lx-music-mobile#%E9%A1%B9%E7%9B%AE%E5%8D%8F%E8%AE%AE')
   }
 
-  const goToQQGroup = () => {
-    openUrl(qqGroupUrl).catch(() => {
-      void openUrl(qqGroupWebUrl)
-    })
-  }
+  // const goToQQGroup = () => {
+  //   openUrl(qqGroupUrl).catch(() => {
+  //     void openUrl(qqGroupWebUrl)
+  //   })
+  // }
   // const goToQQGroup2 = () => {
   //   openUrl(qqGroupUrl2).catch(() => {
   //     void openUrl(qqGroupWebUrl2)
@@ -66,7 +69,7 @@ export default memo(() => {
         </TouchableOpacity>
       </View>
       <View style={styles.part}>
-        <Text style={styles.text} >最新版网盘下载地址：</Text>
+        <Text style={styles.text}>最新版网盘下载地址：</Text>
         <TouchableOpacity onPress={openNetdiskPage}>
           <Text style={textLinkStyle}>网盘地址（密码：glqw）</Text>
         </TouchableOpacity>
@@ -79,10 +82,11 @@ export default memo(() => {
       </View>
       <View style={styles.part}>
         <Text style={styles.text}><Text style={styles.boldText}>本软件没有客服</Text>，但我们整理了一些常见的使用问题，<Text style={styles.boldText} >仔细 仔细 仔细 </Text>地阅读常见问题后，</Text>
-        <Text style={styles.text}>仍有问题可加企鹅群 </Text>
-        <TouchableOpacity onPress={goToQQGroup}><Text style={textLinkStyle}>830125506</Text></TouchableOpacity>
+        <Text style={styles.text}>仍有问题可到 GitHub 发 </Text>
+        <TouchableOpacity onPress={openIssuePage}>
+          <Text style={textLinkStyle}>issue</Text>
+        </TouchableOpacity>
         <Text style={styles.text}> 反馈。</Text>
-        <Text style={styles.text}>注意：<Text style={styles.boldText}>为免满人，无事勿加，入群先看群公告</Text></Text>
       </View>
       <View style={styles.part}>
         <Text style={styles.text}>目前本项目的原始发布地址只有<Text style={styles.boldText}>GitHub</Text>及<Text style={styles.boldText}>蓝奏网盘</Text>，其他渠道均为第三方转载发布，可信度请自行鉴别。</Text>

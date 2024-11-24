@@ -193,7 +193,7 @@ dependencies {
     implementation("com.facebook.react:flipper-integration")
     // implementation "androidx.javascriptengine:javascriptengine:1.0.0-alpha07"
     // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation group: 'wang.harlon.quickjs', name: 'wrapper-android', version: '1.0.0'
+    implementation 'wang.harlon.quickjs:wrapper-android:2.4.0'
 
   if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

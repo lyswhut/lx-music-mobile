@@ -1,6 +1,6 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.7.0-beta.1",
+  "version": "1.7.0-beta.2",
   "versionCode": 69,
   "private": true,
   "scripts": {
@@ -64,7 +64,7 @@
     "react-native-pager-view": "6.3.0",
     "react-native-quick-base64": "^2.1.2",
     "react-native-quick-md5": "^3.0.6",
-    "react-native-track-player": "github:lyswhut/react-native-track-player#bbd330795e9b06177f00441286a4f4cab72d5ed5",
+    "react-native-track-player": "github:lyswhut/react-native-track-player#01873f81e30de85ab96363ad7351cf4bdcd39e37",
     "react-native-vector-icons": "^10.2.0"
   },
   "devDependencies": {

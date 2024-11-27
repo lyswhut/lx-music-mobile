@@ -30,6 +30,7 @@ public class Lyric extends LyricPlayer {
   boolean isShowRoma;
   boolean isShowLyricView = false;
   boolean isSendLyricTextEvent = false;
+  boolean isScreenOff = false;
   String lyricText = "";
   String translationText = "";
   String romaLyricText = "";
@@ -102,22 +103,20 @@ public class Lyric extends LyricPlayer {
   //   }
   // }
 
+  private boolean isDisableAutoPause() {
+    return !isRunPlayer || isSendLyricTextEvent;
+  }
   private void handleScreenOff() {
-    if (!isRunPlayer || !isShowLyricView) return;
+    isScreenOff = true;
+    if (isDisableAutoPause()) return;
     setTempPause(true);
-
-    if (lyricView != null) {
-      lyricView.runOnUiThread(() -> {
-        lyricView.destroyView();
-      });
-    }
   }
 
   private void handleScreenOn() {
-    if (!isRunPlayer || !isShowLyricView) return;
+    isScreenOff = false;
+    if (isDisableAutoPause()) return;
     if (lyricView == null) lyricView = new LyricView(reactAppContext, lyricEvent);
     lyricView.runOnUiThread(() -> {
-      lyricView.showLyricView();
       handleGetCurrentLyric(lastLine);
       setTempPause(false);
     });
@@ -130,7 +129,7 @@ public class Lyric extends LyricPlayer {
   }
 
   private void setCurrentLyric(String lyric, ArrayList<String> extendedLyrics) {
-    if (isShowLyricView && lyricView != null) {
+    if (isShowLyricView && !isScreenOff && lyricView != null) {
       lyricView.setLyric(lyric, extendedLyrics);
     }
     if (isSendLyricTextEvent) {

@@ -57,7 +57,7 @@
     "react-native-background-timer": "github:lyswhut/react-native-background-timer#55ecaa80880e9cec1fff81f3ce10e6250ab3c40c",
     "react-native-exception-handler": "^2.10.10",
     "react-native-fast-image": "^8.6.3",
-    "react-native-file-system": "github:lyswhut/react-native-file-system#cb3b807ac68c5cdb2c32ca10fdbb5e5209154ece",
+    "react-native-file-system": "github:lyswhut/react-native-file-system#2a37b90dbb8d37c5180777d0bf0d4f160812b0c1",
     "react-native-fs": "^2.20.0",
     "react-native-local-media-metadata": "github:lyswhut/react-native-local-media-metadata#5e55e67ecd1d557f29453e1cf34ff087efabbc7b",
     "react-native-navigation": "7.39.2",

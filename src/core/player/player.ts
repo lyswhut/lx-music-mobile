@@ -269,7 +269,6 @@ const handlePlay = async() => {
  * @param index 播放的歌曲位置
  */
 export const playList = async(listId: string, index: number) => {
-  await pause()
   const prevListId = playerState.playInfo.playerListId
   setPlayListId(listId)
   setPlayMusicInfo(listId, getList(listId)[index])
@@ -288,12 +287,12 @@ const handleToggleStop = async() => {
 
 const randomNextMusicInfo = {
   info: null as LX.Player.PlayMusicInfo | null,
-  index: -1,
+  // index: -1,
 }
 export const resetRandomNextMusicInfo = () => {
   if (randomNextMusicInfo.info) {
     randomNextMusicInfo.info = null
-    randomNextMusicInfo.index = -1
+    // randomNextMusicInfo.index = -1
   }
 }
 
@@ -377,13 +376,12 @@ export const getNextPlayMusicInfo = async(): Promise<LX.Player.PlayMusicInfo | n
 
   if (togglePlayMethod == 'random') {
     randomNextMusicInfo.info = nextPlayMusicInfo
-    randomNextMusicInfo.index = nextIndex
+    // randomNextMusicInfo.index = nextIndex
   }
   return nextPlayMusicInfo
 }
 
 const handlePlayNext = async(playMusicInfo: LX.Player.PlayMusicInfo) => {
-  await pause()
   setPlayMusicInfo(playMusicInfo.listId, playMusicInfo.musicInfo, playMusicInfo.isTempPlay)
   await handlePlay()
 }

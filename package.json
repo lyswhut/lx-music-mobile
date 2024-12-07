@@ -1,6 +1,6 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.7.0-beta.5",
+  "version": "1.7.0-beta.6",
   "versionCode": 69,
   "private": true,
   "scripts": {
@@ -61,7 +61,7 @@
     "react-native-fs": "^2.20.0",
     "react-native-local-media-metadata": "github:lyswhut/react-native-local-media-metadata#5eac1b6c70e934a1ad7b800b3ab7122f1075f704",
     "react-native-navigation": "7.39.2",
-    "react-native-pager-view": "6.3.0",
+    "react-native-pager-view": "6.6.1",
     "react-native-quick-base64": "^2.1.2",
     "react-native-quick-md5": "^3.0.6",
     "react-native-track-player": "github:lyswhut/react-native-track-player#57eeeba57e28702fa931d4aeb753da225b6fcf6c",
@@ -77,7 +77,7 @@
     "@react-native/metro-config": "^0.74.88",
     "@react-native/typescript-config": "^0.74.88",
     "@tsconfig/react-native": "^3.0.5",
-    "@types/react": "^18.3.12",
+    "@types/react": "^18.3.14",
     "@types/react-native": "^0.72.8",
     "@types/react-native-background-timer": "^2.0.2",
     "@types/react-native-vector-icons": "^6.4.18",
@@ -86,7 +86,7 @@
     "eslint-config-standard": "^17.1.0",
     "eslint-config-standard-with-typescript": "^43.0.1",
     "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
     "typescript": "^5.7.2"
   }
 }

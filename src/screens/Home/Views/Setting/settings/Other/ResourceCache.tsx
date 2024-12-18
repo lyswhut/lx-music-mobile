@@ -24,7 +24,7 @@ export default memo(() => {
   const handleGetAppCacheSize = () => {
     void Promise.all([getAppCacheSize(), getCacheSize()]).then(([size, size2]) => {
       const count = size + size2
-      setCacheSize(sizeFormate(count as number))
+      setCacheSize(sizeFormate(count))
     })
   }
 

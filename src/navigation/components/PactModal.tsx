@@ -100,7 +100,7 @@ const Footer = ({ componentId }: { componentId: string }) => {
 
   const confirmBtn = useMemo(() => {
     if (isAgreePact) return { disabled: false, text: '关闭' }
-    return time ? { disabled: true, text: `同意（${time}）` } : { disabled: false, text: '同意' }
+    return time ? { disabled: true, text: `接受（${time}）` } : { disabled: false, text: '接受' }
   }, [isAgreePact, time])
 
   useEffect(() => {
@@ -134,7 +134,7 @@ const Footer = ({ componentId }: { componentId: string }) => {
         isAgreePact
           ? null
           : (
-              <Text selectable style={styles.tip} size={13}>若你（使用者）接受以上协议，请点击下面的“接受”按钮签署本协议，若不接受，请点击“不接受”后退出软件并清除本软件的所有数据。</Text>
+              <Text selectable style={styles.tip} size={13}>若你（使用者）接受以上协议，请点击下面的“接受”按钮签署本协议；若不接受，请点击“不接受”后退出软件并清除本软件的所有数据。</Text>
             )
       }
       <View style={styles.btns}>
@@ -143,7 +143,7 @@ const Footer = ({ componentId }: { componentId: string }) => {
             ? null
             : (
                 <Button style={{ ...styles.btn, backgroundColor: theme['c-button-background'] }} onPress={handleRejct}>
-                  <Text color={theme['c-button-font']}>不同意</Text>
+                  <Text color={theme['c-button-font']}>不接受</Text>
                 </Button>
               )
         }

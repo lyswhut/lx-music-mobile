@@ -155,7 +155,7 @@ export default memo(({ host, setHost }: {
   return (
     <>
       <View style={styles.infoContent}>
-        <CheckBoxItem disabled={!host} check={isEnableSync} label={t('setting_sync_enbale')} onChange={handleSetEnableSync} />
+        <CheckBoxItem disabled={!host} check={isEnableSync} label={t('setting_sync_enable')} onChange={handleSetEnableSync} />
         <Text style={styles.textAddr} size={13}>{t('setting_sync_address', { address })}</Text>
         <Text style={styles.text} size={13}>{t('setting_sync_status', { status })}</Text>
       </View>

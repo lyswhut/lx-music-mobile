@@ -68,7 +68,7 @@ export default forwardRef<DesktopLyricEnableType, {}>((props, ref) => {
             closeBtn={false}
             cancelText={t('disagree')}
             confirmText={t('agree_go')}
-            text={t('setting_lyric_dektop_permission_tip')} />
+            text={t('setting_lyric_desktop_permission_tip')} />
         )
       : null
   )

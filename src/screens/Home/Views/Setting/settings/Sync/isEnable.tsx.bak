@@ -174,7 +174,7 @@ export default memo(({ isWaiting, setIsWaiting }: {
   return (
     <>
       <View style={{ marginTop: 5 }}>
-        <CheckBoxItem disabled={isWaiting || !port || !host} check={isEnableSync} label={t('setting_sync_enbale')} onChange={handleSetEnableSync} />
+        <CheckBoxItem disabled={isWaiting || !port || !host} check={isEnableSync} label={t('setting_sync_enable')} onChange={handleSetEnableSync} />
         <Text style={{ ...styles.text, marginTop: setSpText(5) }} size={13}>{t('setting_sync_address', { address })}</Text>
         <Status />
       </View>

@@ -114,7 +114,7 @@
   "list_sort_modal_by_up": "Ascending order",
   "list_sync": "Update",
   "list_sync_confirm_tip": "This will replace the songs in {name} with the songs in the online list, are you sure you want to update?",
-  "list_temp": "Temp list",
+  "list_name_temp": "Temp list",
   "list_update_error": "{name} failed to update",
   "list_update_success": "{name} updated successfully",
   "list_updating": "updating",

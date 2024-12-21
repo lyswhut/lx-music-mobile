@@ -114,7 +114,7 @@
   "list_sort_modal_by_up": "升序",
   "list_sync": "更新",
   "list_sync_confirm_tip": "这将会把「{name}」内的歌曲替换成在线列表的歌曲，你确认要更新吗？",
-  "list_temp": "临时列表",
+  "list_name_temp": "临时列表",
   "list_update_error": "「{name}」更新失败",
   "list_update_success": "「{name}」更新成功",
   "list_updating": "更新中",

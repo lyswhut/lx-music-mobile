@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import { Icon } from '@/components/common/Icon'
@@ -12,6 +12,7 @@ import { setActiveList } from '@/core/list'
 import Text from '@/components/common/Text'
 import { LIST_IDS } from '@/config/constant'
 import Loading from '@/components/common/Loading'
+import { useSettingValue } from '@/store/setting/hook'
 
 export interface ActiveListProps {
   onShowSearchBar: () => void
@@ -25,9 +26,20 @@ export default forwardRef<ActiveListType, ActiveListProps>(({ onShowSearchBar, o
   const theme = useTheme()
   const currentListId = useActiveListId()
   const fetching = useListFetching(currentListId)
-  let currentListName = currentListId == LIST_IDS.TEMP
-    ? global.i18n.t(`list_${LIST_IDS.TEMP}`)
-    : listState.allList.find(l => l.id === currentListId)?.name ?? ''
+  const langId = useSettingValue('common.langId')
+  const currentListName = useMemo(() => {
+    switch (currentListId) {
+      case LIST_IDS.TEMP:
+        return global.i18n.t('list_name_temp')
+      case LIST_IDS.DEFAULT:
+        return global.i18n.t('list_name_default')
+      case LIST_IDS.LOVE:
+        return global.i18n.t('list_name_love')
+      default:
+        return listState.allList.find(l => l.id === currentListId)?.name ?? ''
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentListId, langId])
   const [visibleBar, setVisibleBar] = useState(true)
 
   useImperativeHandle(ref, () => ({

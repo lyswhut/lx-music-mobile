@@ -1,6 +1,6 @@
-import zh_cn from './zh_cn.json'
-import zh_tw from './zh_tw.json'
-import en_us from './en_us.json'
+import zh_cn from './zh-cn.json'
+import zh_tw from './zh-tw.json'
+import en_us from './en-us.json'
 
 type Message = Record<keyof typeof zh_cn, string>
 | Record<keyof typeof zh_tw, string>
@@ -21,7 +21,6 @@ const langs = [
     locale: 'zh_tw',
     // alternate: 'zh-hant',
     country: 'cn',
-    fallback: true,
     message: zh_tw,
   },
   {

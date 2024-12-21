@@ -49,6 +49,8 @@
   "ignoring_battery_optimization_check_tip": "LX Music is not on the list of ignored battery optimization, which may cause the problem of being suspended by the system when playing music in the background. Do you want to add LX Music to the whitelist?",
   "ignoring_battery_optimization_check_title": "Background running permission setting reminder",
   "input_error": "Don't input indiscriminately 😡",
+  "list_name_default": "Default",
+  "list_name_love": "Loved",
   "list_add_btn_title": "Add the song(s) to {name}",
   "list_add_tip_exists": "This song already exists in the list, don't click me again~😡",
   "list_add_title_first_add": "Add",

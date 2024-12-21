@@ -4,11 +4,23 @@ import { getListMusics } from '@/core/list'
 
 export const useMyList = () => {
   const [lists, setList] = useState(state.allList)
+  lists[0].name = global.i18n.t('list_name_default')
+  lists[1].name = global.i18n.t('list_name_love')
 
   useEffect(() => {
+    const handleConfigUpdate = (keys: Array<keyof LX.AppSetting>) => {
+      if (!keys.includes('common.langId')) return
+      setList((lists) => {
+        lists[0].name = global.i18n.t('list_name_default')
+        lists[1].name = global.i18n.t('list_name_love')
+        return [...lists]
+      })
+    }
     global.state_event.on('mylistUpdated', setList)
+    global.state_event.on('configUpdated', handleConfigUpdate)
     return () => {
       global.state_event.off('mylistUpdated', setList)
+      global.state_event.off('configUpdated', handleConfigUpdate)
     }
   }, [])
 

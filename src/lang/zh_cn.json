@@ -49,6 +49,8 @@
   "ignoring_battery_optimization_check_tip": "LX Music 没有在「忽略电池优化」的白名单中，这可能会导致在后台播放音乐时被系统暂停。是否将 LX Music 加入该白名单中？",
   "ignoring_battery_optimization_check_title": "后台运行权限设置提醒",
   "input_error": "不要乱输好吧😡",
+  "list_name_default": "试听列表",
+  "list_name_love": "我的收藏",
   "list_add_btn_title": "把该歌曲添加到「{name}」",
   "list_add_tip_exists": "列表已经存在这首歌啦，不要再点我啦~😡",
   "list_add_title_first_add": "添加",

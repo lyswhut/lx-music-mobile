@@ -10,7 +10,7 @@ import Text from './Text'
 import { scaleSizeH, scaleSizeW } from '@/utils/pixelRatio'
 
 const menuItemHeight = scaleSizeH(40)
-const menuItemWidth = scaleSizeW(100)
+const menuItemWidth = scaleSizeW(125)
 
 export interface Position { w: number, h: number, x: number, y: number, menuWidth?: number, menuHeight?: number }
 export interface MenuSize { width?: number, height?: number }

@@ -212,7 +212,7 @@
   "search_hot_search": "热门搜索",
   "search_type_music": "歌曲",
   "search_type_songlist": "歌单",
-  "setting__other_dislike_list": "不喜欢的歌曲规则",
+  "setting__other_dislike_list": "「不喜欢的歌曲」规则",
   "setting__other_dislike_list_label": "规则数量：{num}",
   "setting__other_dislike_list_saved_tip": "已保存",
   "setting__other_lyric_raw_clear_btn": "清理歌词缓存",

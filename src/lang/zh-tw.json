@@ -249,7 +249,7 @@
   "setting_basic": "基本設定",
   "setting_basic_always_keep_statusbar_height": "總是保留狀態欄高度",
   "setting_basic_always_keep_statusbar_height_tip": "預設情況下，軟體會動態判斷是否需要為系統狀態欄保留間距，但如果在你的裝置上出現軟體可互動內容與狀態欄內容顯示重疊的情況，可以啟用該選項以始終為系統狀態欄保留空間。",
-  "setting_basic_animation": "隨機化彈出動畫",
+  "setting_basic_animation": "彈出層隨機動畫",
   "setting_basic_auto_hide_play_bar": "彈出鍵盤時自動隱藏播放欄",
   "setting_basic_drawer_layout_position": "導航、收藏清單彈出方向",
   "setting_basic_drawer_layout_position_left": "左側",

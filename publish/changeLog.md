@@ -29,6 +29,6 @@
 
 ### 其他
 
-- 更新 Readme 文档，优化文案编排（#2146, Thanks @3gf8jv4dv）
+- 更新 Readme 文档，优化文案编排（#651, Thanks @3gf8jv4dv）
 - 更新 Issue 模板（#652, @3gf8jv4dv）
 - 更新 React Native 到 v0.73.11

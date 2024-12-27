@@ -48,7 +48,7 @@
   "exit_app_tip": "Are you sure you want to exit the app?",
   "ignoring_battery_optimization_check_tip": "LX Music is \"Restricted\" or \"Optimized\" in \"App battery usage\", which may cause LX Music to be prevented by the system when playing music in the background. Do you need to set LX Music to “Unrestricted”?",
   "ignoring_battery_optimization_check_title": "Background Running Permission Reminder",
-  "input_error": "Don't input indiscriminately 😡",
+  "input_error": "Don't type indiscriminately 😡",
   "list_name_default": "Default",
   "list_name_love": "Loved",
   "list_add_btn_title": "Add the song(s) to \"{name}\"",

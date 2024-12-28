@@ -76,6 +76,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   clearBtn: {
+    gap: 5,
     flexDirection: 'row',
+    flexWrap: 'wrap',
   },
 })

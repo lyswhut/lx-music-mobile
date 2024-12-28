@@ -25,7 +25,7 @@ const SearchInput = forwardRef<SearchInputType, SearchInputProps>(({ onSearch },
   return (
     <Input
       onChangeText={handleChangeText}
-      placeholder="Find for something..."
+      placeholder="Search for something..."
       value={text}
       style={styles.input}
       // onFocus={showTipList}

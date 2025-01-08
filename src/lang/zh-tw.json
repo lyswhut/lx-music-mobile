@@ -37,6 +37,8 @@
   "date_format_minute": "{num} 分鐘前",
   "date_format_second": "{num} 秒前",
   "deep_link__handle_error_tip": "呼叫失敗：{message}",
+  "deep_link_file_js_confirm_tip": "確認要匯入這個（{name}）自訂原始檔嗎？",
+  "deep_link_file_lxmc_confirm_tip": "確認要匯入這個（{name}）清單檔案嗎？",
   "delete": "移除",
   "dialog_cancel": "我不",
   "dialog_confirm": "好的",

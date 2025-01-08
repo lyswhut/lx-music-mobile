@@ -57,7 +57,7 @@ declare global {
         /**
          * 播放列表id
          */
-        listId: string
+        listId: string | null
         /**
          * 歌曲信息
          */

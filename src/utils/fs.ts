@@ -15,6 +15,8 @@ export type {
 
 // export const externalDirectoryPath = RNFS.ExternalDirectoryPath
 
+export const extname = (name: string) => name.lastIndexOf('.') > 0 ? name.substring(name.lastIndexOf('.') + 1) : ''
+
 export const temporaryDirectoryPath = Dirs.CacheDir
 export const externalStorageDirectoryPath = Dirs.SDCardDir
 export const privateStorageDirectoryPath = Dirs.DocumentDir

@@ -92,7 +92,7 @@ export const handleSync = (listInfo: LX.List.UserListInfo) => {
   })
 }
 
-const buildLocalMusicInfoByFilePath = (file: FileType): LX.Music.MusicInfoLocal => {
+export const buildLocalMusicInfoByFilePath = (file: FileType): LX.Music.MusicInfoLocal => {
   const index = file.name.lastIndexOf('.')
   return {
     id: file.path,
@@ -109,7 +109,7 @@ const buildLocalMusicInfoByFilePath = (file: FileType): LX.Music.MusicInfoLocal 
     },
   }
 }
-const buildLocalMusicInfo = (filePath: string, metadata: MusicMetadataFull): LX.Music.MusicInfoLocal => {
+export const buildLocalMusicInfo = (filePath: string, metadata: MusicMetadataFull): LX.Music.MusicInfoLocal => {
   return {
     id: filePath,
     name: metadata.name,

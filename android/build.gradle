@@ -10,6 +10,9 @@ buildscript {
         ndkVersion = "26.1.10909125"
         kotlinVersion = "1.9.24" // Or any version above 1.3.x
         RNNKotlinVersion = kotlinVersion
+
+        // https://github.com/DylanVann/react-native-fast-image/blob/9ab80fcd570b7f56da66ab20e52c9a35934067c9/docs/app-glide-module.md
+        excludeAppGlideModule = true
     }
     repositories {
         google()

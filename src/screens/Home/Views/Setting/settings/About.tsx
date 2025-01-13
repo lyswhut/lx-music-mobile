@@ -23,7 +23,7 @@ export default memo(() => {
     void openUrl('https://github.com/lyswhut/lx-music-mobile#readme')
   }
   const openIssuePage = () => {
-    void openUrl('https://github.com/lyswhut/lx-music-mobile/issues')
+    void openUrl('https://github.com/lyswhut/lx-music-mobile/issues?q=is%3Aissue+')
   }
   const openGHReleasePage = () => {
     void openUrl('https://github.com/lyswhut/lx-music-mobile/releases')
@@ -82,9 +82,9 @@ export default memo(() => {
       </View>
       <View style={styles.part}>
         <Text style={styles.text}><Text style={styles.boldText}>本软件没有客服</Text>，但我们整理了一些常见的使用问题。<Text style={styles.boldText} >仔细、仔细、仔细</Text>地阅读常见问题后，</Text>
-        <Text style={styles.text}>仍有问题可到 GitHub 提交 </Text>
+        <Text style={styles.text}>仍有问题可到 GitHub </Text>
         <TouchableOpacity onPress={openIssuePage}>
-          <Text style={textLinkStyle}>Issue</Text>
+          <Text style={textLinkStyle}>提交 Issue</Text>
         </TouchableOpacity>
         <Text style={styles.text}>。</Text>
       </View>
@@ -95,7 +95,7 @@ export default memo(() => {
         <Text style={styles.text}>目前本项目的原始发布地址<Text style={styles.boldText}>只有 GitHub</Text>，其他渠道均为第三方转载发布，可信度请自行鉴别。</Text>
       </View>
       <View style={styles.part}>
-        <Text style={styles.text}><Text style={styles.boldText}>本项目「没有」微信公众号之类的所谓「官方账号」，也未在小米、华为、vivo 等应用商店发布同名应用，谨防被骗！</Text></Text>
+        <Text style={styles.text}><Text style={styles.boldText}>本项目没有微信公众号之类的所谓「官方账号」，也未在小米、华为、vivo 等应用商店发布同名应用，谨防被骗！</Text></Text>
       </View>
       <View style={styles.part}>
         <Text style={styles.text}>若你使用过程中遇到<Text style={styles.boldText}>广告</Text>或者<Text style={styles.boldText}>引流</Text>（如需要加群、关注公众号之类才能使用或者升级）的信息，则表明你当前运行的软件是「第三方修改版」。</Text>

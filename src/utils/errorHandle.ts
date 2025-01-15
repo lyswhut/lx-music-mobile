@@ -8,7 +8,7 @@ const errorHandler = (e: Error, isFatal: boolean) => {
     Alert.alert(
       '💥Unexpected error occurred💥',
       `
-应用出bug了😭，以下是错误异常信息，请截图（并附上刚才你进行了什么操作）通过企鹅群或者GitHub反馈，现在应用可能会出现异常，若出现异常请尝试强制结束APP后重新启动！
+应用出 bug 了😭，以下是错误异常信息。请截图并在 GitHub 反馈（并附上刚才你进行了什么操作）。现在应用可能会出现异常，若出现异常请尝试强制结束应用后重新启动！
 
 Error:
 ${isFatal ? 'Fatal:' : ''} ${e.name} ${e.message}

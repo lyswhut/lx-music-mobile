@@ -71,7 +71,7 @@ export default memo(() => {
       <View style={styles.part}>
         <Text style={styles.text}>最新版下载地址：</Text>
         <TouchableOpacity onPress={openGHReleasePage}>
-          <Text style={textLinkStyle}>GitHub Release</Text>
+          <Text style={textLinkStyle}>GitHub Releases</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.part}>

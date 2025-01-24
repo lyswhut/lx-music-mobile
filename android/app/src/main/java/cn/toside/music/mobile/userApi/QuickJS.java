@@ -1,5 +1,6 @@
 package cn.toside.music.mobile.userApi;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,14 +11,12 @@ import cn.toside.music.mobile.crypto.RSA;
 import com.facebook.react.bridge.ReactApplicationContext;
 
 import com.whl.quickjs.android.QuickJSLoader;
-import com.whl.quickjs.wrapper.JSCallFunction;
 import com.whl.quickjs.wrapper.QuickJSContext;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
-import okhttp3.HttpUrl;
 
 public class QuickJS {
   private final Handler eventHandler;
@@ -87,15 +86,22 @@ public class QuickJS {
     });
     jsContext.getGlobalObject().setProperty("__lx_native_call__utils_str2md5", args -> {
       try {
+        // Log.d("UserApi [script call]", "utils_str2md5: " + args[0]);
+        String str;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+          str = URLDecoder.decode((String) args[0], StandardCharsets.UTF_8);
+        } else {
+          str = URLDecoder.decode((String) args[0], "UTF-8");
+        }
+        // Log.d("UserApi [script call]", "utils_str2md5: " + str);
         MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] inputBytes = ((String) args[0]).getBytes();
-        byte[] md5Bytes = md.digest(inputBytes);
+        byte[] md5Bytes = md.digest(str.getBytes(StandardCharsets.UTF_8));
         StringBuilder md5String = new StringBuilder();
         for (byte b : md5Bytes) {
           md5String.append(String.format("%02x", b));
         }
         return md5String.toString();
-      } catch (NoSuchAlgorithmException e) {
+      } catch (Exception e) {
         Log.e("UserApi [utils]", "utils_str2md5 error: " + e.getMessage());
         return "";
       }

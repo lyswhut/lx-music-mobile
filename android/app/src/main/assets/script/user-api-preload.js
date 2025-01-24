@@ -377,7 +377,7 @@ globalThis.lx_setup = (key, id, name, description, version, author, homepage, ra
       },
       md5(str) {
         if (typeof str !== 'string') throw new Error('param required a string')
-        const md5 = nativeFuncs.utils_str2md5(str)
+        const md5 = nativeFuncs.utils_str2md5(encodeURIComponent(str))
         // console.log('md5', str, md5)
         return md5
       },

@@ -1,6 +1,6 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.7.0-beta.10",
+  "version": "1.7.0-beta.11",
   "versionCode": 69,
   "private": true,
   "scripts": {
@@ -46,7 +46,7 @@
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.0.5",
     "@react-native-async-storage/async-storage": "^2.1.0",
-    "@react-native-clipboard/clipboard": "^1.15.0",
+    "@react-native-clipboard/clipboard": "^1.16.1",
     "@react-native-community/slider": "^4.5.5",
     "iconv-lite": "^0.6.3",
     "lrc-file-parser": "^2.4.1",
@@ -60,18 +60,18 @@
     "react-native-fs": "^2.20.0",
     "react-native-local-media-metadata": "github:lyswhut/react-native-local-media-metadata#5eac1b6c70e934a1ad7b800b3ab7122f1075f704",
     "react-native-navigation": "7.39.2",
-    "react-native-pager-view": "6.6.1",
+    "react-native-pager-view": "6.7.0",
     "react-native-quick-base64": "^2.1.2",
     "react-native-quick-md5": "^3.0.6",
     "react-native-track-player": "github:lyswhut/react-native-track-player#75c097a4a46bea19970540bbc1bd38527ea73cde",
     "react-native-vector-icons": "^10.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.0",
-    "@babel/eslint-parser": "^7.25.9",
+    "@babel/core": "^7.26.7",
+    "@babel/eslint-parser": "^7.26.5",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
-    "@babel/preset-env": "^7.26.0",
-    "@babel/runtime": "^7.26.0",
+    "@babel/preset-env": "^7.26.7",
+    "@babel/runtime": "^7.26.7",
     "@react-native/babel-preset": "^0.74.88",
     "@react-native/metro-config": "^0.74.88",
     "@react-native/typescript-config": "^0.74.88",
@@ -84,8 +84,8 @@
     "changelog-parser": "^3.0.1",
     "eslint-config-standard": "^17.1.0",
     "eslint-config-standard-with-typescript": "^43.0.1",
-    "eslint-plugin-react": "^7.37.3",
+    "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   }
 }

@@ -144,7 +144,8 @@ jobs:
   Release:
     name: Release
     runs-on: ubuntu-latest
-    needs: [Android, Android_SL]
+    # needs: [Android, Android_SL]
+    needs: [Android]
     steps:
       - name: Check out git repository
         uses: actions/checkout@v4
@@ -161,6 +162,7 @@ jobs:
           cd artifacts
           md5sum *.apk >> ../publish/changeLog.md
           echo -e '```\n' >> ../publish/changeLog.md
+          echo -e '\n[软件安装包说明](https://lyswhut.github.io/lx-music-doc/download#%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85%E5%8C%85%E8%AF%B4%E6%98%8E)\n' >> ../publish/changeLog.md
 
       - name: Get package version
         run: node -p -e '`PACKAGE_VERSION=${require("./package.json").version}`' >> $GITHUB_ENV

@@ -1,4 +1,5 @@
 import { dateFormat } from './common'
+import he from 'he'
 
 export { tranditionalize as langS2T } from '@/utils/simplify-chinese-main'
 
@@ -191,4 +192,9 @@ export const formatPlayCount = (num: number): string => {
   if (num > 100000000) return `${Math.trunc(num / 10000000) / 10}亿`
   if (num > 10000) return `${Math.trunc(num / 1000) / 10}万`
   return String(num)
+}
+
+export const decodeName = (str: string | null = '') => {
+  if (!str) return ''
+  return he.decode(str)
 }

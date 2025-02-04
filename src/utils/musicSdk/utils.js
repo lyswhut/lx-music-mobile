@@ -1,5 +1,5 @@
 import { stringMd5 } from 'react-native-quick-md5'
-import { decodeName } from '../common'
+import { decodeName } from '../index'
 
 /**
  * 获取音乐音质

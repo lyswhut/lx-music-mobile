@@ -31,7 +31,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
           headerRef.current?.setInfo({
             name: (info.name || listDetailInfo.info.name) ?? '',
             // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-            desc: info.desc || listDetailInfo.info.desc || '',
+            desc: listDetailInfo.info.desc || info.desc || '',
             playCount: (info.play_count ?? listDetailInfo.info.play_count) ?? '',
             imgUrl: info.img ?? listDetailInfo.info.img,
           })
@@ -43,7 +43,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
         headerRef.current?.setInfo({
           name: (info.name || listDetailInfo.info.name) ?? '',
           // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-          desc: info.desc || listDetailInfo.info.desc || '',
+          desc: listDetailInfo.info.desc || info.desc || '',
           playCount: (info.play_count ?? listDetailInfo.info.play_count) ?? '',
           imgUrl: info.img ?? listDetailInfo.info.img,
         })
@@ -54,7 +54,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
             headerRef.current?.setInfo({
               name: (info.name || listDetailInfo.info.name) ?? '',
               // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-              desc: info.desc || listDetailInfo.info.desc || '',
+              desc: listDetailInfo.info.desc || info.desc || '',
               playCount: (info.play_count ?? listDetailInfo.info.play_count) ?? '',
               imgUrl: info.img ?? listDetailInfo.info.img,
             })

@@ -23,7 +23,7 @@
 
 已支持的平台：
 
-- Android
+- Android 5 及以上
 
 ***注：目前没有计划支持 iOS 和 HarmonyOS NEXT**。*<br>
 *桌面版项目地址：<https://github.com/lyswhut/lx-music-desktop>*

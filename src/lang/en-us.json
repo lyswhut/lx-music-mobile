@@ -221,7 +221,7 @@
   "setting__other_lyric_raw_label": "Number of lyrics:",
   "setting__other_meta_cache": "Other Cache Management",
   "setting__other_music_url_clear_btn": "Clear Song URL Cache",
-  "setting__other_music_url_label": "Number of song URLs:",
+  "setting__other_music_url_label": "Number of song URLs: ",
   "setting__other_other_source_clear_btn": "Clear Song Cache of Changed Source",
   "setting__other_other_source_label": "Number of songs information that changed source: ",
   "setting__other_resource_cache": "Resource Cache Management",

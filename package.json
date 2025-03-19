@@ -45,9 +45,9 @@
   "homepage": "https://github.com/lyswhut/lx-music-mobile#readme",
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.0.5",
-    "@react-native-async-storage/async-storage": "^2.1.1",
-    "@react-native-clipboard/clipboard": "^1.16.1",
-    "@react-native-community/slider": "^4.5.5",
+    "@react-native-async-storage/async-storage": "^2.1.2",
+    "@react-native-clipboard/clipboard": "^1.16.2",
+    "@react-native-community/slider": "^4.5.6",
     "he": "^1.2.0",
     "iconv-lite": "^0.6.3",
     "lrc-file-parser": "^2.4.1",
@@ -59,7 +59,7 @@
     "react-native-exception-handler": "^2.10.10",
     "react-native-file-system": "github:lyswhut/react-native-file-system#2a37b90dbb8d37c5180777d0bf0d4f160812b0c1",
     "react-native-fs": "^2.20.0",
-    "react-native-local-media-metadata": "github:lyswhut/react-native-local-media-metadata#f2d03999413fa8fc9b0a25cde07c18d1a56988f0",
+    "react-native-local-media-metadata": "github:lyswhut/react-native-local-media-metadata#c8c7ae7b11ce027626cae413c3d996ed3b1413a5",
     "react-native-navigation": "7.39.2",
     "react-native-pager-view": "6.7.0",
     "react-native-quick-base64": "^2.1.2",
@@ -68,11 +68,11 @@
     "react-native-vector-icons": "^10.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.7",
-    "@babel/eslint-parser": "^7.26.5",
+    "@babel/core": "^7.26.10",
+    "@babel/eslint-parser": "^7.26.10",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
-    "@babel/preset-env": "^7.26.7",
-    "@babel/runtime": "^7.26.7",
+    "@babel/preset-env": "^7.26.9",
+    "@babel/runtime": "^7.26.10",
     "@react-native/babel-preset": "^0.74.89",
     "@react-native/metro-config": "^0.74.89",
     "@react-native/typescript-config": "^0.74.89",
@@ -87,7 +87,7 @@
     "eslint-config-standard": "^17.1.0",
     "eslint-config-standard-with-typescript": "^43.0.1",
     "eslint-plugin-react": "^7.37.4",
-    "eslint-plugin-react-hooks": "^5.1.0",
-    "typescript": "^5.7.3"
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "typescript": "^5.8.2"
   }
 }

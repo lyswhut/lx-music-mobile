@@ -266,6 +266,22 @@ const handlePlay = async() => {
 /**
  * 播放列表内歌曲
  * @param listId 列表id
+ * @param id 歌曲id
+ */
+export const playListById = async(listId: string, id: string) => {
+  const prevListId = playerState.playInfo.playerListId
+  setPlayListId(listId)
+  const musicInfo = getList(listId).find(m => m.id == id)
+  if (!musicInfo) return
+  setPlayMusicInfo(listId, musicInfo)
+  if (settingState.setting['player.isAutoCleanPlayedList'] || prevListId != listId) clearPlayedList()
+  clearTempPlayeList()
+  await handlePlay()
+}
+
+/**
+ * 播放列表内歌曲
+ * @param listId 列表id
  * @param index 播放的歌曲位置
  */
 export const playList = async(listId: string, index: number) => {

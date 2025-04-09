@@ -14,6 +14,10 @@ import { searchMusic } from '@/utils/musicSdk'
 import { toNewMusicInfo } from '@/utils'
 import { handleShowMusicSourceDetail, handleToggleSource } from './listAction'
 import { BorderRadius, BorderWidths } from '@/theme'
+import playerState from '@/store/player/state'
+import { LIST_IDS } from '@/config/constant'
+import { addTempPlayList } from '@/core/player/tempPlayList'
+import { playNext } from '@/core/player/player'
 
 type FlatListProps = _FlatListProps<LX.Music.MusicInfoOnline>
 const ITEM_HEIGHT = scaleSizeH(56)
@@ -68,9 +72,9 @@ const Empty = ({ loading, error, onReload }: { loading: boolean, error: boolean,
   )
 }
 
-const ListItem = memo(({ info, onToggleSource, onOpenDetail }: {
+const ListItem = memo(({ info, onPlay, onOpenDetail }: {
   info: LX.Music.MusicInfoOnline
-  onToggleSource: (info: LX.Music.MusicInfoOnline) => void
+  onPlay: (info: LX.Music.MusicInfoOnline) => void
   onOpenDetail: (info: LX.Music.MusicInfoOnline) => void
 }) => {
   const theme = useTheme()
@@ -101,7 +105,7 @@ const ListItem = memo(({ info, onToggleSource, onOpenDetail }: {
         <Button style={styles.listItemBtn} onPress={() => { onOpenDetail(info) }}>
           <Icon name="share" style={{ color: theme['c-button-font'] }} size={18} />
         </Button>
-        <Button style={styles.listItemBtn} onPress={() => { onToggleSource(info) }}>
+        <Button style={styles.listItemBtn} onPress={() => { onPlay(info) }}>
           <Icon name="play" style={{ color: theme['c-button-font'] }} size={18} />
         </Button>
       </View>
@@ -111,10 +115,10 @@ const ListItem = memo(({ info, onToggleSource, onOpenDetail }: {
   return prevProps.info === nextProps.info
 })
 
-const List = ({ source, lists, onToggleSource }: {
+const List = ({ source, lists, onPlay }: {
   source: LX.OnlineSource | ''
   lists: Partial<Record<LX.OnlineSource, LX.Music.MusicInfoOnline[]>>
-  onToggleSource: (info?: LX.Music.MusicInfoOnline | null) => void
+  onPlay: (info: LX.Music.MusicInfoOnline) => void
 }) => {
   const [list, setList] = useState<LX.Music.MusicInfoOnline[]>([])
   const isFirstRef = useRef(true)
@@ -134,8 +138,8 @@ const List = ({ source, lists, onToggleSource }: {
   }, [])
 
   const renderItem = useCallback(({ item }: { item: LX.Music.MusicInfoOnline, index: number }) => {
-    return <ListItem info={item} onToggleSource={onToggleSource} onOpenDetail={openDetail} />
-  }, [onToggleSource, openDetail])
+    return <ListItem info={item} onPlay={onPlay} onOpenDetail={openDetail} />
+  }, [onPlay, openDetail])
   const getkey = useCallback<NonNullable<FlatListProps['keyExtractor']>>(item => item.id, [])
   const getItemLayout = useCallback<NonNullable<FlatListProps['getItemLayout']>>((data, index) => {
     return { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index }
@@ -156,15 +160,11 @@ const List = ({ source, lists, onToggleSource }: {
   )
 }
 
-const SourceDetail = ({ info, onToggleSource }: { info: LX.Music.MusicInfo, onToggleSource: (info?: LX.Music.MusicInfoOnline | null) => void }) => {
+const SourceDetail = ({ info, onConfirm, toggleSource }: { info: LX.Music.MusicInfo, onConfirm: (info: LX.Music.MusicInfoOnline) => void, toggleSource: LX.Music.MusicInfoOnline | null }) => {
   const theme = useTheme()
   const isHorizontalMode = useHorizontalMode()
+  const t = useI18n()
 
-  const cleanToggle = useCallback(() => {
-    onToggleSource(null)
-  }, [onToggleSource])
-
-  const toggleSource = info.meta.toggleMusicInfo
   return isHorizontalMode ? (
     <View style={styles.detailContainer}>
       <View style={styles.detailContainerX}>
@@ -215,11 +215,13 @@ const SourceDetail = ({ info, onToggleSource }: { info: LX.Music.MusicInfo, onTo
       }
       </View>
       <Button
-        onPress={cleanToggle}
+        onPress={() => {
+          onConfirm(toggleSource!)
+        }}
         style={{ ...styles.button, backgroundColor: theme['c-button-background'] }}
         disabled={!toggleSource}
       >
-        <Text color={theme['c-button-font']}>取消换源</Text>
+        <Text color={theme['c-button-font']}>{t('music_toggle__confirm')}</Text>
       </Button>
     </View>
   ) : (
@@ -272,11 +274,13 @@ const SourceDetail = ({ info, onToggleSource }: { info: LX.Music.MusicInfo, onTo
         }
       </View>
       <Button
-        onPress={cleanToggle}
+        onPress={() => {
+          onConfirm(toggleSource!)
+        }}
         style={{ ...styles.button, backgroundColor: theme['c-button-background'] }}
-        disabled={!toggleSource}
+        disabled={!toggleSource || toggleSource.id == info.id}
       >
-        <Text color={theme['c-button-font']}>取消换源</Text>
+        <Text color={theme['c-button-font']}>{t('music_toggle__confirm')}</Text>
       </Button>
     </View>
   )
@@ -289,7 +293,7 @@ interface ModalType {
 const initInfo = {}
 
 const Modal = forwardRef<ModalType, {}>((props, ref) => {
-  const [info, setInfo] = useState<SelectInfo>(initInfo as SelectInfo)
+  const infoRef = useRef<SelectInfo>(initInfo as SelectInfo)
   const [sourceInfo, setSourceInfo] = useState<{
     sourceInfo: LX.OnlineSource[]
     lists: Partial<Record<LX.OnlineSource, LX.Music.MusicInfoOnline[]>>
@@ -299,8 +303,16 @@ const Modal = forwardRef<ModalType, {}>((props, ref) => {
   const [source, setSource] = useState<LX.OnlineSource | ''>('')
   const dialogRef = useRef<DialogType>(null)
   const isUnmountedRef = useUnmounted()
+  const [toggleSource, setToggleSource] = useState<LX.Music.MusicInfoOnline | null>(null)
 
-  const loadData = useCallback((selectInfo: SelectInfo = info) => {
+  const handlePlay = useCallback((musicInfo: LX.Music.MusicInfoOnline) => {
+    setToggleSource(musicInfo)
+    const isPlaying = !!playerState.playMusicInfo.musicInfo
+    addTempPlayList([{ listId: LIST_IDS.PLAY_LATER, musicInfo, isTop: true }])
+    if (isPlaying) void playNext()
+  }, [])
+
+  const loadData = useCallback((selectInfo: SelectInfo = infoRef.current) => {
     setSourceInfo({ sourceInfo: [], lists: {}, loading: true, error: false })
     searchMusic({
       name: selectInfo.musicInfo.name,
@@ -320,10 +332,10 @@ const Modal = forwardRef<ModalType, {}>((props, ref) => {
       if (isUnmountedRef.current) return
       setSourceInfo({ ...sourceInfo, error: true })
     })
-  }, [info, isUnmountedRef, sourceInfo])
+  }, [isUnmountedRef, sourceInfo])
   useImperativeHandle(ref, () => ({
     show(info) {
-      setInfo(info)
+      infoRef.current = info
       setSource('')
       loadData(info)
       requestAnimationFrame(() => {
@@ -332,12 +344,10 @@ const Modal = forwardRef<ModalType, {}>((props, ref) => {
     },
   }))
 
-  const toggleSource = useCallback((musicInfo?: LX.Music.MusicInfoOnline | null) => {
-    const newInfo = handleToggleSource(info.listId, info.musicInfo, musicInfo)
-    if (newInfo) {
-      setInfo({ ...info, musicInfo: newInfo })
-    } else dialogRef.current?.setVisible(false)
-  }, [info])
+  const confirmToggleSource = useCallback(async(musicInfo: LX.Music.MusicInfoOnline) => {
+    const isClose = await handleToggleSource(infoRef.current.listId, infoRef.current.musicInfo, musicInfo)
+    if (isClose) dialogRef.current?.setVisible(false)
+  }, [])
 
   return (
     <Dialog ref={dialogRef}>
@@ -353,12 +363,12 @@ const Modal = forwardRef<ModalType, {}>((props, ref) => {
                 <List
                   source={source}
                   lists={sourceInfo.lists}
-                  onToggleSource={toggleSource}
+                  onPlay={handlePlay}
                 />
               </>)
             : <Empty loading={sourceInfo.loading} error={sourceInfo.error} onReload={loadData} />
         }
-        <SourceDetail info={info.musicInfo} onToggleSource={toggleSource} />
+        <SourceDetail info={infoRef.current.musicInfo} onConfirm={confirmToggleSource} toggleSource={toggleSource} />
       </View>
     </Dialog>
   )

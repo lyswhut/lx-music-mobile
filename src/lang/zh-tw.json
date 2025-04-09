@@ -156,6 +156,8 @@
   "metadata_edit_modal_title": "編輯歌曲標籤",
   "move_to": "移動到...",
   "music_source_detail": "歌曲詳情頁",
+  "music_toggle__confirm": "確認",
+  "music_toggle__duplicate_tip": "列表中已存在相同的歌曲，是否將其移除並繼續？",
   "name": "標題：{name}",
   "nav_exit": "退出應用",
   "nav_love": "我的清單",

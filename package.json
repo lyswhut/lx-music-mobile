@@ -69,16 +69,16 @@
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",
-    "@babel/eslint-parser": "^7.26.10",
+    "@babel/eslint-parser": "^7.27.0",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@babel/preset-env": "^7.26.9",
-    "@babel/runtime": "^7.26.10",
+    "@babel/runtime": "^7.27.0",
     "@react-native/babel-preset": "^0.74.89",
     "@react-native/metro-config": "^0.74.89",
     "@react-native/typescript-config": "^0.74.89",
     "@tsconfig/react-native": "^3.0.5",
     "@types/he": "^1.2.3",
-    "@types/react": "^18.3.18",
+    "@types/react": "^18.3.20",
     "@types/react-native": "^0.72.8",
     "@types/react-native-background-timer": "^2.0.2",
     "@types/react-native-vector-icons": "^6.4.18",
@@ -86,8 +86,8 @@
     "changelog-parser": "^3.0.1",
     "eslint-config-standard": "^17.1.0",
     "eslint-config-standard-with-typescript": "^43.0.1",
-    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   }
 }

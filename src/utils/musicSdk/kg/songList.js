@@ -420,6 +420,28 @@ export default {
     })
   },
 
+  async decodeGcid(gcid) {
+    const params = 'dfid=-&appid=1005&mid=0&clientver=20109&clienttime=640612895&uuid=-'
+    const body = {
+      ret_info: 1,
+      data: [
+        {
+          id: gcid,
+          id_type: 2,
+        },
+      ],
+    }
+    const result = await this.createHttp(`https://t.kugou.com/v1/songlist/batch_decode?${params}&signature=${signatureParams(params, 'android', JSON.stringify(body))}`, {
+      method: 'POST',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; HUAWEI HMA-AL00) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Mobile Safari/537.36',
+        Referer: 'https://m.kugou.com/',
+      },
+      body,
+    })
+    return result.list[0].global_collection_id
+  },
+
   async getUserListDetailByLink({ info }, link) {
     let listInfo = info['0']
     let total = listInfo.count
@@ -598,6 +620,13 @@ export default {
     if (retryNum > 3) return Promise.reject(new Error('link try max num'))
     if (link.includes('#')) link = link.replace(/#.*$/, '')
     if (link.includes('global_collection_id')) return this.getUserListDetail2(link.replace(/^.*?global_collection_id=(\w+)(?:&.*$|#.*$|$)/, '$1'))
+    if (link.includes('gcid_')) {
+      let gcid = link.match(/gcid_\w+/)?.[0]
+      if (gcid) {
+        const global_collection_id = await this.decodeGcid(gcid)
+        if (global_collection_id) return this.getUserListDetail2(global_collection_id)
+      }
+    }
     if (link.includes('chain=')) return this.getUserListDetail3(link.replace(/^.*?chain=(\w+)(?:&.*$|#.*$|$)/, '$1'), page)
     if (link.includes('.html')) {
       if (link.includes('zlist.html')) {
@@ -622,6 +651,13 @@ export default {
     if (location.split('?')[0] != link.split('?')[0]) {
       // console.log(location)
       if (location.includes('global_collection_id')) return this.getUserListDetail2(location.replace(/^.*?global_collection_id=(\w+)(?:&.*$|#.*$|$)/, '$1'))
+      if (location.includes('gcid_')) {
+        let gcid = link.match(/gcid_\w+/)?.[0]
+        if (gcid) {
+          const global_collection_id = await this.decodeGcid(gcid)
+          if (global_collection_id) return this.getUserListDetail2(global_collection_id)
+        }
+      }
       if (location.includes('chain=')) return this.getUserListDetail3(location.replace(/^.*?chain=(\w+)(?:&.*$|#.*$|$)/, '$1'), page)
       if (location.includes('.html')) {
         if (location.includes('zlist.html')) {

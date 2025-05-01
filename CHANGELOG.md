@@ -6,6 +6,29 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [1.7.1](https://github.com/lyswhut/lx-music-mobile/compare/v1.7.0...v1.7.1) - 2025-05-01
+
+### 修复
+
+- 修复 tx 歌单搜索名字、描述出现乱码的问题
+- 修复解析某些本地歌词文件时出现乱码的问题（#694）
+- 修复 Android 5.1 下添加本地歌曲时报错的问题（#730）
+- 修复 kw 歌单详情出现打开失败的问题
+- 修复 kg 热门评论无法获取的问题
+- 修复 kg 歌单打开失败的问题（thanks @Folltoshe）
+
+### 优化
+
+- 优化软件文案编排（#701, #703, @3gf8jv4dv）
+
+### 变更
+
+- 我的列表-歌曲菜单中的 歌曲换源 功能从之前的类似软连接的形式改成替换歌曲的形式，也就是说，现在该功能相当于快速在线搜索歌曲，确认换源后将自动将原来的歌曲删除再将选择的歌曲插入被删除歌曲的位置。
+
+### 其他
+
+- 更新项目文档（@3gf8jv4dv）
+
 ## [1.7.0](https://github.com/lyswhut/lx-music-mobile/compare/v1.6.0...v1.7.0) - 2025-01-27
 
 落雪祝大家新年快乐！

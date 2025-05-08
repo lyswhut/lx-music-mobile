@@ -34,7 +34,7 @@ const LIST_LOAD_LIMIT = 30
 
 export const getBoardsList = async(source: LX.OnlineSource) => {
   // const source = (await getLeaderboardSetting()).source as LX.OnlineSource
-  if (leaderboardState.boards[source]) return leaderboardState.boards[source]!.list
+  if (leaderboardState.boards[source]) return leaderboardState.boards[source].list
   const board = await (musicSdk[source]?.leaderboard.getBoards() as Promise<Board>)
   setBoard(board, source)
   return leaderboardState.boards[source]!.list

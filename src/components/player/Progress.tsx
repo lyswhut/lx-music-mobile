@@ -67,6 +67,34 @@ const PreassBar = memo(({ onDragState, setDragProgress, onSetProgress }: {
 })
 
 
+export const ProgressPlain = ({ progress, duration, buffered, paddingTop }: {
+  progress: number
+  duration: number
+  buffered: number
+  paddingTop?: number
+}) => {
+  // const { progress } = usePlayTimeBuffer()
+  const theme = useTheme()
+  // console.log(progress)
+  const progressStr: `${number}%` = `${progress * 100}%`
+
+  const durationRef = useRef(duration)
+  useEffect(() => {
+    durationRef.current = duration
+  }, [duration])
+
+  return (
+    <View style={{ ...styles.progress, paddingTop }}>
+      <View style={{ flex: 1 }}>
+        <DefaultBar />
+        <BufferedBar progress={buffered} />
+        <View style={{ ...styles.progressBar, backgroundColor: theme['c-primary-alpha-900'], width: progressStr, position: 'absolute', left: 0, top: 0 }} />
+      </View>
+      <View style={styles.pressBar} />
+    </View>
+  )
+}
+
 const Progress = ({ progress, duration, buffered, paddingTop }: {
   progress: number
   duration: number

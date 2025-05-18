@@ -52,6 +52,11 @@ declare global {
       'common.homePageScroll': boolean
 
       /**
+       * 允许通过底栏进度条调整进度
+       */
+      'common.allowProgressBarSeek': boolean
+
+      /**
        * 是否显示返回按钮
        */
       'common.showBackBtn': boolean

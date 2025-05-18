@@ -251,6 +251,7 @@
   "setting_backup_part_import_setting": "匯入設定",
   "setting_backup_part_import_setting_desc": "選取設定檔",
   "setting_basic": "基本設定",
+  "setting_basic_allow_progress_bar_seek": "允許通過底欄進度條調整進度",
   "setting_basic_always_keep_statusbar_height": "總是保留狀態欄高度",
   "setting_basic_always_keep_statusbar_height_tip": "預設情況下，軟體會動態判斷是否需要為系統狀態欄保留間距，但如果在你的裝置上出現軟體可互動內容與狀態欄內容顯示重疊的情況，可以啟用該選項以始終為系統狀態欄保留空間。",
   "setting_basic_animation": "彈出層隨機動畫",

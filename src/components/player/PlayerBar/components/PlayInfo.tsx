@@ -1,7 +1,7 @@
 import { memo, useCallback, useState } from 'react'
 import { View, StyleSheet } from 'react-native'
 
-import Progress from '@/components/player/Progress'
+import Progress, { ProgressPlain } from '@/components/player/Progress'
 import Status from './Status'
 import { useProgress } from '@/store/player/hook'
 import { useTheme } from '@/store/theme/hook'
@@ -11,6 +11,7 @@ import { COMPONENT_IDS } from '@/config/constant'
 import { usePageVisible } from '@/store/common/hook'
 import { scaleSizeH, scaleSizeW, scaleSizeWR } from '@/utils/pixelRatio'
 import { useBufferProgress } from '@/plugins/player'
+import { useSettingValue } from '@/store/setting/hook'
 
 const FONT_SIZE = 13
 const PADDING_TOP_RAW = 1.8
@@ -34,6 +35,8 @@ export default ({ isHome }: { isHome: boolean }) => {
   const [autoUpdate, setAutoUpdate] = useState(true)
   const { maxPlayTimeStr, nowPlayTimeStr, progress, maxPlayTime } = useProgress(autoUpdate)
   const buffered = useBufferProgress()
+  const allowProgressBarSeek = useSettingValue('common.allowProgressBarSeek')
+
   usePageVisible([COMPONENT_IDS.home], useCallback((visible) => {
     if (isHome) setAutoUpdate(visible)
   }, [isHome]))
@@ -50,7 +53,11 @@ export default ({ isHome }: { isHome: boolean }) => {
         <PlayTimeMax timeStr={maxPlayTimeStr} />
       </View>
       <View style={[StyleSheet.absoluteFill, stylesRaw.progress]}>
-        <Progress progress={progress} duration={maxPlayTime} buffered={buffered} paddingTop={PADDING_TOP_PROGRESS} />
+        {
+          allowProgressBarSeek
+            ? <Progress progress={progress} duration={maxPlayTime} buffered={buffered} paddingTop={PADDING_TOP_PROGRESS} />
+            : <ProgressPlain progress={progress} duration={maxPlayTime} buffered={buffered} paddingTop={PADDING_TOP_PROGRESS} />
+        }
       </View>
     </View>
   )

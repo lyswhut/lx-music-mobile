@@ -251,6 +251,7 @@
   "setting_backup_part_import_setting": "导入设置",
   "setting_backup_part_import_setting_desc": "选择配置文件",
   "setting_basic": "基本设置",
+  "setting_basic_allow_progress_bar_seek": "允许通过底栏进度条调整进度",
   "setting_basic_always_keep_statusbar_height": "总是保留状态栏高度",
   "setting_basic_always_keep_statusbar_height_tip": "默认情况下，软件会动态判断是否需要为系统状态栏保留间距，但如果在你的设备上出现软件可交互内容与状态栏内容显示重叠的情况，可以启用该选项以始终为系统状态栏保留空间。",
   "setting_basic_animation": "弹出层随机动画",

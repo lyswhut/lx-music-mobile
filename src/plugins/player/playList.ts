@@ -41,8 +41,8 @@ const buildTracks = (musicInfo: LX.Player.PlayMusic, url: LX.Player.Track['url']
     track.push({
       id: `${mInfo.id}__//${Math.random()}__//${url}`,
       url,
-      title: mInfo.name || 'Unknow',
-      artist: mInfo.singer || 'Unknow',
+      title: mInfo.name || 'Unknown',
+      artist: mInfo.singer || 'Unknown',
       album,
       artwork,
       userAgent: defaultUserAgent,
@@ -54,8 +54,8 @@ const buildTracks = (musicInfo: LX.Player.PlayMusic, url: LX.Player.Track['url']
   track.push({
     id: `${mInfo.id}__//${Math.random()}__//default`,
     url: defaultUrl,
-    title: mInfo.name || 'Unknow',
-    artist: mInfo.singer || 'Unknow',
+    title: mInfo.name || 'Unknown',
+    artist: mInfo.singer || 'Unknown',
     album,
     artwork,
     musicId: mInfo.id,
@@ -74,8 +74,8 @@ const buildTracks = (musicInfo: LX.Player.PlayMusic, url: LX.Player.Track['url']
 //     ? {
 //         id: `${mInfo.id}__//${Math.random()}__//${url}`,
 //         url,
-//         title: mInfo.name || 'Unknow',
-//         artist: mInfo.singer || 'Unknow',
+//         title: mInfo.name || 'Unknown',
+//         artist: mInfo.singer || 'Unknown',
 //         album,
 //         artwork,
 //         userAgent: defaultUserAgent,
@@ -86,8 +86,8 @@ const buildTracks = (musicInfo: LX.Player.PlayMusic, url: LX.Player.Track['url']
 //     : {
 //         id: `${mInfo.id}__//${Math.random()}__//default`,
 //         url: defaultUrl,
-//         title: mInfo.name || 'Unknow',
-//         artist: mInfo.singer || 'Unknow',
+//         title: mInfo.name || 'Unknown',
+//         artist: mInfo.singer || 'Unknown',
 //         album,
 //         artwork,
 //         musicId: `${mInfo.id}`,
@@ -197,8 +197,8 @@ const updateMetaInfo = async(mInfo: LX.Player.MusicInfo, lyric?: string) => {
   let name: string
   let singer: string
   if (!state.isPlaying || lyric == null) {
-    name = mInfo.name ?? 'Unknow'
-    singer = mInfo.singer ?? 'Unknow'
+    name = mInfo.name ?? 'Unknown'
+    singer = mInfo.singer ?? 'Unknown'
   } else {
     name = lyric
     singer = `${mInfo.name}${mInfo.singer ? ` - ${mInfo.singer}` : ''}`

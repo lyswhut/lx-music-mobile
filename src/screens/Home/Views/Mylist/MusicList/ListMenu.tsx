@@ -19,6 +19,7 @@ export interface ListMenuProps {
   onAdd: (selectInfo: SelectInfo) => void
   onMove: (selectInfo: SelectInfo) => void
   onEditMetadata: (selectInfo: SelectInfo) => void
+  onRefreshCache: (SelectInfo: SelectInfo) => void
   onCopyName: (selectInfo: SelectInfo) => void
   onChangePosition: (selectInfo: SelectInfo) => void
   onToggleSource: (selectInfo: SelectInfo) => void
@@ -34,10 +35,6 @@ export type {
   Position,
 }
 
-const hasEditMetadata = async(musicInfo: LX.Music.MusicInfo) => {
-  if (musicInfo.source != 'local') return false
-  return existsFile(musicInfo.meta.filePath)
-}
 export default forwardRef<ListMenuType, ListMenuProps>((props, ref) => {
   const t = useI18n()
   const [visible, setVisible] = useState(false)
@@ -59,8 +56,7 @@ export default forwardRef<ListMenuType, ListMenuProps>((props, ref) => {
     },
   }))
 
-  const handleSetMenu = (musicInfo: LX.Music.MusicInfo) => {
-    let edit_metadata = false
+  const handleSetMenu = async (musicInfo: LX.Music.MusicInfo) => {
     const menu = [
       { action: 'play', label: t('play') },
       { action: 'playLater', label: t('play_later') },
@@ -68,28 +64,16 @@ export default forwardRef<ListMenuType, ListMenuProps>((props, ref) => {
       { action: 'add', label: t('add_to') },
       { action: 'move', label: t('move_to') },
       { action: 'changePosition', label: t('change_position') },
+      { action: 'refreshCache', label: t('refresh_cache') },
       { action: 'toggleSource', label: t('toggle_source') },
       { action: 'copyName', label: t('copy_name') },
       { action: 'musicSourceDetail', disabled: musicInfo.source == 'local', label: t('music_source_detail') },
       // { action: 'musicSearch', label: t('music_search') },
       { action: 'dislike', disabled: hasDislike(musicInfo), label: t('dislike') },
-      { action: 'remove', label: t('delete') },
+      { action: 'remove', label: t('delete') }
     ]
-    if (musicInfo.source == 'local') menu.splice(5, 0, { action: 'editMetadata', disabled: !edit_metadata, label: t('edit_metadata') })
+    if (musicInfo.source == 'local' && await existsFile(musicInfo.meta.filePath)) menu.splice(5, 0, { action: 'editMetadata', label: t('edit_metadata') })
     setMenus(menu)
-    void Promise.all([hasEditMetadata(musicInfo)]).then(([_edit_metadata]) => {
-      // console.log(_edit_metadata)
-      let isUpdated = false
-      if (edit_metadata != _edit_metadata) {
-        edit_metadata = _edit_metadata
-        isUpdated ||= true
-      }
-
-      if (isUpdated) {
-        menu[menu.findIndex(m => m.action == 'editMetadata')].disabled = !edit_metadata
-        setMenus([...menu])
-      }
-    })
   }
 
   const handleMenuPress = ({ action }: typeof menus[number]) => {
@@ -118,6 +102,9 @@ export default forwardRef<ListMenuType, ListMenuProps>((props, ref) => {
         break
       case 'editMetadata':
         props.onEditMetadata(selectInfo)
+        break
+      case 'refreshCache':
+        props.onRefreshCache(selectInfo)
         break
       case 'copyName':
         props.onCopyName(selectInfo)

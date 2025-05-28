@@ -13,6 +13,7 @@
   "change_position_music_title": "將「{name}」的位置調整到",
   "change_position_tip": "請輸入新的位置",
   "close": "關閉",
+  "refresh_cache": "刷新單個緩存",
   "collect": "收藏",
   "collect_songlist": "收藏歌單",
   "collect_success": "收藏成功",

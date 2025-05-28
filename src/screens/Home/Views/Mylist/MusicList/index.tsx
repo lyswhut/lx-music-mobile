@@ -15,6 +15,7 @@ import ListMusicSearch, { type ListMusicSearchType } from './ListMusicSearch'
 import MusicPositionModal, { type MusicPositionModalType } from './MusicPositionModal'
 import MetadataEditModal, { type MetadataEditType, type MetadataEditProps } from '@/components/MetadataEditModal'
 import MusicToggleModal, { type MusicToggleModalType } from './MusicToggleModal'
+import { setMusicUrl } from '@/core/player/player'
 
 
 export default () => {
@@ -113,6 +114,9 @@ export default () => {
     selectedInfoRef.current = info
     metadataEditTypeRef.current?.show(info.musicInfo.meta.filePath)
   }, [])
+  const handleRefreshCache = useCallback((info: SelectInfo) => {
+    setMusicUrl(info.musicInfo, true)
+  }, [])
   const handleUpdateMetadata = useCallback<MetadataEditProps['onUpdate']>((info) => {
     if (!selectedInfoRef.current || selectedInfoRef.current.musicInfo.source != 'local') return
     handleUpdateMusicInfo(selectedInfoRef.current.listId, selectedInfoRef.current.musicInfo, info)
@@ -162,9 +166,9 @@ export default () => {
         onAdd={handleAddMusic}
         onMove={handleMoveMusic}
         onEditMetadata={handleEditMetadata}
+        onRefreshCache={handleRefreshCache}
         onChangePosition={info => musicPositionModalRef.current?.show(info)}
-        onToggleSource={info => musicToggleModalRef.current?.show(info)}
-      />
+        onToggleSource={info => musicToggleModalRef.current?.show(info)} />
       <MetadataEditModal
         ref={metadataEditTypeRef}
         onUpdate={handleUpdateMetadata}

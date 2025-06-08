@@ -251,7 +251,7 @@
   "setting_backup_part_import_setting": "Import settings",
   "setting_backup_part_import_setting_desc": "Choose a setting backup file",
   "setting_basic": "General",
-  "setting_basic_allow_progress_bar_seek": "Allows adjustment of progress through the bottom bar progress bar",
+  "setting_basic_allow_progress_bar_seek": "Allow to adjust playback progress by progress bar in bottom",
   "setting_basic_always_keep_statusbar_height": "Always keep status bar height",
   "setting_basic_always_keep_statusbar_height_tip": "By default, the app dynamically determines whether spacing needs to be kept for the system status bar, but if there is a situation on your device where the app's interactable content overlaps with the display of the status bar content, you can enable this option to always keep space for the system status bar.",
   "setting_basic_animation": "Randomize pop-up animation",

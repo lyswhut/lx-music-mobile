@@ -113,6 +113,14 @@ export const handleImportListPart = async(listData: LX.ConfigFile.MyListInfoPart
   })
 }
 
+const showConfirm = async() => {
+  return confirmDialog({
+    message: global.i18n.t('list_import_part_confirm_tip'),
+    cancelButtonText: global.i18n.t('dialog_cancel'),
+    confirmButtonText: global.i18n.t('confirm_button_text'),
+    bgClose: false,
+  })
+}
 const importPlayList = async(path: string) => {
   let configData: any
   try {
@@ -124,23 +132,28 @@ const importPlayList = async(path: string) => {
 
   switch (configData.type) {
     case 'defautlList': // 兼容0.6.2及以前版本的列表数据
+      if (!await showConfirm()) return true
       await overwriteListMusics(LIST_IDS.DEFAULT, filterMusicList((configData.data as LX.List.MyDefaultListInfoFull).list.map(m => toNewMusicInfo(m))))
       break
     case 'playList':
+      if (!await showConfirm()) return true
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await importOldListData(configData.data)
       break
     case 'playList_v2':
+      if (!await showConfirm()) return true
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await importNewListData(configData.data)
       break
     case 'allData':
+      if (!await showConfirm()) return true
       // 兼容0.6.2及以前版本的列表数据
       if (configData.defaultList) await overwriteListMusics(LIST_IDS.DEFAULT, filterMusicList((configData.defaultList as LX.List.MyDefaultListInfoFull).list.map(m => toNewMusicInfo(m))))
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       else await importOldListData(configData.playList)
       break
     case 'allData_v2':
+      if (!await showConfirm()) return true
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await importNewListData(configData.playList)
       break

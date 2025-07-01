@@ -73,6 +73,7 @@
   "list_import_part_button_cancel": "不要啊",
   "list_import_part_button_confirm": "覆蓋掉",
   "list_import_part_confirm": "匯入的清單「{importName}」與本機清單「{localName}」的 ID 相同，是否覆蓋本機清單？",
+  "list_import_part_confirm_tip": "備份文件中列表與現有列表 ID 相同時，現有列表內歌曲將被覆蓋，是否繼續？ \n若你不確定後果，建議先備份現有列表再來繼續！",
   "list_import_part_desc": "選取清單檔案",
   "list_import_tip__alldata": "這是一個「所有資料」備份檔案，你需要去這裡匯入：\n\n設定 → 備份與復原 → 清單資料 → 匯入清單",
   "list_import_tip__failed": "匯入失敗",

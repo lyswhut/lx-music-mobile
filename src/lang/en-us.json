@@ -73,6 +73,7 @@
   "list_import_part_button_cancel": "No",
   "list_import_part_button_confirm": "Overwrite",
   "list_import_part_confirm": "The imported list ({importName}) has the same ID as the local list ({localName}). Do you want to overwrite the local list?",
+  "list_import_part_confirm_tip": "When the list in the backup file has the same ID as the existing list, the songs in the existing list will be overwritten. Will it continue? \nIf you are not sure about the consequences, it is recommended to back up the existing list first and then continue!",
   "list_import_part_desc": "Choose list file",
   "list_import_tip__alldata": "This is an \"All Data\" backup file. You need to go here to import:\n\n\"Settings -> Backup & Restore -> List Data -> Import lists\"",
   "list_import_tip__failed": "Failed to import",

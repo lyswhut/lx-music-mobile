@@ -73,6 +73,7 @@
   "list_import_part_button_cancel": "不要啊",
   "list_import_part_button_confirm": "覆盖掉",
   "list_import_part_confirm": "导入的列表「{importName}」与本地列表「{localName}」的 ID 相同，是否覆盖本地列表？",
+  "list_import_part_confirm_tip": "备份文件中列表与现有列表 ID 相同时，现有列表内歌曲将被覆盖，是否继续？\n若你不确定后果，建议先备份现有列表再来继续！",
   "list_import_part_desc": "选择列表文件",
   "list_import_tip__alldata": "这是一个「所有数据」备份文件，你需要去这里导入：\n\n设置 → 备份与恢复 → 列表数据 → 导入列表",
   "list_import_tip__failed": "导入失败",

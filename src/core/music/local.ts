@@ -135,12 +135,58 @@ export const getPicUrl = async({ musicInfo, listId, isRefresh, skipFilePic, onTo
   })
 }
 
+export const parseLyric = (lrc: string): LX.Music.LyricInfo => {
+  const verifyAwlrc = (lrc: string) => {
+    return /(?:^|\s*)\[\d+:\d+(?:\.\d+)]<\d+,\d+>.+$/m.test(lrc)
+  }
+  const verifylrc = (lrc: string) => {
+    return /(?:^|\s*)\[\d+:\d+(?:\.\d+)].+$/m.test(lrc)
+  }
+  const lrcTags = {
+    awlrc: {
+      name: 'lxlyric',
+      verify: verifyAwlrc,
+    },
+    lrc: {
+      name: 'lyric',
+      verify: verifylrc,
+    },
+    tlrc: {
+      name: 'tlyric',
+      verify: verifylrc,
+    },
+    rlrc: {
+      name: 'rlyric',
+      verify: verifylrc,
+    },
+    rxp: /(?:^|\n\s*)\[(?:awlrc):([^\]]+)]/i,
+    rxp2: /^(lrc|awlrc|tlrc|rlrc):([^,]+)$/i,
+  } as const
+  const parse = (content: string) => {
+    const lyricInfo: Partial<LX.Music.LyricInfo> = {}
+    const lrcs = content.trim().split(',')
+    for (const lrc of lrcs) {
+      const result = lrcTags.rxp2.exec(lrc.trim())
+      if (!result) continue
+      const target = lrcTags[result[1].toLowerCase() as 'tlrc' | 'rlrc' | 'lrc' | 'awlrc']
+      if (!target) continue
+      const data = Buffer.from(result[2], 'base64').toString('utf-8').trim()
+      if (target.verify(data)) lyricInfo[target.name] = data
+    }
+    return lyricInfo
+  }
+  let parsedInfo: Partial<LX.Music.LyricInfo> = {}
+  let lyric = lrc.replace(lrcTags.rxp, (_: string, p1: string) => {
+    parsedInfo = parse(p1)
+    return ''
+  }).trim()
+  return { lyric, ...parsedInfo }
+}
+
 const getMusicFileLyric = async(filePath: string) => {
   const lyric = await readLyric(filePath).catch(() => null)
   if (!lyric) return null
-  return {
-    lyric,
-  }
+  return parseLyric(lyric)
 }
 export const getLyricInfo = async({ musicInfo, isRefresh, skipFileLyric, onToggleSource = () => {} }: {
   musicInfo: LX.Music.MusicInfoLocal

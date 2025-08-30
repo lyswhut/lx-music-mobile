@@ -89,7 +89,7 @@ public class LyricModule extends ReactContextBaseJavaModule {
   public void setLyric(String lyric, String translation, String romaLyric, Promise promise) {
     // Log.d("Lyric", "set lyric: " + lyric);
     // Log.d("Lyric", "set lyric translation: " + translation);
-    if (lyric != null) this.lyric.setLyric(lyric, translation, romaLyric);
+    if (this.lyric != null) this.lyric.setLyric(lyric, translation, romaLyric);
     promise.resolve(null);
   }
 

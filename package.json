@@ -1,6 +1,6 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.8.0-beta.3",
+  "version": "1.8.0-beta.4",
   "versionCode": 71,
   "private": true,
   "scripts": {
@@ -64,8 +64,8 @@
     "react-native-navigation": "7.39.2",
     "react-native-pager-view": "6.9.1",
     "react-native-quick-base64": "^2.2.2",
-    "react-native-quick-md5": "^3.0.8",
-    "react-native-track-player": "github:lyswhut/react-native-track-player#b1b4f208ac46b267e20f3071d2f2dd720a31237d"
+    "react-native-quick-md5": "^3.0.9",
+    "react-native-track-player": "github:lyswhut/react-native-track-player#926aaa96161a6ca38b68d3826c3a0987178086aa"
   },
   "devDependencies": {
     "@babel/core": "^7.28.4",
@@ -78,7 +78,7 @@
     "@react-native/typescript-config": "^0.74.89",
     "@tsconfig/react-native": "^3.0.7",
     "@types/he": "^1.2.3",
-    "@types/react": "^18.3.24",
+    "@types/react": "^18.3.25",
     "@types/react-native": "^0.72.8",
     "@types/react-native-background-timer": "^2.0.2",
     "babel-plugin-module-resolver": "^5.0.2",

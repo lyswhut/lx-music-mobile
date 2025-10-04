@@ -11,6 +11,8 @@ module.exports = {
     '@react-native/metro-config',
     '@react-native/babel-preset',
     '@react-native/typescript-config',
+    '@react-native-community/slider',
+    '@react-native-async-storage/async-storage'
   ],
 
   // target: 'newest',
@@ -27,5 +29,7 @@ module.exports = {
   //   '@react-native/metro-config',
   //   '@react-native/babel-preset',
   //   '@react-native/typescript-config',
+  //   '@react-native-community/slider',
+  //   '@react-native-async-storage/async-storage'
   // ],
 }

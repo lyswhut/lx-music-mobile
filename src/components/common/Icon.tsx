@@ -1,4 +1,4 @@
-import createIconSet from '@react-native-vector-icons/icomoon'
+import { createIconSetFromIcoMoon } from 'react-native-vector-icons'
 import icoMoonConfig from '@/resources/fonts/selection.json'
 import { scaleSizeW } from '@/utils/pixelRatio'
 import { memo, type ComponentProps } from 'react'
@@ -21,12 +21,12 @@ import { StyleSheet, type StyleProp, type TextStyle } from 'react-native'
 // import IconSimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 
-const IcoMoon = createIconSet(icoMoonConfig)
+const IcoMoon = createIconSetFromIcoMoon(icoMoonConfig)
 
 
 // https://oblador.github.io/react-native-vector-icons/
 
-type IconType = ReturnType<typeof createIconSet>
+type IconType = ReturnType<typeof createIconSetFromIcoMoon>
 
 interface IconProps extends Omit<ComponentProps<IconType>, 'style'> {
   style?: StyleProp<TextStyle>
@@ -45,6 +45,7 @@ export const Icon = memo(({ size = 15, rawSize, color, style, ...props }: IconPr
     <IcoMoon
       size={rawSize ?? scaleSizeW(size)}
       color={color ?? theme['c-font']}
+      // @ts-expect-error
       style={newStyle}
       {...props}
     />

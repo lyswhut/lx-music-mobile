@@ -2,8 +2,6 @@ package cn.toside.music.mobile.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,13 +12,10 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.core.app.LocaleManagerCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.os.LocaleListCompat;
 
@@ -29,14 +24,11 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.UiThreadUtil;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -240,7 +232,7 @@ public class UtilsModule extends ReactContextBaseJavaModule {
     }
   }
   private String capitalize(String s) {
-    if (s == null || s.length() == 0) {
+    if (s == null || s.isEmpty()) {
       return "";
     }
     char first = s.charAt(0);
@@ -251,49 +243,22 @@ public class UtilsModule extends ReactContextBaseJavaModule {
     }
   }
 
-  // https://stackoverflow.com/a/57769424
   @ReactMethod
   public void isNotificationsEnabled(final Promise promise) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-      NotificationManager manager = (NotificationManager) reactContext.getSystemService(Context.NOTIFICATION_SERVICE);
-      if (!manager.areNotificationsEnabled()) {
-        promise.resolve(false);
-        return;
-      }
-      List<NotificationChannel> channels = manager.getNotificationChannels();
-      for (NotificationChannel channel : channels) {
-        if (channel.getImportance() == NotificationManager.IMPORTANCE_NONE) {
-          promise.resolve(false);
-          return;
-        }
-      }
-      promise.resolve(true);
-    } else {
-      promise.resolve(NotificationManagerCompat.from(reactContext).areNotificationsEnabled());
-    }
+    new Thread(() -> {
+      boolean enabled = NotificationPermissionUtil.isNotificationsEnabled(
+        reactContext.getApplicationContext());
+      promise.resolve(enabled);
+    }).start();
   }
 
-  // https://blog.51cto.com/u_15298568/3121162
   @ReactMethod
   public void openNotificationPermissionActivity(Promise promise) {
-    Intent intent = new Intent();
-    String packageName = reactContext.getApplicationContext().getPackageName();
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // 8.0及以上
-      intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
-      intent.putExtra("android.provider.extra.APP_PACKAGE", packageName);
-    } else { // android 5.0-7.0
-      intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
-      intent.putExtra("app_package", packageName);
-      intent.putExtra("app_uid", reactContext.getApplicationContext().getApplicationInfo().uid);
-    }
-    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    try {
-      reactContext.startActivity(intent);
-      promise.resolve(true);
-    } catch (Exception ignore) {
-      promise.resolve(false);
-    }
+    new Thread(() -> {
+      boolean result = NotificationPermissionUtil.openNotificationPermissionActivity(
+        reactContext.getApplicationContext());
+      promise.resolve(result);
+    }).start();
   }
 
   @ReactMethod
@@ -311,18 +276,32 @@ public class UtilsModule extends ReactContextBaseJavaModule {
     Locale locale = null;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       LocaleListCompat list = LocaleManagerCompat.getSystemLocales(reactContext);
-      if (list.size() > 0) {
+      if (!list.isEmpty()) {
         locale = list.get(0);
-
-      } else promise.resolve(null);
+      } else {
+        promise.resolve(null);
+        return;
+      }
     } else {
       locale = Locale.getDefault();
     }
     if (locale == null) {
       promise.resolve("");
-    } else {
-      promise.resolve(locale.toString());
+      return;
     }
+
+    // 格式化成 zh_cn、en_us 等
+    String language = locale.getLanguage(); // zh, en
+    String country = locale.getCountry();   // CN, US
+    String localeStr;
+
+    if (!country.isEmpty()) {
+      localeStr = language.toLowerCase() + "_" + country.toLowerCase();
+    } else {
+      localeStr = language.toLowerCase();
+    }
+
+    promise.resolve(localeStr);
   }
 
   // https://github.com/Anthonyzou/react-native-full-screen/blob/master/android/src/main/java/com/rn/full/screen/FullScreen.java
@@ -379,12 +358,28 @@ public class UtilsModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void isIgnoringBatteryOptimization(Promise promise) {
-    promise.resolve(BatteryOptimizationUtil.isIgnoringBatteryOptimization(reactContext.getApplicationContext(), reactContext.getPackageName()));
+    new Thread(() -> {
+      boolean result = BatteryOptimizationUtil.isIgnoringBatteryOptimization(
+        reactContext.getApplicationContext(),
+        reactContext.getPackageName()
+      );
+      promise.resolve(result);
+    }).start();
   }
 
   @ReactMethod
   public void requestIgnoreBatteryOptimization(Promise promise) {
-    promise.resolve(BatteryOptimizationUtil.requestIgnoreBatteryOptimization(reactContext.getApplicationContext(), reactContext.getPackageName()));
+    new Thread(() -> {
+      try {
+        boolean result = BatteryOptimizationUtil.requestIgnoreBatteryOptimization(
+          reactContext.getApplicationContext(),
+          reactContext.getPackageName()
+        );
+        promise.resolve(result);
+      } catch (Exception e) {
+        promise.reject("ERROR", e);
+      }
+    }).start();
   }
 }
 

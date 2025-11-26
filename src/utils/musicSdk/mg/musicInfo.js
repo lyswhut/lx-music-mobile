@@ -1,4 +1,4 @@
-import { sizeFormate } from '../../index'
+import { sizeFormate, formatPlayTime } from '../../index'
 import { createHttpFetch } from './utils'
 import { formatSingerName } from '../utils'
 
@@ -86,6 +86,73 @@ export const filterMusicInfoList = (rawList) => {
   })
   return list
 }
+
+export const filterMusicInfoListV5 = (rawList) => {
+  // console.log(rawList)
+  let ids = new Set()
+  const list = []
+  rawList.forEach(item => {
+    if (!item.songId || ids.has(item.songId)) return
+    ids.add(item.songId)
+    const types = []
+    const _types = {}
+    item.audioFormats?.forEach(type => {
+      let size
+      switch (type.formatType) {
+        case 'PQ':
+          size = sizeFormate(type.size ?? type.androidSize)
+          types.push({ type: '128k', size })
+          _types['128k'] = {
+            size,
+          }
+          break
+        case 'HQ':
+          size = sizeFormate(type.size ?? type.androidSize)
+          types.push({ type: '320k', size })
+          _types['320k'] = {
+            size,
+          }
+          break
+        case 'SQ':
+          size = sizeFormate(type.size ?? type.androidSize)
+          types.push({ type: 'flac', size })
+          _types.flac = {
+            size,
+          }
+          break
+        case 'ZQ':
+          size = sizeFormate(type.size ?? type.androidSize)
+          types.push({ type: 'flac24bit', size })
+          _types.flac24bit = {
+            size,
+          }
+          break
+      }
+    })
+
+    list.push({
+      singer: formatSingerName(item.singerList, 'name'),
+      name: item.songName,
+      albumName: item.album,
+      albumId: item.albumId,
+      songmid: item.songId,
+      copyrightId: item.copyrightId,
+      source: 'mg',
+      interval: formatPlayTime(item.duration),
+      img: item.img3 || item.img2 || item.img1 || null,
+      lrc: null,
+      lrcUrl: item.lrcUrl,
+      mrcUrl: item.mrcUrl,
+      trcUrl: item.trcUrl,
+      otherSource: null,
+      types,
+      _types,
+      typeUrl: {},
+    })
+  })
+  return list
+}
+
 
 export const getMusicInfo = async(copyrightId) => {
   return getMusicInfos([copyrightId]).then(data => data[0])

@@ -26,7 +26,9 @@ jobs:
 
       # Push tag to GitHub if package.json version's tag is not tagged
       - name: Get package version
-        run: node -p -e '`PACKAGE_VERSION=${require("./package.json").version}`' >> $GITHUB_ENV
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
 
       - name: Generate file MD5
         run: |

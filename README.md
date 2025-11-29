@@ -26,7 +26,8 @@
 - Android 5 及以上
 
 ***注：目前没有计划支持 iOS 和 HarmonyOS NEXT**。*<br>
-*桌面版项目地址：<https://github.com/lyswhut/lx-music-desktop>*
+*桌面版项目地址：<https://github.com/lyswhut/lx-music-desktop>*<br>
+*LX Music 项目发展调整与新项目计划：https://github.com/lyswhut/lx-music-desktop/issues/1912*
 
 软件变化请查看[更新日志](https://github.com/lyswhut/lx-music-mobile/blob/master/CHANGELOG.md)。
 

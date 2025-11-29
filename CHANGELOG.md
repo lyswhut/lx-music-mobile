@@ -6,6 +6,33 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [1.8.0](https://github.com/lyswhut/lx-music-mobile/compare/v1.7.1...v1.8.0) - 2025-11-29
+
+我们很高兴地宣布新项目 Any Listen 的桌面版已发布，目前已支持列表跟随本地文件自动更新、加载并播放WebDAV上的歌曲等功能，更多功能仍在积极开发中，桌面版与Web版将同步更新。
+对于有播放本地音乐或播放服务器上音乐需求的人可以试试，若遇到任何问题可以发 issue 反馈。
+
+### 新增
+
+- 新增「设置 → 基本设置 → 允许通过底栏进度条调整播放进度」设置（#778）
+   *默认为原来的启用状态，若你觉得在进入播放详情页时会误触调整进度，则可以将其关闭*
+- 新增 Any Listen 歌词标签数据读取与播放
+- 编辑本地歌曲的标签信息时，添加 Any Listen 歌词标签数据生成（用于支持已下载歌曲的歌词在桌面版逐字播放）
+
+### 优化
+
+- 设置-备份与恢复 导入列表数据时，增加二次确认提示（#809）
+
+### 修复
+
+- 修复切歌时，偶现歌词不播放的问题
+- 修复TX源搜索失败 (@Folltoshe)
+- 修复MG源歌单加载失败（#913）
+- 修复MG源评论加载失败（#914）
+
+### 其他
+
+- 更新 Media3 到 v1.8.0
+
 ## [1.7.1](https://github.com/lyswhut/lx-music-mobile/compare/v1.7.0...v1.7.1) - 2025-05-01
 
 ### 修复

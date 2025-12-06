@@ -1,9 +1,10 @@
 name: Build
+
 on:
   push:
     branches:
       - master
-      - qwsqq-patch-1  # 保留你的修改分支，支持单独打包
+      - qwsqq-patch-1
   workflow_dispatch:
 jobs:
   Android:
@@ -44,43 +45,11 @@ jobs:
           cd android/app/build/outputs/apk/release
           md5sum *.apk
 
-      # 替换自定义上传为官方上传，直接输出APK
-      - name: Upload APK Artifacts (arm64-v8a)
-        uses: actions/upload-artifact@v4
-        with:
-          name: lx-music-mobile-v${{ env.PACKAGE_VERSION }}-arm64-v8a.apk
-          path: android/app/build/outputs/apk/release/app-release-arm64-v8a.apk
-          if-no-files-found: error
+      - name: Upload Artifact
+        uses: ./.github/actions/upload-artifact
+        env:
+          PACKAGE_VERSION: ${{ env.PACKAGE_VERSION }}
 
-      - name: Upload APK Artifacts (armeabi-v7a)
-        uses: actions/upload-artifact@v4
-        with:
-          name: lx-music-mobile-v${{ env.PACKAGE_VERSION }}-armeabi-v7a.apk
-          path: android/app/build/outputs/apk/release/app-release-armeabi-v7a.apk
-          if-no-files-found: error
-
-      - name: Upload APK Artifacts (x86_64)
-        uses: actions/upload-artifact@v4
-        with:
-          name: lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86_64.apk
-          path: android/app/build/outputs/apk/release/app-release-x86_64.apk
-          if-no-files-found: error
-
-      - name: Upload APK Artifacts (x86)
-        uses: actions/upload-artifact@v4
-        with:
-          name: lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86.apk
-          path: android/app/build/outputs/apk/release/app-release-x86.apk
-          if-no-files-found: error
-
-      - name: Upload APK Artifacts (universal)
-        uses: actions/upload-artifact@v4
-        with:
-          name: lx-music-mobile-v${{ env.PACKAGE_VERSION }}-universal.apk
-          path: android/app/build/outputs/apk/release/app-release-universal.apk
-          if-no-files-found: error
-
-  # 保留原有注释的其他分支配置，不影响使用
   # Android_SL:
   #   name: Android_SL
   #   runs-on: ubuntu-latest

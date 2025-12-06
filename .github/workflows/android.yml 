@@ -1,0 +1,17 @@
+name: 打包安卓APK
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: 准备环境
+        run: |
+          chmod +x ./gradlew
+      - name: 开始打包
+        run: |
+          ./gradlew assembleRelease
+      - name: 上传文件
+        uses: actions/upload-artifact@v3
+        with:
+          path: app/build/outputs/apk/release/*.apk

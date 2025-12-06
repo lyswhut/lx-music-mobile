@@ -1,4 +1,3 @@
-工作流该输出显示分支名
 name: Build
 on:
   push:

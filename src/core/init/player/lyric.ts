@@ -40,19 +40,34 @@ export default async (setting: LX.AppSetting) => {
     })
   })
 
-  // 核心修改：获取当前句+下一句，拼接为多行歌词
-  onLyricLinePlay(({ text, extendedLyrics, index, lines }) => {
+  // 唯一修改：替换onLyricLinePlay回调，实现目标效果
+  onLyricLinePlay(({ text, index, lines }) => {
     if (!text && !state.isPlaying) {
       void updateRemoteLyric()
     } else {
-      // 拼接当前句 + 下一句（最多2行，适配投屏显示）
-      const lyricLines = [text]
-      // 若存在下一句，添加到数组（index为当前行索引，lines是全部歌词行数组）
-      if (index !== undefined && lines && index < lines.length - 1) {
-        const nextLine = lines[index + 1].text // 下一句歌词
-        nextLine && lyricLines.push(nextLine)
+      const lyricLines: string[] = []
+      const totalLines = lines?.length || 0
+
+      // 首句：当前句在最上方，显示“当前句+下1句+下2句”
+      if (index === 0) {
+        lyricLines.push(text)
+        if (totalLines > 1) lyricLines.push(lines![1].text)
+        if (totalLines > 2) lyricLines.push(lines![2].text)
       }
-      // 用换行符拼接，投屏协议会识别为多行
+      // 尾句：当前句在最下方，显示“上2句+上1句+当前句”
+      else if (index === totalLines - 1) {
+        if (totalLines > 2) lyricLines.push(lines![index - 2].text)
+        if (totalLines > 1) lyricLines.push(lines![index - 1].text)
+        lyricLines.push(text)
+      }
+      // 中间句：当前句在中间，显示“上1句+当前句+下1句”
+      else {
+        lyricLines.push(lines![index - 1].text)
+        lyricLines.push(text)
+        lyricLines.push(lines![index + 1].text)
+      }
+
+      // 拼接为3行文本，适配投屏
       const multiLineLyric = lyricLines.join('\n')
       void updateRemoteLyric(multiLineLyric)
     }

@@ -40,37 +40,41 @@ export default async (setting: LX.AppSetting) => {
     })
   })
 
-  // 唯一修改：替换onLyricLinePlay回调，实现目标效果
-  onLyricLinePlay(({ text, index, lines }) => {
-    if (!text && !state.isPlaying) {
-      void updateRemoteLyric()
-    } else {
-      const lyricLines: string[] = []
-      const totalLines = lines?.length || 0
-
-      // 首句：当前句在最上方，显示“当前句+下1句+下2句”
-      if (index === 0) {
-        lyricLines.push(text)
-        if (totalLines > 1) lyricLines.push(lines![1].text)
-        if (totalLines > 2) lyricLines.push(lines![2].text)
-      }
-      // 尾句：当前句在最下方，显示“上2句+上1句+当前句”
-      else if (index === totalLines - 1) {
-        if (totalLines > 2) lyricLines.push(lines![index - 2].text)
-        if (totalLines > 1) lyricLines.push(lines![index - 1].text)
-        lyricLines.push(text)
-      }
-      // 中间句：当前句在中间，显示“上1句+当前句+下1句”
-      else {
-        lyricLines.push(lines![index - 1].text)
-        lyricLines.push(text)
-        lyricLines.push(lines![index + 1].text)
-      }
-
-      // 拼接为3行文本，适配投屏
-      const multiLineLyric = lyricLines.join('\n')
-      void updateRemoteLyric(multiLineLyric)
+  // 最终稳定版：无崩溃+符合显示需求
+  onLyricLinePlay((payload) => {
+    const { text, index, lines } = payload
+    // 多重安全校验：覆盖无歌词、歌词未加载、索引异常所有场景
+    if (!text || !lines || index === undefined || index < 0 || index >= lines.length) {
+      void updateRemoteLyric(text)
+      return
     }
+
+    const lyricLines: string[] = []
+    const totalLines = lines.length
+
+    // 首句：当前句在上，补下1-2句
+    if (index === 0) {
+      lyricLines.push(text)
+      if (totalLines > 1) lyricLines.push(lines[1].text || '')
+      if (totalLines > 2) lyricLines.push(lines[2].text || '')
+    }
+    // 尾句：当前句在下，补上1-2句
+    else if (index === totalLines - 1) {
+      if (totalLines > 2) lyricLines.push(lines[index - 2].text || '')
+      if (totalLines > 1) lyricLines.push(lines[index - 1].text || '')
+      lyricLines.push(text)
+    }
+    // 中间句：当前句在中，补上下各1句
+    else {
+      lyricLines.push(lines[index - 1].text || '')
+      lyricLines.push(text)
+      lyricLines.push(lines[index + 1].text || '')
+    }
+
+    // 过滤空行，避免显示空白
+    const validLines = lyricLines.filter(line => line.trim())
+    const multiLineLyric = validLines.join('\n')
+    void updateRemoteLyric(multiLineLyric)
   })
 
   global.app_event.on('play', play)

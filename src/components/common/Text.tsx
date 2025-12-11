@@ -33,14 +33,14 @@ export default memo(({ style, size = 15, color, children, ...props }: TextProps)
   const theme = useTheme()
   const textShadow = useTextShadow()
   style = StyleSheet.compose(textShadow ? {
-    fontFamily: 'System',
+    // fontFamily: 'System',
     textShadowColor: theme['c-primary-dark-300-alpha-800'],
     textShadowOffset: { width: 0.2, height: 0.2 },
     textShadowRadius: 2,
     fontSize: setSpText(size),
     color: color ?? theme['c-font'],
   } : {
-    fontFamily: 'System',
+    // fontFamily: 'System',
     fontSize: setSpText(size),
     color: color ?? theme['c-font'],
   }, style)
@@ -67,14 +67,14 @@ export const AnimatedText = ({ style, size = 15, color, children, ...props }: An
   const theme = useTheme()
   const textShadow = useTextShadow()
   style = StyleSheet.compose(textShadow ? {
-    fontFamily: 'System',
+    // fontFamily: 'System',
     textShadowColor: theme['c-primary-dark-300-alpha-800'],
     textShadowOffset: { width: 0.2, height: 0.2 },
     textShadowRadius: 2,
     fontSize: setSpText(size),
     color: color ?? theme['c-font'],
   } : {
-    fontFamily: 'System',
+    // fontFamily: 'System',
     fontSize: setSpText(size),
     color: color ?? theme['c-font'],
   }, style as TextStyle)
@@ -106,7 +106,7 @@ export const AnimatedColorText = ({ style, size = 15, opacity: _opacity, color: 
   const [opacity] = useAnimateNumber(_opacity ?? 1, DEFAULT_DURATION, false)
 
   style = StyleSheet.compose(textShadow ? {
-    fontFamily: 'System',
+    // fontFamily: 'System',
     textShadowColor: theme['c-primary-dark-300-alpha-800'],
     textShadowOffset: { width: 0.2, height: 0.2 },
     textShadowRadius: 2,
@@ -114,7 +114,7 @@ export const AnimatedColorText = ({ style, size = 15, opacity: _opacity, color: 
     color: color as unknown as ColorValue,
     opacity,
   } : {
-    fontFamily: 'System',
+    // fontFamily: 'System',
     fontSize: setSpText(size),
     color: color as unknown as ColorValue,
     opacity,

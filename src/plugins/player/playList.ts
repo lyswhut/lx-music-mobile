@@ -31,7 +31,7 @@ const formatMusicInfo = (musicInfo: LX.Player.PlayMusic) => {
   }
 }
 
-const buildTracks = (musicInfo: LX.Player.PlayMusic, url: LX.Player.Track['url'], duration?: LX.Player.Track['duration']): LX.Player.Track[] => {
+const buildTracks = (musicInfo: LX.Player.PlayMusic, url?: LX.Player.Track['url'], duration?: LX.Player.Track['duration']): LX.Player.Track[] => {
   const mInfo = formatMusicInfo(musicInfo)
   const track = [] as LX.Player.Track[]
   const isShowNotificationImage = settingState.setting['player.isShowNotificationImage']
@@ -126,6 +126,15 @@ export const updateMetaData = async(musicInfo: LX.Player.MusicInfo, isPlay: bool
     }
   }
 }
+
+export const initTrackInfo = async(musicInfo: LX.Player.PlayMusic, mInfo: LX.Player.MusicInfo) => {
+  const tracks = buildTracks(musicInfo)
+  await TrackPlayer.add(tracks).then(() => list.push(...tracks))
+  const queue = await TrackPlayer.getQueue() as LX.Player.Track[]
+  await TrackPlayer.skip(queue.findIndex(t => t.id == tracks[0].id))
+  delayUpdateMusicInfo(mInfo)
+}
+
 
 const handlePlayMusic = async(musicInfo: LX.Player.PlayMusic, url: string, time: number) => {
 // console.log(tracks, time)

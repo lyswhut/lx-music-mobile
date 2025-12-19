@@ -61,10 +61,10 @@
     "react-native-fs": "^2.20.0",
     "react-native-local-media-metadata": "github:lyswhut/react-native-local-media-metadata#1b5be310d112afce0df598d3e9c7521c3311049c",
     "react-native-navigation": "7.39.2",
-    "react-native-pager-view": "6.9.1",
+    "react-native-pager-view": "6.7.1",
     "react-native-quick-base64": "^2.2.2",
     "react-native-quick-md5": "^3.0.9",
-    "react-native-track-player": "github:lyswhut/react-native-track-player#10d844d029c89c766564b1e486e2519065d54fd9",
+    "react-native-track-player": "github:lyswhut/react-native-track-player#d4a062f76ba3d0c408e0f0827b721cc4bf46dffd",
     "react-native-vector-icons": "^10.2.0"
   },
   "devDependencies": {

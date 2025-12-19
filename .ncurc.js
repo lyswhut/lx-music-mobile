@@ -6,7 +6,7 @@ module.exports = {
     'message2call',
     'react',
     'react-native',
-    // 'react-native-pager-view',
+    'react-native-pager-view',
     'react-native-navigation',
     '@react-native/metro-config',
     '@react-native/babel-preset',

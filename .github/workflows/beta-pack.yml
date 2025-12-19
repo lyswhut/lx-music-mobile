@@ -17,6 +17,8 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build Packages
+        env:
+          DISABLE_SVG: 1
         shell: bash
         run: |
           cd android

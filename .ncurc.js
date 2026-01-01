@@ -8,6 +8,7 @@ module.exports = {
     'react-native',
     'react-native-pager-view',
     'react-native-navigation',
+    'eslint-plugin-react-hooks',
     '@react-native/metro-config',
     '@react-native/babel-preset',
     '@react-native/typescript-config',
@@ -30,6 +31,7 @@ module.exports = {
   //   '@react-native/babel-preset',
   //   '@react-native/typescript-config',
   //   '@react-native-community/slider',
+  //   'eslint-plugin-react-hooks',
   //   '@react-native-async-storage/async-storage'
   // ],
 }

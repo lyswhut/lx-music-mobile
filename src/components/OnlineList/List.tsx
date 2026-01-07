@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react'
-import { FlatList, type FlatListProps, RefreshControl, View } from 'react-native'
+import { type FlatList, type FlatListProps, RefreshControl, View } from 'react-native'
+import { FlatListIndicator } from '@fanchenbao/react-native-scroll-indicator'
 
 // import { useMusicList } from '@/store/list/hook'
 import ListItem, { ITEM_HEIGHT } from './ListItem'
@@ -230,28 +231,37 @@ const List = forwardRef<ListType, ListProps>(({
   }, [onLoadMore, status, visibleMultiSelect])
 
   return (
-    <FlatList
+    <FlatListIndicator
       ref={flatListRef}
+      flatListProps={{
+        data: currentList,
+        numColumns: rowInfo.current.rowNum,
+        horizontal: false,
+        maxToRenderPerBatch: 4,
+        windowSize: 8,
+        removeClippedSubviews: true,
+        initialNumToRender: 12,
+        renderItem,
+        keyExtractor: getkey,
+        getItemLayout,
+        onEndReachedThreshold: 0.5,
+        onEndReached: handleLoadMore,
+        progressViewOffset,
+        ListHeaderComponent,
+        refreshControl,
+        ListFooterComponent: footerComponent,
+      }}
+      position="right"
+      indStyle={{
+        backgroundColor: theme['c-primary-alpha-400'],
+        width: 4,
+        borderRadius: 2,
+      }}
+      indContainerStyle={{
+        width: 12,
+        paddingHorizontal: 4,
+      }}
       style={styles.list}
-      data={currentList}
-      numColumns={rowInfo.current.rowNum}
-      horizontal={false}
-      maxToRenderPerBatch={4}
-      // updateCellsBatchingPeriod={80}
-      windowSize={8}
-      removeClippedSubviews={true}
-      initialNumToRender={12}
-      renderItem={renderItem}
-      keyExtractor={getkey}
-      getItemLayout={getItemLayout}
-      // onRefresh={onRefresh}
-      // refreshing={refreshing}
-      onEndReachedThreshold={0.5}
-      onEndReached={handleLoadMore}
-      progressViewOffset={progressViewOffset}
-      ListHeaderComponent={ListHeaderComponent}
-      refreshControl={refreshControl}
-      ListFooterComponent={footerComponent}
     />
   )
 })

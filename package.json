@@ -46,6 +46,7 @@
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.1.1",
     "@d11/react-native-fast-image": "^8.13.0",
+    "@fanchenbao/react-native-scroll-indicator": "^0.4.0",
     "@react-native-async-storage/async-storage": "^2.1.2",
     "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-community/slider": "^4.5.7",

@@ -1,6 +1,7 @@
 import { playList } from '@/core/player/player'
 import { useMemo, useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react'
-import { FlatList, type NativeScrollEvent, type NativeSyntheticEvent, type FlatListProps } from 'react-native'
+import { type FlatList, type NativeScrollEvent, type NativeSyntheticEvent, type FlatListProps } from 'react-native'
+import { FlatListIndicator } from '@fanchenbao/react-native-scroll-indicator'
 
 import listState from '@/store/list/state'
 import playerState from '@/store/player/state'
@@ -14,6 +15,7 @@ import type { Position } from './ListMenu'
 import type { SelectMode } from './MultipleModeBar'
 import { useActiveListId } from '@/store/list/hook'
 import { useSettingValue } from '@/store/setting/hook'
+import { useTheme } from '@/store/theme/hook'
 
 type FlatListType = FlatListProps<LX.Music.MusicInfo>
 
@@ -46,6 +48,7 @@ const usePlayIndex = () => {
 
 const List = forwardRef<ListType, ListProps>(({ onShowMenu, onMuiltSelectMode, onSelectAll }, ref) => {
   // const t = useI18n()
+  const theme = useTheme()
   const flatListRef = useRef<FlatList>(null)
   const [currentList, setList] = useState<LX.List.ListMusics>([])
   const listFirstScrollRef = useRef(false)
@@ -269,22 +272,33 @@ const List = forwardRef<ListType, ListProps>(({ onShowMenu, onMuiltSelectMode, o
   }
 
   return (
-    <FlatList
+    <FlatListIndicator
       ref={flatListRef}
-      onScroll={handleScroll}
+      flatListProps={{
+        onScroll: handleScroll,
+        data: currentList,
+        maxToRenderPerBatch: 4,
+        numColumns: rowInfo.current.rowNum,
+        horizontal: false,
+        windowSize: 8,
+        removeClippedSubviews: true,
+        initialNumToRender: 12,
+        renderItem,
+        keyExtractor: getkey,
+        extraData: activeIndex,
+        getItemLayout,
+      }}
+      position="right"
+      indStyle={{
+        backgroundColor: theme['c-primary-alpha-400'],
+        width: 4,
+        borderRadius: 2,
+      }}
+      indContainerStyle={{
+        width: 12,
+        paddingHorizontal: 4,
+      }}
       style={styles.list}
-      data={currentList}
-      maxToRenderPerBatch={4}
-      numColumns={rowInfo.current.rowNum}
-      horizontal={false}
-      // updateCellsBatchingPeriod={80}
-      windowSize={8}
-      removeClippedSubviews={true}
-      initialNumToRender={12}
-      renderItem={renderItem}
-      keyExtractor={getkey}
-      extraData={activeIndex}
-      getItemLayout={getItemLayout}
     />
   )
 })

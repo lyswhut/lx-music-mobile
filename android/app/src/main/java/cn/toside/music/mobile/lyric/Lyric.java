@@ -191,8 +191,10 @@ public class Lyric extends LyricPlayer {
   private void refreshLyric() {
     if (!isRunPlayer) return;
     ArrayList<String> extendedLyrics = new ArrayList<>(2);
-    if (isShowTranslation && !"".equals(translationText)) extendedLyrics.add(translationText);
-    if (isShowRoma && !"".equals(romaLyricText)) extendedLyrics.add(romaLyricText);
+    // 始终添加翻译和罗马音到扩展歌词数组，由 JS 端根据设置决定显示哪个
+    // 顺序：翻译在前，罗马音在后
+    if (!"".equals(translationText)) extendedLyrics.add(translationText);
+    if (!"".equals(romaLyricText)) extendedLyrics.add(romaLyricText);
     super.setLyric(lyricText, extendedLyrics);
   }
 

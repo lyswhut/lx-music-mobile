@@ -356,6 +356,8 @@
   "setting_play_s2t": "Convert Chinese lyrics that are playing to traditional",
   "setting_play_save_play_time": "Remember playback progress",
   "setting_play_show_bluetooth_lyric": "Show lyrics from bluetooth",
+  "setting_play_show_bluetooth_lyric_translation": "Bluetooth lyrics show translation if available",
+  "setting_play_show_bluetooth_lyric_roma": "Bluetooth lyrics show romanization if available",
   "setting_play_show_notification_image": "Show album cover in notification bar",
   "setting_play_show_roma": "Show romanized lyrics if available",
   "setting_play_show_translation": "Show translated lyrics if available",

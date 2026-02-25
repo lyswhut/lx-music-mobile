@@ -5,13 +5,29 @@ import playerState from '@/store/player/state'
 import { updateNowPlayingTitles } from '@/plugins/player/utils'
 import { setLastLyric } from '@/core/player/playInfo'
 import { state } from '@/plugins/player/playList'
+import settingState from '@/store/setting/state'
 
-const updateRemoteLyric = async(lrc?: string) => {
-  setLastLyric(lrc)
-  if (lrc == null) {
+const updateRemoteLyric = async(lrc?: string, extendedLyrics?: string[]) => {
+  let displayLyric = lrc
+  if (lrc && extendedLyrics && extendedLyrics.length > 0) {
+    // Android 端总是返回 [翻译, 罗马音]，但可能为空字符串
+    const translation = extendedLyrics[0] || ''
+    const roma = extendedLyrics[1] || ''
+
+    // 根据蓝牙歌词设置决定推送内容
+    // 优先级：罗马音 > 翻译 > 原文
+    if (settingState.setting['player.isShowBluetoothLyricRoma'] && roma) {
+      displayLyric = roma
+    } else if (settingState.setting['player.isShowBluetoothLyricTranslation'] && translation) {
+      displayLyric = translation
+    }
+    // 都未勾选或内容为空时，使用原文
+  }
+  setLastLyric(displayLyric)
+  if (displayLyric == null) {
     void updateNowPlayingTitles((state.prevDuration || 0) * 1000, playerState.musicInfo.name, playerState.musicInfo.singer ?? '', playerState.musicInfo.album ?? '')
   } else {
-    void updateNowPlayingTitles((state.prevDuration || 0) * 1000, lrc, `${playerState.musicInfo.name}${playerState.musicInfo.singer ? ` - ${playerState.musicInfo.singer}` : ''}`, playerState.musicInfo.album ?? '')
+    void updateNowPlayingTitles((state.prevDuration || 0) * 1000, displayLyric, `${playerState.musicInfo.name}${playerState.musicInfo.singer ? ` - ${playerState.musicInfo.singer}` : ''}`, playerState.musicInfo.album ?? '')
   }
 }
 
@@ -43,7 +59,7 @@ export default async(setting: LX.AppSetting) => {
     if (!text && !state.isPlaying) {
       void updateRemoteLyric()
     } else {
-      void updateRemoteLyric(text)
+      void updateRemoteLyric(text, extendedLyrics)
     }
   })
 

@@ -46,7 +46,7 @@
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.1.1",
     "@react-native-async-storage/async-storage": "^2.1.2",
-    "@react-native-clipboard/clipboard": "^1.16.3",
+    "@react-native-clipboard/clipboard": "^1.14.3",
     "@react-native-community/slider": "^4.5.7",
     "he": "^1.2.0",
     "iconv-lite": "^0.7.2",
@@ -96,6 +96,9 @@
     },
     "@react-native-community/cli-platform-ios": {
       "fast-xml-parser": "^5.3.4"
+    },
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^9"
     }
   }
 }

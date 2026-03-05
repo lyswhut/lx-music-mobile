@@ -5,13 +5,38 @@ import playerState from '@/store/player/state'
 import { updateNowPlayingTitles } from '@/plugins/player/utils'
 import { setLastLyric } from '@/core/player/playInfo'
 import { state } from '@/plugins/player/playList'
+import settingState from '@/store/setting/state'
 
-const updateRemoteLyric = async(lrc?: string) => {
-  setLastLyric(lrc)
-  if (lrc == null) {
+const updateRemoteLyric = async(lrc?: string, extendedLyrics?: string[]) => {
+  let displayLyric = lrc
+  if (lrc && extendedLyrics && extendedLyrics.length > 0) {
+    // 解析带类型标记的扩展歌词
+    // 格式：type:text，例如 "translation:这是翻译" 或 "roma:これはローマ字"
+    let translation = ''
+    let roma = ''
+
+    for (const item of extendedLyrics) {
+      if (item.startsWith('translation:')) {
+        translation = item.substring(12) // 去掉 "translation:" 前缀
+      } else if (item.startsWith('roma:')) {
+        roma = item.substring(5) // 去掉 "roma:" 前缀
+      }
+    }
+
+    // 根据蓝牙歌词设置决定推送内容
+    // 优先级：罗马音 > 翻译 > 原文
+    if (settingState.setting['player.isShowBluetoothLyricRoma'] && roma) {
+      displayLyric = roma
+    } else if (settingState.setting['player.isShowBluetoothLyricTranslation'] && translation) {
+      displayLyric = translation
+    }
+    // 都未勾选或内容为空时，使用原文
+  }
+  setLastLyric(displayLyric)
+  if (displayLyric == null) {
     void updateNowPlayingTitles((state.prevDuration || 0) * 1000, playerState.musicInfo.name, playerState.musicInfo.singer ?? '', playerState.musicInfo.album ?? '')
   } else {
-    void updateNowPlayingTitles((state.prevDuration || 0) * 1000, lrc, `${playerState.musicInfo.name}${playerState.musicInfo.singer ? ` - ${playerState.musicInfo.singer}` : ''}`, playerState.musicInfo.album ?? '')
+    void updateNowPlayingTitles((state.prevDuration || 0) * 1000, displayLyric, `${playerState.musicInfo.name}${playerState.musicInfo.singer ? ` - ${playerState.musicInfo.singer}` : ''}`, playerState.musicInfo.album ?? '')
   }
 }
 
@@ -43,7 +68,7 @@ export default async(setting: LX.AppSetting) => {
     if (!text && !state.isPlaying) {
       void updateRemoteLyric()
     } else {
-      void updateRemoteLyric(text)
+      void updateRemoteLyric(text, extendedLyrics)
     }
   })
 

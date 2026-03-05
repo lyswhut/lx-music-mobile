@@ -128,27 +128,58 @@ public class Lyric extends LyricPlayer {
     this.pause();
   }
 
-  private void setCurrentLyric(String lyric, ArrayList<String> extendedLyrics) {
+  private void setCurrentLyric(String lyric, ArrayList<String> desktopLyricExtendedLyrics, ArrayList<String> bluetoothLyricExtendedLyrics) {
     if (isShowLyricView && !isScreenOff && lyricView != null) {
-      lyricView.setLyric(lyric, extendedLyrics);
+      lyricView.setLyric(lyric, desktopLyricExtendedLyrics);
     }
     if (isSendLyricTextEvent) {
       WritableMap params = Arguments.createMap();
       params.putString("text", lyric);
-      params.putArray("extendedLyrics", Arguments.makeNativeArray(extendedLyrics));
+      params.putArray("extendedLyrics", Arguments.makeNativeArray(bluetoothLyricExtendedLyrics));
       lyricEvent.sendEvent(lyricEvent.LYRIC_Line_PLAY, params);
     }
   }
+
   private void handleGetCurrentLyric(int lineNum) {
     lastLine = lineNum;
     if (lineNum >= 0 && lineNum < lines.size()) {
       HashMap line = (HashMap) lines.get(lineNum);
       if (line != null) {
-        setCurrentLyric((String) line.get("text"), (ArrayList<String>) line.get("extendedLyrics"));
+        ArrayList<String> extendedLyrics = (ArrayList<String>) line.get("extendedLyrics");
+
+        // 准备两套扩展歌词数据
+        ArrayList<String> desktopLyricExtendedLyrics = new ArrayList<>();
+        ArrayList<String> bluetoothLyricExtendedLyrics = new ArrayList<>();
+
+        for (String item : extendedLyrics) {
+          if (item.startsWith("translation:")) {
+            String text = item.substring(12);
+            // 桌面歌词：根据 isShowTranslation 决定是否添加（不带类型标记）
+            if (isShowTranslation) {
+              desktopLyricExtendedLyrics.add(text);
+            }
+            // 蓝牙歌词：总是添加（带类型标记）
+            bluetoothLyricExtendedLyrics.add(item);
+          } else if (item.startsWith("roma:")) {
+            String text = item.substring(5);
+            // 桌面歌词：根据 isShowRoma 决定是否添加（不带类型标记）
+            if (isShowRoma) {
+              desktopLyricExtendedLyrics.add(text);
+            }
+            // 蓝牙歌词：总是添加（带类型标记）
+            bluetoothLyricExtendedLyrics.add(item);
+          } else {
+            // 不带类型标记的（向后兼容）
+            desktopLyricExtendedLyrics.add(item);
+            bluetoothLyricExtendedLyrics.add(item);
+          }
+        }
+
+        setCurrentLyric((String) line.get("text"), desktopLyricExtendedLyrics, bluetoothLyricExtendedLyrics);
         return;
       }
     }
-    setCurrentLyric("", new ArrayList<>(0));
+    setCurrentLyric("", new ArrayList<>(0), new ArrayList<>(0));
   }
 
   public void setSendLyricTextEvent(boolean isSend) {
@@ -190,12 +221,7 @@ public class Lyric extends LyricPlayer {
 
   private void refreshLyric() {
     if (!isRunPlayer) return;
-    ArrayList<String> extendedLyrics = new ArrayList<>(2);
-    // 始终添加翻译和罗马音到扩展歌词数组，由 JS 端根据设置决定显示哪个
-    // 顺序：翻译在前，罗马音在后
-    if (!"".equals(translationText)) extendedLyrics.add(translationText);
-    if (!"".equals(romaLyricText)) extendedLyrics.add(romaLyricText);
-    super.setLyric(lyricText, extendedLyrics);
+    super.setLyric(lyricText, translationText, romaLyricText);
   }
 
   public void setLyric(String lyric, String translation, String romaLyric) {

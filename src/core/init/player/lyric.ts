@@ -10,9 +10,18 @@ import settingState from '@/store/setting/state'
 const updateRemoteLyric = async(lrc?: string, extendedLyrics?: string[]) => {
   let displayLyric = lrc
   if (lrc && extendedLyrics && extendedLyrics.length > 0) {
-    // Android 端总是返回 [翻译, 罗马音]，但可能为空字符串
-    const translation = extendedLyrics[0] || ''
-    const roma = extendedLyrics[1] || ''
+    // 解析带类型标记的扩展歌词
+    // 格式：type:text，例如 "translation:这是翻译" 或 "roma:これはローマ字"
+    let translation = ''
+    let roma = ''
+
+    for (const item of extendedLyrics) {
+      if (item.startsWith('translation:')) {
+        translation = item.substring(12) // 去掉 "translation:" 前缀
+      } else if (item.startsWith('roma:')) {
+        roma = item.substring(5) // 去掉 "roma:" 前缀
+      }
+    }
 
     // 根据蓝牙歌词设置决定推送内容
     // 优先级：罗马音 > 翻译 > 原文

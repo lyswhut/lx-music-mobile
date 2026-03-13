@@ -5,6 +5,7 @@ import versionState, { type InitState } from '@/store/version/state'
 import { getIgnoreVersion, getIgnoreVersionFailTipTime, saveIgnoreVersion, saveIgnoreVersionFailTipTime } from '@/utils/data'
 import { showVersionModal } from '@/navigation'
 import { Navigation } from 'react-native-navigation'
+import { toast } from '@/utils/tools'
 
 export const showModal = () => {
   if (versionState.showModal) return
@@ -58,7 +59,7 @@ export const checkUpdate = async() => {
       const time = await getIgnoreVersionFailTipTime()
       if (Date.now() - time < 7 * 86400000) return
       saveIgnoreVersionFailTipTime(Date.now())
-      showModal()
+      toast(global.i18n.t('version_tip_unknown'))
     } else if (versionInfo.newVersion.version != await getIgnoreVersion()) {
       showModal()
     }

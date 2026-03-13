@@ -42,11 +42,17 @@ export default {
         Referer: 'https://y.qq.com/portal/player.html',
       },
     })
-    const { body, statusCode } = await _requestObj.promise
+    const {
+      body,
+      statusCode,
+    } = await _requestObj.promise
     // console.log(body)
     if (statusCode != 200 || body.code !== 0) throw new Error('获取热搜词失败')
     // console.log(body)
-    return { source: 'tx', list: this.filterList(body.hotkey.data.vec_hotkey) }
+    return {
+      source: 'tx',
+      list: this.filterList(body.hotkey.data.vec_hotkey),
+    }
   },
   filterList(rawList) {
     return rawList.map(item => item.query)

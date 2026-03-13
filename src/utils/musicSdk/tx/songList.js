@@ -1,5 +1,5 @@
 import { httpFetch } from '../../request'
-import { decodeName, formatPlayTime, sizeFormate, dateFormat, formatPlayCount } from '../../index'
+import { dateFormat, decodeName, formatPlayCount, formatPlayTime, sizeFormate } from '../../index'
 import { formatSingerName } from '../utils'
 
 export default {
@@ -36,7 +36,10 @@ export default {
     if (id) {
       id = parseInt(id)
       return `https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&hostUin=0&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=wk_v15.json&needNewCode=0&data=${encodeURIComponent(JSON.stringify({
-        comm: { cv: 1602, ct: 20 },
+        comm: {
+          cv: 1602,
+          ct: 20,
+        },
         playlist: {
           method: 'get_category_content',
           param: {
@@ -49,16 +52,25 @@ export default {
           },
           module: 'playlist.PlayListCategoryServer',
         },
-        }))}`
+      }))}`
     }
     return `https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&hostUin=0&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=wk_v15.json&needNewCode=0&data=${encodeURIComponent(JSON.stringify({
-          comm: { cv: 1602, ct: 20 },
-          playlist: {
-            method: 'get_playlist_by_tag',
-            param: { id: 10000000, sin: this.limit_list * (page - 1), size: this.limit_list, order: sortId, cur_page: page },
-            module: 'playlist.PlayListPlazaServer',
-          },
-      }))}`
+      comm: {
+        cv: 1602,
+        ct: 20,
+      },
+      playlist: {
+        method: 'get_playlist_by_tag',
+        param: {
+          id: 10000000,
+          sin: this.limit_list * (page - 1),
+          size: this.limit_list,
+          order: sortId,
+          cur_page: page,
+        },
+        module: 'playlist.PlayListPlazaServer',
+      },
+    }))}`
   },
   getListDetailUrl(id) {
     return `https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&new_format=1&disstid=${id}&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0`
@@ -80,7 +92,10 @@ export default {
     if (this._requestObj_hotTags) this._requestObj_hotTags.cancelHttp()
     if (tryNum > 2) return Promise.reject(new Error('try max num'))
     this._requestObj_hotTags = httpFetch(this.hotTagUrl)
-    return this._requestObj_hotTags.promise.then(({ statusCode, body }) => {
+    return this._requestObj_hotTags.promise.then(({
+      statusCode,
+      body,
+    }) => {
       if (statusCode !== 200) return this.getHotTag(++tryNum)
       return this.filterInfoHotTag(body)
     })
@@ -173,7 +188,10 @@ export default {
     if (retryNum > 2) return Promise.reject(new Error('link try max num'))
 
     const requestObj_listDetailLink = httpFetch(link)
-    const { url, statusCode } = await requestObj_listDetailLink.promise
+    const {
+      url,
+      statusCode,
+    } = await requestObj_listDetailLink.promise
     // console.log(headers)
     if (statusCode > 400) return this.handleParseId(link, ++retryNum)
     return url
@@ -232,28 +250,40 @@ export default {
       let _types = {}
       if (item.file.size_128mp3 !== 0) {
         let size = sizeFormate(item.file.size_128mp3)
-        types.push({ type: '128k', size })
+        types.push({
+          type: '128k',
+          size,
+        })
         _types['128k'] = {
           size,
         }
       }
       if (item.file.size_320mp3 !== 0) {
         let size = sizeFormate(item.file.size_320mp3)
-        types.push({ type: '320k', size })
+        types.push({
+          type: '320k',
+          size,
+        })
         _types['320k'] = {
           size,
         }
       }
       if (item.file.size_flac !== 0) {
         let size = sizeFormate(item.file.size_flac)
-        types.push({ type: 'flac', size })
+        types.push({
+          type: 'flac',
+          size,
+        })
         _types.flac = {
           size,
         }
       }
       if (item.file.size_hires !== 0) {
         let size = sizeFormate(item.file.size_hires)
-        types.push({ type: 'flac24bit', size })
+        types.push({
+          type: 'flac24bit',
+          size,
+        })
         _types.flac24bit = {
           size,
         }
@@ -282,7 +312,11 @@ export default {
     })
   },
   getTags() {
-    return Promise.all([this.getTag(), this.getHotTag()]).then(([tags, hotTag]) => ({ tags, hotTag, source: 'tx' }))
+    return Promise.all([this.getTag(), this.getHotTag()]).then(([tags, hotTag]) => ({
+      tags,
+      hotTag,
+      source: 'tx',
+    }))
   },
 
   async getDetailPageUrl(id) {

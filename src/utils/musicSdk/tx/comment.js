@@ -77,7 +77,10 @@ const promises = new Map()
 export default {
   _requestObj: null,
   _requestObj2: null,
-  async getSongId({ songId, songmid }) {
+  async getSongId({
+    songId,
+    songmid,
+  }) {
     if (songId) return songId
     if (songIdMap.has(songmid)) return songIdMap.get(songmid)
     if (promises.has(songmid)) return (await promises.get(songmid)).songId
@@ -110,7 +113,10 @@ export default {
         pagesize: limit,
       },
     })
-    const { body, statusCode } = await _requestObj.promise
+    const {
+      body,
+      statusCode,
+    } = await _requestObj.promise
     if (statusCode != 200 || body.code !== 0) throw new Error('获取评论失败')
     // console.log(body, statusCode)
     const comment = body.comment
@@ -180,7 +186,10 @@ export default {
         origin: 'https://y.qq.com',
       },
     })
-    const { body, statusCode } = await _requestObj2.promise
+    const {
+      body,
+      statusCode,
+    } = await _requestObj2.promise
     // console.log('body', body)
     if (statusCode != 200 || body.code !== 0 || body.req.code !== 0) throw new Error('获取热门评论失败')
     const comment = body.req.data.CommentList

@@ -45,7 +45,7 @@ export default {
         method: 'DoSearchForQQMusicMobile',
         param: {
           search_type: 0,
-          searchid: this.getSearchId(),
+          searchid: Math.random().toString().slice(2),
           query: str,
           page_num: page,
           num_per_page: limit,
@@ -61,23 +61,23 @@ export default {
     })
     return searchRequest.then(({ body }) => {
       // console.log(body)
-      if (!body || !body.req || body.code !== this.successCode || body.req.code !== this.successCode) {
+      if (!body || !body.req || body.code != this.successCode || body.req.code != this.successCode) {
         return this.musicSearch(str, page, limit, ++retryNum)
       }
       return body.req.data
     })
   },
-  randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min
-  },
-  getSearchId() {
-    const e = BigInt(this.randomInt(1, 20))
-    const t = e * 18014398509481984n
-    const n = BigInt(this.randomInt(0, 4194304)) * 4294967296n
-    const a = BigInt(Date.now())
-    const r = (a * 1000n) % (24n * 60n * 60n * 1000n)
-    return String(t + n + r)
-  },
+  // randomInt(min, max) {
+  //   return Math.floor(Math.random() * (max - min + 1)) + min
+  // },
+  // getSearchId() {
+  //   const e = BigInt(this.randomInt(1, 20))
+  //   const t = e * 18014398509481984n
+  //   const n = BigInt(this.randomInt(0, 4194304)) * 4294967296n
+  //   const a = BigInt(Date.now())
+  //   const r = (a * 1000n) % (24n * 60n * 60n * 1000n)
+  //   return String(t + n + r)
+  // },
   handleResult(rawList) {
     // console.log(rawList)
     if (!rawList || !Array.isArray(rawList)) return []
@@ -88,43 +88,31 @@ export default {
       let types = []
       let _types = {}
       const file = item.file
-      if (file.size_128mp3 !== 0) {
+      if (file.size_128mp3 != 0) {
         let size = sizeFormate(file.size_128mp3)
-        types.push({
-          type: '128k',
-          size,
-        })
+        types.push({ type: '128k', size })
         _types['128k'] = {
           size,
         }
       }
       if (file.size_320mp3 !== 0) {
         let size = sizeFormate(file.size_320mp3)
-        types.push({
-          type: '320k',
-          size,
-        })
+        types.push({ type: '320k', size })
         _types['320k'] = {
           size,
         }
       }
       if (file.size_flac !== 0) {
         let size = sizeFormate(file.size_flac)
-        types.push({
-          type: 'flac',
-          size,
-        })
+        types.push({ type: 'flac', size })
         _types.flac = {
           size,
         }
       }
       if (file.size_hires !== 0) {
         let size = sizeFormate(file.size_hires)
-        types.push({
-          type: 'flac24bit',
-          size,
-        })
-        _types.hires = {
+        types.push({ type: 'flac24bit', size })
+        _types.flac24bit = {
           size,
         }
       }
@@ -146,20 +134,24 @@ export default {
         albumMid: item.album?.mid ?? '',
         strMediaMid: item.file.media_mid,
         songmid: item.mid,
-        img: albumId === '' || albumId === '空' ? item.singer?.length ? `https://y.gtimg.cn/music/photo_new/T001R500x500M000${item.singer[0].mid}.jpg` : '' : `https://y.gtimg.cn/music/photo_new/T002R500x500M000${albumId}.jpg`,
+        img: (albumId === '' || albumId === '空')
+          ? item.singer?.length ? `https://y.gtimg.cn/music/photo_new/T001R500x500M000${item.singer[0].mid}.jpg` : ''
+          : `https://y.gtimg.cn/music/photo_new/T002R500x500M000${albumId}.jpg`,
         types,
         _types,
         typeUrl: {},
       })
     })
+    // console.log(list)
     return list
   },
   search(str, page = 1, limit) {
     if (limit == null) limit = this.limit
-    return this.musicSearch(str, page, limit).then((data) => {
-      let list = this.handleResult(data?.body?.item_song)
+    // http://newlyric.kuwo.cn/newlyric.lrc?62355680
+    return this.musicSearch(str, page, limit).then(({ body, meta }) => {
+      let list = this.handleResult(body.item_song)
 
-      this.total = data?.meta?.estimate_sum ?? 0
+      this.total = meta.estimate_sum
       this.page = page
       this.allPage = Math.ceil(this.total / limit)
 

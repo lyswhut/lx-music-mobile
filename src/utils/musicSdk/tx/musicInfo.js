@@ -42,40 +42,28 @@ export default (songmid) => {
     const file = item.file
     if (file.size_128mp3 != 0) {
       let size = sizeFormate(file.size_128mp3)
-      types.push({
-        type: '128k',
-        size,
-      })
+      types.push({ type: '128k', size })
       _types['128k'] = {
         size,
       }
     }
     if (file.size_320mp3 !== 0) {
       let size = sizeFormate(file.size_320mp3)
-      types.push({
-        type: '320k',
-        size,
-      })
+      types.push({ type: '320k', size })
       _types['320k'] = {
         size,
       }
     }
     if (file.size_flac !== 0) {
       let size = sizeFormate(file.size_flac)
-      types.push({
-        type: 'flac',
-        size,
-      })
+      types.push({ type: 'flac', size })
       _types.flac = {
         size,
       }
     }
     if (file.size_hires !== 0) {
       let size = sizeFormate(file.size_hires)
-      types.push({
-        type: 'flac24bit',
-        size,
-      })
+      types.push({ type: 'flac24bit', size })
       _types.flac24bit = {
         size,
       }

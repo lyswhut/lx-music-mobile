@@ -12,6 +12,7 @@ import com.facebook.react.bridge.WritableMap;
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
@@ -135,6 +136,27 @@ public class CryptoModule extends ReactContextBaseJavaModule {
   @ReactMethod(isBlockingSynchronousMethod = true)
   public String aesDecryptSync(String text, String key, String iv, String mode) {
     return AES.decrypt(text, key, iv, mode);
+  }
+
+  @ReactMethod
+  public void sha1(String input, Promise promise) {
+    try {
+      MessageDigest md = MessageDigest.getInstance("SHA-1");
+      byte[] messageDigest = md.digest(input.getBytes("UTF-8"));
+
+      StringBuilder hexString = new StringBuilder();
+      for (byte b : messageDigest) {
+        String hex = Integer.toHexString(0xFF & b);
+        if (hex.length() == 1) {
+          hexString.append('0');
+        }
+        hexString.append(hex);
+      }
+
+      promise.resolve(hexString.toString());
+    } catch (Exception e) {
+      promise.reject("SHA1_ERROR", "哈希计算失败", e);
+    }
   }
 
 }

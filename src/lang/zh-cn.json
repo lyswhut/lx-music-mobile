@@ -356,6 +356,8 @@
   "setting_play_s2t": "将播放的中文歌词转换为繁体",
   "setting_play_save_play_time": "记住播放进度",
   "setting_play_show_bluetooth_lyric": "显示蓝牙歌词",
+  "setting_play_show_bluetooth_lyric_translation": "蓝牙歌词显示翻译（如果可用）",
+  "setting_play_show_bluetooth_lyric_roma": "蓝牙歌词显示罗马音（如果可用）",
   "setting_play_show_notification_image": "在通知栏显示歌曲专辑封面图片",
   "setting_play_show_roma": "显示歌词罗马音（如果可用）",
   "setting_play_show_translation": "显示歌词翻译（如果可用）",

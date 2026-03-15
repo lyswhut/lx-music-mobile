@@ -7,16 +7,21 @@ import IsHandleAudioFocus from './IsHandleAudioFocus'
 import IsEnableAudioOffload from './IsEnableAudioOffload'
 import IsAutoCleanPlayedList from './IsAutoCleanPlayedList'
 import IsShowBluetoothLyric from './IsShowBluetoothLyric'
+import IsShowBluetoothLyricTranslation from './IsShowBluetoothLyricTranslation'
+import IsShowBluetoothLyricRoma from './IsShowBluetoothLyricRoma'
 import IsShowNotificationImage from './IsShowNotificationImage'
 import IsShowLyricTranslation from './IsShowLyricTranslation'
 import IsShowLyricRoma from './IsShowLyricRoma'
 import IsS2T from './IsS2T'
 import MaxCache from './MaxCache'
 import { useI18n } from '@/lang'
+import { useSettingValue } from '@/store/setting/hook'
+import { View } from 'react-native'
 
 
 export default memo(() => {
   const t = useI18n()
+  const isShowBluetoothLyric = useSettingValue('player.isShowBluetoothLyric')
 
   return (
     <Section title={t('setting_player')}>
@@ -25,6 +30,12 @@ export default memo(() => {
       <IsHandleAudioFocus />
       <IsEnableAudioOffload />
       <IsShowBluetoothLyric />
+      {isShowBluetoothLyric ? (
+        <>
+          <IsShowBluetoothLyricTranslation />
+          <IsShowBluetoothLyricRoma />
+        </>
+      ) : null}
       <IsShowNotificationImage />
       <IsShowLyricTranslation />
       <IsShowLyricRoma />

@@ -19,6 +19,8 @@ public class LyricPlayer {
   Pattern timePattern;
 
   String lyric = "";
+  String translationText = "";
+  String romaLyricText = "";
   ArrayList<String> extendedLyrics = new ArrayList<>();
   List<HashMap> lines = new ArrayList<>();
   HashMap tags = new HashMap();
@@ -123,7 +125,7 @@ public class LyricPlayer {
       .replaceAll(t_rxp_3, ".$1");
   }
 
-  private void parseExtendedLyric(HashMap linesMap, String extendedLyric) {
+  private void parseExtendedLyric(HashMap linesMap, String extendedLyric, String type) {
     String[] extendedLyricLines = extendedLyric.split("\r\n|\n|\r");
     for (String translationLine : extendedLyricLines) {
       String line = translationLine.trim();
@@ -137,7 +139,10 @@ public class LyricPlayer {
             String timeStr = timeMatchResult.group();
             timeStr = formatTimeLabel(timeStr);
             HashMap targetLine = (HashMap) linesMap.get(timeStr);
-            if (targetLine != null) ((ArrayList<String>) targetLine.get("extendedLyrics")).add(text);
+            if (targetLine != null) {
+              // 标记类型：translation: 或 roma:
+              ((ArrayList<String>) targetLine.get("extendedLyrics")).add(type + ":" + text);
+            }
           }
         }
       }
@@ -209,8 +214,12 @@ public class LyricPlayer {
       }
     }
 
-    for (String extendedLyric : extendedLyrics) {
-      parseExtendedLyric(linesMap, extendedLyric);
+    // 解析扩展歌词，标记类型
+    if (!translationText.isEmpty()) {
+      parseExtendedLyric(linesMap, translationText, "translation");
+    }
+    if (!romaLyricText.isEmpty()) {
+      parseExtendedLyric(linesMap, romaLyricText, "roma");
     }
 
     Set<Entry<String, Integer>> set = timeMap.entrySet();
@@ -333,7 +342,24 @@ public class LyricPlayer {
   public void setLyric(String lyric, ArrayList<String> extendedLyrics) {
     if (isPlay) pause();
     this.lyric = lyric;
+    this.translationText = "";
+    this.romaLyricText = "";
     this.extendedLyrics = extendedLyrics;
+    init();
+  }
+
+  public void setLyric(String lyric, String translation, String romaLyric) {
+    if (isPlay) pause();
+    this.lyric = lyric;
+    this.translationText = translation != null ? translation : "";
+    this.romaLyricText = romaLyric != null ? romaLyric : "";
+    this.extendedLyrics = new ArrayList<String>(2);
+    if (translation != null && !translation.isEmpty()) {
+      this.extendedLyrics.add(translation);
+    }
+    if (romaLyric != null && !romaLyric.isEmpty()) {
+      this.extendedLyrics.add(romaLyric);
+    }
     init();
   }
 

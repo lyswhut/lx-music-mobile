@@ -1,0 +1,39 @@
+新增语言时创建的语言文件夹需要与以下列表对应：
+
+- `ar_sa` - Arabic Saudi Arabia
+- `cs_cz` - Czech Czech Republic
+- `da_dk` - Danish Denmark
+- `de_de` - German Germany
+- `el_gr` - Modern Greek Greece
+- `en_au` - English Australia
+- `en_gb` - English United Kingdom
+- `en_ie` - English Ireland
+- `en_us` - English United States
+- `en_za` - English South Africa
+- `es_es` - Spanish Spain
+- `es_mx` - Spanish Mexico
+- `fi_fi` - Finnish Finland
+- `fr_ca` - French Canada
+- `fr_fr` - French France
+- `he_il` - Hebrew Israel
+- `hi_in` - Hindi India
+- `hu_hu` - Hungarian Hungary
+- `id_id` - Indonesian Indonesia
+- `it_it` - Italian Italy
+- `ja_jp` - Japanese Japan
+- `ko_kr` - Korean Republic of Korea
+- `nl_be` - Dutch Belgium
+- `nl_nl` - Dutch Netherlands
+- `no_no` - Norwegian Norway
+- `pl_pl` - Polish Poland
+- `pt_br` - Portuguese Brazil
+- `pt_pt` - Portuguese Portugal
+- `ro_ro` - Romanian Romania
+- `ru_ru` - Russian Russian Federation
+- `sk_sk` - Slovak Slovakia
+- `sv_se` - Swedish Sweden
+- `th_th` - Thai Thailand
+- `tr_tr` - Turkish Turkey
+- `zh_cn` - Chinese China
+- `zh_hk` - Chinese Hong Kong
+- `zh_tw` - Chinese Taiwan

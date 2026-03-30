@@ -9,8 +9,8 @@ const errorHandler = (e: Error, isFatal: boolean) => {
     'Failed to construct \'Response\'',
   ]
   if (isFatal) {
-    if (excludedErrors.includes(e.message)) {
-      toast('应用遇到了错误，如果你有固定的重现方式，请截图并在 GitHub 反馈（并附上刚才你进行了什么操作，以及“设置-错误日志”的内容）')
+    if (excludedErrors.some((excludedError) => e.message.includes(excludedError))) {
+      toast('应用遇到了错误，如果你有固定的复现方式，请截图并在 GitHub 反馈（并附上具体的操作步骤，以及“设置-错误日志”的内容）')
     } else {
       Alert.alert(
         '💥Unexpected error occurred💥',

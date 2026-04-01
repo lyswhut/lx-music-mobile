@@ -197,6 +197,16 @@ declare global {
       'player.isShowBluetoothLyric': boolean
 
       /**
+       * 蓝牙歌词是否显示翻译
+       */
+      'player.isShowBluetoothLyricTranslation': boolean
+
+      /**
+       * 蓝牙歌词是否显示罗马音
+       */
+      'player.isShowBluetoothLyricRoma': boolean
+
+      /**
        * 播放详情页-是否缩放当前播放的歌词行
        */
       // 'playDetail.isZoomActiveLrc': boolean

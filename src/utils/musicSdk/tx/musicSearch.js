@@ -125,7 +125,8 @@ export default {
       }
       list.push({
         singer: formatSingerName(item.singer, 'name'),
-        name: item.name + (item.title_extra ?? ''),
+        // name: item.name + (item.title_extra ?? ''),
+        name: item.title,
         albumName,
         albumId,
         source: 'tx',

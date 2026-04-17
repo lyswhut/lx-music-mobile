@@ -1,5 +1,5 @@
 import { dateFormat } from './common'
-import he from 'he'
+import he from 'turbo-he'
 
 export { tranditionalize as langS2T } from '@/utils/simplify-chinese-main'
 

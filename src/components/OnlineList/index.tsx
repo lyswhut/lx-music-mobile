@@ -1,12 +1,12 @@
 import { useRef, forwardRef, useImperativeHandle } from 'react'
 import { View } from 'react-native'
-// import LoadingMask, { LoadingMaskType } from '@/components/common/LoadingMask'
 import List, { type ListProps, type ListType, type Status, type RowInfoType } from './List'
 import ListMenu, { type ListMenuType, type Position, type SelectInfo } from './ListMenu'
 import ListMusicMultiAdd, { type MusicMultiAddModalType as ListAddMultiType } from '@/components/MusicMultiAddModal'
 import ListMusicAdd, { type MusicAddModalType as ListMusicAddType } from '@/components/MusicAddModal'
 import MultipleModeBar, { type MultipleModeBarType, type SelectMode } from './MultipleModeBar'
 import { handleDislikeMusic, handlePlay, handlePlayLater, handleShare, handleShowMusicSourceDetail } from './listAction'
+import { downloadManager } from '@/core/download'
 import { createStyle } from '@/utils/tools'
 
 export interface OnlineListProps {
@@ -78,6 +78,16 @@ export default forwardRef<OnlineListType, OnlineListProps>(({
     }
   }
 
+  const handleDownload = (info: SelectInfo) => {
+    if (info.selectedList.length) {
+      for (const music of info.selectedList) {
+        void downloadManager.addTask(music)
+      }
+    } else {
+      void downloadManager.addTask(info.musicInfo)
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={{ flex: 1 }}>
@@ -111,6 +121,7 @@ export default forwardRef<OnlineListType, OnlineListProps>(({
         onAdd={handleAddMusic}
         onMusicSourceDetail={info => { void handleShowMusicSourceDetail(info.musicInfo) }}
         onDislikeMusic={info => { void handleDislikeMusic(info.musicInfo) }}
+        onDownload={handleDownload}
       />
       {/* <LoadingMask ref={loadingMaskRef} /> */}
     </View>

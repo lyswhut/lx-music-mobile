@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from 'react'
+import { memo, useState } from 'react'
 import { View, TouchableOpacity, ScrollView } from 'react-native'
 
 import { useTheme } from '@/store/theme/hook'
@@ -44,12 +44,11 @@ export default ({ onChangeId }: {
   const [activeId, setActiveId] = useState(global.lx.settingActiveId)
   const theme = useTheme()
 
-  const handleChangeId = useCallback((id: SettingScreenIds) => {
+  const handleChangeId = (id: SettingScreenIds) => {
     onChangeId(id)
     setActiveId(id)
     global.lx.settingActiveId = id
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }
 
   return (
     <ScrollView horizontal style={{ ...styles.container, borderBottomColor: theme['c-border-background'] }} contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps={'always'}>

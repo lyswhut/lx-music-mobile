@@ -62,5 +62,20 @@ declare namespace LX {
       list: ListItem[]
       addMusicLocationType: LX.AddMusicLocationType
     }
+
+    interface DownloadHistoryItem {
+      id: string
+      musicInfo: LX.Music.MusicInfoOnline
+      quality: LX.Quality
+      ext: FileExt
+      fileName: string
+      filePath: string | null
+      status: 'completed' | 'failed'
+      downloadedSize: number
+      fileSize: number
+      addedTime: number
+      completedTime: number | null
+      errorMessage: string | null
+    }
   }
 }

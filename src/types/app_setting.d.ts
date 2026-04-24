@@ -347,6 +347,21 @@ declare global {
       'download.fileName': '歌名 - 歌手' | '歌手 - 歌名' | '歌名'
 
       /**
+       * 默认下载音质
+       */
+      'download.quality': LX.Quality
+
+      /**
+       * 下载目录路径（null 时使用默认目录）
+       */
+      'download.savePath': string | null
+
+      /**
+       * 歌词保存方式：embed=嵌入元数据，separate=独立文件
+       */
+      'download.lyricType': 'embed' | 'separate'
+
+      /**
        * 是否启用同步
        */
       'sync.enable': boolean

@@ -1,0 +1,123 @@
+# 下载管理功能需求文档
+
+## 功能概述
+
+为 LX Music Mobile 添加完整的下载管理功能，允许用户下载在线歌曲到本地设备，提供下载任务管理、进度显示、历史记录查看、下载目录自定义、歌词保存方式配置等能力。
+
+---
+
+## 核心流程概要
+
+1. **触发下载**：用户在歌曲列表页浏览时，点击歌曲的「下载」按钮
+2. **自动下载**：系统使用设置中的「默认下载音质」和「下载目录」自动开始下载
+3. **查看进度**：用户进入「下载」页面，实时查看所有下载任务（含历史记录）的状态和进度
+4. **管理任务**：用户可以删除下载任务，下载历史记录可单独清空
+5. **配置设置**：用户在「设置」页面配置默认下载音质、下载目录、歌词保存方式
+
+---
+
+## 验收标准（Acceptance Criteria）
+
+### Happy Path（正常流程）
+
+**AC-001**: Given 用户在歌曲列表页（我的列表/在线列表/排行榜等），When 用户点击某首歌的「下载」按钮，Then 系统创建下载任务并使用设置的默认音质和下载目录开始下载，显示「已加入下载队列」提示。
+
+**AC-002**: Given 系统有正在下载的任务，When 用户进入「下载」页面，Then 显示下载列表，包含歌曲名、文件大小、下载进度条、下载状态（下载中/等待中/已完成/失败）、删除按钮。
+
+**AC-003**: Given 有任务正在下载，When 下载进度更新时，Then 列表中的进度条和速度信息实时更新。
+
+**AC-004**: Given 某首歌曲下载完成，When 下载状态变为「已完成」，Then 显示文件大小，删除按钮可用，歌曲文件保存到设置的下载目录。
+
+**AC-005**: Given 用户在设置页面，When 用户配置「默认下载音质」时，Then 提供音质选项（128k/320k/flac/无损等），保存后新下载的任务使用该音质。
+
+**AC-006**: Given 用户在设置页面，When 用户配置「下载目录」时，Then 弹出文件选择器让用户选择保存路径，确认后新下载的歌曲保存到该目录。
+
+**AC-007**: Given 用户在设置页面，When 用户配置「歌词保存方式」时，Then 提供选项：「嵌入音频文件元数据（默认）」和「保存为独立 .lrc 文件」，保存后新下载的歌曲使用该方式。
+
+### Edge & Error Cases（边界和异常）
+
+**AC-008**: Given 某首歌已在下载列表中（无论是否完成），When 用户再次点击下载按钮，Then 不创建新任务，提示「该歌曲已在下载列表中」。
+
+**AC-009**: Given 下载过程中网络断开，When 下载失败时，Then 任务状态显示「失败」并显示错误原因（如「网络连接失败」），用户可点击重试按钮重新下载。
+
+**AC-010**: Given 用户在下载列表中点击「删除」按钮，When 删除任务时，Then 弹出确认对话框「确认删除？已下载的文件将被同时删除」，用户确认后删除任务和文件。
+
+**AC-011**: Given 同时有多个下载任务，When 当前下载完成后，Then 自动开始下一个等待中的任务（最大并发数：3）。
+
+**AC-012**: Given 设备存储空间不足，When 尝试下载歌曲时，Then 显示「存储空间不足」提示，不创建下载任务。
+
+**AC-013**: Given 用户在下载历史页面，When 用户点击「清空历史记录」时，Then 弹出确认对话框「确认清空所有下载历史？已下载的文件将保留」，确认后仅删除历史记录，不删除已下载的文件。
+
+### Business Rules（业务规则）
+
+**AC-014**: Given 任何下载任务，When 下载歌曲时，Then 根据设置决定歌词保存方式：默认嵌入音频文件元数据，若用户勾选「保存为独立 .lrc 文件」则在歌曲同目录生成 .lrc 文件。
+
+**AC-015**: Given 用户下载歌曲，When 文件保存时，Then 文件名格式遵循设置中的「文件名格式」配置（默认：歌名 - 歌手）。
+
+**AC-016**: Given 应用重启，When 重新打开应用时，Then 已完成的下载任务保留在列表中，未完成的任务状态重置为「失败」并允许用户手动重试。
+
+**AC-017**: Given 用户设置了自定义下载目录，When 下载歌曲时，Then 文件保存到用户指定的目录；若该目录不存在或无权限，则使用默认下载目录并提示用户。
+
+---
+
+## 范围界定
+
+### 本次包含的功能
+
+| 功能项 | 说明 |
+|--------|------|
+| 下载导航入口 | 底部导航栏添加「下载」标签页 |
+| 歌曲下载按钮 | 歌曲列表页添加「下载」按钮 |
+| 下载管理页面 | 列表展示、进度显示、删除操作、历史记录查看 |
+| 下载任务管理 | 下载任务创建、状态管理、并发控制（最大 3 并发） |
+| 默认下载音质 | 设置页面添加「默认下载音质」配置 |
+| 下载目录自定义 | 设置页面添加「下载目录」自定义（文件选择器） |
+| 歌词保存方式 | 设置页面添加「歌词保存方式」配置（嵌入元数据/独立文件） |
+| 歌词嵌入元数据 | 歌词嵌入音频文件元数据或生成独立 .lrc 文件 |
+| 下载任务持久化 | 应用重启后保留已完成任务 |
+| 下载历史记录 | 保留历史记录、支持清空历史（不删除文件） |
+
+### 本次不包含的功能
+
+| 功能项 | 说明 |
+|--------|------|
+| 暂停/继续下载 | 后续迭代实现 |
+| 批量下载 | 后续迭代实现 |
+| 后台下载通知 | 系统级通知，后续实现 |
+| WiFi 自动下载限制 | 后续实现 |
+
+---
+
+## 相关配置项
+
+| 配置 Key | 类型 | 默认值 | 说明 |
+|----------|------|--------|------|
+| `download.quality` | string | `'128k'` | 默认下载音质 |
+| `download.savePath` | string \| null | `null` | 下载目录路径（null 时使用默认目录） |
+| `download.fileName` | string | `'歌名 - 歌手'` | 文件名格式（已存在） |
+| `download.lyricType` | `'embed'` \| `'separate'` | `'embed'` | 歌词保存方式：embed=嵌入元数据，separate=独立文件 |
+
+---
+
+## 相关国际化文案
+
+| Key | zh-cn | zh-tw | en-us |
+|-----|-------|-------|-------|
+| `download_title` | 下载管理 | 下載管理 | Downloads |
+| `download_add_tip` | 已加入下载队列 | 已加入下載佇列 | Added to download queue |
+| `download_exists_tip` | 该歌曲已在下载列表中 | 該歌曲已在下載列表中 | This song is already in the download list |
+| `download_delete_confirm` | 确认删除？已下载的文件将被同时删除 | 確認刪除？已下載的文件將被同時刪除 | Delete? Downloaded files will also be deleted |
+| `download_clear_history` | 清空历史记录 | 清空歷史記錄 | Clear History |
+| `download_clear_history_confirm` | 确认清空所有下载历史？已下载的文件将保留 | 確認清空所有下載歷史？已下載的文件將保留 | Clear all download history? Downloaded files will be kept |
+| `download_status_downloading` | 下载中 | 下載中 | Downloading |
+| `download_status_waiting` | 等待中 | 等待中 | Waiting |
+| `download_status_completed` | 已完成 | 已完成 | Completed |
+| `download_status_failed` | 失败 | 失敗 | Failed |
+| `download_quality_label` | 默认下载音质 | 預設下載音質 | Default Download Quality |
+| `download_path_label` | 下载目录 | 下載目錄 | Download Directory |
+| `download_path_btn` | 选择目录 | 選擇目錄 | Choose Directory |
+| `download_lyric_label` | 歌词保存方式 | 歌詞保存方式 | Lyric Save Method |
+| `download_lyric_embed` | 嵌入音频文件元数据 | 嵌入音訊檔案元資料 | Embed in audio metadata |
+| `download_lyric_separate` | 保存为独立 .lrc 文件 | 儲存為獨立 .lrc 檔案 | Save as separate .lrc file |
+| `download_storage_insufficient` | 存储空间不足 | 儲存空間不足 | Insufficient storage space |
+| `download_retry` | 重试 | 重試 | Retry |

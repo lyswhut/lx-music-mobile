@@ -229,6 +229,7 @@
   "play_detail_setting_title": "播放器設定",
   "play_detail_setting_volume": "音量大小",
   "play_detail_todo_tip": "你想幹嘛？不可以的，這個功能還沒有實現哦😛，不過你可以試著長按來定位目前播放的歌曲（僅對播放「我的清單」裡的歌曲有效哦）",
+  "play_detail_download_local": "本地歌曲無法下載",
   "play_later": "稍後播放",
   "play_list_loop": "重複播放清單",
   "play_list_order": "順序播放",

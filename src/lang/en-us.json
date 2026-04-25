@@ -223,6 +223,7 @@
   "play_detail_setting_title": "Player Options",
   "play_detail_setting_volume": "Volume",
   "play_detail_todo_tip": "What do you want? No, this function has not been implemented yet 😛, But you can try to locate the currently playing song by long pressing (Only valid for playing songs in \"Your Library\")",
+  "play_detail_download_local": "Local songs cannot be downloaded",
   "play_later": "Play Later",
   "play_list_loop": "Repeat Playlist",
   "play_list_order": "In order",

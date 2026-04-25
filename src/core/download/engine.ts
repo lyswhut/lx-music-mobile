@@ -1,21 +1,13 @@
 import RNFS from 'react-native-fs'
 import { FileSystem } from 'react-native-file-system'
-import { getSaveDirectory, ensureDirectory } from './directory'
-import { generateFileName } from './filename'
-import { downloadEvent } from '@/event/downloadEvent'
-import { addTask, updateTask, removeTask } from '@/store/download/action'
-import { saveDownloadTasks, saveDownloadHistory, getDownloadTasks, getDownloadHistory } from '@/utils/data'
+import { updateTask } from '@/store/download/action'
 import settingState from '@/store/setting/state'
-import { getMusicUrl as getOnlineMusicUrl } from '@/core/music/online'
-import { getLyric as fetchOnlineLyric } from '@/core/music/online'
-import musicSdk from '@/utils/musicSdk'
-import { externalStorageDirectoryPath, writeFile, unlink, mkdir, readDir } from '@/utils/fs'
-import { toast } from '@/utils/common'
-import { writeLyric } from '@/utils/localMediaMetadata'
-import { log } from '@/utils/log'
+import { writeLyric, writePic } from '@/utils/localMediaMetadata'
+import { writeFile } from '@/utils/fs'
 
 const MAX_CONCURRENT = 3
 const MIN_REQUIRED_SPACE = 100 * 1024 * 1024 // 100MB
+const COVER_CACHE_DIR = RNFS.DocumentDirectoryPath + '/cover_cache'
 
 interface DownloadQueueItem {
   task: LX.Download.ListItem
@@ -163,21 +155,18 @@ export const checkStorageSpace = async(requiredSize?: number): Promise<boolean> 
   try {
     const fsInfo = await FileSystem.getFSInfo()
     const free = fsInfo.freeSpace ?? fsInfo.freeDiskSpace ?? fsInfo.availableSpace ?? 0
-    log.info('[checkStorageSpace] FileSystem.getFSInfo freeSpace:', free)
     if (free > target) {
       return true
     }
-  } catch (err) {
-    log.warn('[checkStorageSpace] FileSystem.getFSInfo failed:', err)
+  } catch {
+    // Ignore
   }
 
   try {
     const fsInfo = await RNFS.getFSInfo()
     const free = fsInfo.freeSpace ?? fsInfo.freeDiskSpace ?? fsInfo.availableSpace ?? 0
-    log.info('[checkStorageSpace] RNFS.getFSInfo freeSpace:', free)
     return free > target
-  } catch (err) {
-    log.warn('[checkStorageSpace] RNFS.getFSInfo failed, allowing download:', err)
+  } catch {
     return true
   }
 }
@@ -185,25 +174,35 @@ export const checkStorageSpace = async(requiredSize?: number): Promise<boolean> 
 export const saveLyricFile = async(lyricInfo: LX.Music.LyricInfo, filePath: string): Promise<void> => {
   const lyricType = settingState.setting['download.lyricType']
   const lyric = lyricInfo.lyric
-  log.info('[saveLyricFile] lyricType:', lyricType, 'lyric length:', lyric?.length, 'filePath:', filePath)
 
-  if (!lyric) {
-    log.warn('[saveLyricFile] No lyric content, skip')
-    return
-  }
+  if (!lyric) return
 
   if (lyricType === 'embed') {
     try {
-      log.info('[saveLyricFile] Embedding lyric to file...')
       await writeLyric(filePath, lyric)
-      log.info('[saveLyricFile] Embed lyric success')
     } catch (err) {
-      log.warn('[saveLyricFile] Failed to embed lyric:', err)
+      console.warn('[saveLyricFile] Failed to embed lyric:', err)
     }
   } else {
     const lrcPath = filePath.replace(/\.\w+$/, '.lrc')
-    log.info('[saveLyricFile] Saving lrc file:', lrcPath)
     await writeFile(lrcPath, lyric, 'utf8')
-    log.info('[saveLyricFile] Lrc file saved')
+  }
+}
+
+export const saveCoverFile = async(picUrl: string, filePath: string): Promise<void> => {
+  if (!picUrl) return
+
+  try {
+    await RNFS.mkdir(COVER_CACHE_DIR)
+    const ext = picUrl.split('?')[0].split('.').pop() || 'jpg'
+    const coverPath = `${COVER_CACHE_DIR}/${Date.now()}.${ext}`
+
+    await RNFS.downloadFile({ fromUrl: picUrl, toFile: coverPath }).promise
+
+    await writePic(filePath, coverPath)
+
+    await RNFS.unlink(coverPath).catch(() => {})
+  } catch (err) {
+    console.warn('[saveCoverFile] Failed to embed cover:', err)
   }
 }

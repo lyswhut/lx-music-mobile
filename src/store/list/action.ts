@@ -4,7 +4,7 @@ import state, { type InitState } from './state'
 export default {
   setUserLists(userList: LX.List.UserListInfo[]) {
     state.userList = userList
-    state.allList = [state.defaultList, state.loveList, ...state.userList]
+    state.allList = [state.defaultList, state.loveList, state.downloadMusicList, ...state.userList]
 
     global.state_event.mylistUpdated(state.allList)
   },

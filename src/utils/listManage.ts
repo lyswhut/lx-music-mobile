@@ -66,6 +66,7 @@ const updateList = ({
   switch (id) {
     case LIST_IDS.DEFAULT:
     case LIST_IDS.LOVE:
+    case LIST_IDS.DOWNLOAD_MUSIC:
       break
     case LIST_IDS.TEMP:
     //   tempList.meta = meta ?? {}
@@ -104,7 +105,7 @@ export const getUserLists = async() => {
 }
 
 
-export const listDataOverwrite = ({ defaultList, loveList, userList, tempList }: MakeOptional<LX.List.ListDataFull, 'tempList'>): string[] => {
+export const listDataOverwrite = ({ defaultList, loveList, downloadMusicList, userList, tempList }: MakeOptional<LX.List.ListDataFull, 'tempList' | 'downloadMusicList'>): string[] => {
   const updatedListIds: string[] = []
   const newUserIds: string[] = []
   const newUserListInfos = userList.map(({ list, ...listInfo }) => {
@@ -124,6 +125,7 @@ export const listDataOverwrite = ({ defaultList, loveList, userList, tempList }:
   setMusicList(LIST_IDS.DEFAULT, defaultList)
   setMusicList(LIST_IDS.LOVE, loveList)
   updatedListIds.push(LIST_IDS.LOVE)
+  setMusicList(LIST_IDS.DOWNLOAD_MUSIC, downloadMusicList ?? [])
 
   if (tempList && allMusicList.has(LIST_IDS.TEMP)) {
     setMusicList(LIST_IDS.TEMP, tempList)

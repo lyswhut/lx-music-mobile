@@ -4,7 +4,7 @@ import ListMenu, { type ListMenuType } from './ListMenu'
 import ListNameEdit, { type ListNameEditType } from './ListNameEdit'
 import List from './List'
 import ListImportExport, { type ListImportExportType } from './ListImportExport'
-import { handleRemove, handleSync } from './listAction'
+import { handleRemove, handleSync, handleUpdateDownloadList } from './listAction'
 import ListMusicSort, { type ListMusicSortType } from './ListMusicSort'
 import DuplicateMusic, { type DuplicateMusicType } from './DuplicateMusic'
 
@@ -53,6 +53,7 @@ export default () => {
             onRemove={info => { handleRemove(info) }}
             onSync={info => { handleSync(info) }}
             onSelectLocalFile={(info, position) => listImportExportRef.current?.selectFile(info, position)}
+            onUpdate={handleUpdateDownloadList}
           />
           {/* <ImportExport actionType={actionType} visible={isShowChoosePath} hide={() => setShowChoosePath(false)} selectedListRef={selectedListRef} /> */}
         </>

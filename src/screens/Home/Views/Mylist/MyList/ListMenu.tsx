@@ -28,6 +28,7 @@ export interface ListMenuProps {
   onSync: (listInfo: LX.List.UserListInfo) => void
   onSelectLocalFile: (listInfo: LX.List.MyListInfo, index: number) => void
   onRemove: (listInfo: LX.List.UserListInfo) => void
+  onUpdate: (listInfo: LX.List.MyDownloadMusicListInfo, index: number) => void
 }
 export interface ListMenuType {
   show: (selectInfo: SelectInfo, position: Position) => void
@@ -47,6 +48,7 @@ export default forwardRef<ListMenuType, ListMenuProps>(({
   onSync,
   onSelectLocalFile,
   onRemove,
+  onUpdate,
 }, ref) => {
   const t = useI18n()
   const menuRef = useRef<MenuType>(null)
@@ -73,10 +75,14 @@ export default forwardRef<ListMenuType, ListMenuProps>(({
     let sync = false
     let remove = false
     let local_file = !listState.fetchingListStatus[listInfo.id]
+    let download_music = false
     let userList: LX.List.UserListInfo
     switch (listInfo.id) {
       case LIST_IDS.DEFAULT:
       case LIST_IDS.LOVE:
+        break
+      case LIST_IDS.DOWNLOAD_MUSIC:
+        download_music = true
         break
       default:
         userList = listInfo as LX.List.UserListInfo
@@ -91,11 +97,11 @@ export default forwardRef<ListMenuType, ListMenuProps>(({
       { action: 'rename', disabled: !rename, label: t('list_rename') },
       { action: 'sort', label: t('list_sort') },
       { action: 'duplicateMusic', label: t('lists__duplicate') },
-      { action: 'local_file', disabled: !local_file, label: t('list_select_local_file') },
+      { action: 'local_file', disabled: !local_file || download_music, label: t('list_select_local_file') },
       { action: 'sync', disabled: !sync || !local_file, label: t('list_sync') },
+      { action: 'update', disabled: !download_music || !local_file, label: t('list_download_update') },
       { action: 'import', label: t('list_import') },
       { action: 'export', label: t('list_export') },
-      // { action: 'changePosition', label: t('change_position') },
       { action: 'remove', disabled: !remove, label: t('list_remove') },
     ])
   }
@@ -124,9 +130,9 @@ export default forwardRef<ListMenuType, ListMenuProps>(({
       case 'sync':
         onSync(selectInfo.listInfo as LX.List.UserListInfo)
         break
-        // case 'changePosition':
-
-        //   break
+      case 'update':
+        onUpdate(selectInfo.listInfo as LX.List.MyDownloadMusicListInfo, selectInfo.index)
+        break
       case 'local_file':
         onSelectLocalFile(selectInfo.listInfo, selectInfo.index)
         break

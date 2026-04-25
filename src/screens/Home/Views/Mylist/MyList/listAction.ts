@@ -8,6 +8,7 @@ import { readMetadata, scanAudioFiles, type MusicMetadataFull } from '@/utils/lo
 import settingState from '@/store/setting/state'
 import BackgroundTimer from 'react-native-background-timer'
 import { type FileType } from '@/utils/fs'
+import { getSaveDirectory } from '@/core/download/directory'
 
 export const handleRemove = (listInfo: LX.List.UserListInfo) => {
   void confirmDialog({
@@ -202,5 +203,42 @@ export const handleImportMediaFile = async(listInfo: LX.List.MyListInfo, path: s
     toast(global.i18n.t('list_select_local_file_temp_add_tip', { total: files.length }), 'long')
     await handleUpdateMusics(files.map(f => f.path), throttleUpdateMusics)
   } else toast(global.i18n.t('list_select_local_file_empty_tip'), 'long')
+  setFetchingListStatus(listInfo.id, false)
+}
+
+export const handleUpdateDownloadList = async(listInfo: LX.List.MyDownloadMusicListInfo) => {
+  setFetchingListStatus(listInfo.id, true)
+  try {
+    const saveDir = await getSaveDirectory()
+    const files = await scanAudioFiles(saveDir)
+    if (!files.length) {
+      toast(global.i18n.t('list_download_update_empty'), 'long')
+      setFetchingListStatus(listInfo.id, false)
+      return
+    }
+
+    const existingSongs = await getListMusics(listInfo.id)
+    const existingPaths = new Set(existingSongs.map(s => s.meta.filePath))
+    const newFiles = files.filter(f => !existingPaths.has(f.path))
+
+    if (!newFiles.length) {
+      toast(global.i18n.t('list_download_update_no_new'), 'long')
+      setFetchingListStatus(listInfo.id, false)
+      return
+    }
+
+    const throttleUpdateMusics = createThrottleAddMusics(async(lId, musicInfos) => {
+      return updateListMusics(musicInfos.map(info => ({ id: lId, musicInfo: info })))
+    }, async(lId, errorPath) => {
+      return removeListMusics(lId, errorPath)
+    }, listInfo.id)
+
+    await addListMusics(listInfo.id, newFiles.map(buildLocalMusicInfoByFilePath), settingState.setting['list.addMusicLocationType'])
+    toast(global.i18n.t('list_select_local_file_temp_add_tip', { total: newFiles.length }), 'long')
+    await handleUpdateMusics(newFiles.map(f => f.path), throttleUpdateMusics)
+  } catch (err: any) {
+    log.error('[handleUpdateDownloadList] Error:', err)
+    toast(global.i18n.t('list_download_update_error'), 'long')
+  }
   setFetchingListStatus(listInfo.id, false)
 }

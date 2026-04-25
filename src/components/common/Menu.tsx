@@ -132,14 +132,7 @@ const Menu = ({
         {
           menus.map((menu, index) => (
             menu.disabled
-              ? (
-                  <View
-                    key={menu.action}
-                    style={{ ...styles.menuItem, width: menuItemStyle.width, height: menuItemStyle.height, opacity: 0.4 }}
-                  >
-                    <Text style={{ textAlign: center ? 'center' : 'left' }} size={fontSize} numberOfLines={1}>{menu.label}</Text>
-                  </View>
-                )
+              ? null
               : menu.action == activeId
                 ? (
                     <View

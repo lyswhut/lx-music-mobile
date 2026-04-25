@@ -32,11 +32,19 @@ declare namespace LX {
       }
     }
 
-    type MyListInfo = MyDefaultListInfo | MyLoveListInfo | UserListInfo
+    interface MyDownloadMusicListInfo {
+      id: 'download_music'
+      name: '下载歌曲'
+      source: 'local'
+      // list: LX.Music.MusicInfo[]
+    }
+
+    type MyListInfo = MyDefaultListInfo | MyLoveListInfo | MyDownloadMusicListInfo | UserListInfo
 
     interface MyAllList {
       defaultList: MyDefaultListInfo
       loveList: MyLoveListInfo
+      downloadMusicList: MyDownloadMusicListInfo
       userList: UserListInfo[]
       tempList: MyTempListInfo
     }
@@ -59,7 +67,7 @@ declare namespace LX {
     }
 
 
-    type ListActionDataOverwrite = MakeOptional<LX.List.ListDataFull, 'tempList'>
+    type ListActionDataOverwrite = MakeOptional<LX.List.ListDataFull, 'tempList' | 'downloadMusicList'>
     interface ListActionAdd {
       position: number
       listInfos: UserListInfo[]
@@ -134,6 +142,7 @@ declare namespace LX {
     interface ListDataFull {
       defaultList: LX.Music.MusicInfo[]
       loveList: LX.Music.MusicInfo[]
+      downloadMusicList: LX.Music.MusicInfo[]
       userList: UserListInfoFull[]
       tempList: LX.Music.MusicInfo[]
     }

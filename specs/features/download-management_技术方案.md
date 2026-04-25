@@ -282,6 +282,102 @@ interface DirectoryHandler {
 
 → AC-006, AC-017
 
+### 3.6 封面处理模块
+
+**文件**: `src/core/download/engine.ts`（复用现有 `writePic`）
+
+歌曲下载完成后，获取在线歌曲的封面 URL 并嵌入音频文件元数据。
+
+**流程**:
+
+```mermaid
+flowchart TD
+    A[下载完成] --> B[调用 getOnlinePicUrl 获取封面]
+    B --> C{获取成功?}
+    C -->|是| D[writePic写入文件]
+    C -->|否| E[记录警告日志]
+    D --> F{写入成功?}
+    F -->|是| G[完成]
+    F -->|否| E
+    E --> H[不阻断, 文件仍为已完成]
+```
+
+**关键逻辑**:
+- 封面获取来源：调用 `musicSdk[musicInfo.source].getPic()` 获取在线封面图
+- 封面写入：使用 `react-native-local-media-metadata` 的 `writePic(filePath, picUrl)`
+- 失败处理：封面嵌入失败不阻断下载流程，文件状态仍为「已完成」
+
+→ AC-018, AC-019
+
+### 3.7 下载歌曲列表模块
+
+**文件**: `src/config/constant.ts` + `src/utils/listManage.ts` + `src/screens/Home/Views/Mylist/MyList/`
+
+在"我的列表"中新增系统级"下载歌曲"列表，自动同步下载目录中的音频文件。
+
+**列表 ID 定义**:
+```typescript
+// src/config/constant.ts
+export const LIST_IDS = {
+  DEFAULT: 'default',
+  LOVE: 'love',
+  TEMP: 'temp',
+  DOWNLOAD_MUSIC: 'download_music',  // 新增
+}
+```
+
+**系统列表识别更新**:
+```typescript
+// src/utils/listManage.ts
+export const isSysList = (listId: string): boolean => {
+  return listId === LIST_IDS.DEFAULT ||
+    listId === LIST_IDS.LOVE ||
+    listId === LIST_IDS.TEMP ||
+    listId === LIST_IDS.DOWNLOAD_MUSIC  // 新增
+}
+```
+
+**UI 层限制逻辑**:
+
+在 `ListMenu.tsx` 中通过 `listId` 判断：
+- 若 `listId === LIST_IDS.DOWNLOAD_MUSIC`：隐藏"重命名"、"删除列表"、"添加本地歌曲"菜单项
+- 新增"更新"菜单项，绑定 `handleUpdateDownloadList()` 函数
+
+**扫描同步流程**:
+
+```mermaid
+flowchart TD
+    A[点击更新按钮] --> B[获取下载目录 getSaveDirectory]
+    B --> C[scanAudioFiles 扫描音频文件]
+    C --> D[分批处理每批 10 个]
+    D --> E[readMetadata 读取元数据]
+    E --> F[构建 MusicInfoLocal]
+    F --> G{filePath 已存在?}
+    G -->|是| H[跳过]
+    G -->|否| I[添加到列表]
+    H --> J{还有文件?}
+    I --> J
+    J -->|是| D
+    J -->|否| K[触发 listDataUpdate 事件]
+    K --> L[完成]
+```
+
+**关键逻辑**:
+- 扫描目录：使用 `getSaveDirectory()` 获取设置中的下载目录
+- 文件扫描：复用 `scanAudioFiles(dir)` 函数（来自 `react-native-local-media-metadata`）
+- 元数据读取：复用 `readMetadata(filePath)` 函数
+- 去重逻辑：根据 `filePath`（即 `MusicInfoLocal.id`）在目标列表中查找已存在项
+- 分批处理：每批 10 个文件，最多 5 个并发（复用 `handleUpdateMusics` 模式）
+
+**新建文件**:
+- `src/screens/Home/Views/Mylist/MyList/DownloadListUpdateBtn.tsx` → 更新按钮组件
+
+**修改文件**:
+- `src/screens/Home/Views/Mylist/MyList/ListMenu.tsx` → 条件隐藏重命名/添加本地歌曲，新增更新按钮
+- `src/screens/Home/Views/Mylist/MyList/listAction.ts` → 新增 `handleUpdateDownloadList()` 扫描同步函数
+
+→ AC-020, AC-021, AC-022, AC-023
+
 ---
 
 ## 4. 状态管理 → AC-002~AC-004
@@ -651,8 +747,14 @@ const isMusicInList = (musicInfo: LX.Music.MusicInfoOnline): boolean => {
 | AC-015 | 文件命名 | download/filename.ts |
 | AC-016 | 重启恢复 | download/index.ts init() |
 | AC-017 | 目录验证回退 | download/directory.ts |
+| AC-018 | 封面获取与嵌入 | download/engine.ts (onComplete) |
+| AC-019 | 封面嵌入失败处理 | download/engine.ts (catch) |
+| AC-020 | 下载歌曲列表 UI 限制 | Mylist/MyList/ListMenu.tsx |
+| AC-021 | 扫描下载目录同步歌曲 | Mylist/MyList/listAction.ts |
+| AC-022 | 歌曲去重逻辑 | Mylist/MyList/listAction.ts |
+| AC-023 | 空目录提示 | Mylist/MyList/listAction.ts |
 
-所有 17 条 AC 均已覆盖。
+所有 23 条 AC 均已覆盖。
 
 ---
 
@@ -699,6 +801,13 @@ const isMusicInList = (musicInfo: LX.Music.MusicInfoOnline): boolean => {
 | `src/lang/en-us.json` | 新增英文文案 |
 | `src/components/OnlineList/listAction.ts` | 新增 handleDownload 方法 |
 | `src/components/OnlineList/ListMenu.tsx` | 下载菜单项 |
+| `src/config/constant.ts` (CR-001) | 新增 DOWNLOAD_MUSIC 列表 ID |
+| `src/utils/listManage.ts` (CR-001) | isSysList 新增 download_music 识别 |
+| `src/screens/Home/Views/Mylist/MyList/ListMenu.tsx` (CR-001) | 条件隐藏重命名/添加本地歌曲，新增更新按钮 |
+| `src/screens/Home/Views/Mylist/MyList/listAction.ts` (CR-001) | 新增 handleUpdateDownloadList 扫描同步函数 |
+| `src/screens/Home/Views/Mylist/MyList/DownloadListUpdateBtn.tsx` (CR-001) | 新建更新按钮组件 |
+| `src/core/download/index.ts` (CR-001) | 添加封面嵌入逻辑 |
+| `src/core/download/engine.ts` (CR-001) | 添加 writePic 导入和封面处理逻辑 |
 
 ---
 
@@ -710,6 +819,20 @@ const isMusicInList = (musicInfo: LX.Music.MusicInfoOnline): boolean => {
 |---------|------|
 | `react-native-fs` | 文件下载、文件操作 |
 | `react-native-file-system` | 目录浏览、存储空间查询 |
-| `react-native-local-media-metadata` | 歌词嵌入音频元数据 |
+| `react-native-local-media-metadata` | 歌词嵌入音频元数据、**封面嵌入 (writePic)** |
 | `@react-native-async-storage/async-storage` | 任务持久化存储 |
 | `react-native-background-timer` | 下载超时控制 |
+
+---
+
+## 13. 变更日志 (Change Log)
+
+### CR-001: 下载功能优化与下载歌曲列表 (2026-04-25)
+**变更类型**: 扩展
+**变更原因**: 用户要求下载封面嵌入、清理调试日志、新增下载歌曲列表
+**变更内容**:
+- 新增 §3.6 封面处理模块（下载完成后自动嵌入封面到音频文件元数据）
+- 新增 §3.7 下载歌曲列表模块（系统列表，扫描下载目录同步歌曲）
+- §10 AC 覆盖矩阵新增 AC-018 ~ AC-023 映射
+- §11 文件变更清单追加 CR-001 新增/修改的 8 个文件
+- §12 依赖项更新 writePic 用途说明

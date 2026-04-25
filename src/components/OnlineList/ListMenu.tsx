@@ -53,7 +53,7 @@ export default forwardRef<ListMenuType, ListMenuProps>((props: ListMenuProps, re
     return [
       { action: 'play', label: t('play') },
       { action: 'playLater', label: t('play_later') },
-      { action: 'download', label: t('download_title') },
+      { action: 'download', label: t('download_action') },
       { action: 'add', label: t('add_to') },
       { action: 'copyName', label: t('copy_name') },
       { action: 'musicSourceDetail', label: t('music_source_detail') },

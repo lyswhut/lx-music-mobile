@@ -11,7 +11,8 @@ import { getLyric as fetchOnlineLyric } from '@/core/music/online'
 import musicSdk from '@/utils/musicSdk'
 import { externalStorageDirectoryPath, writeFile, unlink, mkdir, readDir } from '@/utils/fs'
 import { toast } from '@/utils/common'
-import { writeLyric } from '@/utils/nativeModules/utils'
+import { writeLyric } from '@/utils/localMediaMetadata'
+import { log } from '@/utils/log'
 
 const MAX_CONCURRENT = 3
 const MIN_REQUIRED_SPACE = 100 * 1024 * 1024 // 100MB
@@ -157,24 +158,52 @@ export const getAvailableStorage = async(): Promise<number> => {
 }
 
 export const checkStorageSpace = async(requiredSize?: number): Promise<boolean> => {
-  const available = await getAvailableStorage()
-  return available > (requiredSize ?? MIN_REQUIRED_SPACE)
+  const target = requiredSize ?? MIN_REQUIRED_SPACE
+
+  try {
+    const fsInfo = await FileSystem.getFSInfo()
+    const free = fsInfo.freeSpace ?? fsInfo.freeDiskSpace ?? fsInfo.availableSpace ?? 0
+    log.info('[checkStorageSpace] FileSystem.getFSInfo freeSpace:', free)
+    if (free > target) {
+      return true
+    }
+  } catch (err) {
+    log.warn('[checkStorageSpace] FileSystem.getFSInfo failed:', err)
+  }
+
+  try {
+    const fsInfo = await RNFS.getFSInfo()
+    const free = fsInfo.freeSpace ?? fsInfo.freeDiskSpace ?? fsInfo.availableSpace ?? 0
+    log.info('[checkStorageSpace] RNFS.getFSInfo freeSpace:', free)
+    return free > target
+  } catch (err) {
+    log.warn('[checkStorageSpace] RNFS.getFSInfo failed, allowing download:', err)
+    return true
+  }
 }
 
 export const saveLyricFile = async(lyricInfo: LX.Music.LyricInfo, filePath: string): Promise<void> => {
   const lyricType = settingState.setting['download.lyricType']
   const lyric = lyricInfo.lyric
+  log.info('[saveLyricFile] lyricType:', lyricType, 'lyric length:', lyric?.length, 'filePath:', filePath)
 
-  if (!lyric) return
+  if (!lyric) {
+    log.warn('[saveLyricFile] No lyric content, skip')
+    return
+  }
 
   if (lyricType === 'embed') {
     try {
+      log.info('[saveLyricFile] Embedding lyric to file...')
       await writeLyric(filePath, lyric)
+      log.info('[saveLyricFile] Embed lyric success')
     } catch (err) {
-      console.warn('[Download] Failed to embed lyric:', err)
+      log.warn('[saveLyricFile] Failed to embed lyric:', err)
     }
   } else {
     const lrcPath = filePath.replace(/\.\w+$/, '.lrc')
+    log.info('[saveLyricFile] Saving lrc file:', lrcPath)
     await writeFile(lrcPath, lyric, 'utf8')
+    log.info('[saveLyricFile] Lrc file saved')
   }
 }

@@ -9,6 +9,8 @@ import { addDislikeInfo, hasDislike } from '@/core/dislikeList'
 import playerState from '@/store/player/state'
 import musicSdk from '@/utils/musicSdk'
 import { toOldMusicInfo } from '@/utils'
+import { downloadManager } from '@/core/download'
+import { log } from '@/utils/log'
 
 export const handlePlay = (musicInfo: LX.Music.MusicInfoOnline) => {
   void addListMusics(LIST_IDS.DEFAULT, [musicInfo], settingState.setting['list.addMusicLocationType']).then(() => {
@@ -23,6 +25,19 @@ export const handlePlayLater = (musicInfo: LX.Music.MusicInfoOnline, selectedLis
     onCancelSelect()
   } else {
     addTempPlayList([{ listId: '', musicInfo }])
+  }
+}
+
+export const handleDownload = (musicInfo: LX.Music.MusicInfoOnline, selectedList: LX.Music.MusicInfoOnline[]) => {
+  log.info('[handleDownload] called, musicInfo:', musicInfo.name, 'id:', musicInfo.id, 'selectedList.length:', selectedList.length)
+  if (selectedList.length) {
+    for (const m of selectedList) {
+      log.info('[handleDownload] addTask:', m.name)
+      void downloadManager.addTask(m)
+    }
+  } else {
+    log.info('[handleDownload] addTask single:', musicInfo.name)
+    void downloadManager.addTask(musicInfo)
   }
 }
 

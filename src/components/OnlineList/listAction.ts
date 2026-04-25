@@ -29,14 +29,11 @@ export const handlePlayLater = (musicInfo: LX.Music.MusicInfoOnline, selectedLis
 }
 
 export const handleDownload = (musicInfo: LX.Music.MusicInfoOnline, selectedList: LX.Music.MusicInfoOnline[]) => {
-  log.info('[handleDownload] called, musicInfo:', musicInfo.name, 'id:', musicInfo.id, 'selectedList.length:', selectedList.length)
   if (selectedList.length) {
     for (const m of selectedList) {
-      log.info('[handleDownload] addTask:', m.name)
       void downloadManager.addTask(m)
     }
   } else {
-    log.info('[handleDownload] addTask single:', musicInfo.name)
     void downloadManager.addTask(musicInfo)
   }
 }

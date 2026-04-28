@@ -8,9 +8,9 @@
     /* Completeness */
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
 
-    "baseUrl": "./",
+    "rootDir": "./",
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["./src/*"],
       // "@config": ["src/config"],
       // "@store": ["src/store"],
       // "@components": ["src/components"],

@@ -355,6 +355,7 @@
   "setting_play_play_quality": "優先播放的音質（如果可用）",
   "setting_play_s2t": "將播放的中文歌詞轉換為繁體",
   "setting_play_save_play_time": "記住播放進度",
+  "setting_play_show_bluetooth_full_lyric": "顯示完整藍牙歌詞（需裝置支援）",
   "setting_play_show_bluetooth_lyric": "顯示藍牙歌詞",
   "setting_play_show_notification_image": "在通知欄顯示歌曲專輯封面圖片",
   "setting_play_show_roma": "顯示歌詞羅馬音（如果可用）",

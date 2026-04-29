@@ -355,6 +355,7 @@
   "setting_play_play_quality": "Prioritize Sound Quality for Playback If Available",
   "setting_play_s2t": "Convert Chinese lyrics that are playing to traditional",
   "setting_play_save_play_time": "Remember playback progress",
+  "setting_play_show_bluetooth_full_lyric": "Display complete Bluetooth lyrics (device support required)",
   "setting_play_show_bluetooth_lyric": "Show lyrics from bluetooth",
   "setting_play_show_notification_image": "Show album cover in notification bar",
   "setting_play_show_roma": "Show romanized lyrics if available",

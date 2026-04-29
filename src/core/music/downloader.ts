@@ -1,5 +1,6 @@
 import { Linking, Platform } from 'react-native'
 import { getMusicUrl } from './index'
+import { getPlayQuality } from './utils'
 import settingState from '@/store/setting/state'
 import {
   downloadFile,
@@ -11,6 +12,38 @@ import { filterFileName } from '@/utils/common'
 import { confirmDialog, requestStoragePermission, toast } from '@/utils/tools'
 
 const AUDIO_EXT_RXP = /\.([a-zA-Z0-9]{2,5})(?:\?|#|$)/
+
+/** 与 `fs.downloadFile` 默认 UA 保持一致，便于 CDN 识别 */
+const DOWNLOAD_USER_AGENT =
+  'Mozilla/5.0 (Linux; Android 10; Pixel 3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Mobile Safari/537.36'
+
+/**
+ * 构造下载直链用的 HTTP 头。高码率文件多在 CDN 上，缺少 Referer 时易出现 403；播放器内核可能自动带 Referer，RNFS 直下载则不会。
+ */
+const buildMusicDownloadHeaders = (url: string, musicInfo: LX.Music.MusicInfoOnline): Record<string, string> => {
+  const headers: Record<string, string> = {
+    'User-Agent': DOWNLOAD_USER_AGENT,
+  }
+  const refererBySource: Partial<Record<LX.OnlineSource, string>> = {
+    wy: 'https://music.163.com/',
+    kg: 'https://www.kugou.com/',
+    kw: 'https://www.kuwo.cn/',
+    tx: 'https://y.qq.com/portal/player.html',
+    mg: 'https://music.migu.cn/v3',
+  }
+  const fromSource = refererBySource[musicInfo.source]
+  if (fromSource) {
+    headers.Referer = fromSource
+    return headers
+  }
+  try {
+    const u = new URL(url)
+    headers.Referer = `${u.protocol}//${u.host}/`
+  } catch {
+    // 非合法 URL 时仅使用 UA
+  }
+  return headers
+}
 
 /**
  * 根据歌曲信息与设置生成基础文件名。
@@ -68,7 +101,9 @@ export const downloadMusicToLocal = async(musicInfo: LX.Music.MusicInfoOnline) =
   const downloadDir = await ensureMusicDownloadDirectory()
   toast(global.i18n.t('download_start', { name: musicInfo.name }))
 
-  const url = await getMusicUrl({ musicInfo, isRefresh: false, quality: '128k' })
+  /** 与在线播放一致：按「播放音质」设置并在歌曲元数据允许时取 320k / flac 等 */
+  const quality = getPlayQuality(settingState.setting['player.playQuality'], musicInfo)
+  const url = await getMusicUrl({ musicInfo, isRefresh: false, quality })
   const ext = parseExtByUrl(url)
   const baseName = createBaseFileName(musicInfo)
   let index = 0
@@ -81,7 +116,10 @@ export const downloadMusicToLocal = async(musicInfo: LX.Music.MusicInfoOnline) =
     index++
   }
 
-  const result = await downloadFile(url, savePath, { background: true }).promise
+  const result = await downloadFile(url, savePath, {
+    background: true,
+    headers: buildMusicDownloadHeaders(url, musicInfo),
+  }).promise
   if (result.statusCode < 200 || result.statusCode >= 300) {
     throw new Error(`download failed: ${result.statusCode}`)
   }

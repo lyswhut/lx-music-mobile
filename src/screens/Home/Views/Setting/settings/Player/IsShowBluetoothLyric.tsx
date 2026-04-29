@@ -11,7 +11,6 @@ import { showRemoteLyric } from '@/core/desktopLyric'
 import { setLastLyric } from '@/core/player/playInfo'
 import { updateNowPlayingTitles } from '@/plugins/player/utils'
 import playerState from '@/store/player/state'
-import { state } from '@/plugins/player/playList'
 
 export default memo(() => {
   const t = useI18n()
@@ -24,7 +23,11 @@ export default memo(() => {
     void showRemoteLyric(isShowBluetoothLyric)
     if (!isShowBluetoothLyric) {
       setLastLyric()
-      void updateNowPlayingTitles((state.prevDuration || 0) * 1000, playerState.musicInfo.name, playerState.musicInfo.singer ?? '', playerState.musicInfo.album ?? '')
+      void updateNowPlayingTitles({
+        title: playerState.musicInfo.name,
+        artist: playerState.musicInfo.singer ?? '',
+        album: playerState.musicInfo.album ?? '',
+      })
     }
   }
 

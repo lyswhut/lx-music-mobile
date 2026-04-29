@@ -3,6 +3,7 @@ import BackgroundTimer from 'react-native-background-timer'
 import { defaultUrl } from '@/config'
 // import { action as playerAction } from '@/store/modules/player'
 import settingState from '@/store/setting/state'
+import playerState from '@/store/player/state'
 
 
 const list: LX.Player.Track[] = []
@@ -37,6 +38,7 @@ const buildTracks = (musicInfo: LX.Player.PlayMusic, url?: LX.Player.Track['url'
   const isShowNotificationImage = settingState.setting['player.isShowNotificationImage']
   const album = mInfo.album || undefined
   const artwork = isShowNotificationImage && mInfo.pic && httpRxp.test(mInfo.pic) ? mInfo.pic : undefined
+  const lyric = settingState.setting['player.isShowBluetoothFullLyric'] && playerState.musicInfo.id == musicInfo.id && playerState.musicInfo.lrc ? playerState.musicInfo.lrc : undefined
   if (url) {
     track.push({
       id: `${mInfo.id}__//${Math.random()}__//${url}`,
@@ -47,6 +49,7 @@ const buildTracks = (musicInfo: LX.Player.PlayMusic, url?: LX.Player.Track['url'
       artwork,
       userAgent: defaultUserAgent,
       musicId: mInfo.id,
+      lyric,
       // original: { ...musicInfo },
       duration,
     })
@@ -59,6 +62,7 @@ const buildTracks = (musicInfo: LX.Player.PlayMusic, url?: LX.Player.Track['url'
     album,
     artwork,
     musicId: mInfo.id,
+    lyric,
     // original: { ...musicInfo },
     duration: 0,
   })

@@ -58,7 +58,12 @@ export const TEMP_FILE_PATH = temporaryDirectoryPath + '/tempFile'
 
 export const checkStoragePermissions = async() => PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE)
 
+/**
+ * 请求 Android 读写外部存储权限（写入公共 Download 等）。非 Android 直接视为已授权。
+ */
 export const requestStoragePermission = async() => {
+  if (Platform.OS !== 'android') return true
+
   const isGranted = await checkStoragePermissions()
   if (isGranted) return isGranted
 

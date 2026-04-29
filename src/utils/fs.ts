@@ -1,3 +1,4 @@
+import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 import {
   Dirs,
@@ -20,6 +21,91 @@ export const extname = (name: string) => name.lastIndexOf('.') > 0 ? name.substr
 export const temporaryDirectoryPath = Dirs.CacheDir
 export const externalStorageDirectoryPath = Dirs.SDCardDir
 export const privateStorageDirectoryPath = Dirs.DocumentDir
+
+/** 下载目录下统一子文件夹名，便于用户识别并与其它下载区分 */
+const MUSIC_DOWNLOAD_APP_FOLDER = 'lxmusic'
+
+/**
+ * 获取歌曲下载保存目录绝对路径。
+ * Android（APK）：系统公共 Download 下的 `lxmusic` 子目录，用户可在文件管理器「下载/lxmusic」中看到。
+ * iOS：无与用户共享的公共 Download，使用应用沙盒 `Documents/download/lxmusic`。
+ */
+export const getMusicDownloadDirectoryPath = (): string => {
+  if (Platform.OS === 'android') {
+    const root = (RNFS.DownloadDirectoryPath ?? '').replace(/\/+$/, '')
+    if (root.length > 0) {
+      return `${root}/${MUSIC_DOWNLOAD_APP_FOLDER}`.replace(/\/+/g, '/')
+    }
+  }
+  return `${privateStorageDirectoryPath}/download/${MUSIC_DOWNLOAD_APP_FOLDER}`.replace(/\/+/g, '/')
+}
+
+/**
+ * 确保下载目录存在（与 RNFS.downloadFile 使用同一套路径 API）。
+ * Android 公共路径下需单独创建 `lxmusic` 子目录。
+ */
+export const ensureMusicDownloadDirectory = async(): Promise<string> => {
+  const dir = getMusicDownloadDirectoryPath()
+  if (!(await RNFS.exists(dir))) {
+    await RNFS.mkdir(dir)
+  }
+  return dir
+}
+
+/**
+ * 判断下载目标路径是否已存在（用于生成不重复文件名）。
+ */
+export const existsMusicDownloadTarget = async(path: string): Promise<boolean> => {
+  return RNFS.exists(path)
+}
+
+export interface MusicDownloadDirItem {
+  name: string
+  path: string
+  isFile: boolean
+  size: number
+}
+
+/**
+ * 列出下载目录内文件（Android 公共目录用 RNFS.readDir，与写入路径一致）。
+ */
+export const readMusicDownloadDirectory = async(): Promise<MusicDownloadDirItem[]> => {
+  const dir = getMusicDownloadDirectoryPath()
+  if (Platform.OS === 'android') {
+    const list = await RNFS.readDir(dir)
+    return list.map(item => ({
+      name: item.name,
+      path: item.path,
+      isFile: item.isFile(),
+      size: typeof item.size === 'number' ? item.size : Number(item.size) || 0,
+    }))
+  }
+  const list = await FileSystem.ls(dir)
+  return list.map((item: {
+    name: string
+    path: string
+    isFile?: boolean
+    isDirectory?: boolean
+    size?: number
+  }) => ({
+    name: item.name,
+    path: item.path,
+    isFile: item.isFile === true || item.isDirectory === false,
+    size: item.size ?? 0,
+  }))
+}
+
+/**
+ * 通知系统媒体库扫描新文件（Android 下载后便于「音乐/文件」类应用立刻可见）。
+ */
+export const scanMusicDownloadFile = async(path: string): Promise<void> => {
+  if (Platform.OS !== 'android') return
+  try {
+    await RNFS.scanFile(path)
+  } catch {
+    // 扫描失败不影响下载已成功写入磁盘
+  }
+}
 
 export const getExternalStoragePaths = async(is_removable?: boolean) => _getExternalStoragePaths(is_removable)
 

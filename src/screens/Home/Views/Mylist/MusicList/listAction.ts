@@ -11,6 +11,7 @@ import type { SelectInfo } from './ListMenu'
 import { type Metadata } from '@/components/MetadataEditModal'
 import musicSdk from '@/utils/musicSdk'
 import { getListMusicSync } from '@/utils/listManage'
+import { downloadMusicToLocal } from '@/core/music/downloader'
 
 export const handlePlay = (listId: SelectInfo['listId'], index: SelectInfo['index']) => {
   void playList(listId, index)
@@ -69,6 +70,20 @@ export const handleUpdateMusicInfo = (listId: SelectInfo['listId'], musicInfo: L
 
 export const handleShare = (musicInfo: SelectInfo['musicInfo']) => {
   shareMusic(settingState.setting['common.shareType'], settingState.setting['download.fileName'], musicInfo)
+}
+
+/**
+ * 下载在线歌曲到本地目录，忽略本地歌曲。
+ */
+export const handleDownload = async(musicInfo: SelectInfo['musicInfo']) => {
+  if (musicInfo.source == 'local') return
+  try {
+    const savePath = await downloadMusicToLocal(musicInfo)
+    toast(global.i18n.t('download_success', { path: savePath }))
+  } catch (err) {
+    console.error(err)
+    toast(global.i18n.t('download_failed'))
+  }
 }
 
 

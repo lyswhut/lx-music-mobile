@@ -14,6 +14,32 @@
 
 <p align="center">一个基于 React Native 开发的音乐软件</p>
 
+## 关于本仓库（Pride-lee / [lx-music-mobile](https://github.com/Pride-lee/lx-music-mobile)）
+
+本仓库在 **[lyswhut/lx-music-mobile](https://github.com/lyswhut/lx-music-mobile)** 上游基础上，合并他人分支后做了功能与体验向的修改。**Release 与 Issue 请以本仓库为准**；上游更新可通过 `git remote add upstream …` 后自行 `fetch` / `merge`。
+
+### 相对上游的主要改动
+
+| 模块 | 说明 |
+|------|------|
+| **底部导航** | 新增 `BottomBar`（`src/screens/Home/components/BottomBar.tsx`），横版 / 竖版首页接入；`LIST_IDS` 增加 `download` 页签（`src/config/constant.ts`）。 |
+| **下载到本地** | 在线列表、我的歌单列表菜单支持下载（`OnlineList`、`Mylist/MusicList` 的 `ListMenu` / `listAction`）。核心逻辑在 `src/core/music/downloader.ts`。 |
+| **保存路径（Android）** | 使用系统公共目录 **`Download/lxmusic`**（`src/utils/fs.ts` 中 `getMusicDownloadDirectoryPath` / `ensureMusicDownloadDirectory`），便于在系统文件管理器的「下载」里找到；iOS 为应用沙盒 `Documents/download/lxmusic`。下载完成后 Android 会 `scanFile` 便于媒体库识别。 |
+| **存储权限** | Android 在写入公共下载目录前调用 `requestStoragePermission`（`src/utils/tools.ts`，非 Android 直接视为已授权）；拒绝或「不再询问」时 Toast / 弹窗引导前往系统设置（多语言文案见 `src/lang/*.json`）。 |
+| **下载音质与 CDN** | 下载取链音质与 **设置 → 播放音质** 一致（`getPlayQuality` + `getMusicUrl`）；下载请求附带各音源常见 **`Referer`**，减轻高码率直链 403。默认示例配置里 `player.playQuality` 为 `320k`（`src/config/defaultSetting.ts`，可按需调整）。 |
+| **下载页** | `src/screens/Home/Views/Download/index.js`：展示本地下载列表、刷新等。 |
+| **界面** | `PlayerBar` 等样式调整；`PactModal` 等小改动。 |
+| **Android 工程** | `android/build.gradle`、`gradle.properties`、`gradle-wrapper.properties` 等为本地可打包环境调整（若你环境不同请自行对齐）。 |
+
+### 同步上游示例
+
+```bash
+git fetch upstream
+git merge upstream/master   # 或 git rebase upstream/master
+```
+
+---
+
 ## 说明
 
 所用技术栈：

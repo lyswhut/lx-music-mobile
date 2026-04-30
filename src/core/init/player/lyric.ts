@@ -4,7 +4,6 @@ import { onDesktopLyricPositionChange, showDesktopLyric, onLyricLinePlay, showRe
 import playerState from '@/store/player/state'
 import { updateNowPlayingTitles } from '@/plugins/player/utils'
 import { setLastLyric } from '@/core/player/playInfo'
-import { state } from '@/plugins/player/playList'
 
 const updateRemoteLyric = async(lrc?: string) => {
   setLastLyric(lrc)
@@ -48,7 +47,7 @@ export default async(setting: LX.AppSetting) => {
     })
   })
   onLyricLinePlay(({ text, extendedLyrics }) => {
-    if (!text && !state.isPlaying) {
+    if (!text && !playerState.isPlay) {
       void updateRemoteLyric()
     } else {
       void updateRemoteLyric(text)

@@ -1,0 +1,87 @@
+name: Sync Upstream
+
+# 自动同步上游 lyswhut/lx-music-mobile 到本仓库 master
+# 触发方式：
+#   1) schedule：每天 UTC 18:00（北京次日 02:00）执行一次
+#   2) workflow_dispatch：在 Actions 页面手动运行，可选择是否随后触发 Release 打包
+#
+# 推送说明（重要）：
+#   GitHub Actions 默认 `GITHUB_TOKEN` 推送出去的 commit「不会再次触发其它 workflow」，
+#   所以本 workflow 在末尾会调用一次 release.yml 的 workflow_dispatch。
+#   若你为本仓库配置了 secrets.SYNC_TOKEN（拥有 contents:write 的 PAT），将优先使用，
+#   此时由 PAT 推送的 commit 会按正常用户事件触发 release.yml。
+
+on:
+  schedule:
+    - cron: '0 18 * * *'
+  workflow_dispatch:
+    inputs:
+      upstream_branch:
+        description: '上游分支名（默认 master）'
+        required: false
+        default: 'master'
+      run_release:
+        description: '同步后是否触发 Release 打包'
+        type: boolean
+        required: false
+        default: true
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  sync:
+    name: Sync from lyswhut/lx-music-mobile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+          token: ${{ secrets.SYNC_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/lyswhut/lx-music-mobile.git
+          git fetch upstream --tags
+
+      - name: Merge upstream branch
+        env:
+          UPSTREAM_BRANCH: ${{ github.event.inputs.upstream_branch || 'master' }}
+        run: |
+          set -e
+          BEFORE=$(git rev-parse HEAD)
+          if ! git merge --no-edit "upstream/${UPSTREAM_BRANCH}"; then
+            echo "::error::合并 upstream/${UPSTREAM_BRANCH} 出现冲突，请本地解决后再推送"
+            git merge --abort || true
+            exit 1
+          fi
+          AFTER=$(git rev-parse HEAD)
+          if [ "$BEFORE" = "$AFTER" ]; then
+            echo "已是最新，无需推送"
+            echo "CHANGED=false" >> $GITHUB_ENV
+          else
+            echo "已合并新提交"
+            echo "CHANGED=true" >> $GITHUB_ENV
+          fi
+
+      - name: Push merged commits
+        if: env.CHANGED == 'true'
+        run: |
+          git push origin master
+          git push origin --tags
+
+      - name: Trigger Release workflow
+        if: env.CHANGED == 'true' && (github.event_name == 'schedule' || github.event.inputs.run_release == 'true')
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run release.yml --ref master \
+            || echo "调用 release.yml 失败（可能未启用 workflow_dispatch 或 token 权限不足），已跳过"

@@ -38,6 +38,38 @@ git fetch upstream
 git merge upstream/master   # 或 git rebase upstream/master
 ```
 
+### 自动同步上游 + 自动打包到 Release
+
+仓库已附带两个工作流，配合一次性配置即可让「同步上游」与「打包发版」全自动跑：
+
+- `.github/workflows/sync-upstream.yml`：每天 UTC 18:00（北京 02:00）自动 `merge upstream/master` 并推送，可在 Actions 页手动触发。
+- `.github/workflows/release.yml`：`push master` 或手动 `workflow_dispatch` 时构建多架构 APK 并发到 [Releases](https://github.com/Pride-lee/lx-music-mobile/releases)。
+
+#### 一次性需要在 GitHub 配置的 Secrets
+
+在仓库 **Settings → Secrets and variables → Actions → New repository secret** 添加：
+
+| Secret | 用途 | 是否必需 |
+|--------|------|----------|
+| `KEYSTORE_STORE_FILE_BASE64` | Android 签名 keystore 的 **base64**（`base64 -w0 your.keystore`） | 必需 |
+| `KEYSTORE_STORE_FILE` | keystore 文件名（构建时落到 `android/app/<这个名字>`） | 必需 |
+| `KEYSTORE_KEY_ALIAS` | keystore 的 key alias | 必需 |
+| `KEYSTORE_PASSWORD` | keystore 密码 | 必需 |
+| `KEYSTORE_KEY_PASSWORD` | key 密码 | 必需 |
+| `SYNC_TOKEN` | 一个 **Fine-grained PAT**，对本仓库给 **Contents: Read and write** + **Actions: Read and write**；用来让自动同步推送的提交能触发后续 workflow | 可选，强烈建议 |
+
+> 不配置 `SYNC_TOKEN` 也能跑：默认会退化为 `GITHUB_TOKEN` 推送，并显式调用 `release.yml` 的 `workflow_dispatch` 兜底；但 PAT 模式更稳，且能让 release.yml 通过 `push` 事件自然触发。
+
+#### 触发方式
+
+- **自动**：每天定时；如上游有更新，工作流会合并、推送并自动调起 Release 打包。
+- **手动**：到 **Actions → Sync Upstream → Run workflow**，可选输入 `upstream_branch`（默认 `master`）和是否同时跑 Release。
+- **直接发版**：到 **Actions → Build → Run workflow**，无需同步即可基于当前 master 重新打包发布。
+
+#### 版本号说明
+
+`release.yml` 使用 `package.json` 中的 `version` 作为 tag（前缀 `v`）。同步上游若未修改 `version`，tag 已存在时 `pkgdeps/git-tag-action` 不会重复创建；若希望每次同步都发新 release，可在合并完手动 bump 一下 `package.json` 的 version 再 push。
+
 ---
 
 ## 说明

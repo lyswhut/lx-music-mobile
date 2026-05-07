@@ -108,9 +108,14 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
+    // namespace 保持 cn.toside.music.mobile：决定 R class / BuildConfig 包路径，
+    // 与 java 源码的 package 一致，无需迁移代码；但最终安装包名（applicationId）
+    // 改为 com.luna.music，用于绕过小米后屏对第三方音乐应用的白名单限制
+    // 副作用：与同名"汽水音乐"互斥；老用户从 cn.toside.music.mobile 升级时会被
+    // 视为不同应用，需卸载老版后重装。
     namespace "cn.toside.music.mobile"
     defaultConfig {
-        applicationId "cn.toside.music.mobile"
+        applicationId "com.luna.music"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode verCode

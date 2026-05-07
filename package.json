@@ -1,7 +1,7 @@
 {
   "name": "lx-music-mobile",
-  "version": "1.8.2",
-  "versionCode": 74,
+  "version": "1.8.4",
+  "versionCode": 76,
   "private": true,
   "scripts": {
     "dev": "react-native run-android --active-arch-only",
@@ -45,7 +45,7 @@
   "homepage": "https://github.com/lyswhut/lx-music-mobile#readme",
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.1.1",
-    "@react-native-async-storage/async-storage": "^2.1.2",
+    "@react-native-async-storage/async-storage": "~2.1.2",
     "@react-native-clipboard/clipboard": "^1.14.3",
     "@react-native-community/slider": "^4.5.7",
     "he": "^1.2.0",
@@ -64,7 +64,7 @@
     "react-native-pager-view": "6.7.1",
     "react-native-quick-base64": "^2.2.2",
     "react-native-quick-md5": "^3.0.9",
-    "react-native-track-player": "github:lyswhut/react-native-track-player#d4a062f76ba3d0c408e0f0827b721cc4bf46dffd",
+    "react-native-track-player": "github:lyswhut/react-native-track-player#bfe33933793460e7588d4d8f38eddf7910806f29",
     "react-native-vector-icons": "10.2.0"
   },
   "devDependencies": {

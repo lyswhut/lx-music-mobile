@@ -3,6 +3,7 @@ import BackgroundTimer from 'react-native-background-timer'
 import { defaultUrl } from '@/config'
 // import { action as playerAction } from '@/store/modules/player'
 import settingState from '@/store/setting/state'
+import playerState from '@/store/player/state'
 
 
 const list: LX.Player.Track[] = []
@@ -31,12 +32,20 @@ const formatMusicInfo = (musicInfo: LX.Player.PlayMusic) => {
   }
 }
 
+const getCurrentFullLyric = (targetId: string | null) => {
+  return (settingState.setting['player.isShowBluetoothFullLyric'] && targetId &&
+      playerState.musicInfo.id == targetId && playerState.musicInfo.lrc)
+    ? playerState.musicInfo.lrc
+    : undefined
+}
+
 const buildTracks = (musicInfo: LX.Player.PlayMusic, url?: LX.Player.Track['url'], duration?: LX.Player.Track['duration']): LX.Player.Track[] => {
   const mInfo = formatMusicInfo(musicInfo)
   const track = [] as LX.Player.Track[]
   const isShowNotificationImage = settingState.setting['player.isShowNotificationImage']
   const album = mInfo.album || undefined
   const artwork = isShowNotificationImage && mInfo.pic && httpRxp.test(mInfo.pic) ? mInfo.pic : undefined
+  const lyric = getCurrentFullLyric(mInfo.id)
   if (url) {
     track.push({
       id: `${mInfo.id}__//${Math.random()}__//${url}`,
@@ -47,6 +56,7 @@ const buildTracks = (musicInfo: LX.Player.PlayMusic, url?: LX.Player.Track['url'
       artwork,
       userAgent: defaultUserAgent,
       musicId: mInfo.id,
+      lyric,
       // original: { ...musicInfo },
       duration,
     })
@@ -59,6 +69,7 @@ const buildTracks = (musicInfo: LX.Player.PlayMusic, url?: LX.Player.Track['url'
     album,
     artwork,
     musicId: mInfo.id,
+    lyric,
     // original: { ...musicInfo },
     duration: 0,
   })
@@ -108,21 +119,21 @@ export const getCurrentTrack = async() => {
   return list[currentTrackIndex]
 }
 
-export const updateMetaData = async(musicInfo: LX.Player.MusicInfo, isPlay: boolean, lyric?: string, force = false) => {
+export const updateMetaData = async(musicInfo: LX.Player.MusicInfo, isPlay: boolean, force = false) => {
   if (!force && isPlay == state.isPlaying) {
     const duration = await TrackPlayer.getDuration()
     if (state.prevDuration != duration) {
       state.prevDuration = duration
       const trackInfo = await getCurrentTrack()
       if (trackInfo && musicInfo) {
-        delayUpdateMusicInfo(musicInfo, lyric)
+        delayUpdateMusicInfo(musicInfo)
       }
     }
   } else {
     const [duration, trackInfo] = await Promise.all([TrackPlayer.getDuration(), getCurrentTrack()])
     state.prevDuration = duration
     if (trackInfo && musicInfo) {
-      delayUpdateMusicInfo(musicInfo, lyric)
+      delayUpdateMusicInfo(musicInfo)
     }
   }
 }
@@ -185,8 +196,7 @@ export const playMusic = (musicInfo: LX.Player.PlayMusic, url: string, time: num
 // let musicId = null
 // let duration = 0
 let prevArtwork: string | undefined
-const updateMetaInfo = async(mInfo: LX.Player.MusicInfo, lyric?: string) => {
-  console.log('updateMetaInfo', lyric)
+const updateMetaInfo = async(mInfo: LX.Player.MusicInfo) => {
   const isShowNotificationImage = settingState.setting['player.isShowNotificationImage']
   // const mInfo = formatMusicInfo(musicInfo)
   // console.log('+++++updateMusicPic+++++', track.artwork, track.duration)
@@ -203,21 +213,22 @@ const updateMetaInfo = async(mInfo: LX.Player.MusicInfo, lyric?: string) => {
   state.isPlaying = await TrackPlayer.getState() == State.Playing
   let artwork = isShowNotificationImage ? mInfo.pic ?? prevArtwork : undefined
   if (mInfo.pic) prevArtwork = mInfo.pic
-  let name: string
-  let singer: string
-  if (!state.isPlaying || lyric == null) {
-    name = mInfo.name ?? 'Unknow'
-    singer = mInfo.singer ?? 'Unknow'
+  let title: string
+  let artist: string
+  if (playerState.lastLyric == null) {
+    title = mInfo.name ?? 'Unknow'
+    artist = mInfo.singer ?? 'Unknow'
   } else {
-    name = lyric
-    singer = `${mInfo.name}${mInfo.singer ? ` - ${mInfo.singer}` : ''}`
+    title = playerState.lastLyric
+    artist = `${mInfo.name}${mInfo.singer ? ` - ${mInfo.singer}` : ''}`
   }
   await TrackPlayer.updateNowPlayingMetadata({
-    title: name,
-    artist: singer,
+    title,
+    artist,
     album: mInfo.album ?? undefined,
     artwork,
     duration: state.prevDuration || 0,
+    lyric: getCurrentFullLyric(mInfo.id),
   }, state.isPlaying)
 }
 
@@ -226,13 +237,12 @@ const updateMetaInfo = async(mInfo: LX.Player.MusicInfo, lyric?: string) => {
 const debounceUpdateMetaInfoTools = {
   updateMetaPromise: Promise.resolve(),
   musicInfo: null as LX.Player.MusicInfo | null,
-  debounce(fn: (musicInfo: LX.Player.MusicInfo, lyric?: string) => void | Promise<void>) {
+  debounce(fn: (musicInfo: LX.Player.MusicInfo) => void | Promise<void>) {
     // let delayTimer = null
     let isDelayRun = false
     let timer: number | null = null
     let _musicInfo: LX.Player.MusicInfo | null = null
-    let _lyric: string | undefined
-    return (musicInfo: LX.Player.MusicInfo, lyric?: string) => {
+    return (musicInfo: LX.Player.MusicInfo) => {
       // console.log('debounceUpdateMetaInfoTools', musicInfo)
       if (timer) {
         BackgroundTimer.clearTimeout(timer)
@@ -244,20 +254,17 @@ const debounceUpdateMetaInfoTools = {
       // }
       if (isDelayRun) {
         _musicInfo = musicInfo
-        _lyric = lyric
         timer = BackgroundTimer.setTimeout(() => {
           timer = null
           let musicInfo = _musicInfo
-          let lyric = _lyric
           _musicInfo = null
-          _lyric = undefined
           if (!musicInfo) return
           // isDelayRun = false
-          void fn(musicInfo, lyric)
+          void fn(musicInfo)
         }, 500)
       } else {
         isDelayRun = true
-        void fn(musicInfo, lyric)
+        void fn(musicInfo)
         BackgroundTimer.setTimeout(() => {
           // delayTimer = null
           isDelayRun = false
@@ -266,12 +273,12 @@ const debounceUpdateMetaInfoTools = {
     }
   },
   init() {
-    return this.debounce(async(musicInfo: LX.Player.MusicInfo, lyric?: string) => {
+    return this.debounce(async(musicInfo: LX.Player.MusicInfo) => {
       this.musicInfo = musicInfo
       return this.updateMetaPromise.then(() => {
         // console.log('run')
         if (this.musicInfo?.id === musicInfo.id) {
-          this.updateMetaPromise = updateMetaInfo(musicInfo, lyric)
+          this.updateMetaPromise = updateMetaInfo(musicInfo)
         }
       })
     })

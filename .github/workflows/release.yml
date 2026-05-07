@@ -6,10 +6,16 @@ on:
       - master
   workflow_dispatch:
 
+# 给 GITHUB_TOKEN 显式开通需要的写权限，避免 fork 默认 read-only 导致创建 tag / 发 release 时 403
+permissions:
+  contents: write
+
 jobs:
   Android:
     name: Android
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Check out git repository
         uses: actions/checkout@v4
@@ -151,6 +157,8 @@ jobs:
     runs-on: ubuntu-latest
     # needs: [Android, Android_SL]
     needs: [Android]
+    permissions:
+      contents: write
     steps:
       - name: Check out git repository
         uses: actions/checkout@v4

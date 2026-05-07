@@ -1,0 +1,142 @@
+name: Build (Xiaomi)
+
+# 仅 xiaomi 分支专用打包流程：
+#   - 触发：push 到 xiaomi / 手动触发
+#   - 产物 APK 名加 -xiaomi 后缀，避免与主线（master）的同名 APK 冲突
+#   - tag / release 名形如 v{version}-xiaomi
+#
+# 与主线版本的区别：
+#   - applicationId 为 com.luna.music（伪装"汽水音乐"，用于绕过小米/MIUI 后屏白名单）
+#   - 与汽水音乐互斥；从主线版本升级需卸载重装
+#
+# 注意：本文件同时存在于 master 与 xiaomi 分支，但 trigger 只对 xiaomi 分支的 push 生效，
+#       master 上保留只是为了让 sync-master-to-xiaomi 流程可以一并同步过去。
+
+on:
+  push:
+    branches:
+      - xiaomi
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  Android:
+    name: Android (Xiaomi)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out git repository
+        uses: actions/checkout@v4
+
+      - name: Setup Env
+        uses: ./.github/actions/setup
+
+      - name: Build Packages
+        env:
+          DISABLE_SVG: 1
+        shell: bash
+        run: |
+          cd android
+          echo ${{ secrets.KEYSTORE_STORE_FILE_BASE64 }} | base64 --decode > app/${{ secrets.KEYSTORE_STORE_FILE }}
+          ./gradlew assembleRelease -PMYAPP_UPLOAD_STORE_FILE='${{ secrets.KEYSTORE_STORE_FILE }}' -PMYAPP_UPLOAD_KEY_ALIAS='${{ secrets.KEYSTORE_KEY_ALIAS }}' -PMYAPP_UPLOAD_STORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}' -PMYAPP_UPLOAD_KEY_PASSWORD='${{ secrets.KEYSTORE_KEY_PASSWORD }}'
+          rm -f app/${{ secrets.KEYSTORE_STORE_FILE }}
+
+      - name: Get package version
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+
+      # 把构建产物 lx-music-mobile-v{ver}-{abi}.apk 重命名为 lx-music-mobile-v{ver}-{abi}-xiaomi.apk
+      # 避免与 master 分支同版本的 release 资源冲突
+      - name: Rename APKs (add -xiaomi suffix)
+        shell: bash
+        run: |
+          cd android/app/build/outputs/apk/release
+          for f in lx-music-mobile-v${{ env.PACKAGE_VERSION }}-*.apk; do
+            [ -e "$f" ] || continue
+            base=${f%.apk}
+            mv "$f" "${base}-xiaomi.apk"
+          done
+          ls -la
+
+      - name: Generate file MD5
+        run: |
+          cd android/app/build/outputs/apk/release
+          md5sum *-xiaomi.apk
+
+      - name: Create git tag
+        uses: pkgdeps/git-tag-action@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_repo: ${{ github.repository }}
+          version: ${{ env.PACKAGE_VERSION }}-xiaomi
+          git_commit_sha: ${{ github.sha }}
+          git_tag_prefix: "v"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: xiaomi-v${{ env.PACKAGE_VERSION }}
+          path: android/app/build/outputs/apk/release/*-xiaomi.apk
+
+  Release:
+    name: Release (Xiaomi)
+    runs-on: ubuntu-latest
+    needs: [Android]
+    permissions:
+      contents: write
+    steps:
+      - name: Check out git repository
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+          merge-multiple: true
+
+      - name: Get package version
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+
+      - name: Build release notes
+        shell: bash
+        run: |
+          PACKAGE_VERSION="${{ env.PACKAGE_VERSION }}"
+          MD5_BLOCK=$(cd artifacts && md5sum *-xiaomi.apk)
+          # 用未加引号的 here-doc，让 ${PACKAGE_VERSION} / ${MD5_BLOCK} 被展开；
+          # 反引号统一加 \ 转义为字面字符，避免被当成命令替换
+          cat > release-notes.md <<EOF
+          # LHX Music v${PACKAGE_VERSION} (小米后屏版)
+
+          本版本与 master 主线差异：
+          - \`applicationId\` 改为 \`com.luna.music\`，伪装汽水音乐以绕过小米/MIUI 后屏白名单
+          - 与汽水音乐互斥；从主线版本（cn.toside.music.mobile）升级需要先卸载再重装
+
+          ## File MD5
+          \`\`\`
+          ${MD5_BLOCK}
+          \`\`\`
+          EOF
+          cat release-notes.md
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: ./release-notes.md
+          prerelease: false
+          draft: false
+          tag_name: v${{ env.PACKAGE_VERSION }}-xiaomi
+          name: LHX Music v${{ env.PACKAGE_VERSION }} (小米后屏版)
+          files: |
+            artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-arm64-v8a-xiaomi.apk
+            artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-armeabi-v7a-xiaomi.apk
+            artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86_64-xiaomi.apk
+            artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86-xiaomi.apk
+            artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-universal-xiaomi.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,76 @@
+name: Sync master -> xiaomi
+
+# 把 master 的最新提交自动 merge 到 xiaomi 分支，让 xiaomi 跟随主线（含上游同步进来的）更新
+# 触发方式：
+#   1) push 到 master（包括 sync-upstream 自动同步上游产生的合并提交）
+#   2) workflow_dispatch：手动触发
+#
+# 关于自动触发 release-xiaomi 的说明：
+#   GitHub Actions 默认 GITHUB_TOKEN 推送的提交"不会再次触发其它 workflow"，
+#   所以本 workflow 在末尾会显式调用一次 release-xiaomi.yml 的 workflow_dispatch。
+#   若配置了 secrets.SYNC_TOKEN（拥有 contents:write 的 PAT），将优先使用该 PAT，
+#   此时 PAT 推送的提交会按正常用户事件触发 release-xiaomi.yml。
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+    inputs:
+      run_release:
+        description: '同步后是否触发 Release (Xiaomi) 打包'
+        type: boolean
+        required: false
+        default: true
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  sync:
+    name: Merge master into xiaomi
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout xiaomi
+        uses: actions/checkout@v4
+        with:
+          ref: xiaomi
+          fetch-depth: 0
+          token: ${{ secrets.SYNC_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge origin/master into xiaomi
+        run: |
+          set -e
+          git fetch origin master
+          BEFORE=$(git rev-parse HEAD)
+          if ! git merge --no-edit origin/master; then
+            echo "::error::合并 master 出现冲突，请本地解决后再推送（通常是 build.gradle 或 constant.ts，留 xiaomi 那侧的 com.luna.music 即可）"
+            git merge --abort || true
+            exit 1
+          fi
+          AFTER=$(git rev-parse HEAD)
+          if [ "$BEFORE" = "$AFTER" ]; then
+            echo "xiaomi 已包含 master 全部提交，无需推送"
+            echo "CHANGED=false" >> $GITHUB_ENV
+          else
+            echo "已合并 master 新提交"
+            echo "CHANGED=true" >> $GITHUB_ENV
+          fi
+
+      - name: Push to xiaomi
+        if: env.CHANGED == 'true'
+        run: git push origin xiaomi
+
+      - name: Trigger Release (Xiaomi) workflow
+        if: env.CHANGED == 'true' && (github.event_name == 'push' || github.event.inputs.run_release == 'true')
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run release-xiaomi.yml --ref xiaomi \
+            || echo "调用 release-xiaomi.yml 失败（可能未启用 workflow_dispatch 或 token 权限不足），已跳过"

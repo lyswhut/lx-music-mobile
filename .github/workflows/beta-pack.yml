@@ -7,7 +7,7 @@ on:
 
 jobs:
   Android:
-    name: Android
+    name: Android 
     runs-on: ubuntu-latest
     steps:
       - name: Check out git repository

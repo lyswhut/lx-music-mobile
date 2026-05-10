@@ -393,7 +393,7 @@
   "songlist_new": "Latest",
   "songlist_open": "Open",
   "songlist_open_input_placeholder": "Enter a playlist link/ID",
-  "songlist_open_input_tip": "1. Cross-service playlists are not supported. Please confirm whether the playlist to be opened corresponds to the current chosen service\n2. If you encounter a playlist link that cannot be opened. Please send us your feedback\n3. Unable to open Kugou playlist with playlist ID or link from lite edition, but support to open it with Kugou code or link from main edition",
+  "songlist_open_input_tip": "1. Cross-service playlists are not supported. Please confirm whether the playlist to be opened corresponds to the current chosen service\n2. If you encounter a playlist link that cannot be opened. Please send us your feedback\n3. Unable to open Kugou playlist with playlist ID or link from lite edition, but support to open it with Kugou code or link from main edition\n4. NetEase’s “Private Radar” playlists require a token to access. Tencent’s personal playlists require your profile be public to access. For details, see FAQ in software docs",
   "songlist_recommend": "Recommend",
   "songlist_rise": "Rise",
   "songlist_tag_default": "Default",

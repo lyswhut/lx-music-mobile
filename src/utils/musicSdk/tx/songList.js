@@ -2,6 +2,11 @@ import { httpFetch } from '../../request'
 import { decodeName, formatPlayTime, sizeFormate, dateFormat, formatPlayCount } from '../../index'
 import { formatSingerName } from '../utils'
 
+const listDetailMobileHeaders = {
+  'User-Agent': 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/124 Mobile Safari/537.36',
+  Referer: 'https://i2.y.qq.com/n3/other/pages/details/playlist.html',
+}
+
 export default {
   _requestObj_tags: null,
   _requestObj_hotTags: null,
@@ -29,6 +34,7 @@ export default {
     // https://i.y.qq.com/n2/m/share/details/taoge.html?platform=11&appshare=android_qq&appversion=9050006&id=7217720898&ADTAG=qfshare
     listDetailLink: /\/playlist\/(\d+)/,
     listDetailLink2: /id=(\d+)/,
+    listDetailHostUin: /(?:\?|&)hoste?uin=([^&#]+)/,
   },
   tagsUrl: 'https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&hostUin=0&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=wk_v15.json&needNewCode=0&data=%7B%22tags%22%3A%7B%22method%22%3A%22get_all_categories%22%2C%22param%22%3A%7B%22qq%22%3A%22%22%7D%2C%22module%22%3A%22playlist.PlaylistAllCategoriesServer%22%7D%7D',
   hotTagUrl: 'https://c.y.qq.com/node/pc/wk_v15/category_playlist.html',
@@ -62,6 +68,38 @@ export default {
   },
   getListDetailUrl(id) {
     return `https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&new_format=1&disstid=${id}&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0`
+  },
+  getListDetailDataByNewApi(id, hostUin) {
+    return httpFetch('https://u.y.qq.com/cgi-bin/musicu.fcg', {
+      method: 'post',
+      headers: listDetailMobileHeaders,
+      body: {
+        comm: {
+          cv: 20010508,
+          ct: 24,
+          format: 'json',
+          inCharset: 'utf-8',
+          outCharset: 'utf-8',
+          notice: 0,
+          platform: 'yqq.json',
+          needNewCode: 1,
+          uin: 0,
+        },
+        req_0: {
+          module: 'music.srfDissInfo.aiDissInfo',
+          method: 'uniform_get_Dissinfo',
+          param: {
+            disstid: parseInt(id),
+            enc_host_uin: hostUin,
+            tag: 1,
+            userinfo: 1,
+            song_begin: 0,
+            song_num: this.limit_song,
+            orderlist: 1,
+          },
+        },
+      },
+    })
   },
 
   // http://nplserver.kuwo.cn/pl.svc?op=getlistinfo&pid=2849349915&pn=0&rn=100&encode=utf8&keyset=pl2012&identity=kuwo&pcmp4=1&vipver=MUSIC_9.0.5.0_W1&newver=1
@@ -179,8 +217,15 @@ export default {
     return url
   },
 
-  async getListId(id) {
+  async getListInfo(id) {
+    const info = {
+      id,
+      hostUin: '',
+    }
     if ((/[?&:/]/.test(id))) {
+      const hostUinResult = this.regExps.listDetailHostUin.exec(id)
+      if (hostUinResult) info.hostUin = decodeURIComponent(hostUinResult[1])
+
       if (!this.regExps.listDetailLink.test(id)) {
         id = await this.handleParseId(id)
       }
@@ -189,16 +234,52 @@ export default {
         result = this.regExps.listDetailLink2.exec(id)
         if (!result) throw new Error('failed')
       }
-      id = result[1]
+      info.id = result[1]
       // console.log(id)
     }
-    return id
+    return info
+  },
+  async getListId(id) {
+    return (await this.getListInfo(id)).id
+  },
+  async getListDetailByNewApi(id, hostUin, tryNum = 0) {
+    if (tryNum > 2) return Promise.reject(new Error('try max num'))
+
+    const requestObj_listDetail = this.getListDetailDataByNewApi(id, hostUin)
+    const { body, statusCode } = await requestObj_listDetail.promise
+    const result = body.req_0?.data
+    const dirinfo = result?.dirinfo
+
+    if (
+      statusCode !== 200 ||
+      body.code !== this.successCode ||
+      body.req_0?.code !== this.successCode ||
+      result?.code !== this.successCode ||
+      result?.subcode !== this.successCode ||
+      !dirinfo
+    ) return this.getListDetailByNewApi(id, hostUin, ++tryNum)
+
+    return {
+      list: this.filterListDetail(result.songlist ?? []),
+      page: 1,
+      limit: (result.songlist?.length ?? 0) + 1,
+      total: result.songlist?.length ?? dirinfo.songnum ?? 0,
+      source: 'tx',
+      info: {
+        name: dirinfo.title,
+        img: dirinfo.picurl,
+        desc: decodeName(dirinfo.desc ?? '').replace(/<br>/g, '\n'),
+        author: dirinfo.host_nick,
+        play_count: formatPlayCount(dirinfo.listennum),
+      },
+    }
   },
   // 获取歌曲列表内的音乐
   async getListDetail(id, tryNum = 0) {
     if (tryNum > 2) return Promise.reject(new Error('try max num'))
 
-    id = await this.getListId(id)
+    const listInfo = await this.getListInfo(id)
+    id = listInfo.id
 
     const requestObj_listDetail = httpFetch(this.getListDetailUrl(id), {
       headers: {
@@ -209,6 +290,7 @@ export default {
     const { body } = await requestObj_listDetail.promise
 
     if (body.code !== this.successCode) return this.getListDetail(id, ++tryNum)
+    if (body.subcode !== this.successCode || !body.cdlist?.[0]) return this.getListDetailByNewApi(id, listInfo.hostUin)
     const cdlist = body.cdlist[0]
     return {
       list: this.filterListDetail(cdlist.songlist),

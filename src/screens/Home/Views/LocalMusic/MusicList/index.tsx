@@ -1,5 +1,5 @@
-import { useCallback, useRef, useState, type LayoutChangeEvent } from 'react'
-import { FlatList, View } from 'react-native'
+import { useCallback, useRef, useState } from 'react'
+import { FlatList, View, type LayoutChangeEvent } from 'react-native'
 import { playList } from '@/core/player/player'
 import { LIST_IDS } from '@/config/constant'
 import ListItem from './ListItem'

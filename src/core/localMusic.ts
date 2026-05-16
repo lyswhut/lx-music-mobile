@@ -1,5 +1,5 @@
-import { scanAudioFiles, readMetadata } from '@/utils/localMediaMetadata'
-import type { PathItem } from '@/utils/localMediaMetadata'
+import { scanAudioFiles, readMetadata, type MusicMetadataFull } from '@/utils/localMediaMetadata'
+import type { FileType } from '@/utils/fs'
 
 /** 扫描上限，超出截断提示 */
 const SCAN_MAX_MUSICS = 5000
@@ -11,11 +11,11 @@ const SCAN_MAX_MUSICS = 5000
 const SCAN_BATCH_SIZE = 50
 
 /**
- * 去重前置：按 (文件名 + 文件大小 + 修改时间) 对 PathItem[] 去重
+ * 去重前置：按 (文件名 + 文件大小 + 修改时间) 对 FileType[] 去重
  * 发生在 readMetadata() 之前，避免无效 I/O
  */
-function deduplicatePathItems(pathItems: PathItem[]): PathItem[] {
-  const map = new Map<string, PathItem>()
+function deduplicatePathItems(pathItems: FileType[]): FileType[] {
+  const map = new Map<string, FileType>()
   for (const file of pathItems) {
     const key = `${file.name}||${file.size}||${file.lastModified}`
     const existing = map.get(key)
@@ -30,8 +30,8 @@ function deduplicatePathItems(pathItems: PathItem[]): PathItem[] {
  * 将单个音频文件路径转为 MusicInfoLocal
  * @param filePath     - 文件完整路径
  * @param fileName     - 文件名（不含路径）
- * @param fileSize     - 文件大小（字节），从 PathItem 透传
- * @param lastModified - 文件修改时间戳，从 PathItem 透传
+ * @param fileSize     - 文件大小（字节），从 FileType 透传
+ * @param lastModified - 文件修改时间戳，从 FileType 透传
  */
 async function buildLocalMusicInfo(
   filePath: string,
@@ -42,38 +42,43 @@ async function buildLocalMusicInfo(
   try {
     const metadata = await readMetadata(filePath)
     return {
+      id: filePath,
+      name: metadata?.name || fileName,
+      singer: metadata?.singer || '',
       source: 'local',
-      songname: metadata.title || fileName,
-      singer: metadata.artist || '',
-      albumName: metadata.album || '',
+      interval: metadata?.interval ? formatInterval(metadata.interval) : null,
       meta: {
+        songId: filePath,
         filePath,
-        fileName,
-        fileSize,
-        lastModified,
-        picUrl: '',
-        duration: (metadata.duration ?? 0) * 1000,
-        ext: '',
+        albumName: metadata?.albumName || '',
+        ext: metadata?.ext || '',
+        picUrl: null,
       },
     }
   } catch {
     // ID3 读取失败时降级：使用文件名作为歌名
     return {
-      source: 'local',
-      songname: fileName,
+      id: filePath,
+      name: fileName,
       singer: '',
-      albumName: '',
+      source: 'local',
+      interval: null,
       meta: {
+        songId: filePath,
         filePath,
-        fileName,
-        fileSize,
-        lastModified,
-        picUrl: '',
-        duration: 0,
+        albumName: '',
         ext: '',
+        picUrl: null,
       },
     }
   }
+}
+
+/** 将秒数格式化为 mm:ss */
+function formatInterval(seconds: number): string {
+  const m = Math.floor(seconds / 60)
+  const s = Math.floor(seconds % 60)
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
 }
 
 /**

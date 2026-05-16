@@ -9,7 +9,7 @@ import {
 import { View, TouchableOpacity } from 'react-native'
 import { createStyle } from '@/utils/tools'
 import Text from '@/components/common/Text'
-import Icon from '@/components/common/Icon'
+import { Icon } from '@/components/common/Icon'
 import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'
 import { playList } from '@/core/player/player'
@@ -50,8 +50,8 @@ export default forwardRef<ListMenuType>((_, ref) => {
   const menuItems: MenuItem[] = useMemo(
     () => [
       { action: 'play', label: t('play'), icon: 'play' },
-      { action: 'playLater', label: t('play_later'), icon: 'clock' },
-      { action: 'copyName', label: t('copy_name'), icon: 'copy' },
+      { action: 'playLater', label: t('play_later'), icon: 'playback-rate' },
+      { action: 'copyName', label: t('copy_name'), icon: 'share' },
       // TODO: 待"我的歌单"模块完成后，新增 'addToSonglist' 菜单项
       // { action: 'addToSonglist', label: t('add_to_songlist'), icon: 'add' },
     ],

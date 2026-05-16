@@ -33,7 +33,7 @@ export default ({ onScan, isScanning }: ActionBarProps) => {
 
   return (
     <View style={styles.container}>
-      <Text size={18} weight="bold" style={styles.title}>
+      <Text size={18} style={{ fontWeight: 'bold', ...styles.title }}>
         {t('local_music_title')}
       </Text>
       <Button

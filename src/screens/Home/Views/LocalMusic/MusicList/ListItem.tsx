@@ -1,7 +1,7 @@
 import { memo, useCallback } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import Text from '@/components/common/Text'
-import Icon from '@/components/common/Icon'
+import { Icon } from '@/components/common/Icon'
 import { useTheme } from '@/store/theme/hook'
 import { createStyle } from '@/utils/tools'
 
@@ -39,13 +39,13 @@ const ListItem = memo(
       >
         {/* 左侧：封面占位 */}
         <View style={styles.cover}>
-          <Icon name="music" size={20} color={theme['c-font-label']} />
+          <Icon name="play-outline" size={20} color={theme['c-font-label']} />
         </View>
 
         {/* 中间：歌曲信息 */}
         <View style={styles.info}>
           <Text numberOfLines={1} size={14} color={theme['c-font']}>
-            {musicInfo.songname}
+            {musicInfo.name}
           </Text>
           {musicInfo.singer ? (
             <Text numberOfLines={1} size={12} color={theme['c-font-label']}>

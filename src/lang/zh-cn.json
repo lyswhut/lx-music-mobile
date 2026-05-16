@@ -172,6 +172,7 @@
   "name": "歌曲名：{name}",
   "nav_exit": "退出应用",
   "nav_love": "我的列表",
+  "nav_local_music": "本地音乐",
   "nav_search": "搜索",
   "nav_setting": "设置",
   "nav_songlist": "歌单",

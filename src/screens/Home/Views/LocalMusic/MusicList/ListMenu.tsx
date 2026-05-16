@@ -83,7 +83,7 @@ export default forwardRef<ListMenuType>((_, ref) => {
   if (!visible || !selectInfo) return null
 
   return (
-    <View style={styles.overlay}>
+    <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={() => setVisible(false)}>
       <TouchableOpacity style={styles.menu} activeOpacity={1}>
         {menuItems.map((item) => (
           <TouchableOpacity
@@ -98,7 +98,7 @@ export default forwardRef<ListMenuType>((_, ref) => {
           </TouchableOpacity>
         ))}
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   )
 })
 

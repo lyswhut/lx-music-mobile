@@ -118,6 +118,20 @@ export class StateEvent extends Event {
     this.emit('navActiveIdUpdated', id)
   }
 
+  /**
+   * 本地音乐列表更新
+   */
+  localMusicsUpdated(musics: LX.Music.MusicInfoLocal[]) {
+    this.emit('localMusicsUpdated', musics)
+  }
+
+  /**
+   * 本地音乐扫描状态更新
+   */
+  localMusicScanningUpdated(isScanning: boolean) {
+    this.emit('localMusicScanningUpdated', isScanning)
+  }
+
   sourceNamesUpdated(names: CommonState['sourceNames']) {
     this.emit('sourceNamesUpdated', names)
   }

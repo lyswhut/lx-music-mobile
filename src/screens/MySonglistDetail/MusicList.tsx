@@ -69,7 +69,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId, listId 
 
   const loadList = async (id: string) => {
     const list = await getListMusics(id)
-    setMusics(list)
+    setMusics([...list]) // 创建新数组，触发 React 重渲染
   }
 
   const handlePlayList = useCallback((item: LX.Music.MusicInfo, index: number) => {

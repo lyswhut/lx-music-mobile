@@ -34,6 +34,8 @@ const createUserList = ({
   source,
   sourceListId,
   locationUpdateTime,
+  desc,
+  picUrl,
 }: LX.List.UserListInfo, position: number) => {
   if (position < 0 || position >= userLists.length) {
     userLists.push({
@@ -42,6 +44,8 @@ const createUserList = ({
       source,
       sourceListId,
       locationUpdateTime,
+      desc,
+      picUrl,
     })
   } else {
     userLists.splice(position, 0, {
@@ -50,6 +54,8 @@ const createUserList = ({
       source,
       sourceListId,
       locationUpdateTime,
+      desc,
+      picUrl,
     })
   }
 }
@@ -61,6 +67,8 @@ const updateList = ({
   sourceListId,
   // meta,
   locationUpdateTime,
+  desc,
+  picUrl,
 }: LX.List.UserListInfo & { meta?: { id?: string } }) => {
   let index
   switch (id) {
@@ -73,7 +81,7 @@ const updateList = ({
     default:
       index = userLists.findIndex(l => l.id == id)
       if (index < 0) return
-      userLists.splice(index, 1, { ...userLists[index], name, source, sourceListId, locationUpdateTime })
+      userLists.splice(index, 1, { ...userLists[index], name, source, sourceListId, locationUpdateTime, desc, picUrl })
       break
   }
 }
@@ -136,13 +144,15 @@ export const listDataOverwrite = ({ defaultList, loveList, userList, tempList }:
   return updatedListIds
 }
 
-export const userListCreate = ({ name, id, source, sourceListId, position, locationUpdateTime }: {
+export const userListCreate = ({ name, id, source, sourceListId, position, locationUpdateTime, desc, picUrl }: {
   name: string
   id: string
   source?: LX.OnlineSource
   sourceListId?: string
   position: number
   locationUpdateTime: number | null
+  desc?: string
+  picUrl?: string
 }) => {
   if (userLists.some(item => item.id == id)) return
   const newList: LX.List.UserListInfo = {
@@ -151,6 +161,8 @@ export const userListCreate = ({ name, id, source, sourceListId, position, locat
     source,
     sourceListId,
     locationUpdateTime,
+    desc,
+    picUrl,
   }
   createUserList(newList, position)
 }

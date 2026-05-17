@@ -2,11 +2,6 @@ import { httpFetch } from '../../request'
 import { decodeName, formatPlayTime, sizeFormate, dateFormat, formatPlayCount } from '../../index'
 import { formatSingerName } from '../utils'
 
-const listDetailMobileHeaders = {
-  'User-Agent': 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/124 Mobile Safari/537.36',
-  Referer: 'https://i2.y.qq.com/n3/other/pages/details/playlist.html',
-}
-
 export default {
   _requestObj_tags: null,
   _requestObj_hotTags: null,
@@ -68,38 +63,6 @@ export default {
   },
   getListDetailUrl(id) {
     return `https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&new_format=1&disstid=${id}&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0`
-  },
-  getListDetailDataByNewApi(id, hostUin) {
-    return httpFetch('https://u.y.qq.com/cgi-bin/musicu.fcg', {
-      method: 'post',
-      headers: listDetailMobileHeaders,
-      body: {
-        comm: {
-          cv: 20010508,
-          ct: 24,
-          format: 'json',
-          inCharset: 'utf-8',
-          outCharset: 'utf-8',
-          notice: 0,
-          platform: 'yqq.json',
-          needNewCode: 1,
-          uin: 0,
-        },
-        req_0: {
-          module: 'music.srfDissInfo.aiDissInfo',
-          method: 'uniform_get_Dissinfo',
-          param: {
-            disstid: parseInt(id),
-            enc_host_uin: hostUin,
-            tag: 1,
-            userinfo: 1,
-            song_begin: 0,
-            song_num: this.limit_song,
-            orderlist: 1,
-          },
-        },
-      },
-    })
   },
 
   // http://nplserver.kuwo.cn/pl.svc?op=getlistinfo&pid=2849349915&pn=0&rn=100&encode=utf8&keyset=pl2012&identity=kuwo&pcmp4=1&vipver=MUSIC_9.0.5.0_W1&newver=1
@@ -223,8 +186,8 @@ export default {
       hostUin: '',
     }
     if ((/[?&:/]/.test(id))) {
-      const hostUinResult = this.regExps.listDetailHostUin.exec(id)
-      if (hostUinResult) info.hostUin = decodeURIComponent(hostUinResult[1])
+      const hostUinResult = this.regExps.listDetailHostUin.exec(decodeURIComponent(id))
+      if (hostUinResult) info.hostUin = hostUinResult[1]
 
       if (!this.regExps.listDetailLink.test(id)) {
         id = await this.handleParseId(id)
@@ -245,8 +208,39 @@ export default {
   async getListDetailByNewApi(id, hostUin, tryNum = 0) {
     if (tryNum > 2) return Promise.reject(new Error('try max num'))
 
-    const requestObj_listDetail = this.getListDetailDataByNewApi(id, hostUin)
-    const { body, statusCode } = await requestObj_listDetail.promise
+    const { body, statusCode } = httpFetch('https://u.y.qq.com/cgi-bin/musicu.fcg', {
+      method: 'post',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/124 Mobile Safari/537.36',
+        Referer: 'https://i2.y.qq.com/n3/other/pages/details/playlist.html',
+      },
+      body: {
+        comm: {
+          cv: 20010508,
+          ct: 24,
+          format: 'json',
+          inCharset: 'utf-8',
+          outCharset: 'utf-8',
+          notice: 0,
+          platform: 'yqq.json',
+          needNewCode: 1,
+          uin: 0,
+        },
+        req_0: {
+          module: 'music.srfDissInfo.aiDissInfo',
+          method: 'uniform_get_Dissinfo',
+          param: {
+            disstid: parseInt(id),
+            enc_host_uin: hostUin,
+            tag: 1,
+            userinfo: 1,
+            song_begin: 0,
+            song_num: this.limit_song,
+            orderlist: 1,
+          },
+        },
+      },
+    }).promise
     const result = body.req_0?.data
     const dirinfo = result?.dirinfo
 

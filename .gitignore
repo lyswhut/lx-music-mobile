@@ -1,6 +1,9 @@
 # OSX
 #
 .DS_Store
+.mp3
+testMedia
+.mydocs
 
 # Xcode
 #

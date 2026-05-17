@@ -77,8 +77,14 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId, listId 
   }, [listId])
 
   const handleLongPress = useCallback((item: LX.Music.MusicInfo, index: number) => {
-    // TODO: implement long press
-  }, [])
+    musicPositionModalRef.current?.show({
+      musicInfo: item,
+      selectedList: selectedListRef.current,
+      index,
+      listId,
+      single: selectedListRef.current.length === 0,
+    })
+  }, [listId])
 
   const showMenu = useCallback((musicInfo: LX.Music.MusicInfo, index: number, position: { x: number, y: number, w: number, h: number }) => {
     listMenuRef.current?.show({

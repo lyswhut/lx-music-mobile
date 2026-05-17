@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import state, { type InitState } from './state'
 import { getListMusics } from '@/core/list'
+import { isMySonglistId } from '@/core/mySonglist'
 
 export const useMyList = () => {
   const [lists, setList] = useState(state.allList)
@@ -99,5 +100,23 @@ export const useListFetching = (listId: string) => {
   }, [listId])
 
   return fetching
+}
+
+export const useMySonglists = (): LX.List.UserListInfo[] => {
+  const [lists, setLists] = useState(
+    state.userList.filter(l => isMySonglistId(l.id))
+  )
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setLists(state.userList.filter(l => isMySonglistId(l.id)))
+    }
+    global.state_event.on('mylistUpdated', handleUpdate)
+    return () => {
+      global.state_event.off('mylistUpdated', handleUpdate)
+    }
+  }, [])
+
+  return lists
 }
 

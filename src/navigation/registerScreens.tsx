@@ -9,6 +9,7 @@ import {
   Comment,
   // Setting,
 } from '@/screens'
+import MySonglistDetail from '@/screens/MySonglistDetail'
 import { Provider } from '@/store/Provider'
 
 import {
@@ -16,6 +17,7 @@ import {
   PLAY_DETAIL_SCREEN,
   SONGLIST_DETAIL_SCREEN,
   COMMENT_SCREEN,
+  MY_SONGLIST_DETAIL_SCREEN,
   VERSION_MODAL,
   PACT_MODAL,
   SYNC_MODE_MODAL,
@@ -47,6 +49,7 @@ export default () => {
   Navigation.registerComponent(VERSION_MODAL, () => WrappedComponent(VersionModal))
   Navigation.registerComponent(PACT_MODAL, () => WrappedComponent(PactModal))
   Navigation.registerComponent(SYNC_MODE_MODAL, () => WrappedComponent(SyncModeModal))
+  Navigation.registerComponent(MY_SONGLIST_DETAIL_SCREEN, () => WrappedComponent(MySonglistDetail))
   // Navigation.registerComponent(SETTING_SCREEN, () => WrappedComponent(Setting))
 
   console.info('All screens have been registered...')

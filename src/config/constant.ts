@@ -25,6 +25,7 @@ export enum COMPONENT_IDS {
   playDetail = 'playDetail',
   songlistDetail = 'songlistDetail',
   comment = 'comment',
+  mySonglistDetail = 'mySonglistDetail',
 }
 
 export enum NAV_SHEAR_NATIVE_IDS {
@@ -103,6 +104,7 @@ export const NAV_MENUS = [
   { id: 'nav_songlist', icon: 'album' },
   { id: 'nav_top', icon: 'leaderboard' },
   { id: 'nav_love', icon: 'love' },
+  { id: 'nav_mysonglist', icon: 'album' },
   { id: 'nav_local_music', icon: 'album' },
   // { id: 'download', icon: 'download-2' },
   { id: 'nav_setting', icon: 'setting' },

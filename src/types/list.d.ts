@@ -8,6 +8,8 @@ declare namespace LX {
       sourceListId?: string
       // position?: number
       locationUpdateTime: number | null
+      desc?: string
+      picUrl?: string
     }
 
     interface MyDefaultListInfo {

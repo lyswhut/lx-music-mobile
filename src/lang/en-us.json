@@ -1,5 +1,6 @@
 {
   "add_to": "Add to ...",
+  "add_to_songlist": "Add to My Playlist",
   "agree": "Sure",
   "agree_go": "Turn it on",
   "agree_to": "Go set it",
@@ -184,6 +185,7 @@
   "nav_top": "Charts",
   "never_show": "Never show again",
   "no_item": "The list is empty...",
+  "no_songlist_tip": "No playlists yet, please create one first",
   "notifications_check_tip": "You have not allowed LX Music to show notifications, or the \"MusicService\" notification category in the LX Music notification settings is disabled, which prevents you from using the notification for actions such as pausing, switching songs, and so on. Do you want to enable it?",
   "notifications_check_title": "Notification Permission Reminder",
   "ok": "OK",

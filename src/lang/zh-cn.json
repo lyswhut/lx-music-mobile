@@ -1,5 +1,6 @@
 {
   "add_to": "添加到...",
+  "add_to_songlist": "添加到我的歌单",
   "agree": "行行行",
   "agree_go": "去开启",
   "agree_to": "去设置",
@@ -184,6 +185,7 @@
   "nav_songlist": "歌单",
   "nav_top": "排行榜",
   "never_show": "不再提醒",
+  "no_songlist_tip": "还没有歌单，请先创建一个歌单",
   "no_item": "列表竟然是空的...",
   "notifications_check_tip": "你没有允许 LX Music 显示通知，或 LX Music 通知设置里的「MusicService」通知被禁用，这将无法使用通知栏进行暂停、切歌等操作，是否去开启？",
   "notifications_check_title": "通知权限提醒",

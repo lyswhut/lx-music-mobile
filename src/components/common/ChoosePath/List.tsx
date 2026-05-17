@@ -123,6 +123,8 @@ export default forwardRef<ListType, ListProps>(({
   }, [])
 
   const readDir = async(newPath: string, dirOnly: boolean, filter?: string[], isRefresh?: boolean, isOpen?: boolean): Promise<PathItem[]> => {
+    // 组件已卸载时不执行任何操作，防止 setState 循环
+    if (isUnmountedRef.current) return []
     if (isReading) return []
     setIsReading(true)
     return handleReadDir(newPath, dirOnly, filter, isRefresh).then(list => {

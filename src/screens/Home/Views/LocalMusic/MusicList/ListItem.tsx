@@ -10,6 +10,7 @@ const ITEM_HEIGHT = 54
 type ListItemProps = {
   musicInfo: LX.Music.MusicInfoLocal
   index: number
+  activeIndex?: number
   listWidth: number
   onPlay: (index: number) => void
   onShowMenu: (musicInfo: LX.Music.MusicInfoLocal, index: number) => void
@@ -20,8 +21,9 @@ type ListItemProps = {
 }
 
 const ListItem = memo(
-  ({ musicInfo, index, listWidth, onPlay, onShowMenu, isSelected, isMultiSelectMode, onSelect, onLongPress }: ListItemProps) => {
+  ({ musicInfo, index, activeIndex, listWidth, onPlay, onShowMenu, isSelected, isMultiSelectMode, onSelect, onLongPress }: ListItemProps) => {
     const theme = useTheme()
+    const active = activeIndex === index
 
     const handlePress = useCallback(() => {
       if (isMultiSelectMode) {
@@ -51,26 +53,28 @@ const ListItem = memo(
         onLongPress={handleLongPress}
         activeOpacity={0.5}
       >
-        {/* 左侧：多选模式下显示复选框，否则显示封面占位 */}
-        <View style={styles.cover}>
+        {/* 左侧：多选模式显示复选框，播放中显示图标，否则显示序号 */}
+        <View style={styles.sn}>
           {isMultiSelectMode ? (
             <Icon
-              name={isSelected ? 'check-box' : 'check-box-outline-blank'}
+              name={isSelected ? 'checkbox-marked' : 'checkbox-blank-outline'}
               size={24}
               color={isSelected ? theme['c-primary'] : theme['c-font-label']}
             />
+          ) : active ? (
+            <Icon name="play-outline" size={13} color={theme['c-primary-font']} />
           ) : (
-            <Icon name="play-outline" size={20} color={theme['c-font-label']} />
+            <Text size={13} color={theme['c-300']}>{index + 1}</Text>
           )}
         </View>
 
         {/* 中间：歌曲信息 */}
         <View style={styles.info}>
-          <Text numberOfLines={1} size={14} color={theme['c-font']}>
+          <Text numberOfLines={1} size={14} color={active ? theme['c-primary-font'] : theme['c-font']}>
             {musicInfo.name}
           </Text>
           {musicInfo.singer ? (
-            <Text numberOfLines={1} size={12} color={theme['c-font-label']}>
+            <Text numberOfLines={1} size={12} color={active ? theme['c-primary-alpha-200'] : theme['c-font-label']}>
               {musicInfo.singer}
             </Text>
           ) : null}
@@ -98,10 +102,9 @@ const styles = createStyle({
     paddingLeft: 10,
     paddingRight: 10,
   },
-  cover: {
-    width: 40,
-    height: 40,
-    borderRadius: 4,
+  sn: {
+    width: 38,
+    textAlign: 'center',
     justifyContent: 'center',
     alignItems: 'center',
   },

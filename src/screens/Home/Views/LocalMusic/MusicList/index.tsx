@@ -10,6 +10,7 @@ import { useI18n } from '@/lang'
 import { useTheme } from '@/store/theme/hook'
 import Text from '@/components/common/Text'
 import { BorderWidths } from '@/theme'
+import playerState from '@/store/player/state'
 
 const ITEM_HEIGHT = 54
 
@@ -33,6 +34,11 @@ export default ({ musics }: MusicListProps) => {
     () => musics.filter(m => selectedIds.has(m.id)),
     [musics, selectedIds]
   )
+
+  // 当前正在播放的歌曲索引（本地音乐对应 LIST_IDS.TEMP）
+  const activeIndex = musics.findIndex(m => {
+    return playerState.playMusicInfo.listId === LIST_IDS.TEMP && playerState.playMusicInfo.musicInfo?.id === m.id
+  })
 
   const handleLayout = useCallback((e: any) => {
     setListWidth(e.nativeEvent.layout.width)
@@ -98,6 +104,7 @@ export default ({ musics }: MusicListProps) => {
       <ListItem
         musicInfo={item}
         index={index}
+        activeIndex={activeIndex}
         listWidth={listWidth}
         onPlay={handlePlay}
         onShowMenu={handleShowMenu}
@@ -107,7 +114,7 @@ export default ({ musics }: MusicListProps) => {
         onLongPress={handleLongPress}
       />
     ),
-    [listWidth, handlePlay, handleShowMenu, selectedIds, isMultiSelectMode, handleSelect, handleLongPress],
+    [listWidth, handlePlay, handleShowMenu, selectedIds, isMultiSelectMode, handleSelect, handleLongPress, activeIndex],
   )
 
   return (

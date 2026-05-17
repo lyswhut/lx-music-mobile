@@ -15,6 +15,7 @@ import { useI18n } from '@/lang'
 import { playList } from '@/core/player/player'
 import { LIST_IDS } from '@/config/constant'
 import { toast } from '@/utils/tools'
+import MusicAddSonglistModal, { type MusicAddSonglistModalType } from '@/components/MusicAddSonglistModal'
 
 export interface SelectInfo {
   musicInfo: LX.Music.MusicInfoLocal
@@ -25,8 +26,8 @@ export interface ListMenuType {
   show: (selectInfo: SelectInfo) => void
 }
 
-/** 菜单动作联合类型（v1.1 修正） */
-type MenuAction = 'play' | 'playLater' | 'copyName' // TODO: 'addToSonglist'
+/** 菜单动作联合类型 */
+type MenuAction = 'play' | 'playLater' | 'copyName' | 'addToSonglist'
 
 type MenuItem = {
   action: MenuAction
@@ -39,6 +40,7 @@ export default forwardRef<ListMenuType>((_, ref) => {
   const theme = useTheme()
   const [visible, setVisible] = useState(false)
   const [selectInfo, setSelectInfo] = useState<SelectInfo | null>(null)
+  const musicAddSonglistModalRef = useRef<MusicAddSonglistModalType>(null)
 
   useImperativeHandle(ref, () => ({
     show(info: SelectInfo) {
@@ -52,8 +54,7 @@ export default forwardRef<ListMenuType>((_, ref) => {
       { action: 'play', label: t('play'), icon: 'play' },
       { action: 'playLater', label: t('play_later'), icon: 'playback-rate' },
       { action: 'copyName', label: t('copy_name'), icon: 'share' },
-      // TODO: 待"我的歌单"模块完成后，新增 'addToSonglist' 菜单项
-      // { action: 'addToSonglist', label: t('add_to_songlist'), icon: 'add' },
+      { action: 'addToSonglist', label: t('add_to_songlist'), icon: 'add' },
     ],
     [t],
   )
@@ -68,12 +69,16 @@ export default forwardRef<ListMenuType>((_, ref) => {
           await playList(LIST_IDS.TEMP, selectInfo.index)
           break
         case 'playLater':
-          // TODO: 实现"稍后播放"
           toast(t('feature_coming_soon'))
           break
         case 'copyName':
-          // TODO: 实现复制歌名
           toast(t('feature_coming_soon'))
+          break
+        case 'addToSonglist':
+          musicAddSonglistModalRef.current?.show({
+            musicInfo: selectInfo.musicInfo,
+            listId: LIST_IDS.TEMP,
+          })
           break
       }
     },
@@ -98,6 +103,7 @@ export default forwardRef<ListMenuType>((_, ref) => {
           </TouchableOpacity>
         ))}
       </TouchableOpacity>
+      <MusicAddSonglistModal ref={musicAddSonglistModalRef} />
     </TouchableOpacity>
   )
 })

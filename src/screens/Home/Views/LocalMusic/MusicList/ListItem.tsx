@@ -13,19 +13,31 @@ type ListItemProps = {
   listWidth: number
   onPlay: (index: number) => void
   onShowMenu: (musicInfo: LX.Music.MusicInfoLocal, index: number) => void
+  isSelected?: boolean
+  isMultiSelectMode?: boolean
+  onSelect?: (musicInfo: LX.Music.MusicInfoLocal) => void
+  onLongPress?: (musicInfo: LX.Music.MusicInfoLocal) => void
 }
 
 const ListItem = memo(
-  ({ musicInfo, index, listWidth, onPlay, onShowMenu }: ListItemProps) => {
+  ({ musicInfo, index, listWidth, onPlay, onShowMenu, isSelected, isMultiSelectMode, onSelect, onLongPress }: ListItemProps) => {
     const theme = useTheme()
 
-    const handlePlay = useCallback(() => {
-      onPlay(index)
-    }, [onPlay, index])
+    const handlePress = useCallback(() => {
+      if (isMultiSelectMode) {
+        onSelect?.(musicInfo)
+      } else {
+        onPlay(index)
+      }
+    }, [isMultiSelectMode, onSelect, musicInfo, onPlay, index])
 
     const handleShowMenu = useCallback(() => {
       onShowMenu(musicInfo, index)
     }, [onShowMenu, musicInfo, index])
+
+    const handleLongPress = useCallback(() => {
+      onLongPress?.(musicInfo)
+    }, [onLongPress, musicInfo])
 
     return (
       <TouchableOpacity
@@ -33,13 +45,23 @@ const ListItem = memo(
           ...styles.row,
           height: ITEM_HEIGHT,
           width: listWidth,
+          backgroundColor: isSelected ? theme['c-primary-background-hover'] : 'transparent',
         }}
-        onPress={handlePlay}
+        onPress={handlePress}
+        onLongPress={handleLongPress}
         activeOpacity={0.5}
       >
-        {/* 左侧：封面占位 */}
+        {/* 左侧：多选模式下显示复选框，否则显示封面占位 */}
         <View style={styles.cover}>
-          <Icon name="play-outline" size={20} color={theme['c-font-label']} />
+          {isMultiSelectMode ? (
+            <Icon
+              name={isSelected ? 'check-box' : 'check-box-outline-blank'}
+              size={24}
+              color={isSelected ? theme['c-primary'] : theme['c-font-label']}
+            />
+          ) : (
+            <Icon name="play-outline" size={20} color={theme['c-font-label']} />
+          )}
         </View>
 
         {/* 中间：歌曲信息 */}
@@ -80,7 +102,6 @@ const styles = createStyle({
     width: 40,
     height: 40,
     borderRadius: 4,
-    backgroundColor: 'rgba(128,128,128,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
   },

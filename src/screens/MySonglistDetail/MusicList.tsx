@@ -55,7 +55,16 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId, listId 
 
   useEffect(() => {
     void loadList(listId)
-    return () => {}
+
+    const handleChange = (ids: string[]) => {
+      if (!ids.includes(listId)) return
+      void loadList(listId)
+    }
+
+    global.app_event.on('myListMusicUpdate', handleChange)
+    return () => {
+      global.app_event.off('myListMusicUpdate', handleChange)
+    }
   }, [listId])
 
   const loadList = async (id: string) => {

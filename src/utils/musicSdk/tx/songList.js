@@ -29,7 +29,6 @@ export default {
     // https://i.y.qq.com/n2/m/share/details/taoge.html?platform=11&appshare=android_qq&appversion=9050006&id=7217720898&ADTAG=qfshare
     listDetailLink: /\/playlist\/(\d+)/,
     listDetailLink2: /id=(\d+)/,
-    listDetailHostUin: /(?:\?|&)hoste?uin=([^&#]+)/,
   },
   tagsUrl: 'https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&hostUin=0&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=wk_v15.json&needNewCode=0&data=%7B%22tags%22%3A%7B%22method%22%3A%22get_all_categories%22%2C%22param%22%3A%7B%22qq%22%3A%22%22%7D%2C%22module%22%3A%22playlist.PlaylistAllCategoriesServer%22%7D%7D',
   hotTagUrl: 'https://c.y.qq.com/node/pc/wk_v15/category_playlist.html',
@@ -180,15 +179,8 @@ export default {
     return url
   },
 
-  async getListInfo(id) {
-    const info = {
-      id,
-      hostUin: '',
-    }
+  async getListId(id) {
     if ((/[?&:/]/.test(id))) {
-      const hostUinResult = this.regExps.listDetailHostUin.exec(decodeURIComponent(id))
-      if (hostUinResult) info.hostUin = hostUinResult[1]
-
       if (!this.regExps.listDetailLink.test(id)) {
         id = await this.handleParseId(id)
       }
@@ -197,67 +189,60 @@ export default {
         result = this.regExps.listDetailLink2.exec(id)
         if (!result) throw new Error('failed')
       }
-      info.id = result[1]
+      id = result[1]
       // console.log(id)
     }
-    return info
+    return id
   },
-  async getListId(id) {
-    return (await this.getListInfo(id)).id
-  },
-  async getListDetailByNewApi(id, hostUin, tryNum = 0) {
+  // 获取歌曲列表内的音乐
+  async getListDetail2(id, tryNum = 0) {
     if (tryNum > 2) return Promise.reject(new Error('try max num'))
 
-    const { body, statusCode } = httpFetch('https://u.y.qq.com/cgi-bin/musicu.fcg', {
+    const requestObj_listDetail = httpFetch('https://u.y.qq.com/cgi-bin/musicu.fcg', {
       method: 'post',
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/124 Mobile Safari/537.36',
-        Referer: 'https://i2.y.qq.com/n3/other/pages/details/playlist.html',
+        Origin: 'https://y.qq.com',
+        Referer: `https://y.qq.com/n/yqq/playsquare/${id}.html`,
       },
       body: {
         comm: {
-          cv: 20010508,
+          cv: 4747474,
           ct: 24,
           format: 'json',
           inCharset: 'utf-8',
           outCharset: 'utf-8',
-          notice: 0,
           platform: 'yqq.json',
           needNewCode: 1,
           uin: 0,
         },
-        req_0: {
+        req_1: {
           module: 'music.srfDissInfo.aiDissInfo',
           method: 'uniform_get_Dissinfo',
           param: {
             disstid: parseInt(id),
-            enc_host_uin: hostUin,
-            tag: 1,
             userinfo: 1,
+            tag: 1,
+            orderlist: 1,
             song_begin: 0,
             song_num: this.limit_song,
-            orderlist: 1,
+            onlysonglist: 0,
+            enc_host_uin: '',
           },
         },
       },
-    }).promise
-    const result = body.req_0?.data
-    const dirinfo = result?.dirinfo
+    })
+    const { body } = await requestObj_listDetail.promise
+    // console.log(body)
+    if (body.code !== this.successCode) return this.getListDetail2(id, ++tryNum)
+    if (body.req_1.code !== this.successCode) throw new Error('failed')
 
-    if (
-      statusCode !== 200 ||
-      body.code !== this.successCode ||
-      body.req_0?.code !== this.successCode ||
-      result?.code !== this.successCode ||
-      result?.subcode !== this.successCode ||
-      !dirinfo
-    ) return this.getListDetailByNewApi(id, hostUin, ++tryNum)
-
+    const result = body.req_1.data
+    const dirinfo = result.dirinfo
     return {
-      list: this.filterListDetail(result.songlist ?? []),
+      list: this.filterListDetail(result.songlist),
       page: 1,
-      limit: (result.songlist?.length ?? 0) + 1,
-      total: result.songlist?.length ?? dirinfo.songnum ?? 0,
+      limit: this.limit_song,
+      total: result.songnum,
       source: 'tx',
       info: {
         name: dirinfo.title,
@@ -272,8 +257,7 @@ export default {
   async getListDetail(id, tryNum = 0) {
     if (tryNum > 2) return Promise.reject(new Error('try max num'))
 
-    const listInfo = await this.getListInfo(id)
-    id = listInfo.id
+    id = await this.getListId(id)
 
     const requestObj_listDetail = httpFetch(this.getListDetailUrl(id), {
       headers: {
@@ -284,7 +268,7 @@ export default {
     const { body } = await requestObj_listDetail.promise
 
     if (body.code !== this.successCode) return this.getListDetail(id, ++tryNum)
-    if (body.subcode !== this.successCode || !body.cdlist?.[0]) return this.getListDetailByNewApi(id, listInfo.hostUin)
+    if (body.subcode !== this.successCode || !body.cdlist) return this.getListDetail2(id)
     const cdlist = body.cdlist[0]
     return {
       list: this.filterListDetail(cdlist.songlist),

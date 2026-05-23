@@ -1,5 +1,5 @@
-import { memo } from 'react'
-import { View } from 'react-native'
+import { memo, useRef } from 'react'
+import { View, TouchableOpacity } from 'react-native'
 import { BorderWidths } from '@/theme'
 import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 import { scaleSizeW } from '@/utils/pixelRatio'
@@ -10,6 +10,7 @@ import Image from '@/components/common/Image'
 import { useStatusbarHeight } from '@/store/common/hook'
 import { useSonglistInfo } from './state'
 import ActionBar from './ActionBar'
+import ImagePreviewModal, { type ImagePreviewModalType } from '@/components/common/ImagePreviewModal'
 
 const IMAGE_WIDTH = scaleSizeW(70)
 
@@ -20,6 +21,11 @@ export default memo(({ componentId, onEdit }: {
   const statusBarHeight = useStatusbarHeight()
   const theme = useTheme()
   const info = useSonglistInfo()
+  const imagePreviewRef = useRef<ImagePreviewModalType>(null)
+
+  const handlePreview = () => {
+    if (info.picUrl) imagePreviewRef.current?.show(info.picUrl)
+  }
 
   return (
     <View style={{
@@ -28,13 +34,13 @@ export default memo(({ componentId, onEdit }: {
       borderBottomColor: theme['c-border-background'],
     }}>
       <View style={{ flexDirection: 'row', flexGrow: 0, flexShrink: 0, padding: 10 }}>
-        <View style={{ ...styles.listItemImg, width: IMAGE_WIDTH, height: IMAGE_WIDTH }}>
+        <TouchableOpacity activeOpacity={0.7} onPress={handlePreview} style={{ ...styles.listItemImg, width: IMAGE_WIDTH, height: IMAGE_WIDTH }}>
           <Image
             nativeID={`${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_to_${info.id}`}
             url={info.picUrl}
             style={{ flex: 1, borderRadius: 4 }}
           />
-        </View>
+        </TouchableOpacity>
         <View style={{ flexDirection: 'column', flexGrow: 1, flexShrink: 1, paddingLeft: 5 }}
           nativeID={NAV_SHEAR_NATIVE_IDS.songlistDetail_title}>
           <Text size={14} numberOfLines={1}>{info.name}</Text>
@@ -46,6 +52,7 @@ export default memo(({ componentId, onEdit }: {
         </View>
       </View>
       <ActionBar componentId={componentId} onEdit={onEdit} />
+      <ImagePreviewModal ref={imagePreviewRef} />
     </View>
   )
 })

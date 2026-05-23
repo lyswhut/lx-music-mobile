@@ -5,7 +5,7 @@ const defaultSetting: LX.AppSetting = {
   'common.apiSource': '',
   'common.sourceNameType': 'alias',
   'common.shareType': 'system',
-  'common.isAgreePact': false,
+  'common.isAgreePact': true,
   'common.autoHidePlayBar': true,
   'common.drawerLayoutPosition': 'left',
   'common.homePageScroll': true,

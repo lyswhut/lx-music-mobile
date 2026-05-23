@@ -4,6 +4,11 @@
 .mp3
 testMedia
 .mydocs
+*.md
+*.yaml
+*.png
+*.jpg
+*.mp3
 
 # Xcode
 #

@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { FlatList, View, type FlatListProps } from 'react-native'
 import { useMySonglists } from '@/store/list/hook'
+import { usePlayMusicInfo } from '@/store/player/hook'
 import { createStyle } from '@/utils/tools'
 import { useLayout } from '@/utils/hooks'
 import { scaleSizeW } from '@/utils/pixelRatio'
@@ -19,6 +20,7 @@ export default ({ onShowMenu, onPress }: {
   onPress: (item: LX.List.UserListInfo, index: number) => void
 }) => {
   const lists = useMySonglists()
+  const playMusicInfo = usePlayMusicInfo()
   const { onLayout, width } = useLayout()
   const t = useI18n()
   const theme = useTheme()
@@ -46,6 +48,7 @@ export default ({ onShowMenu, onPress }: {
       width={rowInfo.width}
       onShowMenu={handleShowMenu}
       onPress={onPress}
+      isPlaying={playMusicInfo.listId === item.id}
     />
   )
 

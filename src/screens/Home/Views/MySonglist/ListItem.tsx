@@ -9,12 +9,13 @@ import { Icon } from '@/components/common/Icon'
 
 const gap = scaleSizeW(15)
 
-export default memo(({ item, index, width, onShowMenu, onPress }: {
+export default memo(({ item, index, width, onShowMenu, onPress, isPlaying }: {
   item: LX.List.UserListInfo
   index: number
   width: number
   onShowMenu: (item: LX.List.UserListInfo, index: number, moreButtonRef: any) => void
   onPress: (item: LX.List.UserListInfo, index: number) => void
+  isPlaying?: boolean
 }) => {
   const theme = useTheme()
   const moreButtonRef = useRef<TouchableOpacity>(null)
@@ -36,10 +37,19 @@ export default memo(({ item, index, width, onShowMenu, onPress }: {
     <View style={{ ...styles.listItem, width: itemWidth }}>
       <View style={{ ...styles.listItemImg, backgroundColor: theme['c-content-background'] }}>
         <TouchableOpacity activeOpacity={0.5} onPress={handlePress} onLongPress={handleLongPress}>
-          <Image
-            url={item.picUrl}
-            style={{ width: itemWidth, height: itemWidth, borderRadius: 4 }}
-          />
+          <View style={{ position: 'relative' }}>
+            <Image
+              url={item.picUrl}
+              style={{ width: itemWidth, height: itemWidth, borderRadius: 4 }}
+            />
+            {isPlaying && (
+              <View style={styles.playingBadge}>
+                <View style={{ width: itemWidth / 4, height: itemWidth / 4, borderRadius: itemWidth / 8, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' }}>
+                  <Icon name="play-outline" size={Math.round(itemWidth / 6)} color="#fff" />
+                </View>
+              </View>
+            )}
+          </View>
         </TouchableOpacity>
       </View>
       <TouchableOpacity activeOpacity={0.5} onPress={handlePress} onLongPress={handleLongPress}>
@@ -54,6 +64,7 @@ export default memo(({ item, index, width, onShowMenu, onPress }: {
   return prevProps.item === nextProps.item &&
     prevProps.item.name === nextProps.item.name &&
     prevProps.width === nextProps.width &&
+    prevProps.isPlaying === nextProps.isPlaying &&
     prevProps.onPress === nextProps.onPress
 })
 
@@ -76,5 +87,10 @@ const styles = createStyle({
     right: 2,
     padding: 6,
     zIndex: 1,
+  },
+  playingBadge: {
+    position: 'absolute',
+    bottom: 4,
+    right: 4,
   },
 })

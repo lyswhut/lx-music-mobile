@@ -116,7 +116,7 @@ export default forwardRef<MySonglistEditModalType, {}>((_, ref) => {
 
   return (
     visible ? (
-      <Modal ref={modalRef} onHide={handleHide}>
+      <Modal ref={modalRef} bgHide={false} onHide={handleHide}>
         <View style={styles.container}>
           <View style={styles.header}>
             <Text size={16}>{isCreatingRef.current ? '新建歌单' : '编辑歌单'}</Text>
@@ -131,7 +131,7 @@ export default forwardRef<MySonglistEditModalType, {}>((_, ref) => {
             />
           </View>
           <View style={styles.footer}>
-            <TouchableOpacity style={styles.footerBtn} onPress={handleHide}>
+            <TouchableOpacity style={styles.footerBtn} onPress={() => modalRef.current?.setVisible(false)}>
               <Text color={theme['c-button-font']}>{t('cancel')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.footerBtn} onPress={handleSubmit}>

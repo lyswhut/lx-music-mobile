@@ -2,7 +2,7 @@
  * 本组件仅渲染歌曲列表，Header 由父组件 index.tsx 统一渲染，避免重复。
  * 注意：不要在 OnlineList 的 ListHeaderComponent 中传入 Header。
  */
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { View, FlatList, type FlatListProps } from 'react-native'
 import { getListMusics } from '@/core/list'
 import { createStyle, getRowInfo } from '@/utils/tools'
@@ -17,7 +17,7 @@ import { handlePlay, handleRemove, handleReorder } from './listAction'
 import { useTheme } from '@/store/theme/hook'
 import Text from '@/components/common/Text'
 import { useI18n } from '@/lang'
-import playerState from '@/store/player/state'
+import { usePlayMusicInfo, usePlayInfo } from '@/store/player/hook'
 import { useSettingValue } from '@/store/setting/hook'
 
 type FlatListType = FlatListProps<LX.Music.MusicInfo>
@@ -109,10 +109,13 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId, listId 
     isMultiSelectMode.current = false
   }, [])
 
-  // Find active playing index
-  const activeIndex = musics.findIndex((m, i) => {
-    return playerState.playMusicInfo.listId === listId && playerState.playMusicInfo.musicInfo?.id === m.id
-  })
+  // 订阅播放器状态事件，实时更新播放指示
+  const playMusicInfo = usePlayMusicInfo()
+  const playInfo = usePlayInfo()
+  // listId 是导航传入的固定值，在组件生命周期内不会变化
+  const activeIndex = useMemo(() => {
+    return playMusicInfo.listId === listId ? playInfo.playIndex : -1
+  }, [listId, playInfo.playIndex, playMusicInfo.listId])
 
   const renderItem: FlatListType['renderItem'] = ({ item, index }) => (
     <ListItem
@@ -159,6 +162,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId, listId 
           maxToRenderPerBatch={10}
           windowSize={10}
           removeClippedSubviews={true}
+          extraData={activeIndex}
         />
       </View>
       <ListMenu

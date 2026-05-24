@@ -10,6 +10,7 @@ declare namespace LX {
       locationUpdateTime: number | null
       desc?: string
       picUrl?: string
+      star?: number
     }
 
     interface MyDefaultListInfo {

@@ -11,6 +11,7 @@ import { useStatusbarHeight } from '@/store/common/hook'
 import { useSonglistInfo } from './state'
 import ActionBar from './ActionBar'
 import ImagePreviewModal, { type ImagePreviewModalType } from '@/components/common/ImagePreviewModal'
+import StarRating from '@/components/common/StarRating'
 
 const IMAGE_WIDTH = scaleSizeW(70)
 
@@ -44,6 +45,7 @@ export default memo(({ componentId, onEdit }: {
         <View style={{ flexDirection: 'column', flexGrow: 1, flexShrink: 1, paddingLeft: 5 }}
           nativeID={NAV_SHEAR_NATIVE_IDS.songlistDetail_title}>
           <Text size={14} numberOfLines={1}>{info.name}</Text>
+          <StarRating star={info.star ?? 0} size={13} />
           <View style={{ flexGrow: 0, flexShrink: 1 }}>
             <Text size={13} color={theme['c-font-label']} numberOfLines={4}>
               {info.desc || ''}

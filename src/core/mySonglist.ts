@@ -17,18 +17,21 @@ export const ensureCoverDir = async () => {
 
 /**
  * 创建歌单
- * @param position 插入位置，传 -1 自动追加到末尾
+ * @param params 歌单参数
  */
 export const createMySonglist = async (
-  name: string,
-  desc?: string,
-  picUrl?: string,
-  position = -1
+  params: { name: string; desc?: string; picUrl?: string; star?: number; position?: number }
 ) => {
   const id = `${MY_SONGLIST_PREFIX}${Date.now()}`
-  await global.list_event.list_create(position, [{
-    id, name, desc, picUrl, locationUpdateTime: null,
-  }])
+  const listInfo: LX.List.UserListInfo = {
+    id,
+    name: params.name,
+    desc: params.desc,
+    picUrl: params.picUrl,
+    star: params.star ?? 0,
+    locationUpdateTime: null,
+  }
+  await global.list_event.list_create(params.position ?? -1, [listInfo])
   return id
 }
 
@@ -37,7 +40,7 @@ export const createMySonglist = async (
  */
 export const updateMySonglist = async (
   id: string,
-  info: Partial<{ name: string; desc: string; picUrl: string }>
+  info: Partial<{ name: string; desc: string; picUrl: string; star: number }>
 ) => {
   const list = listState.userList.find(l => l.id === id)
   if (!list || !list.id.startsWith(MY_SONGLIST_PREFIX)) return

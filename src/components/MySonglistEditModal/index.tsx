@@ -11,6 +11,7 @@ import { createMySonglist, updateMySonglist, ensureCoverDir } from '@/core/mySon
 import { navigations } from '@/navigation'
 import commonState from '@/store/common/state'
 import { BorderWidths } from '@/theme'
+import StarRating from '@/components/common/StarRating'
 
 export interface MySonglistEditModalType {
   showCreate: () => void
@@ -22,6 +23,7 @@ interface EditData {
   name: string
   desc: string
   picUrl: string | undefined
+  star: number
 }
 
 const initialData: EditData = {
@@ -29,6 +31,7 @@ const initialData: EditData = {
   name: '',
   desc: '',
   picUrl: undefined,
+  star: 0,
 }
 
 export default forwardRef<MySonglistEditModalType, {}>((_, ref) => {
@@ -43,7 +46,7 @@ export default forwardRef<MySonglistEditModalType, {}>((_, ref) => {
   useImperativeHandle(ref, () => ({
     showCreate() {
       isCreatingRef.current = true
-      setEditData({ id: null, name: '', desc: '', picUrl: undefined })
+      setEditData({ id: null, name: '', desc: '', picUrl: undefined, star: 0 })
       setPicUrl(undefined)
       if (visible) modalRef.current?.setVisible(true)
       else {
@@ -58,6 +61,7 @@ export default forwardRef<MySonglistEditModalType, {}>((_, ref) => {
         name: listInfo.name,
         desc: listInfo.desc || '',
         picUrl: listInfo.picUrl,
+        star: listInfo.star ?? 0,
       })
       setPicUrl(listInfo.picUrl)
       if (visible) modalRef.current?.setVisible(true)
@@ -76,6 +80,10 @@ export default forwardRef<MySonglistEditModalType, {}>((_, ref) => {
     setEditData(prev => ({ ...prev, desc }))
   }, [])
 
+  const handleStarChange = useCallback((star: number) => {
+    setEditData(prev => ({ ...prev, star }))
+  }, [])
+
   const handleCoverChange = useCallback((url: string | undefined) => {
     setPicUrl(url)
   }, [])
@@ -90,7 +98,7 @@ export default forwardRef<MySonglistEditModalType, {}>((_, ref) => {
       await ensureCoverDir()
 
       if (isCreatingRef.current) {
-        const id = await createMySonglist(editData.name.trim(), editData.desc.trim() || undefined, picUrl)
+        const id = await createMySonglist({ name: editData.name.trim(), desc: editData.desc.trim() || undefined, picUrl, star: editData.star })
         modalRef.current?.setVisible(false)
         setTimeout(() => {
           navigations.pushMySonglistDetailScreen(commonState.componentIds.home!, id)
@@ -101,6 +109,7 @@ export default forwardRef<MySonglistEditModalType, {}>((_, ref) => {
           name: editData.name.trim(),
           desc: editData.desc.trim() || undefined,
           picUrl,
+          star: editData.star,
         })
         modalRef.current?.setVisible(false)
       }
@@ -122,21 +131,25 @@ export default forwardRef<MySonglistEditModalType, {}>((_, ref) => {
             <Text size={16}>{isCreatingRef.current ? '新建歌单' : '编辑歌单'}</Text>
           </View>
           <View style={styles.content}>
-            <CoverPicker picUrl={picUrl} onChange={handleCoverChange} />
-            <Form
-              name={editData.name}
-              desc={editData.desc}
-              onNameChange={handleNameChange}
-              onDescChange={handleDescChange}
-            />
-          </View>
-          <View style={styles.footer}>
-            <TouchableOpacity style={styles.footerBtn} onPress={() => modalRef.current?.setVisible(false)}>
-              <Text color={theme['c-button-font']}>{t('cancel')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.footerBtn} onPress={handleSubmit}>
-              <Text color={theme['c-button-font']}>{t('confirm')}</Text>
-            </TouchableOpacity>
+              <CoverPicker picUrl={picUrl} onChange={handleCoverChange} />
+              <Form
+                name={editData.name}
+                desc={editData.desc}
+                onNameChange={handleNameChange}
+                onDescChange={handleDescChange}
+              />
+              <View style={styles.starSection}>
+                <Text style={styles.starLabel} size={14}>评级</Text>
+                <StarRating star={editData.star} size={22} editable onChange={handleStarChange} />
+              </View>
+              <View style={styles.footer}>
+                <TouchableOpacity style={{ ...styles.footerBtn, backgroundColor: theme['c-button-background'] }} onPress={() => modalRef.current?.setVisible(false)}>
+                  <Text color={theme['c-button-font']}>{t('cancel')}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ ...styles.footerBtn, backgroundColor: theme['c-button-background'] }} onPress={handleSubmit}>
+                  <Text color={theme['c-button-font']}>{t('confirm')}</Text>
+                </TouchableOpacity>
+              </View>
           </View>
         </View>
       </Modal>
@@ -166,17 +179,26 @@ const styles = createStyle({
     paddingRight: 15,
     paddingBottom: 15,
   },
+  starSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+    marginBottom: 5,
+  },
+  starLabel: {
+    marginRight: 12,
+  },
   footer: {
-    width: '85%',
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    paddingTop: 10,
-    paddingBottom: 15,
+    marginTop: 15,
+    marginBottom: 5,
   },
   footerBtn: {
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 8,
-    paddingBottom: 8,
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+    borderRadius: 4,
+    marginLeft: 12,
+    alignItems: 'center',
   },
 })

@@ -53,6 +53,7 @@ async function buildLocalMusicInfo(
         albumName: metadata?.albumName || '',
         ext: metadata?.ext || '',
         picUrl: null,
+        lastModified,
       },
     }
   } catch {
@@ -69,6 +70,7 @@ async function buildLocalMusicInfo(
         albumName: '',
         ext: '',
         picUrl: null,
+        lastModified,
       },
     }
   }

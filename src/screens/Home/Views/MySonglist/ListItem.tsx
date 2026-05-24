@@ -6,6 +6,8 @@ import { useTheme } from '@/store/theme/hook'
 import Text from '@/components/common/Text'
 import Image from '@/components/common/Image'
 import { Icon } from '@/components/common/Icon'
+import StarRating from '@/components/common/StarRating'
+import { isMySonglistId } from '@/core/mySonglist'
 
 const gap = scaleSizeW(15)
 
@@ -54,6 +56,7 @@ export default memo(({ item, index, width, onShowMenu, onPress, isPlaying }: {
       </View>
       <TouchableOpacity activeOpacity={0.5} onPress={handlePress} onLongPress={handleLongPress}>
         <Text style={styles.listItemTitle} numberOfLines={2}>{item.name}</Text>
+        {isMySonglistId(item.id) && <StarRating star={item.star ?? 0} size={12} />}
       </TouchableOpacity>
       <TouchableOpacity onPress={handleShowMenu} ref={moreButtonRef} style={styles.moreButton}>
         <Icon name="dots-vertical" color={theme['c-350']} size={14} />
@@ -63,6 +66,7 @@ export default memo(({ item, index, width, onShowMenu, onPress, isPlaying }: {
 }, (prevProps, nextProps) => {
   return prevProps.item === nextProps.item &&
     prevProps.item.name === nextProps.item.name &&
+    prevProps.item.star === nextProps.item.star &&
     prevProps.width === nextProps.width &&
     prevProps.isPlaying === nextProps.isPlaying &&
     prevProps.onPress === nextProps.onPress

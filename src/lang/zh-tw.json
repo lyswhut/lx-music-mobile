@@ -533,5 +533,10 @@
   "version_title_latest": "🎉 目前版本已是最新 🎊",
   "version_title_new": "🌟 發現新版本 🌟",
   "version_title_unknown": "❓ 獲取最新版本資訊失敗 ❓",
-  "version_title_update": "🚀 軟體更新 🚀"
+  "version_title_update": "🚀 軟體更新 🚀",
+  "locate_songlist": "定位歌单",
+  "no_playing_music": "当前没有正在播放的歌曲",
+  "not_in_any_songlist": "该歌曲不属于任何歌单",
+  "belongs_to_songlist": "该歌曲属于以下歌单",
+  "already_in_songlist": "已在该歌单"
 }

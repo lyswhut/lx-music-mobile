@@ -533,5 +533,10 @@
   "version_title_latest": "🎉 The current version is already the latest 🎊",
   "version_title_new": "🌟 New version found 🌟",
   "version_title_unknown": "❓ Failed to get the latest version information ❓",
-  "version_title_update": "🚀 App update 🚀"
+  "version_title_update": "🚀 App update 🚀",
+  "locate_songlist": "Locate Playlist",
+  "no_playing_music": "No song is currently playing",
+  "not_in_any_songlist": "This song does not belong to any playlist",
+  "belongs_to_songlist": "This song belongs to the following playlists",
+  "already_in_songlist": "Already in this playlist"
 }

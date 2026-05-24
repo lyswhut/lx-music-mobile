@@ -11,7 +11,6 @@ import { useTheme } from '@/store/theme/hook'
 import Text from '@/components/common/Text'
 import { Icon } from '@/components/common/Icon'
 import { BorderWidths } from '@/theme'
-import playerState from '@/store/player/state'
 import { getData, saveData } from '@/plugins/storage'
 
 const SORT_FIELD_KEY = '@localmusic_sort_field'
@@ -60,11 +59,6 @@ export default ({ musics }: MusicListProps) => {
     [musics, selectedIds]
   )
 
-  // 当前正在播放的歌曲索引（本地音乐对应 LIST_IDS.TEMP）
-  const activeIndex = musics.findIndex(m => {
-    return playerState.playMusicInfo.listId === LIST_IDS.TEMP && playerState.playMusicInfo.musicInfo?.id === m.id
-  })
-
   // 排序逻辑
   const sortedMusics = useMemo(() => {
     const sorted = [...musics]
@@ -94,16 +88,15 @@ export default ({ musics }: MusicListProps) => {
     setListWidth(e.nativeEvent.layout.width)
   }, [])
 
-  const handlePlay = useCallback(async (index: number) => {
-    await playList(LIST_IDS.TEMP, index)
-  }, [])
+  const handlePlay = useCallback(async (item: LX.Music.MusicInfoLocal) => {
+    // FlatList 传的是排序后索引，需转换为原始列表索引
+    const originalIndex = musics.findIndex(m => m.id === item.id)
+    await playList(LIST_IDS.TEMP, originalIndex)
+  }, [musics])
 
   const handleShowMenu = useCallback(
-    (musicInfo: LX.Music.MusicInfoLocal, index: number) => {
-      listMenuRef.current?.show({
-        musicInfo,
-        index,
-      })
+    (musicInfo: LX.Music.MusicInfoLocal) => {
+      listMenuRef.current?.show({ musicInfo })
     },
     [],
   )
@@ -150,11 +143,9 @@ export default ({ musics }: MusicListProps) => {
   }, [selectedList])
 
   const renderItem = useCallback(
-    ({ item, index }: { item: LX.Music.MusicInfoLocal; index: number }) => (
+    ({ item }: { item: LX.Music.MusicInfoLocal }) => (
       <ListItem
         musicInfo={item}
-        index={index}
-        activeIndex={activeIndex}
         listWidth={listWidth}
         onPlay={handlePlay}
         onShowMenu={handleShowMenu}
@@ -164,7 +155,7 @@ export default ({ musics }: MusicListProps) => {
         onLongPress={handleLongPress}
       />
     ),
-    [listWidth, handlePlay, handleShowMenu, selectedIds, isMultiSelectMode, handleSelect, handleLongPress, activeIndex, sortedMusics],
+    [listWidth, handlePlay, handleShowMenu, selectedIds, isMultiSelectMode, handleSelect, handleLongPress],
   )
 
   return (

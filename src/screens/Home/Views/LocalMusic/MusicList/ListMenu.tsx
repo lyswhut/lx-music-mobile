@@ -16,10 +16,10 @@ import { playList } from '@/core/player/player'
 import { LIST_IDS } from '@/config/constant'
 import { toast } from '@/utils/tools'
 import MusicAddSonglistModal, { type MusicAddSonglistModalType } from '@/components/MusicAddSonglistModal'
+import { allMusicList } from '@/utils/listManage'
 
 export interface SelectInfo {
   musicInfo: LX.Music.MusicInfoLocal
-  index: number
 }
 
 export interface ListMenuType {
@@ -65,9 +65,12 @@ export default forwardRef<ListMenuType>((_, ref) => {
       if (!selectInfo) return
 
       switch (action) {
-        case 'play':
-          await playList(LIST_IDS.TEMP, selectInfo.index)
+        case 'play': {
+          const musics = allMusicList.get(LIST_IDS.TEMP) ?? []
+          const originalIndex = musics.findIndex(m => m.id === selectInfo.musicInfo.id)
+          if (originalIndex >= 0) await playList(LIST_IDS.TEMP, originalIndex)
           break
+        }
         case 'playLater':
           toast(t('feature_coming_soon'))
           break

@@ -128,6 +128,12 @@ export default ({ onShowMenu, onPress }: {
   return (
     <View style={styles.container} onLayout={onLayout}>
       <View style={styles.toolbar}>
+        <Text size={13} color={theme['c-font-label']} style={styles.sortLabel}>
+          {sortField === 'createTime'
+            ? '按创建日期'
+            : '按星级'}
+          {' '}{sortOrder === 'desc' ? '↓' : '↑'}
+        </Text>
         <TouchableOpacity style={styles.sortBtn} onPress={() => setShowSortMenu(v => !v)}>
           <Icon name="list-order" size={18} color={theme['c-font-label']} />
         </TouchableOpacity>
@@ -179,6 +185,10 @@ const styles = createStyle({
     justifyContent: 'flex-end',
     paddingHorizontal: 10,
     paddingVertical: 8,
+  },
+  sortLabel: {
+    marginRight: 4,
+    alignSelf: 'center',
   },
   sortBtn: {
     padding: 6,

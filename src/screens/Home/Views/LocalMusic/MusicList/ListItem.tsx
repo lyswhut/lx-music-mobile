@@ -4,16 +4,16 @@ import Text from '@/components/common/Text'
 import { Icon } from '@/components/common/Icon'
 import { useTheme } from '@/store/theme/hook'
 import { createStyle } from '@/utils/tools'
+import { usePlayMusicInfo } from '@/store/player/hook'
+import { LIST_IDS } from '@/config/constant'
 
 const ITEM_HEIGHT = 54
 
 type ListItemProps = {
   musicInfo: LX.Music.MusicInfoLocal
-  index: number
-  activeIndex?: number
   listWidth: number
-  onPlay: (index: number) => void
-  onShowMenu: (musicInfo: LX.Music.MusicInfoLocal, index: number) => void
+  onPlay: (musicInfo: LX.Music.MusicInfoLocal) => void
+  onShowMenu: (musicInfo: LX.Music.MusicInfoLocal) => void
   isSelected?: boolean
   isMultiSelectMode?: boolean
   onSelect?: (musicInfo: LX.Music.MusicInfoLocal) => void
@@ -21,21 +21,22 @@ type ListItemProps = {
 }
 
 const ListItem = memo(
-  ({ musicInfo, index, activeIndex, listWidth, onPlay, onShowMenu, isSelected, isMultiSelectMode, onSelect, onLongPress }: ListItemProps) => {
+  ({ musicInfo, listWidth, onPlay, onShowMenu, isSelected, isMultiSelectMode, onSelect, onLongPress }: ListItemProps) => {
     const theme = useTheme()
-    const active = activeIndex === index
+    const playMusicInfo = usePlayMusicInfo()
+    const active = playMusicInfo.listId === LIST_IDS.TEMP && playMusicInfo.musicInfo?.id === musicInfo.id
 
     const handlePress = useCallback(() => {
       if (isMultiSelectMode) {
         onSelect?.(musicInfo)
       } else {
-        onPlay(index)
+        onPlay(musicInfo)
       }
-    }, [isMultiSelectMode, onSelect, musicInfo, onPlay, index])
+    }, [isMultiSelectMode, onSelect, musicInfo, onPlay])
 
     const handleShowMenu = useCallback(() => {
-      onShowMenu(musicInfo, index)
-    }, [onShowMenu, musicInfo, index])
+      onShowMenu(musicInfo)
+    }, [onShowMenu, musicInfo])
 
     const handleLongPress = useCallback(() => {
       onLongPress?.(musicInfo)
@@ -53,7 +54,7 @@ const ListItem = memo(
         onLongPress={handleLongPress}
         activeOpacity={0.5}
       >
-        {/* 左侧：多选模式显示复选框，播放中显示图标，否则显示序号 */}
+        {/* 左侧：多选模式显示复选框，播放中显示图标 */}
         <View style={styles.sn}>
           {isMultiSelectMode ? (
             <Icon
@@ -64,7 +65,7 @@ const ListItem = memo(
           ) : active ? (
             <Icon name="play-outline" size={13} color={theme['c-primary-font']} />
           ) : (
-            <Text size={13} color={theme['c-300']}>{index + 1}</Text>
+            <Text size={13} color={theme['c-300']}>♪</Text>
           )}
         </View>
 

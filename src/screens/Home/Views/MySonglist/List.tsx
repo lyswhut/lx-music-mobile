@@ -1,8 +1,9 @@
-import { useRef } from 'react'
-import { FlatList, View, type FlatListProps } from 'react-native'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { FlatList, StyleSheet, TouchableOpacity, View, type FlatListProps } from 'react-native'
 import { useMySonglists } from '@/store/list/hook'
 import { usePlayMusicInfo } from '@/store/player/hook'
 import { createStyle } from '@/utils/tools'
+import { getData, saveData } from '@/plugins/storage'
 import { useLayout } from '@/utils/hooks'
 import { scaleSizeW } from '@/utils/pixelRatio'
 import ListItem from './ListItem'
@@ -10,10 +11,31 @@ import { type SelectInfo } from './ListMenu'
 import Text from '@/components/common/Text'
 import { useI18n } from '@/lang'
 import { useTheme } from '@/store/theme/hook'
+import { Icon } from '@/components/common/Icon'
 
 type FlatListType = FlatListProps<LX.List.UserListInfo>
 
+type SortField = 'createTime' | 'star'
+type SortOrder = 'asc' | 'desc'
+
+const SORT_FIELD_KEY = '@mysonglist_sort_field'
+const SORT_ORDER_KEY = '@mysonglist_sort_order'
+
 const GAP = scaleSizeW(20)
+
+const SORT_OPTIONS: { label: string; field: SortField; order: SortOrder }[] = [
+  { label: '按创建日期 ↓', field: 'createTime', order: 'desc' },
+  { label: '按创建日期 ↑', field: 'createTime', order: 'asc' },
+  { label: '按星级 ↓', field: 'star', order: 'desc' },
+  { label: '按星级 ↑', field: 'star', order: 'asc' },
+]
+
+function getCreateTime(listId: string): number {
+  if (listId.startsWith('mysonglist_')) {
+    return parseInt(listId.replace('mysonglist_', ''), 10) || 0
+  }
+  return 0
+}
 
 export default ({ onShowMenu, onPress }: {
   onShowMenu: (info: SelectInfo, position: { x: number, y: number, w: number, h: number }) => void
@@ -24,6 +46,47 @@ export default ({ onShowMenu, onPress }: {
   const { onLayout, width } = useLayout()
   const t = useI18n()
   const theme = useTheme()
+
+  // Sorting state (tasks 2.1-2.2)
+  const [sortField, setSortField] = useState<SortField>('createTime')
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+  const [showSortMenu, setShowSortMenu] = useState(false)
+
+  // Load persisted sort preference
+  useEffect(() => {
+    void (async () => {
+      const [savedField, savedOrder] = await Promise.all([
+        getData<SortField>(SORT_FIELD_KEY),
+        getData<SortOrder>(SORT_ORDER_KEY),
+      ])
+      if (savedField) setSortField(savedField)
+      if (savedOrder) setSortOrder(savedOrder)
+    })()
+  }, [])
+
+  // Handle sort change (task 2.3)
+  const handleSortChange = useCallback((field: SortField, order: SortOrder) => {
+    setSortField(field)
+    setSortOrder(order)
+    void saveData(SORT_FIELD_KEY, field)
+    void saveData(SORT_ORDER_KEY, order)
+    setShowSortMenu(false)
+  }, [])
+
+  // Sorted list (task 2.4)
+  const sortedLists = useMemo(() => {
+    const sorted = [...lists]
+    sorted.sort((a, b) => {
+      let cmp = 0
+      if (sortField === 'createTime') {
+        cmp = getCreateTime(a.id) - getCreateTime(b.id)
+      } else {
+        cmp = (a.star ?? 0) - (b.star ?? 0)
+      }
+      return sortOrder === 'desc' ? -cmp : cmp
+    })
+    return sorted
+  }, [lists, sortField, sortOrder])
 
   const rowInfo = (() => {
     const num = 2
@@ -64,18 +127,43 @@ export default ({ onShowMenu, onPress }: {
 
   return (
     <View style={styles.container} onLayout={onLayout}>
+      <View style={styles.toolbar}>
+        <TouchableOpacity style={styles.sortBtn} onPress={() => setShowSortMenu(v => !v)}>
+          <Icon name="list-order" size={18} color={theme['c-font-label']} />
+        </TouchableOpacity>
+      </View>
       {width == 0 ? null : (
         <FlatList
           style={styles.list}
           numColumns={rowInfo.num}
           columnWrapperStyle={{ justifyContent: 'space-evenly' }}
-          data={lists}
+          data={sortedLists}
           renderItem={renderItem}
           keyExtractor={getkey}
           maxToRenderPerBatch={4}
           windowSize={8}
           removeClippedSubviews={true}
         />
+      )}
+      {showSortMenu && (
+        <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={() => setShowSortMenu(false)}>
+          <View style={styles.menu}>
+            {SORT_OPTIONS.map((opt, i) => (
+              <TouchableOpacity
+                key={i}
+                style={styles.menuItem}
+                onPress={() => handleSortChange(opt.field, opt.order)}
+              >
+                <Icon
+                  name={sortField === opt.field && sortOrder === opt.order ? 'checkbox-marked' : 'checkbox-blank-outline'}
+                  size={20}
+                  color={theme['c-primary']}
+                />
+                <Text style={styles.menuText} size={14}>{opt.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </TouchableOpacity>
       )}
     </View>
   )
@@ -86,6 +174,15 @@ const styles = createStyle({
     flex: 1,
     overflow: 'hidden',
   },
+  toolbar: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+  },
+  sortBtn: {
+    padding: 6,
+  },
   list: {
     flex: 1,
     paddingLeft: 10,
@@ -95,5 +192,28 @@ const styles = createStyle({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
+  },
+  menu: {
+    marginTop: 4,
+    marginRight: 10,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    paddingVertical: 4,
+    minWidth: 160,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  menuText: {
+    marginLeft: 10,
   },
 })

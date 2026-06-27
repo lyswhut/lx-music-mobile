@@ -118,6 +118,10 @@ export class StateEvent extends Event {
     this.emit('navActiveIdUpdated', id)
   }
 
+  statisticsUpdated(stats: any) {
+    this.emit('statisticsUpdated', stats)
+  }
+
   sourceNamesUpdated(names: CommonState['sourceNames']) {
     this.emit('sourceNamesUpdated', names)
   }

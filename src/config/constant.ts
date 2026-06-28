@@ -78,6 +78,8 @@ export const storageDataPrefix = {
   dislikeList: '@dislike_list',
 
   userApi: '@user_api__',
+
+  listeningStatistics: '@listening_statistics',
 } as const
 
 // v0.x.x 版本的 data keys
@@ -103,6 +105,7 @@ export const NAV_MENUS = [
   { id: 'nav_songlist', icon: 'album' },
   { id: 'nav_top', icon: 'leaderboard' },
   { id: 'nav_love', icon: 'love' },
+  { id: 'nav_statistics', icon: 'music_time' },
   // { id: 'download', icon: 'download-2' },
   { id: 'nav_setting', icon: 'setting' },
 ] as const

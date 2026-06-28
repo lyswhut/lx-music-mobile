@@ -4,6 +4,7 @@ import { filterMusicList, fixNewMusicInfoQuality, toNewMusicInfo } from '@/utils
 import { log } from '@/utils/log'
 import { confirmDialog, handleReadFile, handleSaveFile, showImportTip, toast } from '@/utils/tools'
 import listState from '@/store/list/state'
+import { getStatisticsStore, mergeRemoteStatistics, type StatisticsStore } from '@/core/init/player/playStatistics'
 
 
 const getAllLists = async() => {
@@ -144,6 +145,8 @@ const importPlayList = async(path: string) => {
       if (!await showConfirm()) return true
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await importNewListData(configData.data)
+      // 恢复听歌统计数据（CRDT 合并，幂等不串数）
+      if (configData.statistics) await mergeRemoteStatistics(configData.statistics as StatisticsStore)
       break
     case 'allData':
       if (!await showConfirm()) return true
@@ -189,6 +192,8 @@ const exportAllList = async(path: string) => {
   const data = JSON.parse(JSON.stringify({
     type: 'playList_v2',
     data: await getAllLists(),
+    // 听歌统计数据（分桶 CRDT）。桌面版按 type 只读 data，会忽略该字段，不影响通用性
+    statistics: getStatisticsStore(),
   }))
 
   try {

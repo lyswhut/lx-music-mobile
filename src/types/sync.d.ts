@@ -21,6 +21,7 @@ declare global {
         moduleReadys: {
           list: boolean
           dislike: boolean
+          statistics: boolean
         }
 
         onClose: (handler: (err: Error) => (void | Promise<void>)) => () => void
@@ -28,6 +29,7 @@ declare global {
         remote: LX.Sync.ServerSyncActions
         remoteQueueList: LX.Sync.ServerSyncListActions
         remoteQueueDislike: LX.Sync.ServerSyncDislikeActions
+        remoteQueueStatistics: LX.Sync.ServerSyncStatisticsActions
       }
 
 
@@ -51,10 +53,14 @@ declare global {
       interface DislikeConfig {
         skipSnapshot: boolean
       }
+      interface StatisticsConfig {
+        skipSnapshot: boolean
+      }
       type ServerType = 'desktop-app' | 'server'
       interface EnabledFeatures {
         list?: false | ListConfig
         dislike?: false | DislikeConfig
+        statistics?: false | StatisticsConfig
       }
       type SupportedFeatures = Partial<{ [k in keyof EnabledFeatures]: number }>
     }

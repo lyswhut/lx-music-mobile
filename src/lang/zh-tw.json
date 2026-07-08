@@ -346,7 +346,7 @@
   "setting_play_audio_offload_tip": "啟用音訊移除可以節省耗電量，但在某些裝置上可能會出現所有歌曲都提示「音訊載入出錯」或「無法完整播放整首歌」的問題，這是由於目前系統的 bug 導致的。\n\n對於遇到這個問題的人可以關閉該選項後完全重啟應用再試。",
   "setting_play_auto_clean_played_list": "自動清空已播放清單",
   "setting_play_auto_clean_played_list_tip": "隨機播放模式下，透過點擊「與播放清單相同的清單」內的歌曲切歌時，若啟用「自動清空已播放清單」，則已播放的歌曲將重新參與隨機播放。",
-  "setting_play_cache_size": "最大快取大小（MB）",
+  "setting_play_cache_size": "最大快取大小（MiB）",
   "setting_play_cache_size_no_cache": "停用快取",
   "setting_play_cache_size_save_tip": "快取設定完畢，重啟應用後生效",
   "setting_play_handle_audio_focus": "其他應用播放聲音時，自動暫停播放",

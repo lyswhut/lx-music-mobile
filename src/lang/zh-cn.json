@@ -346,7 +346,7 @@
   "setting_play_audio_offload_tip": "启用音频卸载可以节省耗电量，但在某些设备上可能会出现所有歌曲都提示「音频加载出错」或「无法完整播放整首歌」的问题，这是由于当前系统的 bug 导致的。\n\n对于遇到这个问题的人可以关闭该选项后完全重启应用再试。",
   "setting_play_auto_clean_played_list": "自动清空已播放列表",
   "setting_play_auto_clean_played_list_tip": "随机播放模式下，通过点击「与播放列表相同的列表」内的歌曲切歌时，若启用「自动清空已播放列表」，则已播放的歌曲将重新参与随机播放。",
-  "setting_play_cache_size": "最大缓存大小（MB）",
+  "setting_play_cache_size": "最大缓存大小（MiB）",
   "setting_play_cache_size_no_cache": "禁用缓存",
   "setting_play_cache_size_save_tip": "缓存设置完毕，重启应用后生效",
   "setting_play_handle_audio_focus": "其他应用播放声音时，自动暂停播放",

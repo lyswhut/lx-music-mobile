@@ -346,7 +346,7 @@
   "setting_play_audio_offload_tip": "You can enable this option to save power consumption, but on some devices there may be an issue where all songs prompt \"Error loading music\" or \"Unable to play the whole song in full\", this is due to a bug in the current system. \n\nFor those experiencing this issue you can turn off the option and restart the app completely and try again.",
   "setting_play_auto_clean_played_list": "Automatically empty the played list",
   "setting_play_auto_clean_played_list_tip": "In the shuffle mode, when switching between songs by clicking on a song in the same list as playlist, if \"Automatically empty played list\" is enabled, the songs in the list will participate in the random again.",
-  "setting_play_cache_size": "Maximum Cache Size (MB)",
+  "setting_play_cache_size": "Maximum Cache Size (MiB)",
   "setting_play_cache_size_no_cache": "Cache Disabled",
   "setting_play_cache_size_save_tip": "The cache is set and takes effect after restarting the app.",
   "setting_play_handle_audio_focus": "Automatically pause playback when other apps playing sound",

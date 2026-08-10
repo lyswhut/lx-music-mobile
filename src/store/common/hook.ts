@@ -1,6 +1,7 @@
 import { type COMPONENT_IDS } from '@/config/constant'
 import { useEffect, useState } from 'react'
 import state, { type InitState } from './state'
+import { useSettingValue } from '@/store/setting/hook'
 
 export const useFontSize = () => {
   const [value, update] = useState(state.fontSize)
@@ -26,6 +27,26 @@ export const useStatusbarHeight = () => {
   }, [])
 
   return value
+}
+
+export const useNavBottomHeight = () => {
+  const [value, update] = useState(state.navBottomHeight)
+
+  useEffect(() => {
+    global.state_event.on('navBottomHeightUpdated', update)
+    return () => {
+      global.state_event.off('navBottomHeightUpdated', update)
+    }
+  }, [])
+
+  return value
+}
+
+export const useCarBottomPadding = () => {
+  const manualPadding = useSettingValue('common.carBottomPadding') || 0
+  const autoPadding = useNavBottomHeight() || 0
+
+  return manualPadding > 0 ? manualPadding : autoPadding
 }
 
 export const useComponentIds = () => {

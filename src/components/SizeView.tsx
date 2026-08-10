@@ -2,8 +2,9 @@ import { memo, useCallback, useRef, useEffect } from 'react'
 import { type LayoutChangeEvent, StyleSheet, View, StatusBar, Dimensions } from 'react-native'
 import commonState from '@/store/common/state'
 import settingState from '@/store/setting/state'
-import { setStatusbarHeight } from '@/core/common'
+import { setNavBottomHeight, setStatusbarHeight } from '@/core/common'
 import { windowSizeTools, getWindowSize } from '@/utils/windowSizeTools'
+import { getNavbarHeight } from '@/utils/nativeModules/utils'
 
 const getStatusbarHeight = (winHeight: number, layoutHeight: number) => {
   const height = (!settingState.setting['common.alwaysKeepStatusbarHeight'] &&
@@ -31,7 +32,12 @@ export default memo(() => {
         currentHeightRef.current = height
         setStatusbarHeight(height)
       }
-      // console.log(layout, size)
+      void getNavbarHeight().then(navHeight => {
+        if (navHeight >= 0) {
+          setNavBottomHeight(navHeight)
+        }
+      }).catch(() => {})
+
       const currentSize = windowSizeTools.getSize()
       if (currentSize.width != layout.width || currentSize.height != layout.height) {
         windowSizeTools.setWindowSize(layout.width, layout.height)

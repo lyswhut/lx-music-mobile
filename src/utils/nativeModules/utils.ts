@@ -68,6 +68,10 @@ export const getWindowSize = async(): Promise<{ width: number, height: number }>
   return UtilsModule.getWindowSize()
 }
 
+export const getNavbarHeight = async(): Promise<number> => {
+  return UtilsModule.getNavbarHeight()
+}
+
 export const onWindowSizeChange = (handler: (size: { width: number, height: number }) => void): () => void => {
   UtilsModule.listenWindowSizeChanged()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument

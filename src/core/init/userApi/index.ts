@@ -1,10 +1,13 @@
 import { type InitParams, onScriptAction, sendAction, type ResponseParams, type UpdateInfoParams, type RequestParams } from '@/utils/nativeModules/userApi'
-import { log, setUserApiList, setUserApiStatus } from '@/core/userApi'
+import { importUserApi, log, setUserApiList, setUserApiStatus } from '@/core/userApi'
 import settingState from '@/store/setting/state'
 import BackgroundTimer from 'react-native-background-timer'
 import { fetchData } from './request'
 import { getUserApiList } from '@/utils/data'
 import { confirmDialog, openUrl, tipDialog } from '@/utils/tools'
+import { DEFAULT_USER_API_URL } from '@/config/constant'
+import { httpFetch } from '@/utils/request'
+import { setApiSource } from '@/core/apiSource'
 
 
 export default async(setting: LX.AppSetting) => {
@@ -252,5 +255,21 @@ export default async(setting: LX.AppSetting) => {
     }
   })
 
-  setUserApiList(await getUserApiList())
+  const userApis = await getUserApiList()
+  setUserApiList(userApis)
+
+  if (!userApis.length) {
+    void httpFetch(DEFAULT_USER_API_URL).promise.then(async resp => {
+      const script = resp.body as string
+      if (script && script.includes('/*')) {
+        await importUserApi(script)
+        const updatedList = await getUserApiList()
+        if (updatedList.length && !settingState.setting['common.apiSource']) {
+          setApiSource(updatedList[0].id)
+        }
+      }
+    }).catch(err => {
+      log.warn('Auto import default user api failed:', err.message)
+    })
+  }
 }

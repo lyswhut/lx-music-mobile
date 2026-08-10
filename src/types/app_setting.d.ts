@@ -77,6 +77,11 @@ declare global {
       'common.alwaysKeepStatusbarHeight': boolean
 
       /**
+       * 车机底栏/空调栏避让高度 (px)
+       */
+      'common.carBottomPadding': number
+
+      /**
        * 主题id
        */
       'theme.id': string

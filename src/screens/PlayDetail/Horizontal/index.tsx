@@ -16,11 +16,11 @@ import Lyric from './Lyric'
 import Player from './Player'
 import { createStyle } from '@/utils/tools'
 import { marginLeftRaw } from './constant'
-import { useStatusbarHeight } from '@/store/common/hook'
-// import MoreBtn from './MoreBtn2'
+import { useCarBottomPadding, useStatusbarHeight } from '@/store/common/hook'
 
 export default memo(({ componentId }: { componentId: string }) => {
   const statusBarHeight = useStatusbarHeight()
+  const carBottomPadding = useCarBottomPadding()
 
   useEffect(() => {
     setComponentId(COMPONENT_IDS.playDetail, componentId)
@@ -54,7 +54,7 @@ export default memo(({ componentId }: { componentId: string }) => {
   return (
     <PageContent>
       <StatusBar />
-      <View style={{ ...styles.container, paddingTop: statusBarHeight }}>
+      <View style={{ ...styles.container, paddingTop: statusBarHeight, paddingBottom: carBottomPadding }}>
         <View style={styles.left}>
           <Header />
           <View style={styles.leftContent}>

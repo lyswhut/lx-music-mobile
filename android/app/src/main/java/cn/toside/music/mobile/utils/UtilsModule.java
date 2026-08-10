@@ -357,6 +357,32 @@ public class UtilsModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void getNavbarHeight(Promise promise) {
+    Activity currentActivity = getCurrentActivity();
+    if (currentActivity == null) {
+      promise.resolve(0);
+      return;
+    }
+    Window window = currentActivity.getWindow();
+    android.view.View decorView = window.getDecorView();
+    Rect rect = new Rect();
+    decorView.getWindowVisibleDisplayFrame(rect);
+    int decorHeight = decorView.getHeight();
+    int bottomInset = decorHeight - rect.bottom;
+
+    if (bottomInset <= 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      android.view.WindowInsets windowInsets = decorView.getRootWindowInsets();
+      if (windowInsets != null) {
+        android.graphics.Insets insets = windowInsets.getInsets(android.view.WindowInsets.Type.navigationBars() | android.view.WindowInsets.Type.systemBars());
+        bottomInset = insets.bottom;
+      }
+    }
+    float density = reactContext.getResources().getDisplayMetrics().density;
+    int bottomDp = Math.round(bottomInset / density);
+    promise.resolve(Math.max(0, bottomDp));
+  }
+
+  @ReactMethod
   public void isIgnoringBatteryOptimization(Promise promise) {
     new Thread(() -> {
       boolean result = BatteryOptimizationUtil.isIgnoringBatteryOptimization(

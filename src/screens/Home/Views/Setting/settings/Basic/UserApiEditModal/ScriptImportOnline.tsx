@@ -8,6 +8,7 @@ import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'
 import { httpFetch } from '@/utils/request'
 import { handleImportScript } from './action'
+import { DEFAULT_USER_API_URL } from '@/config/constant'
 
 interface UrlInputType {
   setText: (text: string) => void
@@ -61,7 +62,7 @@ export default forwardRef<ScriptImportOnlineType, {}>((props, ref) => {
     alertRef.current?.setVisible(true)
     setBtn({ disabled: false, text: t('user_api_btn_import_online_input_confirm') })
     requestAnimationFrame(() => {
-      urlInputRef.current?.setText('')
+      urlInputRef.current?.setText(DEFAULT_USER_API_URL)
       setTimeout(() => {
         urlInputRef.current?.focus()
       }, 300)

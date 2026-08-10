@@ -68,65 +68,22 @@ const Content = () => {
 const Footer = ({ componentId }: { componentId: string }) => {
   const theme = useTheme()
   const isAgreePact = useSettingValue('common.isAgreePact')
-  // const checkUpdate = useDispatch('common', 'checkUpdate')
-  const [time, setTime] = useState(20)
 
   const handleRejct = () => {
     exitApp()
-    // Navigation.dismissOverlay(componentId)
   }
 
   const handleConfirm = () => {
     let _isAgreePact = isAgreePact
     if (!isAgreePact) updateSetting({ 'common.isAgreePact': true })
     void Navigation.dismissOverlay(componentId)
-    if (!_isAgreePact) {
-      setTimeout(() => {
-        Alert.alert(
-          '',
-          Buffer.from('e69cace8bdafe4bbb6e5ae8ce585a8e5858de8b4b9e4b894e5bc80e6ba90efbc8ce5a682e69e9ce4bda0e698afe88ab1e992b1e8b4ade4b9b0e79a84efbc8ce8afb7e79bb4e68ea5e7bb99e5b7aee8af84efbc810a0a5468697320736f667477617265206973206672656520616e64206f70656e20736f757263652e', 'hex').toString(),
-          [{
-            text: Buffer.from('e5a5bde79a8420284f4b29', 'hex').toString(),
-            onPress: () => {
-              void checkUpdate()
-              void initDeeplink()
-            },
-          }],
-        )
-      }, 2e3)
-    }
   }
 
 
   const confirmBtn = useMemo(() => {
     if (isAgreePact) return { disabled: false, text: '关闭' }
-    return time ? { disabled: true, text: `接受（${time}）` } : { disabled: false, text: '接受' }
-  }, [isAgreePact, time])
-
-  useEffect(() => {
-    if (isAgreePact) return
-    const timeoutTools = {
-      timeout: null as NodeJS.Timeout | null,
-      start() {
-        this.timeout = setTimeout(() => {
-          setTime(time => {
-            time--
-            if (time > 0) this.start()
-            return time
-          })
-        }, 1000)
-      },
-      clear() {
-        if (!this.timeout) return
-        clearTimeout(this.timeout)
-      },
-    }
-    timeoutTools.start()
-    return () => {
-      timeoutTools.clear()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    return { disabled: false, text: '接受' }
+  }, [isAgreePact])
 
   return (
     <>

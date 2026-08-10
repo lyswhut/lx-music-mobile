@@ -10,6 +10,11 @@ import { tipDialog } from '@/utils/tools'
 
 import { useTheme } from '@/store/theme/hook'
 
+import { handleImportScript } from './action'
+import { DEFAULT_USER_API_URL } from '@/config/constant'
+import { httpFetch } from '@/utils/request'
+import { toast } from '@/utils/tools'
+
 interface BtnProps {
   btnStyle?: _DorpDownMenuProps<any[]>['btnStyle']
 }
@@ -23,8 +28,9 @@ export default ({ btnStyle }: BtnProps) => {
 
   const importTypes = useMemo(() => {
     return [
-      { action: 'local', label: t('user_api_btn_import_local') },
+      { action: 'default', label: t('user_api_btn_import_default') },
       { action: 'online', label: t('user_api_btn_import_online') },
+      { action: 'local', label: t('user_api_btn_import_local') },
     ] as const
   }, [t])
 
@@ -39,7 +45,14 @@ export default ({ btnStyle }: BtnProps) => {
       return
     }
 
-    if (action == 'local') {
+    if (action == 'default') {
+      toast(t('user_api_btn_import_online_input_loading'))
+      httpFetch(DEFAULT_USER_API_URL).promise.then(resp => {
+        return handleImportScript(resp.body as string)
+      }).catch((err: any) => {
+        toast(t('user_api_import_failed_tip', { message: err.message }), 'long')
+      })
+    } else if (action == 'local') {
       scriptImportExportRef.current?.import()
     } else {
       scriptImportOnlineRef.current?.show()

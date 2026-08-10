@@ -17,7 +17,7 @@ const headerComponents: Partial<Record<CommonState['navActiveId'], React.ReactNo
   nav_search: <SearchTypeSelector />,
 }
 
-const HEADER_HEIGHT = _HEADER_HEIGHT * 0.8
+const HEADER_HEIGHT = _HEADER_HEIGHT
 
 
 // const LeftTitle = () => {

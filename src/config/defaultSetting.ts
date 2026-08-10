@@ -5,7 +5,7 @@ const defaultSetting: LX.AppSetting = {
   'common.apiSource': '',
   'common.sourceNameType': 'alias',
   'common.shareType': 'system',
-  'common.isAgreePact': false,
+  'common.isAgreePact': true,
   'common.autoHidePlayBar': true,
   'common.drawerLayoutPosition': 'left',
   'common.homePageScroll': true,
@@ -14,6 +14,7 @@ const defaultSetting: LX.AppSetting = {
   'common.showExitBtn': true,
   'common.useSystemFileSelector': true,
   'common.alwaysKeepStatusbarHeight': false,
+  'common.carBottomPadding': 0,
 
   'player.startupAutoPlay': false,
   'player.startupPushPlayDetailScreen': false,

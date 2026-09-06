@@ -72,6 +72,9 @@ const defaultSetting: LX.AppSetting = {
 
   'sync.enable': false,
 
+  'localMusic.folderPath': '',
+  'localMusic.listId': '',
+
   // 'theme.id': 'blue_plus',
   'theme.id': 'green',
   'theme.lightId': 'green',

@@ -8,6 +8,7 @@ import List from './settings/List'
 import Sync from './settings/Sync'
 import Backup from './settings/Backup'
 import Other from './settings/Other'
+import LocalMusic from './settings/LocalMusic'
 import Version from './settings/Version'
 import About from './settings/About'
 
@@ -17,6 +18,7 @@ export const SETTING_SCREENS = [
   'lyric_desktop',
   'search',
   'list',
+  'localMusic',
   'sync',
   'backup',
   'other',
@@ -52,6 +54,7 @@ const Main = forwardRef<MainType, {}>((props, ref) => {
       case 'lyric_desktop': return <LyricDesktop />
       case 'search': return <Search />
       case 'list': return <List />
+      case 'localMusic': return <LocalMusic />
       case 'sync': return <Sync />
       case 'backup': return <Backup />
       case 'other': return <Other />

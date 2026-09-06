@@ -355,6 +355,16 @@ declare global {
        * 是否启用同步
        */
       'sync.enable': boolean
+
+      /**
+       * 本地音乐文件夹路径
+       */
+      'localMusic.folderPath': string
+
+      /**
+       * 本地音乐列表ID
+       */
+      'localMusic.listId': string
     }
   }
 }

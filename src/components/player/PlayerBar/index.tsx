@@ -19,7 +19,12 @@ export default memo(({ isHome = false }: { isHome?: boolean }) => {
   const autoHidePlayBar = useSettingValue('common.autoHidePlayBar')
 
   const playerComponent = useMemo(() => (
-    <View style={{ ...styles.container, backgroundColor: theme['c-content-background'] }}>
+    <View style={{
+      ...styles.container,
+      backgroundColor: theme['c-content-background'],
+      borderColor: theme['c-border-background'],
+      shadowColor: theme['c-primary-dark-1000-alpha-300'],
+    }}>
       <Pic isHome={isHome} />
       <View style={styles.center}>
         <Title isHome={isHome} />
@@ -42,21 +47,23 @@ export default memo(({ isHome = false }: { isHome?: boolean }) => {
 
 const styles = createStyle({
   container: {
-    width: '100%',
-    // height: 100,
-    // paddingTop: progressContentPadding,
-    // marginTop: -progressContentPadding,
-    // backgroundColor: 'rgba(0, 0, 0, .1)',
-    // borderTopWidth: BorderWidths.normal2,
-    paddingVertical: 5,
-    paddingLeft: 5,
-    // backgroundColor: AppColors.primary,
-    // backgroundColor: 'red',
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
+    width: 'auto',
+    marginHorizontal: 6,
+    marginTop: 4,
+    marginBottom: 4,
+    paddingVertical: 6,
+    paddingLeft: 8,
+    borderRadius: 14,
+    borderWidth: 0.5,
     flexDirection: 'row',
     alignItems: 'center',
-    elevation: 10,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 3,
   },
   left: {
     // borderRadius: 3,
@@ -67,7 +74,7 @@ const styles = createStyle({
     flexDirection: 'column',
     flexGrow: 1,
     flexShrink: 1,
-    paddingLeft: 5,
+    paddingLeft: 8,
     height: '100%',
     // justifyContent: 'space-evenly',
     // height: 48,
@@ -78,8 +85,8 @@ const styles = createStyle({
     alignItems: 'center',
     flexGrow: 0,
     flexShrink: 0,
-    paddingLeft: 5,
-    paddingRight: 5,
+    paddingLeft: 6,
+    paddingRight: 8,
   },
   // row: {
   //   flexDirection: 'row',

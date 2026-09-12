@@ -6,6 +6,24 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [1.9.0](https://github.com/lyswhut/lx-music-mobile/compare/v1.8.4...v1.9.0) - 2026-09-12
+
+### 新增
+
+- 歌曲菜单新增 “清理缓存” 按钮，可用于清理 URL 缓存，当某首歌获取到了错误的歌曲链接时，可以使用该功能清理与其关联的歌曲URL缓存
+
+### 优化
+
+- 优化自动换源歌曲匹配机制
+
+### 修复
+
+- 修复 kg 搜索结果显示问题
+- 修复某些 tx 歌单打开失败的问题 (@ght-000)
+- 修复 mg 图片、歌词获取
+- 修复 tx 歌单翻页问题 (#1107, @jtcai)
+- 修复 tx 歌曲搜索失败的问题（@ikun0014）
+
 ## [1.8.4](https://github.com/lyswhut/lx-music-mobile/compare/v1.8.3...v1.8.4) - 2026-05-01
 
 我们很高兴地宣布新项目 Any Listen 的桌面版已发布，目前已支持列表跟随本地文件自动更新、加载并播放WebDAV上的歌曲等功能，更多功能仍在积极开发中，桌面版与Web版将同步更新。

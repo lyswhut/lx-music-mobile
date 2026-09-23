@@ -37,13 +37,20 @@ const setLists = (results: SearchResult[], page: number, text: string): ListInfo
   let totals = []
   let limit = 0
   let list = []
+  const pages: number[] = []
   for (const source of results) {
     list.push(...source.list)
     totals.push(source.total)
     maxTotals[source.source] = source.total
-    state.maxPages[source.source] = Math.ceil(source.total / source.limit)
+    const sourcePages = Math.ceil(source.total / source.limit)
+    state.maxPages[source.source] = sourcePages
+    pages.push(sourcePages)
     limit = Math.max(source.limit, limit)
   }
+  // 聚合搜索的"到底了"要看所有源里最靠后的那一页。以前只写各子源的 maxPages，
+  // state.source 是 'all' 时读到 undefined，判定永远不成立——滚到底之后每滑一次
+  // 都会再发一轮必定为空的请求。
+  state.maxPages.all = Math.max(0, ...pages)
 
   let listInfo = state.listInfos.all
   const total = Math.max(0, ...totals)

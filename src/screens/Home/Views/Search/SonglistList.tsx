@@ -20,6 +20,11 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
   const isUnmountedRef = useRef(false)
   useImperativeHandle(ref, () => ({
     async loadList(text, source) {
+      // 和 MusicList 一样：翻页/刷新读的是这个 ref，必须在两个分支之前赋值。
+      // 切歌单/歌曲标签会重挂本组件，不加这一句的话，"直接用已缓存结果"的分支
+      // 会让 ref 停在初始的 {text:'', source:'kw'}，翻页就变成请求一个空关键词。
+      searchInfoRef.current.text = text
+      searchInfoRef.current.source = source
       // const listDetailInfo = searchSonglistState.listDetailInfo
       listRef.current?.setList([], source == 'all')
       if (searchSonglistState.searchText == text && searchSonglistState.source == source && searchSonglistState.listInfos[searchSonglistState.source]!.list.length) {
@@ -29,11 +34,9 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
       } else {
         listRef.current?.setStatus('loading')
         const page = 1
-        searchInfoRef.current.text = text
-        searchInfoRef.current.source = source
         return search(text, page, source).then((list) => {
-          // const result = setListInfo(listDetail, id, page)
-          if (isUnmountedRef.current) return
+          // null 表示这次结果已被更新的请求顶掉，列表归那次请求管
+          if (list == null || isUnmountedRef.current) return
           requestAnimationFrame(() => {
             listRef.current?.setList(list, source == 'all')
             listRef.current?.setStatus(searchSonglistState.maxPages[searchSonglistState.source] == page ? 'end' : 'idle')
@@ -57,8 +60,8 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
     const page = 1
     listRef.current?.setStatus('refreshing')
     search(searchInfoRef.current.text, page, searchInfoRef.current.source).then((list) => {
-      // const result = setListInfo(listDetail, searchSonglistState.listDetailInfo.id, page)
-      if (isUnmountedRef.current) return
+      // null：结果作废，列表归发起更新的那次请求管
+      if (list == null || isUnmountedRef.current) return
       listRef.current?.setList(list, searchInfoRef.current.source == 'all')
       listRef.current?.setStatus(searchSonglistState.maxPages[searchSonglistState.source] == page ? 'end' : 'idle')
     }).catch(() => {
@@ -70,8 +73,8 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
     const info = searchSonglistState.listInfos[searchInfoRef.current.source]!
     const page = info.list.length ? info.page + 1 : 1
     search(searchInfoRef.current.text, page, searchInfoRef.current.source).then((list) => {
-      // const result = setListInfo(listDetail, searchSonglistState.listDetailInfo.id, page)
-      if (isUnmountedRef.current) return
+      // 同上：拿不到有效结果就别动列表
+      if (list == null || isUnmountedRef.current) return
       listRef.current?.setList(list, searchInfoRef.current.source == 'all')
       listRef.current?.setStatus(searchSonglistState.maxPages[searchSonglistState.source] == page ? 'end' : 'idle')
     }).catch(() => {

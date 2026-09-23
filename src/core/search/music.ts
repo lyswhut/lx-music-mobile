@@ -17,9 +17,14 @@ export const clearListInfo: typeof searchMusicActions.clearListInfo = (source) =
 }
 
 
-export const search = async(text: string, page: number, sourceId: Source): Promise<LX.Music.MusicInfoOnline[]> => {
+/**
+ * 返回要显示的列表；返回 null 表示这次结果作废（已被更新的请求顶掉，或关键词为空），
+ * 调用方拿到 null 时不要动列表——空数组是"这一页确实没有结果"，两者被混用的话，
+ * 一次作废的响应就会把界面上的列表清成空白页。
+ */
+export const search = async(text: string, page: number, sourceId: Source): Promise<LX.Music.MusicInfoOnline[] | null> => {
   const listInfo = searchMusicState.listInfos[sourceId]!
-  if (!text) return []
+  if (!text) return null
   const key = `${page}__${text}`
   if (sourceId == 'all') {
     listInfo.key = key
@@ -38,7 +43,7 @@ export const search = async(text: string, page: number, sourceId: Source): Promi
       }))
     }
     return Promise.all(task).then((results: SearchResult[]) => {
-      if (key != listInfo.key) return []
+      if (key != listInfo.key) return null
       setSearchText(text)
       setSource(sourceId)
       return setListInfo(results, page, text)
@@ -47,7 +52,7 @@ export const search = async(text: string, page: number, sourceId: Source): Promi
     if (listInfo?.key == key && listInfo?.list.length) return listInfo?.list
     listInfo.key = key
     return (musicSdk[sourceId]?.musicSearch.search(text, page, listInfo.limit).then((data: SearchResult) => {
-      if (key != listInfo.key) return []
+      if (key != listInfo.key) return null
       return setListInfo(data, page, text)
     }) ?? Promise.reject(new Error('source not found: ' + sourceId))).catch((err: any) => {
       if (listInfo.list.length && page == 1) clearListInfo(sourceId)

@@ -1,0 +1,12 @@
+{
+  "name": "react-native-track-player",
+  "version": "2.1.2",
+  "description": "A fully fledged audio module created for music apps",
+  "peerDependencies": {
+    "react": ">=16.8.6",
+    "react-native": ">=0.60.0-rc.2",
+    "react-native-windows": ">=0.63.0"
+  },
+  "main": "src/index.ts",
+  "react-native": "src/index.ts"
+}

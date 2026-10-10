@@ -1,0 +1,9 @@
+{
+  "name": "react-native-background-timer",
+  "version": "2.4.1",
+  "description": "Emit event periodically (even when app is in the background)",
+  "peerDependencies": {
+    "react-native": ">=0.47.0"
+  },
+  "main": "index.js"
+}

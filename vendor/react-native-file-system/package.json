@@ -1,0 +1,11 @@
+{
+  "name": "react-native-file-system",
+  "version": "0.1.0",
+  "description": "React native android file system",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "main": "src/index.ts",
+  "react-native": "src/index.ts"
+}

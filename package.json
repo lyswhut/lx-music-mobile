@@ -15,6 +15,7 @@
     "bundle-android": "react-native bundle --platform android --dev true --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "build-test": "react-native bundle --platform android --dev true --entry-file index.js --bundle-output index.android.bundle --assets-dest res",
     "bundle-harmony": "react-native bundle-harmony --dev true",
+    "bundle-harmony:probe": "react-native bundle-harmony --dev true --entry-file index.harmony.js",
     "bundle-harmony:release": "react-native bundle-harmony --dev false",
     "pack:android:debug": "./gradlew assembleDebug",
     "pack": "npm run pack:android",

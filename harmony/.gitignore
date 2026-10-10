@@ -1,0 +1,22 @@
+/node_modules
+/oh_modules
+/local.properties
+/.idea
+**/build
+/.hvigor
+.cxx
+/.clangd
+/.clang-format
+/.clang-tidy
+**/.test
+/.appanalyzer
+# RNOH: bundle-harmony 生成的 JS 产物（用 `npm run bundle-harmony` 重新生成，不入库）
+/entry/src/main/resources/rawfile/bundle.harmony.js
+/entry/src/main/resources/rawfile/assets/
+
+# RNOH 构建时由 hvigor 插件生成（autolinking / codegen），不入库
+/entry/src/main/ets/RNOHPackagesFactory.ets
+/entry/src/main/ets/generated/
+/entry/src/main/cpp/autolinking.cmake
+/entry/src/main/cpp/RNOHPackagesFactory.h
+/entry/src/main/cpp/generated/

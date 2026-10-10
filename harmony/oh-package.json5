@@ -1,0 +1,15 @@
+{
+  "modelVersion": "6.1.0",
+  "description": "lx-music HarmonyOS 宿主工程 (RNOH)",
+  "dependencies": {
+    // RNOH 原生 SDK，来自 JS 工程 node_modules 里的 @react-native-oh/react-native-harmony
+    "@rnoh/react-native-openharmony": "file:../node_modules/@react-native-oh/react-native-harmony/react_native_openharmony.har"
+  },
+  "devDependencies": {
+    "@ohos/hypium": "1.0.25",
+    "@ohos/hamock": "1.0.0"
+  },
+  "overrides": {
+    "@rnoh/react-native-openharmony": "file:../node_modules/@react-native-oh/react-native-harmony/react_native_openharmony.har"
+  }
+}

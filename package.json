@@ -48,6 +48,7 @@
     "@react-native-async-storage/async-storage": "~2.1.2",
     "@react-native-clipboard/clipboard": "^1.14.3",
     "@react-native-community/slider": "^4.5.7",
+    "@react-native-oh/react-native-harmony": "0.72.144",
     "he": "^1.2.0",
     "iconv-lite": "^0.7.2",
     "lrc-file-parser": "^2.4.1",
@@ -73,7 +74,6 @@
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@babel/preset-env": "^7.29.2",
     "@babel/runtime": "^7.29.2",
-    "metro-react-native-babel-preset": "^0.76.8",
     "@react-native/metro-config": "^0.72.12",
     "@tsconfig/react-native": "^3.0.9",
     "@types/he": "^1.2.3",
@@ -87,6 +87,7 @@
     "eslint-config-standard-with-typescript": "^43.0.1",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
+    "metro-react-native-babel-preset": "^0.76.8",
     "typescript": "^5.9.3"
   },
   "overrides": {

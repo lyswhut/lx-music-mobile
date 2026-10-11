@@ -147,7 +147,7 @@ b4b342b 回退 RN 0.73.11→0.72.5，vendor 化 github fork 依赖
 - 用户指定 Billy Joel 的 `Goodnight Saigon`、酷我来源。Harmony 真机搜索到时长 07:02、songmid `215582995`，请求 `http://97.64.37.235/flower/v1/url/kw/215582995/128k` 仍返回 404，自动换源也失败。
 - 在独立 QuickJS 环境加载同一下载脚本，分别使用原始安卓 preload 与生成的 Harmony preload，并回传 npm `flower-source-info/latest` 的真实配置。初始化来源列表、该歌曲取流 URL、method 和全部脚本请求头一致；忽略随机 requestKey。电脑带齐 `User-Agent: lx-music/mobile`、`ver: 2.0.0`、`source-ver: 1`、`tag` 与默认 Accept 后重放仍为 nginx 404。
 - 扩展真机 HTTP probe，服务端必须检查以上四个请求头的确切值才能返回成功。完整 RN fetch → 原生 HTTP → worker 回调通过，报告 `Source request headers verified` 和 `ALL USER API CHECKS PASSED`，未发现这些请求头在 Harmony 丢失。
-- 以上不能替代实际安卓设备请求对比。已指导用户在安卓「设置 → 其他 → 资源缓存 → 清理缓存」、退出重开后复播；等待结果及安卓版本，必要时核对安卓导出的实际音源脚本、缓存 URL 与两端网络环境。
+- 用户随后反馈：安卓清理缓存后也无法播放。结合两种 preload 生成请求一致、Harmony 请求头真机验证通过、电脑与 Harmony 取流均为 404，现有证据支持当前野花取流服务不可用，安卓此前很可能命中缓存链接。尚未抓取安卓实际网络请求，不能把缓存解释当成已证实事实；后续真实播放验证需可用音源或该服务恢复。
 
 ---
 

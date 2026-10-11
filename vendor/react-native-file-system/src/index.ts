@@ -1,75 +1,56 @@
-import { NativeModules, Platform } from 'react-native';
-
-const LINKING_ERROR =
-  `The package 'react-native-file-system' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo Go\n';
-
-const FileSystemModule = NativeModules.FileSystemModule
-  ? NativeModules.FileSystemModule
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
-
+/**
+ * react-native-file-system —— HarmonyOS 适配实现（委托 react-native-fs OH 版）。
+ *
+ * 原 fork(github:lyswhut/react-native-file-system)依赖安卓原生 FileSystemModule，
+ * 鸿蒙无此原生模块,模块顶层 `Dirs = FileSystemModule.getConstants()` 会直接抛
+ * "doesn't seem to be linked"。此处改为用 react-native-fs(OH 移植版,原生已注册)
+ * 实现等价文件操作;gzip 用 pako(已是项目依赖)。
+ *
+ * AndroidScoped(SAF 文档树)/getExternalStoragePaths 鸿蒙无直接等价,降级为安全桩。
+ */
+import RNFS from 'react-native-fs'
+import pako from 'pako'
+import { Buffer } from '@craftzdog/react-native-buffer'
 
 export interface FileType {
-  /** Document Tree Uri for the file or directory */
-  // uri: string
-  /** Name of the file or directory */
   name: string
-  /** Storage path for the file */
   path: string
   isDirectory: boolean
   isFile: boolean
-  /** Last modified date of the file or directory */
   lastModified: number
   canRead: boolean
-  /** data read from the file */
   data: string
-  /** mime type of the file */
   mimeType: string
   size: number
 }
 export type Encoding = 'base64' | 'utf8'
 export type HashAlgorithm = 'md5' | 'sha1' | 'sha224' | 'sha256' | 'sha384' | 'sha512'
 
+const toFileType = (item: any): FileType => ({
+  name: item.name,
+  path: item.path,
+  isDirectory: typeof item.isDirectory === 'function' ? item.isDirectory() : !!item.isDirectory,
+  isFile: typeof item.isFile === 'function' ? item.isFile() : !!item.isFile,
+  lastModified: item.mtime ? new Date(item.mtime).getTime() : 0,
+  canRead: true,
+  data: '',
+  mimeType: '',
+  size: Number(item.size) || 0,
+})
+
 export const Dirs: {
-  /**
-   * Temporary files. System/user may delete these if device storage is low.
-   */
   CacheDir: string
-
-  /**
-   * System recommended location for SQLite files.
-   *
-   * Android only.
-   */
   DatabaseDir?: string
-
-  /**
-   * Persistent data. Generally user created content.
-   */
   DocumentDir: string
-
-  /**
-   * App's default root directory.
-   */
   MainBundleDir: string
-
-  /**
-   * Root path to removable media. Prefer `cpExternal()` when possible, as
-   * Android discourages this access method.
-   *
-   * Android only.
-   */
   SDCardDir: string
-} = FileSystemModule.getConstants()
+} = {
+  CacheDir: RNFS.CachesDirectoryPath,
+  DatabaseDir: RNFS.DocumentDirectoryPath,
+  DocumentDir: RNFS.DocumentDirectoryPath,
+  MainBundleDir: (RNFS as any).MainBundlePath ?? RNFS.DocumentDirectoryPath,
+  SDCardDir: (RNFS as any).ExternalStorageDirectoryPath ?? '',
+}
 
 export interface OpenDocumentOptions {
   mimeTypes?: string[]
@@ -79,143 +60,97 @@ export interface OpenDocumentOptions {
   encoding?: Encoding
 }
 
-export const getExternalStoragePaths = async(is_removable?: boolean): Promise<string[]> => {
-  return is_removable == null
-    ? FileSystemModule.getAllExternalStoragePaths()
-    : FileSystemModule.getExternalStoragePaths(is_removable)
+export const getExternalStoragePaths = async(_is_removable?: boolean): Promise<string[]> => {
+  // 鸿蒙无直接等价,返回空
+  return []
 }
 
 export const AndroidScoped = {
   async getPersistedUriPermissions(): Promise<string[]> {
-    return FileSystemModule.getPersistedUriPermissions()
+    return []
   },
-  releasePersistableUriPermission(path: string) {
-    return FileSystemModule.releasePersistableUriPermission(path)
+  releasePersistableUriPermission(_path: string) {},
+  async openDocumentTree(_isPersist: boolean): Promise<FileType> {
+    throw new Error('[RNFileSystem-Harmony] openDocumentTree 暂未实现')
   },
-  async openDocumentTree(isPersist: boolean): Promise<FileType> {
-    return FileSystemModule.openDocumentTree(isPersist)
-  },
-  async openDocument(options: OpenDocumentOptions): Promise<FileType> {
-    return FileSystemModule.openDocument(options)
+  async openDocument(_options: OpenDocumentOptions): Promise<FileType> {
+    throw new Error('[RNFileSystem-Harmony] openDocument 暂未实现')
   },
 }
 
+const dirname = (p: string) => {
+  const i = Math.max(p.lastIndexOf('/'), p.lastIndexOf('\\'))
+  return i >= 0 ? p.slice(0, i) : ''
+}
+
 export const FileSystem = {
-  /**
-   * Copy a file.
-   */
   async cp(source: string, target: string): Promise<void> {
-    return FileSystemModule.cp(source, target)
+    await RNFS.copyFile(source, target)
   },
-
-  /**
-   * Check if a path exists.
-   */
   async exists(path: string): Promise<boolean> {
-    return FileSystemModule.exists(path)
+    return RNFS.exists(path)
   },
-
-  /**
-   * List files in a directory.
-   */
   async ls(path: string): Promise<FileType[]> {
-    return FileSystemModule.ls(path)
+    const items = await RNFS.readDir(path)
+    return items.map(toFileType)
   },
-
-  /**
-   * Make a new directory.
-   *
-   * Returns path of the created directory.
-   */
   async mkdir(path: string): Promise<FileType> {
-    return FileSystemModule.mkdir(path)
+    await RNFS.mkdir(path)
+    return this.stat(path)
   },
-
-  /**
-   * move a file.
-   */
   async mv(source: string, target: string): Promise<boolean> {
-    return FileSystemModule.mv(source, target)
+    await RNFS.moveFile(source, target)
+    return true
   },
-
-  /**
-   * rename a file.
-   */
   async rename(source: string, name: string): Promise<boolean> {
-    return FileSystemModule.rename(source, name)
+    await RNFS.moveFile(source, `${dirname(source)}/${name}`)
+    return true
   },
-
-  /**
-   * Read the content of a file.
-   */
   async readFile(path: string, encoding: Encoding = 'utf8'): Promise<string> {
-    return FileSystemModule.readFile(path, encoding)
+    return RNFS.readFile(path, encoding)
   },
-
-  /**
-   * Read file metadata.
-   */
   async stat(path: string): Promise<FileType> {
-    return FileSystemModule.stat(path)
+    const s = await RNFS.stat(path)
+    return toFileType({
+      name: path.slice(dirname(path).length + 1),
+      path,
+      isDirectory: () => s.isDirectory(),
+      isFile: () => s.isFile(),
+      mtime: s.mtime,
+      size: s.size,
+    })
   },
-
-  /**
-   * Delete a file.
-   */
   async unlink(path: string): Promise<boolean> {
-    return FileSystemModule.unlink(path)
+    await RNFS.unlink(path)
+    return true
   },
-
-  /**
-   * Write content to a file.
-   *
-   * Default encoding of `data` is assumed utf8.
-   */
   async writeFile(path: string, data: string, encoding: Encoding = 'utf8'): Promise<void> {
-    return FileSystemModule.writeFile(path, data, encoding)
+    await RNFS.writeFile(path, data, encoding)
   },
-  /**
-   * Append content to a file.
-   *
-   * Default encoding of `data` is assumed utf8.
-   */
   async appendFile(path: string, data: string, encoding: Encoding = 'utf8'): Promise<void> {
-    return FileSystemModule.appendFile(path, data, encoding)
+    await RNFS.appendFile(path, data, encoding)
   },
-  /**
-   * Gzip to a file.
-   */
   async gzipFile(source: string, target: string): Promise<void> {
-    return FileSystemModule.gzipFile(source, target)
+    const b64 = await RNFS.readFile(source, 'base64')
+    const input = Buffer.from(b64, 'base64')
+    const out = pako.gzip(input)
+    await RNFS.writeFile(target, Buffer.from(out).toString('base64'), 'base64')
   },
-  /**
-   * UnGzip to a file.
-   */
   async unGzipFile(source: string, target: string): Promise<void> {
-    return FileSystemModule.unGzipFile(source, target)
+    const b64 = await RNFS.readFile(source, 'base64')
+    const input = Buffer.from(b64, 'base64')
+    const out = pako.ungzip(input)
+    await RNFS.writeFile(target, Buffer.from(out).toString('base64'), 'base64')
   },
-  /**
-   * Gzip string.
-   *
-   * Default encoding of `data` is assumed utf8.
-   */
   async gzipString(data: string, encoding: Encoding = 'utf8'): Promise<string> {
-    return FileSystemModule.gzipString(data, encoding)
+    const input = encoding === 'base64' ? Buffer.from(data, 'base64') : Buffer.from(data, 'utf8')
+    return Buffer.from(pako.gzip(input)).toString('base64')
   },
-  /**
-   * UnGzip string.
-   *
-   * Default encoding of `data` is assumed utf8.
-   */
   async unGzipString(data: string, encoding: Encoding = 'utf8'): Promise<string> {
-    return FileSystemModule.unGzipString(data, encoding)
+    const out = pako.ungzip(Buffer.from(data, 'base64'))
+    return encoding === 'base64' ? Buffer.from(out).toString('base64') : Buffer.from(out).toString('utf8')
   },
-  /**
-   * Get File hash string.
-   *
-   * Default algorithm is md5.
-   */
   async hash(path: string, algorithm: HashAlgorithm = 'md5'): Promise<string> {
-    return FileSystemModule.hash(path, algorithm)
+    return RNFS.hash(path, algorithm)
   },
 }

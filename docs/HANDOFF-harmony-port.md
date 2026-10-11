@@ -138,9 +138,16 @@ b4b342b 回退 RN 0.73.11→0.72.5，vendor 化 github fork 依赖
 - 回归测试发现安卓 preload 的字节数组转 Base64 先经过 UTF-8，导致大于 127 的字节被改写，中文 emoji 的 UTF-8 转换也不完整。新增 Harmony 构建适配器，生成 preload 时将转换接到 worker 的原生 Base64/UTF-8 回调。
 - 修复前全部 256 个字节的独立 Base64 向量失败；修复后三个离线 CTest 套件通过。真机 probe 新增全部字节、中文 emoji 往返以及 buffer 输入 AES 向量，再次显示 `ALL USER API CHECKS PASSED`。
 - 用户提供在线测试音源 `https://liuyang-public.oss-cn-beijing.aliyuncs.com/flower-v1.0.0.js`（野花🌷）。已下载用于联调，第三方脚本不入库；真实导入和取流播放继续验证。
-- 恢复全量 bundle、签名构建并覆盖安装后，设置页已有野花🌷 v1，显示「初始化成功」。Billy Joel 搜索返回真实列表，Vienna 播放请求经 QuickJS 到达音源服务器；kg/kw/tx/wy/mg 取流接口均返回 HTTP 404，换源后仍失败，进度为 00:00。电脑直接请求同一 tx 接口也返回 nginx 的 `404 Not Found`，因此不能标记真实播放或 MVP 已通过。已请用户提供当前可用的其他测试音源。
+- 恢复全量 bundle、签名构建并覆盖安装后，设置页已有野花🌷 v1，显示「初始化成功」。Billy Joel 搜索返回真实列表，Vienna 播放请求经 QuickJS 到达音源服务器；kg/kw/tx/wy/mg 取流接口均返回 HTTP 404，换源后仍失败，进度为 00:00。电脑直接请求同一 tx 接口也返回 nginx 的 `404 Not Found`，因此不能标记真实播放或 MVP 已通过。用户随后说明安卓端同一音源能播放，需继续同条件对比，不能仅据该 404 判定音源已失效。
 - Clipboard 的嵌套 JS 包仍构造 NativeEventEmitter，导致监听方法警告。postinstall 补丁改为 Harmony DeviceEventEmitter；完整应用启动后的进程日志不再出现 NativeEventEmitter 警告。
 - 真机最终安装的是完整应用；隔离测试 HTTP 服务、端口映射和 crypto fixture 已清理。
+
+### 2026-10-11 · 安卓可播放反馈后的请求对比
+
+- 用户指定 Billy Joel 的 `Goodnight Saigon`、酷我来源。Harmony 真机搜索到时长 07:02、songmid `215582995`，请求 `http://97.64.37.235/flower/v1/url/kw/215582995/128k` 仍返回 404，自动换源也失败。
+- 在独立 QuickJS 环境加载同一下载脚本，分别使用原始安卓 preload 与生成的 Harmony preload，并回传 npm `flower-source-info/latest` 的真实配置。初始化来源列表、该歌曲取流 URL、method 和全部脚本请求头一致；忽略随机 requestKey。电脑带齐 `User-Agent: lx-music/mobile`、`ver: 2.0.0`、`source-ver: 1`、`tag` 与默认 Accept 后重放仍为 nginx 404。
+- 扩展真机 HTTP probe，服务端必须检查以上四个请求头的确切值才能返回成功。完整 RN fetch → 原生 HTTP → worker 回调通过，报告 `Source request headers verified` 和 `ALL USER API CHECKS PASSED`，未发现这些请求头在 Harmony 丢失。
+- 以上不能替代实际安卓设备请求对比。已指导用户在安卓「设置 → 其他 → 资源缓存 → 清理缓存」、退出重开后复播；等待结果及安卓版本，必要时核对安卓导出的实际音源脚本、缓存 URL 与两端网络环境。
 
 ---
 

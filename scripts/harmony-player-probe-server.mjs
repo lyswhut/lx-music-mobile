@@ -20,7 +20,9 @@ for (let sample = 0; sample < samples; sample++) {
 }
 
 const server = http.createServer((request, response) => {
-  if (request.url === '/source-probe' && request.headers['x-lx-probe'] === 'source-required') {
+  if (request.url === '/source-probe' && request.headers['x-lx-probe'] === 'source-required' &&
+    request.headers['user-agent'] === 'lx-music/mobile' && request.headers.ver === '2.0.0' &&
+    request.headers['source-ver'] === '1' && request.headers.tag === '5b0a20223231353538323939222c0a20223132386b220a5d') {
     console.log('Source request headers verified')
     response.writeHead(200, { 'Content-Type': 'application/json' })
     response.end(JSON.stringify({ url: 'https://example.test/network.mp3' }))

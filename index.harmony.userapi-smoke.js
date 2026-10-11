@@ -14,7 +14,7 @@ const initScript = `lx.send(lx.EVENT_NAMES.inited, {sources: {kw: {type: 'music'
 const sourceScript = `
 lx.on(lx.EVENT_NAMES.request, async ({info}) => {
   if (info.mode === 'timer') return new Promise(resolve => setTimeout(() => resolve('https://example.test/timer.mp3'), 20));
-  if (info.mode === 'network') return new Promise((resolve, reject) => lx.request('http://127.0.0.1:18080/source-probe', { headers: { 'X-LX-Probe': 'source-required' } }, (error, response, body) => error ? reject(error) : resolve(body.url)));
+  if (info.mode === 'network') return new Promise((resolve, reject) => lx.request('http://127.0.0.1:18080/source-probe', { headers: { 'X-LX-Probe': 'source-required', 'User-Agent': 'lx-music/mobile', ver: '2.0.0', 'source-ver': '1', tag: '5b0a20223231353538323939222c0a20223132386b220a5d' } }, (error, response, body) => error ? reject(error) : resolve(body.url)));
   if (info.mode === 'error') throw new Error('source probe error');
   if (info.mode === 'loop') { while (true) {} }
   if (lx.utils.crypto.md5('hello') !== '5d41402abc4b2a76b9719d911017c592') throw new Error('MD5 mismatch');

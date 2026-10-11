@@ -11,6 +11,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import { Platform } from 'react-native'
 
 import { Home, PlayDetail, SonglistDetail, Comment } from '@/screens'
 import VersionModal from './components/VersionModal'
@@ -68,26 +70,30 @@ export default function Root() {
 
   return (
     <Provider>
-      {ready
-        ? (
-          <NavigationContainer ref={navigationRef} onStateChange={handleStateChange}>
-            <Stack.Navigator
-              initialRouteName={HOME_SCREEN}
-              screenOptions={{ headerShown: false, animation: 'slide_from_right' }}
-            >
-              <Stack.Screen name={HOME_SCREEN}>{wrap(Home)}</Stack.Screen>
-              <Stack.Screen name={PLAY_DETAIL_SCREEN}>{wrap(PlayDetail)}</Stack.Screen>
-              <Stack.Screen name={SONGLIST_DETAIL_SCREEN}>{wrap(SonglistDetail)}</Stack.Screen>
-              <Stack.Screen name={COMMENT_SCREEN}>{wrap(Comment)}</Stack.Screen>
-              <Stack.Group screenOptions={{ presentation: 'transparentModal', animation: 'fade' }}>
-                <Stack.Screen name={VERSION_MODAL}>{wrap(VersionModal)}</Stack.Screen>
-                <Stack.Screen name={PACT_MODAL}>{wrap(PactModal)}</Stack.Screen>
-                <Stack.Screen name={SYNC_MODE_MODAL}>{wrap(SyncModeModal)}</Stack.Screen>
-              </Stack.Group>
-            </Stack.Navigator>
-          </NavigationContainer>
-          )
-        : null}
+      <SafeAreaProvider>
+        <SafeAreaView style={{ flex: 1 }} edges={(Platform.OS as string) === 'harmony' ? ['top', 'bottom'] : []}>
+          {ready
+            ? (
+              <NavigationContainer ref={navigationRef} onStateChange={handleStateChange}>
+                <Stack.Navigator
+                  initialRouteName={HOME_SCREEN}
+                  screenOptions={{ headerShown: false, animation: 'slide_from_right' }}
+                >
+                  <Stack.Screen name={HOME_SCREEN}>{wrap(Home)}</Stack.Screen>
+                  <Stack.Screen name={PLAY_DETAIL_SCREEN}>{wrap(PlayDetail)}</Stack.Screen>
+                  <Stack.Screen name={SONGLIST_DETAIL_SCREEN}>{wrap(SonglistDetail)}</Stack.Screen>
+                  <Stack.Screen name={COMMENT_SCREEN}>{wrap(Comment)}</Stack.Screen>
+                  <Stack.Group screenOptions={{ presentation: 'transparentModal', animation: 'fade' }}>
+                    <Stack.Screen name={VERSION_MODAL}>{wrap(VersionModal)}</Stack.Screen>
+                    <Stack.Screen name={PACT_MODAL}>{wrap(PactModal)}</Stack.Screen>
+                    <Stack.Screen name={SYNC_MODE_MODAL}>{wrap(SyncModeModal)}</Stack.Screen>
+                  </Stack.Group>
+                </Stack.Navigator>
+              </NavigationContainer>
+              )
+            : null}
+        </SafeAreaView>
+      </SafeAreaProvider>
     </Provider>
   )
 }

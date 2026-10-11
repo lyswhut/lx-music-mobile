@@ -7,9 +7,11 @@
  */
 import type { RNPackageContext, RNPackage } from '@rnoh/react-native-openharmony';
 import { createRNOHPackages as createRNOHPackagesAutolinking } from './RNOHPackagesFactory';
+import { LXMusicPackage } from './nativeModules/LXMusicPackage';
 
 export function getRNOHPackages(ctx: RNPackageContext): RNPackage[] {
   return [
     ...createRNOHPackagesAutolinking(ctx),
+    new LXMusicPackage(ctx),
   ];
 }

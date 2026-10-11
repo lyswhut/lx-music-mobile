@@ -4,10 +4,13 @@ import {
   NativeEventEmitter,
   NativeModules,
   Platform,
+  TurboModuleRegistry,
 } from 'react-native';
 
-const { RNBackgroundTimer } = NativeModules;
-const Emitter = new NativeEventEmitter(RNBackgroundTimer);
+const RNBackgroundTimer = Platform.OS === 'harmony'
+  ? TurboModuleRegistry.getEnforcing('RNBackgroundTimer')
+  : NativeModules.RNBackgroundTimer;
+const Emitter = Platform.OS === 'harmony' ? DeviceEventEmitter : new NativeEventEmitter(RNBackgroundTimer);
 
 class BackgroundTimer {
   constructor() {
@@ -41,6 +44,7 @@ class BackgroundTimer {
     const EventEmitter = Platform.select({
       ios: () => NativeAppEventEmitter,
       android: () => DeviceEventEmitter,
+      harmony: () => DeviceEventEmitter,
     })();
     this.start(0);
     this.backgroundListener = EventEmitter.addListener(
@@ -80,7 +84,7 @@ class BackgroundTimer {
   clearTimeout(timeoutId) {
     if (this.callbacks[timeoutId]) {
       delete this.callbacks[timeoutId];
-      // RNBackgroundTimer.clearTimeout(timeoutId);
+      if (Platform.OS === 'harmony') RNBackgroundTimer.clearTimeout(timeoutId);
     }
   }
 
@@ -99,7 +103,7 @@ class BackgroundTimer {
   clearInterval(intervalId) {
     if (this.callbacks[intervalId]) {
       delete this.callbacks[intervalId];
-      // RNBackgroundTimer.clearTimeout(intervalId);
+      if (Platform.OS === 'harmony') RNBackgroundTimer.clearTimeout(intervalId);
     }
   }
 }

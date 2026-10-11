@@ -35,10 +35,21 @@ struct Index {
           rnInstanceConfig: {
             name: APP_KEY,
             createRNPackages: getRNOHPackages,
-            fontResourceByFontFamily: {},
+            fontResourceByFontFamily: { icomoon: $rawfile('fonts/icomoon.ttf') },
             enableDebugger: this.rnohCoreContext.isDebugModeEnabled,
             // RNOH 0.72.x 必填：ArkTS 实现的 Fabric 组件名列表（无则空数组）
-            arkTsComponentNames: [],
+            arkTsComponentNames: [
+              'RNCSlider',
+              'RNSScreen',
+              'RNSFullWindowOverlay',
+              'RNSModalScreen',
+              'RNSScreenContainer',
+              'RNSScreenNavigationContainer',
+              'RNSScreenStack',
+              'RNSScreenStackHeaderSubview',
+              'RNSScreenStackHeaderConfig',
+              'RNSSearchBar',
+            ],
             // 试：切 C-API 架构（新路径，规避 API26 上 ArkTS 架构的窗口接口不兼容）
             enableCAPIArchitecture: true,
           },

@@ -1,5 +1,6 @@
-import { NativeModules } from 'react-native'
-const { TrackPlayerModule: TrackPlayer } = NativeModules
+import { NativeModules, Platform } from 'react-native'
+import harmonyConstants from './constants.harmony'
+const TrackPlayer = (Platform.OS as string) === 'harmony' ? harmonyConstants : NativeModules.TrackPlayerModule
 
 export enum IOSCategory {
   Playback = 'playback',

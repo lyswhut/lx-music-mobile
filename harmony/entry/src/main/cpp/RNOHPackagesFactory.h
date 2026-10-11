@@ -5,7 +5,7 @@
  *（ReactNativeOhTplXxxPackage.h）→ C++ 编译 "file not found"。故在 hvigorfile 把
  * autolinker 的 C++ 产物也重定向到编译树外,此处用各包真实头手动注册。
  *
- * 注：fs 纯 ArkTS(无 C++),只在 ETS 注册;safe-area 因 ArkTS px2vp 问题暂排除。
+ * 注：fs 纯 ArkTS(无 C++),只在 ETS 注册。
  * 新增/移除含 C++ 的 OH 库时,需同步这里 + autolinking.cmake(由 autolinker 按
  * 各包 harmony.autolinking 元数据生成)。
  */
@@ -16,6 +16,9 @@
 #include "ExceptionHandlerPackage.h"
 #include "RNQuickBase64Package.h"
 #include "ViewPagerPackage.h"
+#include "ScreensPackage.h"
+#include "SafeAreaViewPackage.h"
+#include "SliderPackage.h"
 
 using namespace rnoh;
 
@@ -26,5 +29,8 @@ std::vector<Package::Shared> createRNOHPackages(const Package::Context &ctx) {
     std::make_shared<ExceptionHandlerPackage>(ctx),
     std::make_shared<RNQuickBase64Package>(ctx),
     std::make_shared<ViewPagerPackage>(ctx),
+    std::make_shared<ScreensPackage>(ctx),
+    std::make_shared<SafeAreaViewPackage>(ctx),
+    std::make_shared<SliderPackage>(ctx),
   };
 }

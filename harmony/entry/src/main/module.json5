@@ -14,6 +14,8 @@
     "pages": "$profile:main_pages",
     "requestPermissions": [
       { "name": "ohos.permission.INTERNET" },
+      { "name": "ohos.permission.GET_WIFI_INFO" },
+      { "name": "ohos.permission.KEEP_BACKGROUND_RUNNING" },
       { "name": "ohos.permission.VIBRATE" }
     ],
     "abilities": [
@@ -26,6 +28,7 @@
         "startWindowIcon": "$media:startIcon",
         "startWindowBackground": "$color:start_window_background",
         "exported": true,
+        "backgroundModes": ["audioPlayback"],
         "skills": [
           {
             "entities": [

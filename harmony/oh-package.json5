@@ -12,7 +12,8 @@
     "@react-native-oh-tpl/react-native-pager-view": "file:../node_modules/react-native-pager-view/harmony/pager_view.har",
     "@react-native-oh-tpl/react-native-quick-base64": "file:../node_modules/react-native-quick-base64/harmony/rn_quick_base64.har",
     "@react-native-oh-tpl/react-native-safe-area-context": "file:../node_modules/react-native-safe-area-context/harmony/safe_area.har",
-    "@react-native-oh-tpl/slider": "file:../node_modules/@react-native-community/slider/harmony/slider.har"
+    "@react-native-oh-tpl/slider": "file:../node_modules/@react-native-community/slider/harmony/slider.har",
+    "@react-native-oh-tpl/react-native-screens": "file:../node_modules/@react-native-oh-tpl/react-native-screens/harmony/screens.har"
   },
   "devDependencies": {
     "@ohos/hypium": "1.0.25",

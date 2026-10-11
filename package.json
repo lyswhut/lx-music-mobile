@@ -15,9 +15,12 @@
     "menu": "adb shell input keyevent 82",
     "bundle-android": "react-native bundle --platform android --dev true --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "build-test": "react-native bundle --platform android --dev true --entry-file index.js --bundle-output index.android.bundle --assets-dest res",
-    "bundle-harmony": "react-native bundle-harmony --dev true",
-    "bundle-harmony:probe": "react-native bundle-harmony --dev true --entry-file index.harmony.js",
-    "bundle-harmony:release": "react-native bundle-harmony --dev false",
+    "bundle-harmony": "node scripts/prepare-harmony-assets.mjs && react-native bundle-harmony --dev true --entry-file index.harmony.js",
+    "bundle-harmony:probe": "npm run bundle-harmony",
+    "bundle-harmony:smoke": "node scripts/prepare-harmony-assets.mjs && react-native bundle-harmony --dev true --entry-file index.harmony.smoke.js",
+    "bundle-harmony:player-smoke": "node scripts/prepare-harmony-assets.mjs && react-native bundle-harmony --dev true --entry-file index.harmony.player-smoke.js",
+    "bundle-harmony:crypto-smoke": "node scripts/prepare-harmony-assets.mjs && node scripts/prepare-harmony-crypto-probe.mjs && react-native bundle-harmony --dev true --entry-file index.harmony.crypto-smoke.js",
+    "bundle-harmony:release": "node scripts/prepare-harmony-assets.mjs && react-native bundle-harmony --dev false --entry-file index.harmony.js",
     "pack:android:debug": "./gradlew assembleDebug",
     "pack": "npm run pack:android",
     "pack:android": "cd android && gradlew.bat assembleRelease",
@@ -53,6 +56,7 @@
     "@react-native-clipboard/clipboard": "npm:@react-native-oh-tpl/clipboard@1.13.2-0.0.9",
     "@react-native-community/slider": "npm:@react-native-oh-tpl/slider@4.4.3-0.3.4",
     "@react-native-oh/react-native-harmony": "0.72.144",
+    "@react-native-oh-tpl/react-native-screens": "3.34.0-rc.6",
     "@react-navigation/native": "6.1.18",
     "@react-navigation/native-stack": "6.11.0",
     "he": "^1.2.0",
@@ -98,6 +102,9 @@
     "typescript": "^5.9.3"
   },
   "overrides": {
+    "@craftzdog/react-native-buffer": {
+      "react-native-quick-base64": "$react-native-quick-base64"
+    },
     "@react-native-community/cli-platform-android": {
       "fast-xml-parser": "^5.3.4"
     },

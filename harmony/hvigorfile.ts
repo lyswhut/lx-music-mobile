@@ -4,6 +4,10 @@
  */
 import { appTasks } from '@ohos/hvigor-ohos-plugin';
 import { createRNOHHvigorPlugin } from '@rnoh/hvigor-plugin';
+import { mkdirSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+mkdirSync(resolve(__dirname, 'entry/.rnoh-autolink'), { recursive: true });
 
 export default {
   system: appTasks,

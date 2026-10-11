@@ -14,7 +14,7 @@
 - **Phase 1 Task 1.1（OH 移植原生库接入）✅ 构建通过 + 真机运行到渲染**：
   clipboard/async-storage/exception-handler/quick-base64/pager-view/fs 已注册，`getEnforcing` 崩溃已解决。
   真机上 **App 已经在渲染**（RN 层 + 导航工作），只是开发模式错误浮层（RedBox）盖着若干未接入模块的报错。
-- **当前所在**：正在解决「App 自带/自定义原生模块」。已把 `react-native-file-system`（自定义 fork）改为委托 `react-native-fs`；**最后一次打包失败**（见 §6），需先处理。
+- **当前所在**：全量首页已在真机正常渲染，搜索返回歌曲列表；screens、安全区域、图标字体和抽屉已接通，滑块原生组件已注册。工具模块、fs/gzip/AsyncStorage、AVPlayer/HTTP/后台播放已验证；CryptoModule 的 SHA1/AES/RSA 已接通并通过真机独立向量测试。QuickJS 自定义音源未接入，真实音源端到端播放与 MVP 仍未完成。
 - **MVP 目标**（用户确认）：**自定义音源(QuickJS) + 搜索 + 播放**。桌面歌词、本地媒体元数据 **不做**。
 
 ### 已提交 commit（`git log d295604..HEAD`）
@@ -32,7 +32,80 @@ cd73620 修正 hvigor 插件 tgz 路径
 b4b342b 回退 RN 0.73.11→0.72.5，vendor 化 github fork 依赖
 5fe2498 docs: 移植实施计划
 ```
-未提交：`vendor/react-native-file-system/src/index.ts`（fs 委托实现，见 §5）。
+`6dcc5306` 已提交交接文档及 `vendor/react-native-file-system/src/index.ts` 的 fs 委托实现。本次继续工作尚未提交。
+
+### 2026-10-11 · 新电脑接续记录
+
+- 已拉取并切换到 `feat/harmony-port`。实际工程位置为 `D:\Projects\Harmony\lx-music-harmony`；DevEco 安装在 `D:\Projects\Harmony\DevEco Studio`，工具路径与 §2 的旧电脑不同。
+- 首次 `npm ci` 因 lock 缺少 `fsevents@2.3.3` 失败；`npm install` 已补齐 lock、安装依赖并执行 autolinking 补丁。`ohpm install` 已完成。
+- 新检出没有被 gitignore 的 `entry/.rnoh-autolink` 目录，旧 autolinker 不会自行创建。`harmony/hvigorfile.ts` 现在自动创建目录；新增 `harmony/.npmrc` 满足 hvigor 的项目级 registry 配置要求。
+- `hvigor clean` 后原先的 `BuildNativeWithCmake` 错误未再出现；C++/ArkTS 编译通过。打包还需要把 DevEco 的 `jbr/bin` 放入 PATH，否则出现 `spawn java ENOENT`。
+- `UtilsModule` 实现窗口尺寸（像素）、窗口变化事件、息屏事件、保持亮屏、退出、设备名/ABI/语言、Wi-Fi IPv4、分享与通知授权。注册点为 `LXMusicPackage`（ArkTS + C++）。APK 安装明确拒绝，安卓电池优化接口返回 false；后台播放仍须后续实现 AVSession。
+- JS 在 Harmony 使用 `TurboModuleRegistry` 获取工具模块；通知授权直接等待原生 Promise，避免等待 Android 设置页的 AppState 回前台事件。事件退订及模块销毁会清理监听。
+- `npm run bundle-harmony` / `bundle-harmony:release` 已固定使用 `index.harmony.js`。bundle 构建、`assembleHap`、工具模块定向 TypeScript 检查与桥接模拟验证通过；模拟覆盖权限允许/拒绝、语言/IPv4/像素尺寸、分享、保持亮屏、重复订阅及销毁期间的异步竞态。尚未证明全量 App 可完成初始化，crypto/userApi/cache/播放器等模块仍待接入。
+- 本机 `JAVA_HOME=D:\Projects\Harmony\DevEco Studio\jbr`，`DEVECO_SDK_HOME=D:\Projects\Harmony\DevEco Studio\sdk`；PowerShell 调用 `npm.cmd` 可避开 npm.ps1 的执行策略限制。
+- 当前产物：`harmony/entry/build/default/outputs/default/entry-default-unsigned.hap`。`build-profile.json5` 的 `signingConfigs` 为空；需要在本机 DevEco 配置签名、连接设备后才能安装和验证 fs 设置持久化及工具模块行为。
+- 真机现已连接，`hdc install -r` 安装上述包明确失败：`9568320: no signature file`。已请用户在 DevEco 的 Signing Configs 登录并启用自动签名；签名完成后重新 `assembleHap`，用 signed.hap 覆盖安装（保留应用数据）。
+- 设备上仍有旧包，`aa start -a EntryAbility -b com.wingsluo.lxmusic` 可启动；其 JS 日志报 `RNCClipboard could not be found`。这是旧安装包的日志，不能据此判断当前源码和新包的行为。签名完成后必须重新安装最新包再采集日志。
+
+### 2026-10-11 · 真机验证结果
+
+- 用户已在本机 DevEco 配好签名，`assembleHap` 生成 signed.hap，`hdc install -r` 成功。签名配置含本机凭据，不能随源码提交。
+- 最新全量 App 已安装启动，原来的 RNCClipboard 报错消失，出现 track-player 导入错误：`Cannot read property 'RATING_HEART' of null`。位置为 `vendor/react-native-track-player/src/interfaces.ts` 的 RatingType；当前 fork 依赖安卓 `NativeModules.TrackPlayerModule`，需按 Phase 2 接入 OH 4.x 后适配 API，不能仅用空模块掩盖。
+- 新增独立验证入口 `index.harmony.smoke.js`（`npm run bundle-harmony:smoke`）。不依赖播放器，可直接验证工具模块和现有 fs/AsyncStorage；首次启动写入测试数据、gzip，第二次启动检查文件和设置仍一致、解压还原并清除测试数据。其标记文件和 AsyncStorage key 与业务数据隔离。
+- 首次 gzip 真机验证暴露 Buffer 的嵌套 `react-native-quick-base64@2.2.2`（安卓实现）导致 `global.base64ToArrayBuffer is not a function`。新增 npm override，让 Buffer 的 base64 依赖使用根 OH alias，并清除 lock 中两个旧嵌套包后重装；`npm ls react-native-quick-base64` 与 `npm ci --dry-run` 通过。
+- 修复后真机两次启动验证页面显示 `ALL CHECKS PASSED`：设备名 nova 14 Ultra、语言 zh_cn、ABI arm64-v8a、窗口 1272×2860px、通知状态查询 false、Wi-Fi IPv4、包含中文及 emoji 的 UTF-8 文件读写、gzip 往返、文件与 AsyncStorage 重启持久化全部通过。亮屏/分享/权限申请/息屏事件的实际交互仍待验证。
+- 完成验证后恢复全量 `index.harmony.js` bundle。后续构建全量 App 使用 `npm run bundle-harmony`；要复测基础模块才使用 smoke 入口。
+
+### 2026-10-11 · 播放器与启动链继续移植
+
+- 检查 `@react-native-oh-tpl/react-native-track-player@4.1.2` 发布代码发现：初始化 Promise 在创建 AVPlayer 回调前完成、缺少 playback/remote 事件发射、seekTo(0) 不结束 Promise、队列删除不调整当前索引、AVSession 控制直接操作队列。因此没有安装此包；新增 `LXTrackPlayer` 原生 TurboModule（`TrackPlayerModule.ets` + `LXMusicPackage.h` 方法表），保留旧 vendor 外部接口。
+- Harmony JS 为 `vendor/react-native-track-player/src/trackPlayer.harmony.ts`。静态常量解决 RATING_HEART null，秒级进度不额外除以 1000。HTTP headers/User-Agent 传递到 AVPlayer。队列操作串行，等待 prepare/seekDone；支持暂停、恢复、停止、音量、倍速、重复模式、元数据/歌词、AVSession remote 事件，以及 `//default` 占位轨道的旧 `playback-track-changed`。占位轨道不打开文件。
+- AVSession + AUDIO_PLAYBACK 长时任务在播放时启动，暂停/停止/销毁释放。manifest 新增 KEEP_BACKGROUND_RUNNING 和 audioPlayback 模式。设备 API 26；setPlaybackRate 需要 API 20，低版本未测。
+- 真机入口 `index.harmony.player-smoke.js`，`npm run bundle-harmony:player-smoke`。隔离的 100 秒 WAV 覆盖播放、暂停稳定进度、seekTo(0/5)、删前序轨道索引调整、曲终进入占位轨道和旧事件、reset/destroy/reinitialize；已显示 `ALL PLAYER CHECKS PASSED`。
+- HTTP 服务：另开终端运行 `node scripts/harmony-player-probe-server.mjs`，执行 `hdc rport tcp:18080 tcp:18080`。服务拒绝缺指定 User-Agent/header 的请求；真机 HTTP 10 秒 WAV 播放和请求头验证通过。首次只等 500ms 检查进度失败，改为 5 秒内等实际进度后通过。外部音源/HTTPS 尚未验证。
+- 一次后台复测受到其他设备活动/音频焦点干扰，长延迟返回时音频已结束，该次不能算通过；随后控制 Home 窗口 60 秒，位置约 66.5 秒，通过。AVSessionService dump 确认 LX Music 会话。后台定时器另有最后一轮复测，见后续最新记录。
+- 播放磁盘缓存未实现：isCached=false、缓存大小 0、无缓存可清理。Android maxCacheSize/audioOffload 不代表已支持。锁屏按钮/耳机遥控、HTTPS/HLS、重复模式、快速切歌压力仍待测。
+- `cache.harmony.ts` 用 RNFS 统计/清理应用 cache 目录，不碰 DocumentDirectoryPath 设置与列表，清理交互待测。
+- 全量入口先暴露 UserApiModule.destroy null，缺失实例销毁/订阅已安全返回；loadScript/sendAction 明确拒绝未实现引擎，未伪造 QuickJS。随后暴露桌面歌词 setPlaybackRate null；按原定范围降级，show/授权拒绝，关闭和配置无操作，Harmony 不订阅缺失歌词事件。
+- 新增 RNBackgroundTimer ArkTS 定时器 + C++ 桥接，vendor Harmony 使用 DeviceEventEmitter，取消会释放原生定时器。后台保活由播放器 AUDIO_PLAYBACK 提供，普通定时器不单独申请。
+- 定向 TypeScript 检查（播放器、cache/lyricDesktop/userApi）诊断 0，ArkTS/C++ 编译签名通过。更改未提交，用户签名凭据不能提交。
+- 最后一轮将 probe 的等待改用新 RNBackgroundTimer，真机重新显示 `ALL PLAYER CHECKS PASSED`（进度约 70.2 秒、HTTP/曲终/销毁重建全通过），说明新的原生定时器事件链可用。测试 HTTP 服务已停止，`hdc fport rm tcp:18080 tcp:18080` 已移除本次反向映射。
+- 最后恢复全量 bundle、assembleHap、signed.hap 覆盖安装并启动。init 不再报 UserApi/桌面歌词 null，进入导航渲染，出现 screens 缺组件的 Render Error。设备当前安装的是全量应用，非 probe。
+- **下一步导航根因已定位**：`node_modules/...react-native-harmony-cli/dist/core/ProjectDependenciesManager.js` 的 forEachDependencyInDirectory 仅检查 dirent.isDirectory()，不会跟随 npm `file:` vendor 的符号链接，因此 screens har/codegen/autolinking 都被跳过。即使扫描到 vendor，package harmony.codegenConfig 指向的 `src/specs` 也不存在（只有官方 `src/fabric`）。原 OH 3.34.0-0.0.1 npm 包有完整 specs，har 是 ArkTS screens（C++ 工厂不创建组件实例），需要配套 ArkTS 注册与 RNApp arkTsComponentNames，而非仅加 C++。
+- 该 har 导出 `RNOHScreensPackage` 为 default class，但 index.ets/ts.ts 只 export *，下一步需适配导入；原生代码依赖生成的 RNC/TM 和 px2vp。检查过的 npm tgz/har 解包均在系统 TEMP，未改变当前 screens 集成。修复建议先把 vendor specs/扫描与注册配套补齐，再真机构建验证；旧 handoff 的「导航工作」仅指旧最小页，不能视作全量首页已验证。
+
+---
+
+### 2026-10-11 · 全量首页与导航组件修复
+
+- 新增独立 npm 依赖 `@react-native-oh-tpl/react-native-screens@3.34.0-rc.6`；其真实安装目录可被旧 autolinker 扫描，具有完整 specs 和正确 default 导出。`vendor/react-native-screens` 保留官方 JS，移除错误 harmony 元数据，Harmony Metro 使用 OH alias；补上根 har、ETS/C++ 工厂和 RNApp 的 screens ArkTS 组件名。保留 C-API 架构。
+- screens 修复后真机暴露 `RNCSafeAreaProvider` 缺失，补齐 safe-area-context autolinking + ETS/C++ 注册。当前 SDK 构建未出现旧记录的 px2vp 错误；safe-area 是 C++ 组件，不加入 ArkTS 名单。Root 使用安全区域包裹，避开状态栏和底部手势区域。
+- `DrawerLayoutAndroid` 在 Harmony 落入 UnimplementedView（红框、内容挤到左侧）。新增平台文件 `DrawerLayoutFixed.harmony.tsx`，使用 RN View/Pressable 实现侧栏、点击遮罩关闭及 BackHandler 关闭；安卓入口保持原实现。当前未做边缘拖动/滑入动画。
+- `scripts/prepare-harmony-assets.mjs` 从已有 `src/resources/fonts/icomoon.ttf` 复制字体到 rawfile，所有 bundle scripts 调用；RNApp 注册 icomoon。字体生成目录忽略。真机菜单/搜索/播放器图标已显示。
+- 播放详情暴露 `RNCSlider` 缺失：har 有 C++ SliderPackage 和 ArkTS RNCSlider，但未提供 ETS Package。新增 HarmonySliderPackage builder，补 C++ 注册、autolink rnoh_slider 和 ArkTS 名单；编译签名通过。最后真机点击封面打开 Vienna 播放详情，专辑图、控制按钮和进度滑块正常显示；实际 seek 待接通音源后验证。
+- OH react-native-fs 的 unlink 总调用 fs.rmdir，普通文件删除失败。新增 HarmonyFsPackage，继承现有 FsTurboModule，仅按 stat 区分 unlink/rmdir，并补事件接口；启动清理先判断临时文件存在并捕获错误。smoke 入口增加普通文件和非空嵌套目录删除检查。
+- Harmony 不再显示安卓「忽略电池优化」设置提醒，后台播放由已接入的 AVSession/AUDIO_PLAYBACK 保活。
+- 真机已看到正常全宽搜索页，以及 Billy Joel 的 Vienna/Piano Man 等真实搜索结果。真实歌曲播放尚未通过，日志出现 `sha1`/`aesEncryptSync` null 和 `Api is not found`；下一步应实现 crypto 与 QuickJS，而非标记 MVP 完成。设备同时被用户操作，连续坐标自动化测试会受影响。
+- 本次修改仍未提交；继续保留用户的 build-profile.json5 签名凭据。
+- 删除修复最终真机复测显示 `File + nested directory deletion PASS`，重启后 `Restart persistence + gzip PASS; probe data removed` 和 `ALL CHECKS PASSED`。通知状态此时为 true（用户已授权）；测试数据已清理，最终重新安装的是全量入口。
+- 依赖 lock 的 `npm ci --dry-run --ignore-scripts`、bundle、ArkTS/C++ 构建签名和 diff 检查通过。导航/抽屉/工具/启动清理定向 TypeScript 检查无新增错误；扩大到 tools.ts 检查时发现其原有第 522 行 unused @ts-expect-error，未修无关代码。
+- 剩余日志：react-native-fs 的 NativeEventEmitter 仍警告缺 addListener/removeListeners（仅 ETS 追加方法不足以更新原 C++ 方法表）；一次恢复上一首的 AVSession 元数据报 `SetAVMetaData failed : native invalid parameters`。下一步需要检查真实 musicInfo 的 duration/id/artwork 与原生 AVMetadata 类型及错误处理。不能把播放器 probe 通过等同于全部业务元数据通过。
+- 最后一轮确认抽屉打开/点击遮罩关闭、封面 push 到播放详情、详情左上返回按钮 pop 回搜索页；未证明系统 Back 手势链路全部可用。
+
+---
+
+### 2026-10-11 · 加密模块与元数据修复
+
+- 新增 `CryptoModule.ets`，使用系统 cryptoFramework 实现 SHA1、AES128/192/256 CBC/ECB PKCS7、ECB NoPadding、RSA1024/2048 NoPadding/OAEP SHA1，以及 RSA2048 密钥生成；ETS 工厂、C++ 方法表与 JS TurboModuleRegistry 均已注册，没有增加 npm 加密依赖。
+- 保留安卓端的 Base64 输入/密钥、加密 Base64 输出、解密 UTF-8 输出和 SPKI/PKCS8 格式。旧 `AES_MODE.ECB_128_NoPadding` 的实际值是 `AES`，Java 默认采用 ECB PKCS5/7，因此 Harmony 同样按 PKCS7 处理；显式 `AES/ECB/NoPadding` 才不填充。CBC IV 继续截断/补零到 16 字节。
+- 新增 `npm run bundle-harmony:crypto-smoke`：Node crypto 生成独立预期值与一次性密钥到被忽略的 `crypto-probe.json`。真机报告 `ALL CRYPTO CHECKS PASSED`，覆盖 SHA1 中文/emoji/空串、AES 三种密钥长度与全部上述模式的同步/异步加解密、空文本解密、RSA 两种长度的 raw 加密/OAEP 解密和往返、生成 PEM 密钥对、非法 AES 密钥拒绝。尚无同一向量在安卓真机的对照结果。
+- 真机发现 SDK 在空文本 AES 解密后返回 null DataBlob，已转为空串；SHA1 空输入因 SDK 不创建摘要上下文，直接返回标准空串摘要。RSA cipher 参数使用实际模数位数，避免导入 1024 位密钥后仍按 2048 位处理。
+- `TrackPlayerModule.publishMetadata` 将负数/非有限 duration 归零并转换为整数毫秒，空 assetId 回退到当前轨道或 `lxmusic`。播放器 probe 增加 `duration: -1` 与清空元数据回归检查。
+- 更新后的播放器 probe 真机报告 `ALL PLAYER CHECKS PASSED`：负时长/清空元数据、暂停/seek/队列删除、Home 后后台播放 65 秒（位置约 70 秒）、曲终占位轨道、HTTP 请求头、销毁重建均通过；测试服务和反向端口映射已清理。
+- `patch-oh-autolinking.mjs` 在 postinstall 中将 react-native-fs 的 Harmony 事件监听切换为 DeviceEventEmitter，对应原生全局事件，避免 NativeEventEmitter 的 addListener/removeListeners 警告；其他平台保持原实现。
+- 最终恢复全量 bundle、构建签名并覆盖安装，正常进入首页；启动日志不再出现 crypto null 或 AVMetadata 参数错误，自定义音源仍明确提示引擎未实现。启动仍有一组 NativeEventEmitter 缺 addListener/removeListeners 警告，fs bundle 已确认使用 DeviceEventEmitter，需继续定位其他库（如 Clipboard）；不能认为全部 emitter 警告已消除。一次性 crypto fixture 已从最终包移除。
+- ArkTS/C++ 编译及签名通过。同步 cryptoFramework API 需要 API12+，本轮验证设备为 API26。本节及此前续接修改随本次移植提交一起入库（见 `git log`），用户的本机签名配置和构建产物不入库。
 
 ---
 
@@ -104,7 +177,7 @@ keyguard 锁屏时 `aa start` 起不来前台 Ability（`pidof` 为空,窗口焦
 ## 3. 架构 / 关键决策
 
 - **RNOH 承载 RN JS**：`src/` 业务代码基本复用；原生依赖要么用 `@react-native-oh-tpl/*` 移植版,要么自己 vendor/重写。
-- **C-API 架构**：`harmony/entry/src/main/ets/pages/Index.ets` 的 `RNApp` 配 `enableCAPIArchitecture: true`——**这是 Phase 0 真机不崩的关键**（RNOH 0.72.144 旧 ArkTS 架构在 API26 的窗口接口会 SIGSEGV）。`arkTsComponentNames: []` 必填。
+- **C-API 架构**：`harmony/entry/src/main/ets/pages/Index.ets` 的 `RNApp` 配 `enableCAPIArchitecture: true`——**这是 Phase 0 真机不崩的关键**（RNOH 0.72.144 旧 ArkTS 架构在 API26 的窗口接口会 SIGSEGV）。`arkTsComponentNames` 注册 screens 与 RNCSlider，safe-area 使用 C++ 组件。
 - **导航**：Wix RNN 全原生,RNOH 不支持 → 换 **react-navigation v6**。重写了 `src/navigation/` **内部**（`navigationRef` 全局命令式导航 + `Root.tsx` 的 NavigationContainer）,**对外导出 API 全保持不变**（`push*/pop/show*Modal/init/componentId/useNavigationComponentDidAppear`）,业务层 50+ 调用点零改动。`componentId → route.key`。
 - **入口**：`index.harmony.js` 用 `AppRegistry.registerComponent('lxmusic', () => Root)`（appKey `lxmusic` 必须和 Index.ets 的 RNApp appKey 一致）。
 - **被墙 github fork**：track-player/background-timer/file-system/local-media-metadata 本地 `vendor/`（file: 引用）。
@@ -126,7 +199,7 @@ RNOH 0.2.0 autolinker 对这批早期 `@react-native-oh-tpl` 库各种不配套,
    新增/删 OH 库要**同步维护这两个手写文件** + `scripts/patch-oh-autolinking.mjs`。
 3. **工厂返回类型**：用基类 `RNPackage[]`（不是 `RNOHPackage[]`）——老包缺 `createWrappedCustomRNComponentBuilderByComponentNameMap`。
 4. **har 依赖放根 `harmony/oh-package.json5`**（不是 entry）——CMakeLists 的 `OH_MODULES_DIR=harmony/oh_modules`。
-5. 个案：**screens** OH 版 JS 残缺 → `vendor/react-native-screens`（官方完整 JS + OH harmony 原生 + 合并 harmony 字段）；**fs** 纯 ArkTS 无 C++（只 ETS 注册）；**slider** 无 Package 类（排除）；**safe-area** ArkTS 用 `px2vp` 报错（**暂排除**,react-navigation 有 JS 回退)。
+5. 个案：**screens** 使用独立 OH rc.6 依赖提供 specs/har，vendor 保留上游 JS；**fs** 纯 ArkTS 无 C++（HarmonyFsPackage 覆盖文件删除）；**slider** 手写 ETS builder Package + 原 har C++ SliderPackage；**safe-area** 已恢复 ETS/C++ 注册并真机渲染，不需要 JS 回退。
 6. 装 OH 版要 `rm package-lock.json` 后再 `npm install`（否则 npm alias 不装）。装时用 `--legacy-peer-deps`（`.npmrc` 已设）。
 
 ---
@@ -135,20 +208,20 @@ RNOH 0.2.0 autolinker 对这批早期 `@react-native-oh-tpl` 库各种不配套,
 
 RN 侧 `getEnforcing` 硬依赖已解决；现在是 `NativeModules.XxxModule`（undefined）类模块。真机 RedBox "Log x of 5" 显示若干未接入模块报错。
 
-- **`react-native-file-system`（vendor fork）** → 已改为**委托 `react-native-fs`（OH 版）实现**（`vendor/react-native-file-system/src/index.ts`,未提交）。gzip 用 pako；AndroidScoped(SAF 文档树)降级为桩。**待这次构建成功后真机验证。**
+- **`react-native-file-system`（vendor fork）** → 已改为**委托 `react-native-fs`（OH 版）实现**（`vendor/react-native-file-system/src/index.ts`,已入库）。gzip 用 pako；AndroidScoped(SAF 文档树)降级为桩。**构建、UTF-8 读写、gzip 与重启持久化真机验证通过。**
 - **项目自带 5 模块**（`src/utils/nativeModules/`,安卓在 `android/.../cn/toside/music/mobile/`）：
   | 模块 | NativeModules 名 | 用途 | 处置 |
   |---|---|---|---|
-  | `utils.ts` | UtilsModule | 状态栏/窗口尺寸/退出/通知权限/电池优化/息屏 | **重写**（ArkTS）——init 就用,优先 |
-  | `cache.ts` | CacheModule | 缓存清理 | 重写(简单)或桩 |
-  | `crypto.ts` | CryptoModule | AES/RSA | 重写（鸿蒙 cryptoFramework）——自定义音源要 |
+  | `utils.ts` | UtilsModule | 窗口尺寸/退出/通知权限/电池优化/息屏 | **ArkTS + C++ 已接入**；设备信息、窗口尺寸、Wi-Fi、通知状态真机验证通过，事件与交互待测；电池优化不支持 |
+  | `cache.ts` | CacheModule | 缓存清理 | Harmony 入口用 RNFS 统计/清理 cache，交互待测 |
+  | `crypto.ts` | CryptoModule | SHA1/AES/RSA | **cryptoFramework 已接入并真机验证**；独立 Node 向量与同步/异步往返通过 |
   | `userApi.ts` | UserApiModule | **QuickJS 跑自定义音源脚本** | 重写（QuickJS NAPI）——MVP 核心,最难 |
   | `lyricDesktop.ts` | LyricModule | 桌面歌词 | **桩**（本期不做） |
   > 注意 `utils.ts` 等在**模块顶层**就 `UtilsModule.exitApp` 取属性,undefined 会 import 崩。重写需提供 ArkTS TurboModule,或先做 JS 安全桩让 import 不崩、再逐个实现。
 
 ---
 
-## 6. ⚠️ 立即要处理的：最后一次构建失败
+## 6. 历史构建失败（新电脑清理重建后已通过）
 
 最后一次 `assembleHap`（改 fs 委托、重打 bundle 后）失败：
 ```
@@ -166,9 +239,9 @@ BUILD FAILED in 56s
 
 ## 7. 剩余路线图（到 MVP）
 
-1. **修 §6 构建** → 真机验证 fs 委托 + 看 RedBox 还剩哪些模块错。
-2. **重写 App 自带原生模块**（§5 表）：先 `utils`（让 init 过）→ `crypto` → `userApi`（QuickJS,MVP 核心）→ `cache`；`lyricDesktop` 桩。
-3. **搜索 + 播放链路**（Phase 2）：`track-player` 用 OH 移植版(4.1.2)+ 合入 lyswhut fork 定制(fork 实为 2.x,API 有差异);后台播放用 AVSession。
+1. **首页已渲染、真实搜索已返回列表、crypto 已验证**；继续复测页面 push/back/滑块交互、搜索异常输入，并补齐 QuickJS 后真实歌曲播放联调、AVSession 遥控和重复模式测试。
+2. **下一项核心实现**（§5 表）：`userApi`（QuickJS），需独立线程、5 秒超时中断、脚本事件/网络请求回调；随后验证 cache 清理交互。`utils` 与 `crypto` 已接入，`lyricDesktop` 按本期范围降级。
+3. **搜索 + 播放链路**（Phase 2）：已有 AVPlayer + AVSession 和旧 fork 兼容层，继续真实音源、搜索、列表和歌词端到端验证。
 4. **自定义音源**跑通（QuickJS）= MVP 达成。
 5. 收尾：`react-native-quick-md5`（无 OH 版,换 JS md5 或 cryptoFramework）、vector-icons 字体、release 打包。
 
@@ -193,11 +266,14 @@ metro.config.js                           # createHarmonyMetroConfig
 scripts/patch-oh-autolinking.mjs          # ★postinstall:补 OH 库 autolinking 元数据
 vendor/                                   # 被墙 github fork 本地化 + 修复的 screens
   react-native-screens/                   # 官方完整 JS + OH 原生(OH 版 JS 残缺)
-  react-native-file-system/src/index.ts   # ★改为委托 react-native-fs(未提交)
+  react-native-file-system/src/index.ts   # ★改为委托 react-native-fs(已入库)
   react-native-{track-player,background-timer,local-media-metadata}/
 src/navigation/                           # 全部重写为 react-navigation(对外 API 不变)
   navigationRef.ts, Root.tsx, index.ts, navigation.ts, utils.ts, event.ts, hooks.ts, regLaunchedEvent.ts
-src/utils/nativeModules/*.ts              # 待重写(§5)
+src/utils/nativeModules/*.ts              # Harmony 工具/crypto/cache/桌面歌词适配；userApi 待实现
+harmony/entry/src/main/ets/nativeModules/  # Utils/Crypto/TrackPlayer/BackgroundTimer + 包工厂
+harmony/entry/src/main/cpp/LXMusicPackage.h # 原生模块 C++ 方法表及工厂
+index.harmony.{smoke,player-smoke,crypto-smoke}.js # 基础/播放器/加密真机验证入口
 docs/superpowers/plans/2026-10-10-lx-music-harmony-port.md   # 分阶段计划
 .superpowers/sdd/2026-10-10-.../progress.md                  # 详细执行 ledger(gitignore)
 ```
@@ -206,4 +282,4 @@ docs/superpowers/plans/2026-10-10-lx-music-harmony-port.md   # 分阶段计划
 - `.npmrc`: `legacy-peer-deps=true`。
 - `package.json`: RN 相关依赖已改 OH 版/vendor;`overrides`;`postinstall` 跑补丁脚本;`bundle-harmony*` scripts。
 - 安卓端因移除 Wix RNN 已不可构建（本期 harmony-only,安卓非交付物）。
-- 签名已由用户在 DevEco 配好（`harmony/build-profile.json5` signingConfigs）。
+- 本机签名已由用户在 DevEco 配好；`harmony/build-profile.json5` 的签名配置属于本机凭据，不提交。

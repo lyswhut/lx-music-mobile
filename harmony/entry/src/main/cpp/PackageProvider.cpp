@@ -6,6 +6,7 @@
 #include "RNOH/PackageProvider.h"
 #include "RNOHPackagesFactory.h"
 #include "generated/RNOHGeneratedPackage.h"
+#include "LXMusicPackage.h"
 
 using namespace rnoh;
 
@@ -13,5 +14,6 @@ std::vector<std::shared_ptr<Package>> PackageProvider::getPackages(
     Package::Context ctx) {
   auto packages = createRNOHPackages(ctx); // autolinking
   packages.push_back(std::make_shared<RNOHGeneratedPackage>(ctx)); // codegen
+  packages.push_back(std::make_shared<LXMusicPackage>(ctx));
   return packages;
 }

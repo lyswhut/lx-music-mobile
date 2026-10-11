@@ -96,18 +96,5 @@
       "javaPackageName": "com.swmansion.rnscreens"
     }
   },
-  "packageManager": "yarn@4.1.1",
-  "harmony": {
-    "alias": "react-native-screens",
-    "codegenConfig": {
-      "specPaths": [
-        "./src/specs"
-      ]
-    },
-    "redirectInternalImports": true,
-    "autolinking": {
-      "cmakeLibraryTargetName": "rnoh_screens",
-      "ohPackageName": "@react-native-oh-tpl/react-native-screens"
-    }
-  }
+  "packageManager": "yarn@4.1.1"
 }

@@ -4,6 +4,7 @@
   "versionCode": 76,
   "private": true,
   "scripts": {
+    "postinstall": "node scripts/patch-oh-autolinking.mjs",
     "dev": "react-native run-android --active-arch-only",
     "ios": "react-native run-ios",
     "start": "react-native start",

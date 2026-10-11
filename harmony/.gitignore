@@ -15,8 +15,7 @@
 /entry/src/main/resources/rawfile/assets/
 
 # RNOH 构建时由 hvigor 插件生成（autolinking / codegen），不入库
-/entry/src/main/ets/RNOHPackagesFactory.ets
 /entry/src/main/ets/generated/
 /entry/src/main/cpp/autolinking.cmake
-/entry/src/main/cpp/RNOHPackagesFactory.h
 /entry/src/main/cpp/generated/
+/entry/.rnoh-autolink/

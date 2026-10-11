@@ -5,10 +5,10 @@
  * 在构建时根据 autolinking 自动生成（本仓不手写、不入库）。首次构建前它不存在，
  * 构建时生成。
  */
-import type { RNPackageContext, RNOHPackage } from '@rnoh/react-native-openharmony';
+import type { RNPackageContext, RNPackage } from '@rnoh/react-native-openharmony';
 import { createRNOHPackages as createRNOHPackagesAutolinking } from './RNOHPackagesFactory';
 
-export function getRNOHPackages(ctx: RNPackageContext): RNOHPackage[] {
+export function getRNOHPackages(ctx: RNPackageContext): RNPackage[] {
   return [
     ...createRNOHPackagesAutolinking(ctx),
   ];

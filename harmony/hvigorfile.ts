@@ -11,8 +11,14 @@ export default {
     createRNOHHvigorPlugin({
       // rnohModulePath 相对 harmony/ 根；.har 已装于 oh_modules
       codegen: { rnohModulePath: './oh_modules/@rnoh/react-native-openharmony' },
-      // 默认路径(./entry/src/main/...、./oh-package.json5、../node_modules)均正确
-      autolinking: {},
+      // autolinking 生成的 ETS 注册文件对 OH-tpl 库用 default import，而这些库是
+      // named export → ArkTS 报错。故把 autolinker 的 ETS 产物重定向到编译树外，
+      // 改由我们手写 entry/src/main/ets/RNOHPackagesFactory.ets（named import）。
+      // C++(RNOHPackagesFactory.h)与 cmake(autolinking.cmake)仍用 autolinker 生成的。
+      autolinking: {
+        etsRNOHPackagesFactoryPath: './entry/.rnoh-autolink/RNOHPackagesFactory.ets',
+        cppRNOHPackagesFactoryPath: './entry/.rnoh-autolink/RNOHPackagesFactory.h',
+      },
     }),
   ],
 };

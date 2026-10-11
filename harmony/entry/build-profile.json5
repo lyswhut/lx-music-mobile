@@ -2,7 +2,7 @@
   "apiType": "stageMode",
   "buildOption": {
     "sourceOption": {
-      "workers": ["./src/main/ets/workers/UserApiWorker.ets"]
+      "workers": ["./src/main/ets/workers/RNOHWorker.ets", "./src/main/ets/workers/UserApiWorker.ets"]
     },
     // RNOH C++ 原生编译入口
     "externalNativeOptions": {

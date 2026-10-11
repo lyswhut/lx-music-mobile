@@ -20,7 +20,7 @@
     "bundle-harmony:smoke": "node scripts/prepare-harmony-assets.mjs && react-native bundle-harmony --dev true --entry-file index.harmony.smoke.js",
     "bundle-harmony:player-smoke": "node scripts/prepare-harmony-assets.mjs && react-native bundle-harmony --dev true --entry-file index.harmony.player-smoke.js",
     "bundle-harmony:crypto-smoke": "node scripts/prepare-harmony-assets.mjs && node scripts/prepare-harmony-crypto-probe.mjs && react-native bundle-harmony --dev true --entry-file index.harmony.crypto-smoke.js",
-    "bundle-harmony:userapi-smoke": "node scripts/prepare-harmony-assets.mjs && react-native bundle-harmony --dev true --entry-file index.harmony.userapi-smoke.js",
+    "bundle-harmony:userapi-smoke": "node scripts/prepare-harmony-assets.mjs && node scripts/prepare-harmony-crypto-probe.mjs && react-native bundle-harmony --dev true --entry-file index.harmony.userapi-smoke.js",
     "bundle-harmony:release": "node scripts/prepare-harmony-assets.mjs && react-native bundle-harmony --dev false --entry-file index.harmony.js",
     "pack:android:debug": "./gradlew assembleDebug",
     "pack": "npm run pack:android",

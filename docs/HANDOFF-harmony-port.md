@@ -14,7 +14,7 @@
 - **Phase 1 Task 1.1（OH 移植原生库接入）✅ 构建通过 + 真机运行到渲染**：
   clipboard/async-storage/exception-handler/quick-base64/pager-view/fs 已注册，`getEnforcing` 崩溃已解决。
   真机上 **App 已经在渲染**（RN 层 + 导航工作），只是开发模式错误浮层（RedBox）盖着若干未接入模块的报错。
-- **当前所在**：全量首页已在真机正常渲染，搜索返回歌曲列表；screens、安全区域、图标字体和抽屉已接通，滑块原生组件已注册。工具模块、fs/gzip/AsyncStorage、AVPlayer/HTTP/后台播放已验证；CryptoModule 的 SHA1/AES/RSA 已接通并通过真机独立向量测试。QuickJS 自定义音源已实现并通过电脑端测试、鸿蒙构建；尚未真机验证，真实音源端到端播放与 MVP 仍未完成。
+- **当前所在**：全量首页已在真机正常渲染，搜索返回歌曲列表；screens、安全区域、图标字体和抽屉已接通，滑块原生组件已注册。工具模块、fs/gzip/AsyncStorage、AVPlayer/HTTP/后台播放已验证；CryptoModule 的 SHA1/AES/RSA 已接通并通过真机独立向量测试。QuickJS 自定义音源已实现，电脑测试和真机 probe 均通过；真实音源端到端播放与 MVP 仍未完成。
 - **MVP 目标**（用户确认）：**自定义音源(QuickJS) + 搜索 + 播放**。桌面歌词、本地媒体元数据 **不做**。
 
 ### 已提交 commit（`git log d295604..HEAD`）
@@ -122,6 +122,16 @@ b4b342b 回退 RN 0.73.11→0.72.5，vendor 化 github fork 依赖
 - `userApi.ts` 定向 TypeScript 检查诊断 0；全量及新 `bundle-harmony:userapi-smoke` bundle、ArkTS/C++ 与 signed HAP 构建通过。新增 probe 覆盖初始化、请求、timer、模拟网络回包、MD5/Base64、5 秒中断与恢复，待设备返回后运行。
 - 检查 quick-md5 发现现有包已自带 SparkMD5 纯 JS fallback，电脑端空串/ASCII/中文 emoji/长字符串与 Node MD5 一致；暂不为 Harmony 增加另一套依赖或全局替换，设备端 fallback 黄金值仍待验。
 - 下一步必须先在 Harmony 真机检查 worker 路径/NAPI 加载和系统 cryptoFramework 的线程行为，再导入真实音源、获取 URL 并播放。不要把本阶段标成 MVP 达成。用户签名凭据及构建目录继续不提交。
+
+---
+
+### 2026-10-11 · QuickJS 真机验证
+
+- 首次新包启动发现 `sourceOption.workers` 只列自定义音源 worker，覆盖了默认扫描，导致 `RNOHWorker.ets` 未打包。补全两个 worker 后启动正常；这也是只构建无法发现的问题。
+- USB 真机 `bundle-harmony:userapi-smoke` 报告 `ALL USER API CHECKS PASSED`：ThreadWorker/NAPI 加载、音源初始化/Promise/定时器/错误回传、5 秒死循环中断且 app 心跳继续、脚本切换/恢复均通过。
+- 扩展 probe 从 Node 独立向量检查 worker 内 AES128 CBC/ECB、RSA1024/2048 raw 加密；实际系统 cryptoFramework 线程内操作通过。RN quick-md5 fallback 中文/emoji 摘要匹配 Node MD5。
+- 网络检查改走现有 `fetchData` 及实际 HTTP 请求，电脑服务 `/source-probe` 验证自定义请求头后返回 JSON；经 worker 回调得到预期 URL。复测仍全部通过。复测需 `node scripts/harmony-player-probe-server.mjs` + `hdc rport tcp:18080 tcp:18080`。
+- 以上使用隔离 probe，不修改用户保存的脚本或设置。真实用户音源与播放链路仍须继续联调。
 
 ---
 

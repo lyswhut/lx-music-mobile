@@ -2,6 +2,10 @@ import './shim'
 import React, { useEffect, useState } from 'react'
 import { AppRegistry, ScrollView, Text } from 'react-native'
 import BackgroundTimer from 'react-native-background-timer'
+import RNFS from 'react-native-fs'
+import { Buffer } from '@craftzdog/react-native-buffer'
+import { stringMd5 } from 'react-native-quick-md5'
+import { fetchData } from './src/core/init/userApi/request'
 import { loadScript, sendAction, onScriptAction, destroy } from './src/utils/nativeModules/userApi'
 
 const pause = milliseconds => new Promise(resolve => BackgroundTimer.setTimeout(resolve, milliseconds))
@@ -10,7 +14,7 @@ const initScript = `lx.send(lx.EVENT_NAMES.inited, {sources: {kw: {type: 'music'
 const sourceScript = `
 lx.on(lx.EVENT_NAMES.request, async ({info}) => {
   if (info.mode === 'timer') return new Promise(resolve => setTimeout(() => resolve('https://example.test/timer.mp3'), 20));
-  if (info.mode === 'network') return new Promise((resolve, reject) => lx.request('https://example.test/request', {}, (error, response, body) => error ? reject(error) : resolve(body.url)));
+  if (info.mode === 'network') return new Promise((resolve, reject) => lx.request('http://127.0.0.1:18080/source-probe', { headers: { 'X-LX-Probe': 'source-required' } }, (error, response, body) => error ? reject(error) : resolve(body.url)));
   if (info.mode === 'error') throw new Error('source probe error');
   if (info.mode === 'loop') { while (true) {} }
   if (lx.utils.crypto.md5('hello') !== '5d41402abc4b2a76b9719d911017c592') throw new Error('MD5 mismatch');
@@ -22,13 +26,29 @@ ${initScript}
 `
 
 async function runChecks(report) {
+  const fixtures = JSON.parse(await RNFS.readFileAssets('crypto-probe.json', 'utf8'))
+  const aes = fixtures.aes.filter(fixture => Buffer.from(fixture.key, 'base64').length === 16 && ['AES/CBC/PKCS7Padding', 'AES'].includes(fixture.mode))
+    .map(fixture => ({ ...fixture, expectedHex: Buffer.from(fixture.ciphertext, 'base64').toString('hex') }))
+  const rsa = fixtures.rsa.map(fixture => ({ ...fixture, expectedHex: Buffer.from(fixture.rawCiphertext, 'base64').toString('hex') }))
+  const cryptoScript = `
+    for (const fixture of ${JSON.stringify(aes)}) {
+      const encrypted = lx.utils.crypto.aesEncrypt(fixture.plaintext, fixture.mode === 'AES' ? 'aes-128-ecb' : 'aes-128-cbc', lx.utils.buffer.from(fixture.key, 'base64'), lx.utils.buffer.from(fixture.iv, 'base64'));
+      if (lx.utils.buffer.bufToString(encrypted, 'hex') !== fixture.expectedHex) throw new Error('Worker AES Node vector mismatch');
+    }
+    for (const fixture of ${JSON.stringify(rsa)}) {
+      const encrypted = lx.utils.crypto.rsaEncrypt(lx.utils.buffer.from(fixture.rawPlaintext, 'base64'), fixture.publicKey);
+      if (lx.utils.buffer.bufToString(encrypted, 'hex') !== fixture.expectedHex) throw new Error('Worker RSA Node vector mismatch');
+    }
+  `
+  if (stringMd5(fixtures.plaintext) !== fixtures.md5) throw new Error('App MD5 fallback mismatch')
   const events = []
   const unsubscribe = onScriptAction(event => {
     events.push(event)
-    if (event.action === 'request') sendAction('response', {
-      requestKey: event.data.requestKey, error: null,
-      response: { statusCode: 200, statusMessage: 'OK', headers: {}, body: { url: 'https://example.test/network.mp3' } },
-    })
+    if (event.action === 'request') {
+      const request = fetchData(event.data.url, event.data.options)
+      request.request.then(response => sendAction('response', { requestKey: event.data.requestKey, error: null, response }))
+        .catch(error => sendAction('response', { requestKey: event.data.requestKey, error: error.message, response: null }))
+    }
   })
   const waitFor = async predicate => {
     const deadline = Date.now() + 9000
@@ -49,7 +69,9 @@ async function runChecks(report) {
     return events.find(event => event.action === 'response' && event.data.requestKey === mode).data
   }
   try {
-    if (!(await reload(sourceScript)).status) throw new Error('Source init failed')
+    const initial = await reload(cryptoScript + sourceScript)
+    if (!initial.status) throw new Error(initial.errorMessage || 'Source init failed')
+    report('Worker AES/RSA Node vectors + app MD5 fallback PASS')
     report('Script init + source registration PASS')
     for (const mode of ['normal', 'timer', 'network']) {
       const response = await request(mode)

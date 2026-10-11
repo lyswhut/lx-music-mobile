@@ -25,4 +25,4 @@ for (const modulusLength of [1024, 2048]) {
   rsa.push({ modulusLength, publicKey: publicKey.export({ type: 'spki', format: 'der' }).toString('base64'), privateKey: privateKey.export({ type: 'pkcs8', format: 'der' }).toString('base64'), rawPlaintext: input.toString('base64'), rawCiphertext: rawCiphertext.toString('base64'), oaepCiphertext: oaepCiphertext.toString('base64') })
 }
 const target = path.join(root, 'harmony/entry/src/main/resources/rawfile/crypto-probe.json')
-fs.writeFileSync(target, JSON.stringify({ plaintext, sha1: crypto.createHash('sha1').update(plaintext).digest('hex'), aes, rsa }))
+fs.writeFileSync(target, JSON.stringify({ plaintext, sha1: crypto.createHash('sha1').update(plaintext).digest('hex'), md5: crypto.createHash('md5').update(plaintext).digest('hex'), aes, rsa }))

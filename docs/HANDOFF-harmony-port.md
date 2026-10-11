@@ -158,6 +158,13 @@ b4b342b 回退 RN 0.73.11→0.72.5，vendor 化 github fork 依赖
 - 改用 `--file <source-file> <output-file>` 生成只写 LX 日志的本地诊断源；不会访问本地收集服务。原 preload 禁用 eval / 动态 Function，已移除不能运行的远程 bootstrap。生成文件为忽略目录中的 `harmony/entry/build/flower-diagnostic.js`，第三方源码不入库。
 - 当前连接设备为手机 `5KTUT25428012210`（MRT-AL10），与之前验证完整链路的横屏平板不同；未在新手机重新安装最新包，不能沿用旧设备的验证结论。hdc shell 对手机公共文件目录没有访问权限，需用户把本地诊断 JS 转入卓易通安卓 LX 可读取的目录并本地导入。在「设置 → 其他设置 → 日志」启用「记录自定义源日志」，然后选中诊断源、播放指定歌曲，查看 `[LX_SOURCE_HTTP]` 记录。仍待实际安卓请求日志，播放根因尚未确定。命令见 `cpp/userapi/README.md`。
 
+### 2026-10-11 · 收到安卓真实请求成功日志
+
+- 用户提供横屏设备的 LX 日志截图：21:17:07 请求 `http://97.64.37.235/flower/v1/url/kw/215582995/128k`，method `GET`；21:17:08 回调 `error: null`、`statusCode: 200`、`bodyType: object`、`code: 0`。截图同时显示《Goodnight Saigon - Billy Joel》播放进度 00:22 / 07:02。该日志来自本地诊断脚本，证明原音源在安卓环境能成功取流。
+- 截图中的四个脚本请求头与 Harmony 已验证值一致：`User-Agent: lx-music/mobile`、`ver: 2.0.0`、`source-ver: 1`、`tag: 5b0a20223231353538323939222c0a20223132386b220a5d`。诊断日志记录的是脚本调用参数，不是底层线上全部 headers，不能据此断言整个 HTTP 报文完全相同。
+- 截图状态栏显示 VPN，用户确认其为全局模式。当前 RNOH DefaultHttpClient 将请求交给 `@ohos.net.http.requestInStream`，没有指定 `usingProxy: false`；本机 API26 SDK 文档明确省略 usingProxy 默认使用系统代理。因此未发现代码主动绕过系统 HTTP 代理，不能把全局 VPN 模式等同于两端实际出口一致，也不能贸然添加硬编码代理。
+- 电脑使用上述 URL/头和默认 Accept 重放仍返回 404，出口本地地址为 `10.154.77.241`。USB 当前只有手机 `5KTUT25428012210`，与截图的横屏设备尚未核对；已请用户连接截图中的设备（若实际是当前手机则说明），下一步在同一设备、同一 VPN 下对照 Harmony 取流响应。根因仍待该对照，未修改业务请求或版本号。
+
 ---
 
 ## 1. 版本配套（关键，别乱动）

@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from 'react'
 import { View, ScrollView, Alert } from 'react-native'
-import { Navigation } from 'react-native-navigation'
+import { dismissOverlay } from '../utils'
 
 import Button from '@/components/common/Button'
 import { createStyle, openUrl } from '@/utils/tools'
@@ -79,7 +79,7 @@ const Footer = ({ componentId }: { componentId: string }) => {
   const handleConfirm = () => {
     let _isAgreePact = isAgreePact
     if (!isAgreePact) updateSetting({ 'common.isAgreePact': true })
-    void Navigation.dismissOverlay(componentId)
+    void dismissOverlay(componentId)
     if (!_isAgreePact) {
       setTimeout(() => {
         Alert.alert(

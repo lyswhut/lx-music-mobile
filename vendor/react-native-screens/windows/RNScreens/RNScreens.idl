@@ -1,0 +1,8 @@
+namespace RNScreens {
+    [default_interface]
+    runtimeclass RNScreensModule : Windows.UI.Xaml.Controls.TextBox {
+        RNScreensModule(Microsoft.ReactNative.IReactContext context);
+        void UpdateProperties(Microsoft.ReactNative.IJSValueReader reader);
+        void DispatchCommand(String commandId, Microsoft.ReactNative.IJSValueReader commandArgsReader);
+    };
+}

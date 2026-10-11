@@ -1,33 +1,11 @@
-import { Navigation } from 'react-native-navigation'
 import * as screenNames from './screenNames'
 import * as navigations from './navigation'
-
-import registerScreens from './registerScreens'
-import { removeComponentId } from '@/core/common'
 import { onAppLaunched } from './regLaunchedEvent'
 
-let unRegisterEvent: ReturnType<ReturnType<typeof Navigation.events>['registerScreenPoppedListener']>
-
 const init = (callback: () => void | Promise<void>) => {
-  // Register all screens on launch
-  registerScreens()
-
-  if (unRegisterEvent) unRegisterEvent.remove()
-
-  Navigation.setDefaultOptions({
-    // animations: {
-    //   setRoot: {
-    //     waitForRender: true,
-    //   },
-    // },
-  })
-  unRegisterEvent = Navigation.events().registerScreenPoppedListener(({ componentId }) => {
-    removeComponentId(componentId)
-  })
-  onAppLaunched(() => {
-    console.log('Register app launched listener')
-    void callback()
-  })
+  // react-navigation 下根组件(Root)由 AppRegistry 注册并渲染,
+  // 启动处理链在 Root 挂载时触发(fireAppLaunched)。此处仅注册启动回调。
+  onAppLaunched(callback)
 }
 
 export * from './utils'
@@ -39,3 +17,4 @@ export {
   screenNames,
   navigations,
 }
+export { default as Root } from './Root'

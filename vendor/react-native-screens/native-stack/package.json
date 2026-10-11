@@ -1,0 +1,6 @@
+{
+  "main": "../lib/commonjs/native-stack/index",
+  "module": "../lib/module/native-stack/index",
+  "react-native": "../src/native-stack/index",
+  "types": "../lib/typescript/native-stack/index.d.ts"
+}

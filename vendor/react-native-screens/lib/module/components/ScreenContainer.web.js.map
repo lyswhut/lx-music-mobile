@@ -1,0 +1,1 @@
+{"version":3,"names":["View","NativeScreenContainer","NativeScreenNavigationContainer"],"sourceRoot":"..\\..\\..\\src","sources":["components/ScreenContainer.web.tsx"],"mappings":"AAAA,SAASA,IAAI,QAAQ,cAAc;AAEnC,OAAO,MAAMC,qBAAqB,GAAGD,IAAI;AACzC,OAAO,MAAME,+BAA+B,GAAGF,IAAI;AAEnD,eAAeA,IAAI","ignoreList":[]}

@@ -1,56 +1,32 @@
-import { useEffect } from 'react'
-import { type EmitterSubscription } from 'react-native'
-import { Navigation } from 'react-native-navigation'
+/**
+ * 页面生命周期 hooks(原 RNN registerComponentListener)。
+ * 迁移后用 react-navigation 的 useFocusEffect 近似:componentDidAppear≈focus,
+ * componentDidDisappear≈blur(focus effect 的清理)。componentId 参数保留以兼容签名。
+ */
+import { useCallback } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 
-export const useNavigationCommandComplete = (callback = () => {}) => {
-  useEffect(() => {
-    // Register the listener to all events related to our component
-    let commandCompletedListener: EmitterSubscription | null = Navigation.events().registerCommandCompletedListener(({ commandId }) => {
+export const useNavigationCommandComplete = (_callback = () => {}) => {
+  // RNN 的 command-completed 无直接等价,且业务未使用 —— 置空以兼容导出。
+}
+
+export const useNavigationComponentDidAppear = (_componentId: string, callback = () => {}) => {
+  useFocusEffect(
+    useCallback(() => {
       callback()
-      if (!commandCompletedListener) return
-      commandCompletedListener.remove()
-      commandCompletedListener = null
-    })
-    return () => {
-      // Make sure to unregister the listener during cleanup
-      if (!commandCompletedListener) return
-      commandCompletedListener.remove()
-      commandCompletedListener = null
-    }
-  }, [callback])
-}
-export const useNavigationComponentDidAppear = (componentId: string, callback = () => {}) => {
-  useEffect(() => {
-    const listener = {
-      componentDidAppear: () => {
-        callback()
-      },
-    }
-    // Register the listener to all events related to our component
-    const unsubscribe = Navigation.events().registerComponentListener(listener, componentId)
-    return () => {
-      // Make sure to unregister the listener during cleanup
-      unsubscribe.remove()
-    }
-  }, [callback, componentId])
+    }, [callback]),
+  )
 }
 
-export const onNavigationComponentDidDisappearEvent = (componentId: string, callback = () => {}) => {
-  const listener = {
-    componentDidDisappear: () => {
-      callback()
-    },
-  }
-  const unsubscribe = Navigation.events().registerComponentListener(listener, componentId)
-  return unsubscribe
+export const onNavigationComponentDidDisappearEvent = (_componentId: string, _callback = () => {}) => {
+  // 仅定义,业务无活跃调用 —— 返回可移除句柄以兼容签名。
+  return { remove: () => {} }
 }
 
-export const useNavigationComponentDidDisappear = (componentId: string, callback = () => {}) => {
-  useEffect(() => {
-    const unsubscribe = onNavigationComponentDidDisappearEvent(componentId, callback)
-    return () => {
-      // Make sure to unregister the listener during cleanup
-      unsubscribe.remove()
-    }
-  }, [callback, componentId])
+export const useNavigationComponentDidDisappear = (_componentId: string, callback = () => {}) => {
+  useFocusEffect(
+    useCallback(() => {
+      return () => { callback() }
+    }, [callback]),
+  )
 }

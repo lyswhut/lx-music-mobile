@@ -1,0 +1,1 @@
+{"version":3,"names":["React","HeaderHeightContext","createContext","undefined"],"sourceRoot":"..\\..\\..\\..\\src","sources":["native-stack/utils/HeaderHeightContext.tsx"],"mappings":"AAAA,OAAO,KAAKA,KAAK,MAAM,OAAO;AAE9B,MAAMC,mBAAmB,gBAAGD,KAAK,CAACE,aAAa,CAAqBC,SAAS,CAAC;AAE9E,eAAeF,mBAAmB","ignoreList":[]}

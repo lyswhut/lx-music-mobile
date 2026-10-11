@@ -1,0 +1,1 @@
+{"version":3,"names":["View","NativeSearchBar","NativeSearchBarCommands"],"sourceRoot":"..\\..\\..\\src","sources":["components/SearchBar.web.tsx"],"mappings":"AAAA,SAASA,IAAI,QAAQ,cAAc;AAEnC,OAAO,MAAMC,eAAe,GAAGD,IAAI;AACnC,OAAO,MAAME,uBAAuB,GAAGF,IAAI;AAE3C,eAAeA,IAAI","ignoreList":[]}

@@ -1,0 +1,1 @@
+{"version":3,"names":["_reactNative","require","_default","exports","default","TurboModuleRegistry","get"],"sourceRoot":"..\\..\\..\\src","sources":["fabric/NativeScreensModule.ts"],"mappings":";;;;;;AAEA,IAAAA,YAAA,GAAAC,OAAA;AAFA;AAAA,IAAAC,QAAA,GAAAC,OAAA,CAAAC,OAAA,GAMeC,gCAAmB,CAACC,GAAG,CAAO,WAAW,CAAC","ignoreList":[]}

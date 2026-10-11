@@ -34,3 +34,17 @@ The worker test transpiles the actual ETS files with the repository's TypeScript
 ## Device follow-up
 
 Build `npm run bundle-harmony:userapi-smoke`, run `node scripts/harmony-player-probe-server.mjs` with `hdc rport tcp:18080 tcp:18080`, assemble the HAP and run it on Harmony. The entry checks init, callbacks, real HTTP requests, timers, binary/Unicode buffer conversion, MD5/Base64, independent Node AES/RSA vectors, script errors, five second interrupts with an app heartbeat, and recovery. These checks passed on a device on 2026-10-11. Then restore `npm run bundle-harmony` and test importing a real custom source and playing a song; that end-to-end check remains outstanding.
+
+## Comparing source requests
+
+For an Android app running inside a Harmony compatibility container, ordinary Android USB log collection may be unavailable. On the connected phone, the user reported that Zhuoyitong could not import through the Harmony USB reverse port. Use a local diagnostic file instead:
+
+```sh
+node scripts/harmony-source-diagnostic-server.mjs --file /path/to/source.js /path/to/diagnostic.js
+```
+
+Transfer the file to storage accessible to the Android app, then use Settings → Basic → Custom source management → Import → Local import and select the added `[诊断]` source. Enable Settings → Other → Log → Record custom source logs before selecting it and playing a song. View log contains `[LX_SOURCE_HTTP]` records with request URLs, selected headers, and response status codes. Local mode makes no collector requests and requires neither a server nor USB forwarding. Harmony's shell cannot write the current phone's public files directory; transferring through the user's file manager is still needed. A remote loader is unsuitable because the original preload disables `eval` and dynamic Function execution.
+
+For devices that can reach the reverse port, `node scripts/harmony-source-diagnostic-server.mjs /path/to/source.js` and `hdc rport tcp:18080 tcp:18080` also support importing `http://127.0.0.1:18080/source.js`. That mode sends records to the terminal through `/events` as well as the app log.
+
+The wrapper preserves the original script metadata and raw script for integrity checks, request options, callback arguments, and cancellation. It redacts headers other than User-Agent, ver, source-ver, tag, Accept and Content-Type, and does not record request bodies or response URLs. The `source_diagnostic` test exercises both modes against the actual frozen preload and native QuickJS bridge. After comparison, select the original source and remove the diagnostic source. If using the server, stop it and run `hdc fport rm tcp:18080 tcp:18080`. Third-party scripts are supplied locally and are not committed.

@@ -147,7 +147,16 @@ b4b342b 回退 RN 0.73.11→0.72.5，vendor 化 github fork 依赖
 - 用户指定 Billy Joel 的 `Goodnight Saigon`、酷我来源。Harmony 真机搜索到时长 07:02、songmid `215582995`，请求 `http://97.64.37.235/flower/v1/url/kw/215582995/128k` 仍返回 404，自动换源也失败。
 - 在独立 QuickJS 环境加载同一下载脚本，分别使用原始安卓 preload 与生成的 Harmony preload，并回传 npm `flower-source-info/latest` 的真实配置。初始化来源列表、该歌曲取流 URL、method 和全部脚本请求头一致；忽略随机 requestKey。电脑带齐 `User-Agent: lx-music/mobile`、`ver: 2.0.0`、`source-ver: 1`、`tag` 与默认 Accept 后重放仍为 nginx 404。
 - 扩展真机 HTTP probe，服务端必须检查以上四个请求头的确切值才能返回成功。完整 RN fetch → 原生 HTTP → worker 回调通过，报告 `Source request headers verified` 和 `ALL USER API CHECKS PASSED`，未发现这些请求头在 Harmony 丢失。
-- 用户随后反馈：安卓清理缓存后也无法播放。结合两种 preload 生成请求一致、Harmony 请求头真机验证通过、电脑与 Harmony 取流均为 404，现有证据支持当前野花取流服务不可用，安卓此前很可能命中缓存链接。尚未抓取安卓实际网络请求，不能把缓存解释当成已证实事实；后续真实播放验证需可用音源或该服务恢复。
+- 用户随后反馈：安卓清理缓存后也无法播放，但更新到 1.9.1 后同一音源链接又能播放。此前「音源服务不可用 / 安卓命中缓存」只是阶段性推断，不能作为最终根因；继续对比实际运行请求。
+
+### 2026-10-11 · 卓易通中的安卓 1.9.1 恢复播放
+
+- 用户说明安卓 LX 实际运行在鸿蒙卓易通中，升级到 1.9.1 后同一野花链接恢复。普通 Android 手机 USB/ADB 采集方案不适用于当前设备环境。
+- 官方 v1.8.4 → v1.9.1 变更列表没有自定义音源 runtime、preload、请求桥或酷我搜索实现的变更；当前与官方 master 的 preload 和 `src/core/init/userApi/request.js` 内容一致。在线野花脚本 SHA256 仍为 `15c166987edde41cf5917b3160c0ab253ff17e5e6bc6765c9eaa11a822c4aa97`。原始 preload 下 QuickJS 与 V8 生成的取流 URL 和头也一致；电脑复测仍为 404。尚无证据表明应通过修改版本号或迁移整套 1.9.1 解决。
+- 新增 `scripts/harmony-source-diagnostic-server.mjs`：从本机脚本生成独立 `[诊断]` 音源，保留原始 rawScript 和 metadata，记录实际 URL、指定请求头和响应状态；同时回传 localhost 电脑服务并写入音源日志。敏感请求头值被省略，不采集请求 body 或响应 URL。实际冻结 preload + QuickJS 桥测试通过，原脚本取流参数保持一致。
+- 用户在卓易通中导入 `http://127.0.0.1:18080/source.js` 报连接不上服务器；该环境的 USB 反向端口未连通。诊断服务已停止、映射已清理。不要让用户重复尝试该地址，也不能假定电脑与手机处于同一局域网。
+- 改用 `--file <source-file> <output-file>` 生成只写 LX 日志的本地诊断源；不会访问本地收集服务。原 preload 禁用 eval / 动态 Function，已移除不能运行的远程 bootstrap。生成文件为忽略目录中的 `harmony/entry/build/flower-diagnostic.js`，第三方源码不入库。
+- 当前连接设备为手机 `5KTUT25428012210`（MRT-AL10），与之前验证完整链路的横屏平板不同；未在新手机重新安装最新包，不能沿用旧设备的验证结论。hdc shell 对手机公共文件目录没有访问权限，需用户把本地诊断 JS 转入卓易通安卓 LX 可读取的目录并本地导入。在「设置 → 其他设置 → 日志」启用「记录自定义源日志」，然后选中诊断源、播放指定歌曲，查看 `[LX_SOURCE_HTTP]` 记录。仍待实际安卓请求日志，播放根因尚未确定。命令见 `cpp/userapi/README.md`。
 
 ---
 

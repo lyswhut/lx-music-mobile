@@ -50,3 +50,12 @@ if (fs.existsSync(fsEntry)) {
   if (source.includes(original)) fs.writeFileSync(fsEntry, source.replace(original, replacement))
   else if (!source.includes(replacement)) throw new Error('Unsupported react-native-fs event emitter implementation')
 }
+
+const clipboardEntry = path.join(ROOT, 'node_modules/@react-native-clipboard/clipboard/node_modules/@react-native-clipboard/clipboard/src/NativeClipboardModule.ts')
+if (fs.existsSync(clipboardEntry)) {
+  const source = fs.readFileSync(clipboardEntry, 'utf8')
+  const original = 'const eventEmitter = new NativeEventEmitter(ClipboardTurboModule);'
+  const replacement = "const eventEmitter = require('react-native').Platform.OS === 'harmony' ? require('react-native').DeviceEventEmitter : new NativeEventEmitter(ClipboardTurboModule);"
+  if (source.includes(original)) fs.writeFileSync(clipboardEntry, source.replace(original, replacement))
+  else if (!source.includes(replacement)) throw new Error('Unsupported clipboard event emitter implementation')
+}

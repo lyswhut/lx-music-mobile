@@ -31,8 +31,11 @@ async function runChecks(report) {
     .map(fixture => ({ ...fixture, expectedHex: Buffer.from(fixture.ciphertext, 'base64').toString('hex') }))
   const rsa = fixtures.rsa.map(fixture => ({ ...fixture, expectedHex: Buffer.from(fixture.rawCiphertext, 'base64').toString('hex') }))
   const cryptoScript = `
+    const allBytes = Array.from({ length: 256 }, (_, index) => index);
+    if (lx.utils.buffer.bufToString(lx.utils.buffer.from(allBytes), 'base64') !== '${Buffer.from(Array.from({ length: 256 }, (_, index) => index)).toString('base64')}') throw new Error('Binary Base64 mismatch');
+    if (lx.utils.buffer.bufToString(lx.utils.buffer.from('${fixtures.plaintext}'), 'utf8') !== '${fixtures.plaintext}') throw new Error('Unicode roundtrip mismatch');
     for (const fixture of ${JSON.stringify(aes)}) {
-      const encrypted = lx.utils.crypto.aesEncrypt(fixture.plaintext, fixture.mode === 'AES' ? 'aes-128-ecb' : 'aes-128-cbc', lx.utils.buffer.from(fixture.key, 'base64'), lx.utils.buffer.from(fixture.iv, 'base64'));
+      const encrypted = lx.utils.crypto.aesEncrypt(lx.utils.buffer.from(fixture.plaintext), fixture.mode === 'AES' ? 'aes-128-ecb' : 'aes-128-cbc', lx.utils.buffer.from(fixture.key, 'base64'), lx.utils.buffer.from(fixture.iv, 'base64'));
       if (lx.utils.buffer.bufToString(encrypted, 'hex') !== fixture.expectedHex) throw new Error('Worker AES Node vector mismatch');
     }
     for (const fixture of ${JSON.stringify(rsa)}) {

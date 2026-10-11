@@ -6,7 +6,10 @@ const events = []
 const handle = engine.create((name, args) => {
   if (name === '__lx_native_call__') events.push({ action: args[1], data: JSON.parse(args[2]) })
   if (name === '__lx_native_call__utils_str2md5') return crypto.createHash('md5').update(decodeURIComponent(args[0])).digest('hex')
-  if (name === '__lx_native_call__utils_str2b64') return Buffer.from(args[0]).toString('base64')
+  if (name === '__lx_native_call__utils_str2b64') {
+    if (args[1] === 'bytes' || args[1] === 'utf8') return Buffer.from(JSON.parse(args[0])).toString(args[1] === 'bytes' ? 'base64' : 'utf8')
+    return Buffer.from(args[0]).toString('base64')
+  }
   if (name === '__lx_native_call__utils_b642buf') return JSON.stringify([...Buffer.from(args[0], 'base64')])
   if (name === '__lx_native_call__utils_aes_encrypt') {
     const key = Buffer.from(args[1], 'base64')
@@ -30,6 +33,10 @@ try {
   assert.equal(events.at(-1).data.result.data.url, 'https://example.test/song.mp3')
   assert.equal(engine.evaluate(handle, "lx.utils.crypto.md5('歌词 🎵')", 'md5.js'), crypto.createHash('md5').update('歌词 🎵').digest('hex'))
   assert.equal(engine.evaluate(handle, "lx.utils.buffer.bufToString(lx.utils.buffer.from('hello'), 'base64')", 'base64.js'), 'aGVsbG8=')
+  const allBytes = Array.from({ length: 256 }, (_, index) => index)
+  assert.equal(engine.evaluate(handle, `lx.utils.buffer.bufToString(lx.utils.buffer.from(${JSON.stringify(allBytes)}), 'base64')`, 'binary.js'), Buffer.from(allBytes).toString('base64'))
+  assert.equal(engine.evaluate(handle, "lx.utils.buffer.bufToString(lx.utils.buffer.from('歌词 🎵'), 'hex')", 'utf8-encode.js'), Buffer.from('歌词 🎵').toString('hex'))
+  assert.equal(engine.evaluate(handle, `lx.utils.buffer.bufToString(lx.utils.buffer.from('${Buffer.from('歌词 🎵').toString('base64')}', 'base64'), 'utf8')`, 'utf8-decode.js'), '歌词 🎵')
   const cipher = crypto.createCipheriv('aes-128-cbc', Buffer.from('0123456789abcdef'), Buffer.from('0123456789abcdef'))
   const expected = Buffer.concat([cipher.update('hello'), cipher.final()]).toString('hex')
   assert.equal(engine.evaluate(handle, "lx.utils.buffer.bufToString(lx.utils.crypto.aesEncrypt('hello', 'aes-128-cbc', '0123456789abcdef', '0123456789abcdef'), 'hex')", 'aes.js'), expected)

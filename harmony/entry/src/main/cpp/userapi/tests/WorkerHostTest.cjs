@@ -122,6 +122,8 @@ if (!isMainThread) {
             if (lx.utils.crypto.md5('') !== 'd41d8cd98f00b204e9800998ecf8427e') throw new Error('empty MD5 mismatch');
             if (lx.utils.crypto.md5('hello') !== '5d41402abc4b2a76b9719d911017c592') throw new Error('MD5 mismatch');
             if (lx.utils.buffer.bufToString(lx.utils.buffer.from('hello'), 'base64') !== 'aGVsbG8=') throw new Error('Base64 mismatch');
+            if (lx.utils.buffer.bufToString(lx.utils.buffer.from([0, 128, 255]), 'base64') !== 'AID/') throw new Error('Binary Base64 mismatch');
+            if (lx.utils.buffer.bufToString(lx.utils.buffer.from('歌词 🎵'), 'utf8') !== '歌词 🎵') throw new Error('UTF8 mismatch');
           }
           return 'https://example.test/song.mp3';
         });

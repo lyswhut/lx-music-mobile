@@ -133,6 +133,15 @@ b4b342b 回退 RN 0.73.11→0.72.5，vendor 化 github fork 依赖
 - 网络检查改走现有 `fetchData` 及实际 HTTP 请求，电脑服务 `/source-probe` 验证自定义请求头后返回 JSON；经 worker 回调得到预期 URL。复测仍全部通过。复测需 `node scripts/harmony-player-probe-server.mjs` + `hdc rport tcp:18080 tcp:18080`。
 - 以上使用隔离 probe，不修改用户保存的脚本或设置。真实用户音源与播放链路仍须继续联调。
 
+### 2026-10-11 · 音源缓冲区转换修复
+
+- 回归测试发现安卓 preload 的字节数组转 Base64 先经过 UTF-8，导致大于 127 的字节被改写，中文 emoji 的 UTF-8 转换也不完整。新增 Harmony 构建适配器，生成 preload 时将转换接到 worker 的原生 Base64/UTF-8 回调。
+- 修复前全部 256 个字节的独立 Base64 向量失败；修复后三个离线 CTest 套件通过。真机 probe 新增全部字节、中文 emoji 往返以及 buffer 输入 AES 向量，再次显示 `ALL USER API CHECKS PASSED`。
+- 用户提供在线测试音源 `https://liuyang-public.oss-cn-beijing.aliyuncs.com/flower-v1.0.0.js`（野花🌷）。已下载用于联调，第三方脚本不入库；真实导入和取流播放继续验证。
+- 恢复全量 bundle、签名构建并覆盖安装后，设置页已有野花🌷 v1，显示「初始化成功」。Billy Joel 搜索返回真实列表，Vienna 播放请求经 QuickJS 到达音源服务器；kg/kw/tx/wy/mg 取流接口均返回 HTTP 404，换源后仍失败，进度为 00:00。电脑直接请求同一 tx 接口也返回 nginx 的 `404 Not Found`，因此不能标记真实播放或 MVP 已通过。已请用户提供当前可用的其他测试音源。
+- Clipboard 的嵌套 JS 包仍构造 NativeEventEmitter，导致监听方法警告。postinstall 补丁改为 Harmony DeviceEventEmitter；完整应用启动后的进程日志不再出现 NativeEventEmitter 警告。
+- 真机最终安装的是完整应用；隔离测试 HTTP 服务、端口映射和 crypto fixture 已清理。
+
 ---
 
 ## 1. 版本配套（关键，别乱动）
@@ -241,7 +250,7 @@ RN 侧 `getEnforcing` 硬依赖已解决；现在是 `NativeModules.XxxModule`�
   | `utils.ts` | UtilsModule | 窗口尺寸/退出/通知权限/电池优化/息屏 | **ArkTS + C++ 已接入**；设备信息、窗口尺寸、Wi-Fi、通知状态真机验证通过，事件与交互待测；电池优化不支持 |
   | `cache.ts` | CacheModule | 缓存清理 | Harmony 入口用 RNFS 统计/清理 cache，交互待测 |
   | `crypto.ts` | CryptoModule | SHA1/AES/RSA | **cryptoFramework 已接入并真机验证**；独立 Node 向量与同步/异步往返通过 |
-  | `userApi.ts` | UserApiModule | **QuickJS 跑自定义音源脚本** | **QuickJS + worker + NAPI 已实现**；电脑测试/鸿蒙构建通过，真机待验 |
+  | `userApi.ts` | UserApiModule | **QuickJS 跑自定义音源脚本** | **QuickJS + worker + NAPI 已实现**；电脑测试与真机 probe 通过，真实音源播放待验 |
   | `lyricDesktop.ts` | LyricModule | 桌面歌词 | **桩**（本期不做） |
   > 注意 `utils.ts` 等在**模块顶层**就 `UtilsModule.exitApp` 取属性,undefined 会 import 崩。重写需提供 ArkTS TurboModule,或先做 JS 安全桩让 import 不崩、再逐个实现。
 
@@ -266,7 +275,7 @@ BUILD FAILED in 56s
 ## 7. 剩余路线图（到 MVP）
 
 1. **首页已渲染、真实搜索已返回列表、crypto 已验证**；继续复测页面 push/back/滑块交互、搜索异常输入，再做真实歌曲播放联调、AVSession 遥控和重复模式测试。
-2. **下一项核心验证**（§5 表）：`bundle-harmony:userapi-smoke` 真机验证 QuickJS/ThreadWorker/NAPI，再导入真实音源取流播放；随后验证 cache 清理交互。`utils` 与 `crypto` 已接入，`lyricDesktop` 按本期范围降级。
+2. **下一项核心验证**（§5 表）：QuickJS/ThreadWorker/NAPI 真机 probe 已通过，继续导入真实音源取流播放；随后验证 cache 清理交互。`utils` 与 `crypto` 已接入，`lyricDesktop` 按本期范围降级。
 3. **搜索 + 播放链路**（Phase 2）：已有 AVPlayer + AVSession 和旧 fork 兼容层，继续真实音源、搜索、列表和歌词端到端验证。
 4. **自定义音源**跑通（QuickJS）= MVP 达成。
 5. 收尾：`react-native-quick-md5`（无 OH 版,换 JS md5 或 cryptoFramework）、vector-icons 字体、release 打包。

@@ -74,8 +74,14 @@ function nativeCall(name: string, args: string[]): string {
       }, Math.min(2147483647, Math.max(0, Number(args[1])))));
       return '';
     }
-    case '__lx_native_call__utils_str2b64':
+    case '__lx_native_call__utils_str2b64': {
+      if (args[1] === 'bytes' || args[1] === 'utf8') {
+        const bytes = new Uint8Array(JSON.parse(args[0]) as number[]);
+        if (args[1] === 'utf8') return buffer.from(bytes).toString('utf8');
+        return bytes.length ? base64.encodeToStringSync(bytes) : '';
+      }
       return args[0] ? base64.encodeToStringSync(new util.TextEncoder().encodeInto(args[0])) : '';
+    }
     case '__lx_native_call__utils_b642buf':
       return JSON.stringify(Array.from(args[0] ? base64.decodeSync(args[0].replace(/\s/g, '')) : new Uint8Array(0)));
     case '__lx_native_call__utils_str2md5': {

@@ -165,6 +165,12 @@ b4b342b 回退 RN 0.73.11→0.72.5，vendor 化 github fork 依赖
 - 截图状态栏显示 VPN，用户确认其为全局模式。当前 RNOH DefaultHttpClient 将请求交给 `@ohos.net.http.requestInStream`，没有指定 `usingProxy: false`；本机 API26 SDK 文档明确省略 usingProxy 默认使用系统代理。因此未发现代码主动绕过系统 HTTP 代理，不能把全局 VPN 模式等同于两端实际出口一致，也不能贸然添加硬编码代理。
 - 电脑使用上述 URL/头和默认 Accept 重放仍返回 404，出口本地地址为 `10.154.77.241`。USB 当前只有手机 `5KTUT25428012210`，与截图的横屏设备尚未核对；已请用户连接截图中的设备（若实际是当前手机则说明），下一步在同一设备、同一 VPN 下对照 Harmony 取流响应。根因仍待该对照，未修改业务请求或版本号。
 
+### 2026-10-11 · 卓易通安卓复测也返回 404
+
+- 用户确认 21:33 的诊断日志来自卓易通里的 Android LX 1.9.1，而不是 Harmony 包。酷我 `songmid=215582995` 的请求仍是 `http://97.64.37.235/flower/v1/url/kw/215582995/128k`，请求头和此前 21:17 成功记录一致，但响应为 `statusCode: 404`、`bodyType: string`；同一轮酷狗、网易云、咪咕候选 URL 也全部 404。
+- 电脑立即重放酷我和咪咕 URL 均得到 nginx `404 Not Found`；`flower-source-info/latest` registry 仍返回 200。这说明当前可访问的野花 registry 正常，但取流服务端的 URL 路由或数据暂时失效。安卓和 Harmony 现在无法用这条音源完成播放，不能通过修改 Harmony headers、版本号或代理设置修复。
+- 21:17 安卓曾对同一酷我 URL 返回 `200` / `code: 0` 并播放到 22 秒，因此服务状态发生了时间变化；这份证据排除了 Harmony 独有的请求桥差异。待服务恢复或用户提供仍可用的音源后，再继续 Harmony 播放复测。
+
 ---
 
 ## 1. 版本配套（关键，别乱动）

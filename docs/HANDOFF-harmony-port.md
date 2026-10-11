@@ -178,6 +178,14 @@ b4b342b 回退 RN 0.73.11→0.72.5，vendor 化 github fork 依赖
 - 电脑对同一酷我 URL 直连（curl --noproxy '*') 仍为 404；增加 no-cache/Pragma 和诊断查询参数也为 404，响应体均为 `Not Found`。同 IP 的 HTTPS 连接超时，不能当作替代地址交付。没有找到通过重导入、更新脚本或调整缓存恢复的证据，未修改业务请求或关闭 TLS 校验。
 - 可继续验证的方法：在安卓对同一歌曲切换网络或 VPN 出口复测，若得到 200 再对照 Harmony；或者提供当前可用且可信的另一音源进行 Harmony 播放验证。此时不能宣称播放问题已修复，也不应盲改音源服务器 IP。
 
+### 2026-10-11 · 完整音源可用性复验
+
+- 用户要求实际验证音源链接。重新下载 `https://liuyang-public.oss-cn-beijing.aliyuncs.com/flower-v1.0.0.js`，HTTP 200、Content-Type `application/javascript`、10057 字节，SHA256 与此前一致。
+- 在 WSL 的真实 native QuickJS addon 上分别加载原 Android preload 和生成的 Harmony preload，执行完整下载脚本，并真实请求其两个 npm registry，将响应通过原协议回传脚本。两套初始化均成功，两个 registry 均为 HTTP 200；不是只模拟 init 或只检查文件 URL。
+- 对两套运行时分别调用酷我 128k musicUrl，测试 `songmid=215582995`（Goodnight Saigon）和用户失败日志中的 `15865745`。脚本生成原始 URL 和 headers，全部四次真实取流请求为 HTTP 404、Content-Type `text/plain; charset=utf-8`、body `Not Found`，脚本返回失败且没有媒体 URL，因此无法进一步验证媒体下载或播放。
+- 结论限定为本轮测试：脚本链接可下载、脚本可初始化，但已测试的酷我歌曲无法取流；不能把 HTTP 200 下载等同于音源能播放，也不能保证其他网络出口或其他歌曲同样失败。两套均在电脑的 QuickJS/Node 网络桥测试，不冒充新的双端真机验证。
+- 原始结果与时间记录在忽略目录 `harmony/entry/build/flower-availability-results.json`；复验程序为 `harmony/entry/build/source-availability-check.cjs`，运行命令为 WSL 工程目录内 `harmony/entry/build/userapi-node/bin/node harmony/entry/build/source-availability-check.cjs`。第三方源码和临时验证产物不提交。
+
 ---
 
 ## 1. 版本配套（关键，别乱动）

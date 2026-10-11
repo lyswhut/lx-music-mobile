@@ -37,6 +37,8 @@ struct Index {
             createRNPackages: getRNOHPackages,
             fontResourceByFontFamily: {},
             enableDebugger: this.rnohCoreContext.isDebugModeEnabled,
+            // RNOH 0.72.x 必填：ArkTS 实现的 Fabric 组件名列表（无则空数组）
+            arkTsComponentNames: [],
           },
           appKey: APP_KEY,
           jsBundleProvider: new TraceJSBundleProviderDecorator(

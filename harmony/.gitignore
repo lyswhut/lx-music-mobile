@@ -17,6 +17,7 @@
 /entry/src/main/resources/rawfile/assets/
 /entry/src/main/resources/rawfile/fonts/
 /entry/src/main/resources/rawfile/crypto-probe.json
+/entry/src/main/resources/rawfile/user-api-preload.js
 
 # RNOH 构建时由 hvigor 插件生成（autolinking / codegen），不入库
 /entry/src/main/ets/generated/

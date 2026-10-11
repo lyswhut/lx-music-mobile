@@ -5,5 +5,7 @@
   "main": "",
   "author": "",
   "license": "",
-  "dependencies": {}
+  "dependencies": {
+    "liblx_user_api.so": "file:./src/main/cpp/types/liblx_user_api"
+  }
 }

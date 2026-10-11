@@ -90,6 +90,18 @@ class CryptoModule : public ArkTSTurboModule {
   }
 };
 
+class UserApiModule : public ArkTSTurboModule {
+ public:
+  UserApiModule(const ArkTSTurboModule::Context ctx, const std::string& name)
+      : ArkTSTurboModule(ctx, name) {
+    methodMap_ = {
+        ARK_SCHEDULE_METHOD_METADATA(loadScript, 1),
+        ARK_SCHEDULE_METHOD_METADATA(sendAction, 2),
+        ARK_SCHEDULE_METHOD_METADATA(destroy, 0),
+    };
+  }
+};
+
 class BackgroundTimerModule : public ArkTSTurboModule {
  public:
   BackgroundTimerModule(const ArkTSTurboModule::Context ctx, const std::string& name)
@@ -110,6 +122,7 @@ class LXMusicTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
     if (name == "LXTrackPlayer") return std::make_shared<TrackPlayerModule>(ctx, name);
     if (name == "RNBackgroundTimer") return std::make_shared<BackgroundTimerModule>(ctx, name);
     if (name == "CryptoModule") return std::make_shared<CryptoModule>(ctx, name);
+    if (name == "UserApiModule") return std::make_shared<UserApiModule>(ctx, name);
     return nullptr;
   }
 };

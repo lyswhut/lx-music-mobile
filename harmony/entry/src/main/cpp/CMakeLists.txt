@@ -27,3 +27,8 @@ add_library(rnoh_app SHARED
 target_link_libraries(rnoh_app PUBLIC rnoh)
 
 autolink_libraries(rnoh_app)
+
+add_subdirectory(quickjs)
+add_library(lx_user_api SHARED userapi/ScriptRuntime.cpp userapi/NativeBridge.cpp)
+set_target_properties(lx_user_api PROPERTIES CXX_STANDARD 17)
+target_link_libraries(lx_user_api PRIVATE lx_quickjs libace_napi.z.so)

@@ -14,11 +14,13 @@
 - **Phase 1 Task 1.1（OH 移植原生库接入）✅ 构建通过 + 真机运行到渲染**：
   clipboard/async-storage/exception-handler/quick-base64/pager-view/fs 已注册，`getEnforcing` 崩溃已解决。
   真机上 **App 已经在渲染**（RN 层 + 导航工作），只是开发模式错误浮层（RedBox）盖着若干未接入模块的报错。
-- **当前所在**：全量首页已在真机正常渲染，搜索返回歌曲列表；screens、安全区域、图标字体和抽屉已接通，滑块原生组件已注册。工具模块、fs/gzip/AsyncStorage、AVPlayer/HTTP/后台播放已验证；CryptoModule 的 SHA1/AES/RSA 已接通并通过真机独立向量测试。QuickJS 自定义音源未接入，真实音源端到端播放与 MVP 仍未完成。
+- **当前所在**：全量首页已在真机正常渲染，搜索返回歌曲列表；screens、安全区域、图标字体和抽屉已接通，滑块原生组件已注册。工具模块、fs/gzip/AsyncStorage、AVPlayer/HTTP/后台播放已验证；CryptoModule 的 SHA1/AES/RSA 已接通并通过真机独立向量测试。QuickJS 自定义音源已实现并通过电脑端测试、鸿蒙构建；尚未真机验证，真实音源端到端播放与 MVP 仍未完成。
 - **MVP 目标**（用户确认）：**自定义音源(QuickJS) + 搜索 + 播放**。桌面歌词、本地媒体元数据 **不做**。
 
 ### 已提交 commit（`git log d295604..HEAD`）
 ```
+5b414518 完善导航、原生播放与加密并完成真机验证
+6dcc5306 鸿蒙移植 handoff 交接文档 + file-system 委托 react-native-fs
 8ed9052 OH 原生模块注册打通,全量 App assembleHap 构建成功
 78fac33 wip: 接入 OH 移植库 JS 依赖 + har/autolink 配置
 d79e91e Wix RNN → react-navigation v6（Task 1.2）
@@ -32,7 +34,7 @@ cd73620 修正 hvigor 插件 tgz 路径
 b4b342b 回退 RN 0.73.11→0.72.5，vendor 化 github fork 依赖
 5fe2498 docs: 移植实施计划
 ```
-`6dcc5306` 已提交交接文档及 `vendor/react-native-file-system/src/index.ts` 的 fs 委托实现。本次继续工作尚未提交。
+后续阶段提交以 `git log` 为准；以下按日期保留实施过程和验证范围。
 
 ### 2026-10-11 · 新电脑接续记录
 
@@ -106,6 +108,20 @@ b4b342b 回退 RN 0.73.11→0.72.5，vendor 化 github fork 依赖
 - `patch-oh-autolinking.mjs` 在 postinstall 中将 react-native-fs 的 Harmony 事件监听切换为 DeviceEventEmitter，对应原生全局事件，避免 NativeEventEmitter 的 addListener/removeListeners 警告；其他平台保持原实现。
 - 最终恢复全量 bundle、构建签名并覆盖安装，正常进入首页；启动日志不再出现 crypto null 或 AVMetadata 参数错误，自定义音源仍明确提示引擎未实现。启动仍有一组 NativeEventEmitter 缺 addListener/removeListeners 警告，fs bundle 已确认使用 DeviceEventEmitter，需继续定位其他库（如 Clipboard）；不能认为全部 emitter 警告已消除。一次性 crypto fixture 已从最终包移除。
 - ArkTS/C++ 编译及签名通过。同步 cryptoFramework API 需要 API12+，本轮验证设备为 API26。本节及此前续接修改随本次移植提交一起入库（见 `git log`），用户的本机签名配置和构建产物不入库。
+
+---
+
+### 2026-10-11 · 无真机续接：QuickJS 音源引擎
+
+- 用户要求吃饭期间继续无需真机的工作，并要求今后按可验证阶段提交，便于回溯；本阶段没有调用 hdc、安装或操作设备。
+- 从 QuickJS 官方 `quickjs-2025-09-13-2.tar.xz` 引入未修改的核心源码和 MIT 许可，来源及 SHA256 见 `cpp/quickjs/README.md`。仅链接引擎，不链接 quickjs-libc 的文件/进程/网络能力。Windows 上上游 `VERSION` 文件会覆盖 C++ `<version>`，已按源码清单排除。
+- `ScriptRuntime` 为每个上下文设置 64 MiB 内存、512 KiB 栈、每次执行/调用/Promise job 批次共用 5 秒中断期限。`NativeBridge` 提供 create/evaluate/call/destroy NAPI；`liblx_user_api.so` 已编译为 AArch64 并打包到 HAP。
+- `UserApiWorker.ets` 在 ThreadWorker 内持有 QuickJS，复用安卓 `user-api-preload.js` 与 `lx` API 2.0.0。脚本请求/取消经原有 RN 网络层；同步 Base64/MD5/AES/RSA 在 worker 中执行。CryptoOperations 从 UI TurboModule 中分离，worker 不加载 RNOH UI 包。
+- `UserApiModule` 的 ETS/C++ 注册、JS TurboModuleRegistry/DeviceEventEmitter 已接通。销毁清理定时器及运行时，代次过滤旧 worker 事件和异步 preload 结果；执行异常/超时关闭当前 worker，后续加载创建新环境。脚本未发出 init 事件时 20 秒报错；现有业务网络超时保持不变。
+- WSL/GCC/Node24 的三组 CTest 全部通过：引擎协议/沙箱/内存/Promise 无限循环；真实 NAPI 桥与 Unicode/crypto callback/异常/重复 destroy；实际 ETS host/worker 代码转译后的线程联调（网络响应/取消、定时器、加载和请求死循环、主线程心跳、初始化超时、源切换及销毁）。测试只替换鸿蒙平台 API，不能视为 Harmony 真机结果。测试命令见 `cpp/userapi/README.md`。
+- `userApi.ts` 定向 TypeScript 检查诊断 0；全量及新 `bundle-harmony:userapi-smoke` bundle、ArkTS/C++ 与 signed HAP 构建通过。新增 probe 覆盖初始化、请求、timer、模拟网络回包、MD5/Base64、5 秒中断与恢复，待设备返回后运行。
+- 检查 quick-md5 发现现有包已自带 SparkMD5 纯 JS fallback，电脑端空串/ASCII/中文 emoji/长字符串与 Node MD5 一致；暂不为 Harmony 增加另一套依赖或全局替换，设备端 fallback 黄金值仍待验。
+- 下一步必须先在 Harmony 真机检查 worker 路径/NAPI 加载和系统 cryptoFramework 的线程行为，再导入真实音源、获取 URL 并播放。不要把本阶段标成 MVP 达成。用户签名凭据及构建目录继续不提交。
 
 ---
 
@@ -215,7 +231,7 @@ RN 侧 `getEnforcing` 硬依赖已解决；现在是 `NativeModules.XxxModule`�
   | `utils.ts` | UtilsModule | 窗口尺寸/退出/通知权限/电池优化/息屏 | **ArkTS + C++ 已接入**；设备信息、窗口尺寸、Wi-Fi、通知状态真机验证通过，事件与交互待测；电池优化不支持 |
   | `cache.ts` | CacheModule | 缓存清理 | Harmony 入口用 RNFS 统计/清理 cache，交互待测 |
   | `crypto.ts` | CryptoModule | SHA1/AES/RSA | **cryptoFramework 已接入并真机验证**；独立 Node 向量与同步/异步往返通过 |
-  | `userApi.ts` | UserApiModule | **QuickJS 跑自定义音源脚本** | 重写（QuickJS NAPI）——MVP 核心,最难 |
+  | `userApi.ts` | UserApiModule | **QuickJS 跑自定义音源脚本** | **QuickJS + worker + NAPI 已实现**；电脑测试/鸿蒙构建通过，真机待验 |
   | `lyricDesktop.ts` | LyricModule | 桌面歌词 | **桩**（本期不做） |
   > 注意 `utils.ts` 等在**模块顶层**就 `UtilsModule.exitApp` 取属性,undefined 会 import 崩。重写需提供 ArkTS TurboModule,或先做 JS 安全桩让 import 不崩、再逐个实现。
 
@@ -239,8 +255,8 @@ BUILD FAILED in 56s
 
 ## 7. 剩余路线图（到 MVP）
 
-1. **首页已渲染、真实搜索已返回列表、crypto 已验证**；继续复测页面 push/back/滑块交互、搜索异常输入，并补齐 QuickJS 后真实歌曲播放联调、AVSession 遥控和重复模式测试。
-2. **下一项核心实现**（§5 表）：`userApi`（QuickJS），需独立线程、5 秒超时中断、脚本事件/网络请求回调；随后验证 cache 清理交互。`utils` 与 `crypto` 已接入，`lyricDesktop` 按本期范围降级。
+1. **首页已渲染、真实搜索已返回列表、crypto 已验证**；继续复测页面 push/back/滑块交互、搜索异常输入，再做真实歌曲播放联调、AVSession 遥控和重复模式测试。
+2. **下一项核心验证**（§5 表）：`bundle-harmony:userapi-smoke` 真机验证 QuickJS/ThreadWorker/NAPI，再导入真实音源取流播放；随后验证 cache 清理交互。`utils` 与 `crypto` 已接入，`lyricDesktop` 按本期范围降级。
 3. **搜索 + 播放链路**（Phase 2）：已有 AVPlayer + AVSession 和旧 fork 兼容层，继续真实音源、搜索、列表和歌词端到端验证。
 4. **自定义音源**跑通（QuickJS）= MVP 达成。
 5. 收尾：`react-native-quick-md5`（无 OH 版,换 JS md5 或 cryptoFramework）、vector-icons 字体、release 打包。
@@ -270,10 +286,12 @@ vendor/                                   # 被墙 github fork 本地化 + 修�
   react-native-{track-player,background-timer,local-media-metadata}/
 src/navigation/                           # 全部重写为 react-navigation(对外 API 不变)
   navigationRef.ts, Root.tsx, index.ts, navigation.ts, utils.ts, event.ts, hooks.ts, regLaunchedEvent.ts
-src/utils/nativeModules/*.ts              # Harmony 工具/crypto/cache/桌面歌词适配；userApi 待实现
+src/utils/nativeModules/*.ts              # Harmony 工具/crypto/cache/桌面歌词及 userApi 适配
 harmony/entry/src/main/ets/nativeModules/  # Utils/Crypto/TrackPlayer/BackgroundTimer + 包工厂
 harmony/entry/src/main/cpp/LXMusicPackage.h # 原生模块 C++ 方法表及工厂
-index.harmony.{smoke,player-smoke,crypto-smoke}.js # 基础/播放器/加密真机验证入口
+index.harmony.{smoke,player-smoke,crypto-smoke,userapi-smoke}.js # 真机验证入口
+harmony/entry/src/main/ets/workers/UserApiWorker.ets # 音源独立线程
+harmony/entry/src/main/cpp/{quickjs,userapi}/ # 引擎源码、NAPI 桥、离线测试与说明
 docs/superpowers/plans/2026-10-10-lx-music-harmony-port.md   # 分阶段计划
 .superpowers/sdd/2026-10-10-.../progress.md                  # 详细执行 ledger(gitignore)
 ```

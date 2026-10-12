@@ -6,11 +6,12 @@
  * "doesn't seem to be linked"。此处改为用 react-native-fs(OH 移植版,原生已注册)
  * 实现等价文件操作;gzip 用 pako(已是项目依赖)。
  *
- * AndroidScoped(SAF 文档树)/getExternalStoragePaths 鸿蒙无直接等价,降级为安全桩。
+ * AndroidScoped.openDocument 使用鸿蒙系统文件选择器;文档树和外部存储枚举仍为桩。
  */
 import RNFS from 'react-native-fs'
 import pako from 'pako'
 import { Buffer } from '@craftzdog/react-native-buffer'
+import { TurboModuleRegistry, type TurboModule } from 'react-native'
 
 export interface FileType {
   name: string
@@ -73,8 +74,15 @@ export const AndroidScoped = {
   async openDocumentTree(_isPersist: boolean): Promise<FileType> {
     throw new Error('[RNFileSystem-Harmony] openDocumentTree 暂未实现')
   },
-  async openDocument(_options: OpenDocumentOptions): Promise<FileType> {
-    throw new Error('[RNFileSystem-Harmony] openDocument 暂未实现')
+  async openDocument(options: OpenDocumentOptions): Promise<FileType | null> {
+    const module = TurboModuleRegistry.getEnforcing<TurboModule & {
+      openDocument: (extTypes: string[], toPath: string) => Promise<string>
+    }>('UtilsModule')
+    const path = await module.openDocument(options.extTypes ?? [], options.toPath ?? '')
+    if (!path) return null
+    const file = await FileSystem.stat(path)
+    file.data = options.encoding ? await RNFS.readFile(path, options.encoding) : path
+    return file
   },
 }
 

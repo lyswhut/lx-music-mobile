@@ -17,6 +17,7 @@ class UtilsModule : public ArkTSTurboModule {
         ARK_SCHEDULE_METHOD_METADATA(screenUnkeepAwake, 0),
         ARK_ASYNC_METHOD_METADATA(getWIFIIPV4Address, 0),
         ARK_ASYNC_METHOD_METADATA(getDeviceName, 0),
+        ARK_ASYNC_METHOD_METADATA(openDocument, 2),
         ARK_ASYNC_METHOD_METADATA(isNotificationsEnabled, 0),
         ARK_ASYNC_METHOD_METADATA(openNotificationPermissionActivity, 0),
         ARK_ASYNC_METHOD_METADATA(shareText, 3),

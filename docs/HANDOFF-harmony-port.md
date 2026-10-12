@@ -14,7 +14,7 @@
 - **Phase 1 Task 1.1（OH 移植原生库接入）✅ 构建通过 + 真机运行到渲染**：
   clipboard/async-storage/exception-handler/quick-base64/pager-view/fs 已注册，`getEnforcing` 崩溃已解决。
   真机上 **App 已经在渲染**（RN 层 + 导航工作），只是开发模式错误浮层（RedBox）盖着若干未接入模块的报错。
-- **当前所在**：全量首页已在真机正常渲染，搜索返回歌曲列表；screens、安全区域、图标字体和抽屉已接通，滑块原生组件已注册。工具模块、fs/gzip/AsyncStorage、AVPlayer/HTTP/后台播放已验证；CryptoModule 的 SHA1/AES/RSA 已接通并通过真机独立向量测试。QuickJS 自定义音源已实现，电脑测试和真机 probe 均通过；真实音源端到端播放与 MVP 仍未完成。
+- **当前所在**：全量首页和搜索已在真机验证，主分支 v1.9.1 已合入。QuickJS 自定义音源已通过电脑和真机验证；新增 Harmony 系统文件选择器，长青音源本地导入、初始化、真实歌曲播放进度与歌词已跑通。继续验证暂停恢复、重启持久化与完整搜索播放流程，详见 2026-10-12 记录。
 - **MVP 目标**（用户确认）：**自定义音源(QuickJS) + 搜索 + 播放**。桌面歌词、本地媒体元数据 **不做**。
 
 ### 已提交 commit（`git log d295604..HEAD`）
@@ -188,6 +188,15 @@ b4b342b 回退 RN 0.73.11→0.72.5，vendor 化 github fork 依赖
 
 ---
 
+### 2026-10-12 · 长青音源与本地导入
+
+- 用户提供 `D:\Downloads\洛雪音源2.js`，元数据为「长青SVIP音源(二改修复版)」v1.2.0，44876 字节，SHA256 `48d5fed8b46344e9298d55427382ce573485a264a2ae287ed829e2f2548223e8`。第三方脚本和检查结果仅存放于被忽略的 build 目录，没有修改、发布或提交音源代码。
+- 在原生 QuickJS 测试桥中分别使用安卓原 preload 和 Harmony preload 执行原脚本。两种环境均初始化成功，注册 kw/kg/tx/wy；酷我 `215582995`（Goodnight Saigon）和 `15865745` 的请求均成功。取流服务为 `https://musicserver.haitangw.cc/v1/music/resolve-url`，POST 返回 HTTP 201 / code 0，返回的媒体链接读取前 1024 字节均为 HTTP 206 / audio/mpeg。此结果只覆盖本次检查的歌曲与时间，不保证所有歌曲长期可用。
+- 补齐 `UtilsModule.openDocument` 的 ArkTS/C++ 方法和 vendor 文件系统桥接：使用 `DocumentViewPicker` 单文件选择和扩展名过滤，以只读授权 URI 打开文件，复制到应用缓存目录，保留中文文件名和后缀并使用 UUID 避免覆盖；返回可供现有导入逻辑读取的本地路径。取消选择返回 null，复制后关闭文件描述符，复制失败清理临时文件。
+- `ChoosePath` 在 Harmony 的文件导入固定使用系统选择器，兼容此前关闭系统选择器的持久化设置，避免进入依赖 Android Permissions 的目录浏览分支。目录选择和导出仍未实现，不在本次变更范围。
+- 全量 Harmony bundle、ArkTS/C++ 编译和签名 HAP 构建通过并已覆盖安装。真机系统选择器日志确认从 Download 读取 `洛雪音源2.js`，缓存文件 stat 为 44876 字节；原生应用显示长青音源「初始化成功」。已观察到酷狗 Vienna 播放进度由 00:02 增至 01:06，酷我 Piano Man 显示 05:36 总时长并持续推进，歌词同步更新。以上为原生 Harmony LX，非卓易通安卓应用。
+- 用户随后在原生应用搜索并确认 Goodnight Saigon 可以播放。至此可用音源的本地导入、初始化、搜索与播放链路已经跑通；本轮未单独完成暂停恢复、重启后音源持久化和曲终切歌的回归测试，后续仍需检查。
+
 ## 1. 版本配套（关键，别乱动）
 
 ### 2026-10-12 · 合入主分支 v1.9.1
@@ -296,14 +305,14 @@ RNOH 0.2.0 autolinker 对这批早期 `@react-native-oh-tpl` 库各种不配套,
 
 RN 侧 `getEnforcing` 硬依赖已解决；现在是 `NativeModules.XxxModule`（undefined）类模块。真机 RedBox "Log x of 5" 显示若干未接入模块报错。
 
-- **`react-native-file-system`（vendor fork）** → 已改为**委托 `react-native-fs`（OH 版）实现**（`vendor/react-native-file-system/src/index.ts`,已入库）。gzip 用 pako；AndroidScoped(SAF 文档树)降级为桩。**构建、UTF-8 读写、gzip 与重启持久化真机验证通过。**
+- **`react-native-file-system`（vendor fork）** → **委托 `react-native-fs`（OH 版）实现**（`vendor/react-native-file-system/src/index.ts`）。gzip 用 pako；openDocument 已接入 Harmony 系统文件选择器并验证本地音源导入，文档树仍为桩。**构建、UTF-8 读写、gzip 与重启持久化真机验证通过。**
 - **项目自带 5 模块**（`src/utils/nativeModules/`,安卓在 `android/.../cn/toside/music/mobile/`）：
   | 模块 | NativeModules 名 | 用途 | 处置 |
   |---|---|---|---|
   | `utils.ts` | UtilsModule | 窗口尺寸/退出/通知权限/电池优化/息屏 | **ArkTS + C++ 已接入**；设备信息、窗口尺寸、Wi-Fi、通知状态真机验证通过，事件与交互待测；电池优化不支持 |
   | `cache.ts` | CacheModule | 缓存清理 | Harmony 入口用 RNFS 统计/清理 cache，交互待测 |
   | `crypto.ts` | CryptoModule | SHA1/AES/RSA | **cryptoFramework 已接入并真机验证**；独立 Node 向量与同步/异步往返通过 |
-  | `userApi.ts` | UserApiModule | **QuickJS 跑自定义音源脚本** | **QuickJS + worker + NAPI 已实现**；电脑测试与真机 probe 通过，真实音源播放待验 |
+  | `userApi.ts` | UserApiModule | **QuickJS 跑自定义音源脚本** | **QuickJS + worker + NAPI 已实现**；电脑测试与真机 probe 通过，长青音源真实播放已跑通 |
   | `lyricDesktop.ts` | LyricModule | 桌面歌词 | **桩**（本期不做） |
   > 注意 `utils.ts` 等在**模块顶层**就 `UtilsModule.exitApp` 取属性,undefined 会 import 崩。重写需提供 ArkTS TurboModule,或先做 JS 安全桩让 import 不崩、再逐个实现。
 

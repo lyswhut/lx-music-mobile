@@ -7,6 +7,10 @@ import notificationManager from '@ohos.notificationManager';
 import commonEventManager from '@ohos.commonEventManager';
 import { systemShare } from '@kit.ShareKit';
 import { uniformTypeDescriptor } from '@kit.ArkData';
+import picker from '@ohos.file.picker';
+import fs from '@ohos.file.fs';
+import fileUri from '@ohos.file.fileuri';
+import util from '@ohos.util';
 
 export class UtilsModule extends UITurboModule {
   static readonly NAME: string = 'UtilsModule';
@@ -57,6 +61,27 @@ export class UtilsModule extends UITurboModule {
 
   async getDeviceName(): Promise<string> {
     return deviceInfo.marketName || deviceInfo.productModel || 'Unknown';
+  }
+
+  async openDocument(extTypes: string[], toPath: string): Promise<string> {
+    const options: picker.DocumentSelectOptions = { maxSelectNumber: 1 };
+    if (extTypes.length) options.fileSuffixFilters = [extTypes.map((extension: string) => `.${extension}`).join(',')];
+    const uris = await new picker.DocumentViewPicker(this.ctx.uiAbilityContext).select(options);
+    if (!uris.length) return '';
+    const directory = toPath || `${this.ctx.uiAbilityContext.cacheDir}/tempFile`;
+    if (!await fs.access(directory)) await fs.mkdir(directory, true);
+    const name = new fileUri.FileUri(uris[0]).name;
+    const path = `${directory}/${util.generateRandomUUID()}-${name}`;
+    const source = await fs.open(uris[0], fs.OpenMode.READ_ONLY);
+    try {
+      await fs.copyFile(source.fd, path);
+    } catch (error) {
+      if (await fs.access(path)) await fs.unlink(path);
+      throw new Error((error as Error).message);
+    } finally {
+      await fs.close(source);
+    }
+    return path;
   }
 
   async isNotificationsEnabled(): Promise<boolean> {

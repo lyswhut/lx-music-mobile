@@ -15,7 +15,7 @@
 #include "ClipboardPackage.h"
 #include "ExceptionHandlerPackage.h"
 #include "RNQuickBase64Package.h"
-#include "ViewPagerPackage.h"
+#include "HarmonyViewPagerPackage.h"
 #include "ScreensPackage.h"
 #include "SafeAreaViewPackage.h"
 #include "SliderPackage.h"
@@ -28,7 +28,7 @@ std::vector<Package::Shared> createRNOHPackages(const Package::Context &ctx) {
     std::make_shared<ClipboardPackage>(ctx),
     std::make_shared<ExceptionHandlerPackage>(ctx),
     std::make_shared<RNQuickBase64Package>(ctx),
-    std::make_shared<ViewPagerPackage>(ctx),
+    std::make_shared<HarmonyViewPagerPackage>(ctx),
     std::make_shared<ScreensPackage>(ctx),
     std::make_shared<SafeAreaViewPackage>(ctx),
     std::make_shared<SliderPackage>(ctx),

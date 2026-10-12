@@ -197,6 +197,15 @@ b4b342b 回退 RN 0.73.11→0.72.5，vendor 化 github fork 依赖
 - 全量 Harmony bundle、ArkTS/C++ 编译和签名 HAP 构建通过并已覆盖安装。真机系统选择器日志确认从 Download 读取 `洛雪音源2.js`，缓存文件 stat 为 44876 字节；原生应用显示长青音源「初始化成功」。已观察到酷狗 Vienna 播放进度由 00:02 增至 01:06，酷我 Piano Man 显示 05:36 总时长并持续推进，歌词同步更新。以上为原生 Harmony LX，非卓易通安卓应用。
 - 用户随后在原生应用搜索并确认 Goodnight Saigon 可以播放。至此可用音源的本地导入、初始化、搜索与播放链路已经跑通；本轮未单独完成暂停恢复、重启后音源持久化和曲终切歌的回归测试，后续仍需检查。
 
+### 2026-10-12 · 修复点击歌曲错位与手动切歌跳下一首
+
+- 用户反馈点击歌曲与实际播放不符，搜索/排行榜也触发试听列表。真机复现：搜索页点击 Goodnight Saigon 的结果却播放试听列表中的 Piano Man/Vienna。根因之一是 OH pager-view C++ 的触摸命中使用 `m_pageIndex`；该字段在 `onPropsChanged` 被重新赋为 `initialPage`，与原生 Swiper 当前显示页不一致。
+- 新增 `HarmonyViewPagerPackage.h` 并替换应用 C++ 包工厂注册，保留原库的分页、滑动和模块能力，仅重写触摸目标选择：读取原生 `NODE_SWIPER_INDEX`，校验范围后返回当前页的子节点，避免触摸落到隐藏页。原库返回的空触摸目标也被消除；没有修改 node_modules 或依赖版本。
+- 第二个根因是手动选歌会先 stop/skip 到占位轨道，Harmony 原生桥把所有轨道变化统一发为 `playback-track-changed`；JS 播放服务将手动 skip 当成自然曲终，触发 `playerEnded` / `playNext`，导致点中歌曲后又跳下一首。原生事件新增 `isAutomatic`，只在自然曲终推进队列时为 true；Harmony 播放服务仍更新当前轨道 ID，但仅对自动轨道变化处理曲终。安卓事件处理保持原行为。
+- 新版完整应用真机验证：搜索列表依次点击 Piano Man、Vienna、Uptown Girl 均对应；返回试听列表点击 Vienna、Goodnight Saigon 均对应且不再跳下一首；滑动到排行榜后滚动列表，点击第 10 首「雨爱」显示同名歌曲、04:20 时长并推进歌词。其菜单的歌曲信息也对应。未将新增修复视为所有来源和全部个人列表已穷尽验证。
+- 播放器真机 probe 增加手动/自动事件断言并报告 `ALL PLAYER CHECKS PASSED`：本地 WAV、暂停/seek、删除队列后的索引、65 秒持续播放、自然曲终到占位轨道的 `isAutomatic: true`、手动变化 `false`、HTTP 请求头、销毁重建均通过。本轮 65 秒检查在前台进行，不能作为新一次 Home 后台回归。
+- 完整 bundle、ArkTS/C++ 编译和签名 HAP 构建通过；测试后恢复完整应用。签名凭据、测试日志和音源文件不入库。
+
 ## 1. 版本配套（关键，别乱动）
 
 ### 2026-10-12 · 合入主分支 v1.9.1

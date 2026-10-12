@@ -225,7 +225,7 @@ export class TrackPlayerModule extends UITurboModule {
     return this.currentIndex >= 0 && (this.queue[this.currentIndex].id ?? '').endsWith('//default');
   }
 
-  private async loadTrack(index: number): Promise<void> {
+  private async loadTrack(index: number, isAutomatic: boolean = false): Promise<void> {
     const player = this.requirePlayer();
     if (!Number.isInteger(index) || index < 0 || index >= this.queue.length) throw new Error('Track index out of bounds');
     const previous = this.currentIndex;
@@ -235,7 +235,7 @@ export class TrackPlayerModule extends UITurboModule {
     this.bufferedSeconds = 0;
     this.currentIndex = index;
     this.ctx.rnInstance.emitDeviceEvent('playback-track-changed', {
-      track: previous < 0 ? null : previous, nextTrack: index, position,
+      track: previous < 0 ? null : previous, nextTrack: index, position, isAutomatic,
     });
     if (this.isPlaceholder()) {
       this.emitState(PlayerState.Ready);
@@ -326,7 +326,7 @@ export class TrackPlayerModule extends UITurboModule {
       await this.seek(0);
       await this.requirePlayer().play();
     } else if (completedIndex + 1 < this.queue.length || this.repeatMode === 2) {
-      await this.loadTrack((completedIndex + 1) % this.queue.length);
+      await this.loadTrack((completedIndex + 1) % this.queue.length, true);
       if (!this.isPlaceholder()) await this.requirePlayer().play();
     } else {
       this.emitState(PlayerState.Stopped);

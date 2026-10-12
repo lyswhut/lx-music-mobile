@@ -15,7 +15,7 @@ export interface DrawerLayoutFixedType {
   fixWidth: () => void
 }
 
-export default forwardRef<DrawerLayoutFixedType, Props>(({ children, visibleNavNames, widthPercentage, widthPercentageMax, drawerPosition = 'left', renderNavigationView, onDrawerOpen, onDrawerClose, drawerLockMode, style }, ref) => {
+export default forwardRef<DrawerLayoutFixedType, Props>(({ children, visibleNavNames, widthPercentage, widthPercentageMax, drawerPosition = 'left', drawerBackgroundColor, renderNavigationView, onDrawerOpen, onDrawerClose, drawerLockMode, style }, ref) => {
   const [visible, setVisible] = useState(false)
   const [width, setWidth] = useState(0)
   const closeDrawer = useCallback(() => { setVisible(false) }, [])
@@ -50,14 +50,12 @@ export default forwardRef<DrawerLayoutFixedType, Props>(({ children, visibleNavN
   return (
     <View style={[{ flex: 1 }, style]} onLayout={handleLayout}>
       <View style={{ flex: 1 }}>{children}</View>
-      {visible && (
-        <View style={StyleSheet.absoluteFill}>
-          <Pressable style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.4)' }]} onPress={closeDrawer} />
-          <View style={{ position: 'absolute', top: 0, bottom: 0, width, [drawerPosition]: 0 }}>
-            {renderNavigationView()}
-          </View>
+      <View style={[StyleSheet.absoluteFill, { display: visible ? 'flex' : 'none', zIndex: 1 }]} pointerEvents={visible ? 'auto' : 'none'}>
+        <Pressable style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.4)' }]} onPress={closeDrawer} />
+        <View style={{ position: 'absolute', top: 0, bottom: 0, width, [drawerPosition]: 0, backgroundColor: drawerBackgroundColor }}>
+          {renderNavigationView()}
         </View>
-      )}
+      </View>
     </View>
   )
 })

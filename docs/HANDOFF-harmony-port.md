@@ -13,8 +13,8 @@
 - **Phase 1 Task 1.2（Wix 导航 → react-navigation v6）✅ 完成**：全量 App 的 harmony bundle 能构建。
 - **Phase 1 Task 1.1（OH 移植原生库接入）✅ 构建通过 + 真机运行到渲染**：
   clipboard/async-storage/exception-handler/quick-base64/pager-view/fs 已注册，`getEnforcing` 崩溃已解决。
-  真机上 **App 已经在渲染**（RN 层 + 导航工作），只是开发模式错误浮层（RedBox）盖着若干未接入模块的报错。
-- **当前所在**：全量首页和搜索已在真机验证，主分支 v1.9.1 已合入。QuickJS 自定义音源已通过电脑和真机验证；新增 Harmony 系统文件选择器，长青音源本地导入、初始化、真实歌曲播放进度与歌词已跑通。继续验证暂停恢复、重启持久化与完整搜索播放流程，详见 2026-10-12 记录。
+  全量首页、搜索和导航已在真机运行，早期未接入模块导致的启动错误已解决。
+- **当前所在**：主分支 v1.9.1 已合入。QuickJS 自定义音源、本地导入、真实歌曲播放进度与歌词、音源重启保存已跑通；已修复隐藏页面误收歌曲点击及手动切歌被当成曲终的问题。个人列表抽屉首次打开空白也已修复，真机可切换收藏并正确播放。播放器 probe 已覆盖暂停、seek、队列、曲终与 HTTP 请求头。后续重点是备份导出、音频缓存和系统播放控制验证。
 - **MVP 目标**（用户确认）：**自定义音源(QuickJS) + 搜索 + 播放**。桌面歌词、本地媒体元数据 **不做**。
 
 ### 已提交 commit（`git log d295604..HEAD`）
@@ -310,9 +310,9 @@ RNOH 0.2.0 autolinker 对这批早期 `@react-native-oh-tpl` 库各种不配套,
 
 ---
 
-## 5. 当前正在做：App 自带/自定义原生模块
+## 5. App 自带/自定义原生模块现状
 
-RN 侧 `getEnforcing` 硬依赖已解决；现在是 `NativeModules.XxxModule`（undefined）类模块。真机 RedBox "Log x of 5" 显示若干未接入模块报错。
+RN 侧硬依赖、工具模块、crypto、QuickJS 与播放器已接入，全量应用已可导入音源并播放。下表保留各模块的实现与验证范围。
 
 - **`react-native-file-system`（vendor fork）** → **委托 `react-native-fs`（OH 版）实现**（`vendor/react-native-file-system/src/index.ts`）。gzip 用 pako；openDocument 已接入 Harmony 系统文件选择器并验证本地音源导入，文档树仍为桩。**构建、UTF-8 读写、gzip 与重启持久化真机验证通过。**
 - **项目自带 5 模块**（`src/utils/nativeModules/`,安卓在 `android/.../cn/toside/music/mobile/`）：
@@ -343,13 +343,24 @@ BUILD FAILED in 56s
 
 ---
 
-## 7. 剩余路线图（到 MVP）
+## 7. 剩余路线图
 
-1. **首页已渲染、真实搜索已返回列表、crypto 已验证**；继续复测页面 push/back/滑块交互、搜索异常输入，再做真实歌曲播放联调、AVSession 遥控和重复模式测试。
-2. **下一项核心验证**（§5 表）：QuickJS/ThreadWorker/NAPI 真机 probe 已通过，继续导入真实音源取流播放；随后验证 cache 清理交互。`utils` 与 `crypto` 已接入，`lyricDesktop` 按本期范围降级。
-3. **搜索 + 播放链路**（Phase 2）：已有 AVPlayer + AVSession 和旧 fork 兼容层，继续真实音源、搜索、列表和歌词端到端验证。
-4. **自定义音源**跑通（QuickJS）= MVP 达成。
-5. 收尾：`react-native-quick-md5`（无 OH 版,换 JS md5 或 cryptoFramework）、vector-icons 字体、release 打包。
+核心 MVP（自定义音源 + 搜索 + 播放）已在真机跑通，md5 与图标适配已完成。后续按实现缺口与验证缺口分别推进：
+
+1. **备份导出与目录选择未实现**：本地音源/备份文件选择使用系统 picker；`AndroidScoped.openDocumentTree` 仍是桩，列表与设置导出依赖目录选择，需要适配 Harmony 保存文件流程。持久目录授权与本地媒体扫描也不能视为已支持。
+2. **音频磁盘缓存未实现**：`isCached` 固定 false、缓存大小固定 0、播放器清理缓存为空操作；现有歌曲 URL/歌词缓存与 RNFS 应用 cache 清理不等于离线音频缓存。
+3. **系统播放控制待完整验证**：AVSession 与后台播放已实现；锁屏按钮、蓝牙/耳机遥控、真实歌曲的重复/随机模式、音频焦点变化、长时间与弱网播放仍需测试。
+4. **歌单管理与交互继续回归**：列表切换、收藏歌曲播放、管理菜单与新建弹窗可用；新建/重命名/删除的完整保存流程、收藏批量操作、远程歌单同步、备份往返与缓存清理 UI 尚未全面验证。
+5. **发布收尾**：完成 release 安装验证、Harmony 版本与分发方案。现有 APK 自动更新入口不适用于 Harmony。
+
+桌面歌词与本地媒体元数据仍按用户确认的本期范围不做。
+
+### 2026-10-12 · 个人列表抽屉修复与验证
+
+- 真机复现点击「试听列表」后个人列表面板内容空白。Harmony 抽屉只在打开时挂载 `renderNavigationView()`，而 `MyList` 依赖此前已发出的 `changeLoveListVisible` 事件进行首次初始化，导致新挂载组件错过事件。
+- `DrawerLayoutFixed.harmony.tsx` 保留导航内容挂载，以 display 与 pointerEvents 控制关闭状态；恢复 `drawerBackgroundColor` 并设置覆盖层层级。关闭时保留列表与菜单组件状态，重新打开无需重复初始化。
+- 完整 Harmony bundle 生成、debug signed HAP 构建与覆盖安装通过。真机首次打开即显示「试听列表 / 我的收藏」；切换收藏后只显示其《雨爱》，点击后实际播放器显示《雨爱 - 杨丞琳》、4:20 时长及正常进度/歌词。
+- 继续验证重复打开、收藏管理菜单、新建列表弹窗及取消、点击遮罩关闭、主导航抽屉开关均通过。未在本轮创建或删除用户歌单；完整管理保存流程仍列为待验证。设备保留完整应用。
 
 ---
 

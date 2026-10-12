@@ -14,9 +14,11 @@ import java.util.regex.Pattern;
 public class LyricPlayer {
   final String timeFieldExp = "^(?:\\[[\\d:.]+])+";
   final String timeExp = "\\d{1,3}(:\\d{1,3}){0,2}(?:\\.\\d{1,3})";
+  final String msTimeRxp = "\\[\\d{1,3}(:\\d{1,3}){0,2}\\.\\d{3}]";
 //  HashMap tagRegMap;
   Pattern timeFieldPattern;
   Pattern timePattern;
+  Pattern msTimePattern;
 
   String lyric = "";
   ArrayList<String> extendedLyrics = new ArrayList<>();
@@ -45,6 +47,7 @@ public class LyricPlayer {
 
     timeFieldPattern = Pattern.compile(timeFieldExp);
     timePattern = Pattern.compile(timeExp);
+    msTimePattern = Pattern.compile(msTimeRxp);
   }
 
   public void setTempPause(boolean isPaused) {
@@ -144,7 +147,15 @@ public class LyricPlayer {
     }
   }
 
+  public static String padEnd(String str, int length, char padChar) {
+    if (str.length() >= length) {
+      return str;
+    }
+    return str + String.valueOf(padChar).repeat(length - str.length());
+  }
+
   private void initLines() {
+    boolean isMsTime = msTimePattern.matcher(this.lyric).find();
     String[] linesStr = lyric.split("\r\n|\n|\r");
     lines = new ArrayList<>();
 
@@ -192,7 +203,11 @@ public class LyricPlayer {
             if (seconds.contains(".")) {
               timeArr = seconds.split("\\.");
               seconds = timeArr[0];
-              if (timeArr.length > 1) milliseconds = timeArr[1];
+              if (timeArr.length > 1) {
+                String msStr = timeArr[1];
+                if (!isMsTime) msStr = padEnd(msStr, 3, '0');
+                milliseconds = msStr;
+              }
             }
             HashMap<String, Object> lineInfo = new HashMap<>();
             int time = Integer.parseInt(hours) * 60 * 60 * 1000

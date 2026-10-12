@@ -11,6 +11,7 @@ import type { SelectInfo } from './ListMenu'
 import { type Metadata } from '@/components/MetadataEditModal'
 import musicSdk from '@/utils/musicSdk'
 import { getListMusicSync } from '@/utils/listManage'
+import { clearMusicUrlByMusic } from '@/utils/data'
 
 export const handlePlay = (listId: SelectInfo['listId'], index: SelectInfo['index']) => {
   void playList(listId, index)
@@ -115,6 +116,16 @@ export const handleShowMusicSourceDetail = async(minfo: SelectInfo['musicInfo'])
   const url = musicSdk[minfo.source as LX.OnlineSource]?.getMusicDetailPageUrl(toOldMusicInfo(minfo))
   if (!url) return
   void openUrl(url)
+}
+
+export const clearMusicUrl = async(musicInfo: SelectInfo['musicInfo']) => {
+  try {
+    await clearMusicUrlByMusic(musicInfo)
+  } catch (error) {
+    toast(global.i18n.t('list_remove_cache_fail_tip', { msg: (error as Error).message }))
+    return
+  }
+  toast(global.i18n.t('list_remove_cache_success_tip'))
 }
 
 

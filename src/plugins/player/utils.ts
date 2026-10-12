@@ -175,7 +175,7 @@ export interface NowPlayingTitles {
   lyric?: string
 }
 export const updateNowPlayingTitles = async(titles: NowPlayingTitles) => {
-  console.log('set playing titles', titles)
+  // console.log('set playing titles', titles)
   return TrackPlayer.updateNowPlayingTitles(titles)
 }
 

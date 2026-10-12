@@ -1,6 +1,6 @@
 # lx-music → HarmonyOS 移植 · Handoff 交接文档
 
-> 最后更新：2026-10-11 · 分支 `feat/harmony-port`（**从未动过 master**）
+> 最后更新：2026-10-12 · 分支 `feat/harmony-port`（**从未动过 master**）
 > 配套阅读：`docs/superpowers/plans/2026-10-10-lx-music-harmony-port.md`（分阶段计划）
 
 把 **lx-music-mobile**（React Native 安卓端）移植到 **HarmonyOS NEXT**，走 **RNOH（React Native for OpenHarmony）** 路线。本文档交接「当前到哪了、怎么构建运行、踩过哪些坑、下一步做什么」。
@@ -189,6 +189,15 @@ b4b342b 回退 RN 0.73.11→0.72.5，vendor 化 github fork 依赖
 ---
 
 ## 1. 版本配套（关键，别乱动）
+
+### 2026-10-12 · 合入主分支 v1.9.1
+
+- 用户要求继续同步主分支。合入 `origin/master` 的 `fb848072`（发布 v1.9.1），纳入此前缺少的全部 24 个提交，使用 merge 保留主分支与 Harmony 移植两条历史；master 本身未修改。
+- 业务改动包括 tx 搜索/歌单、kg 搜索和歌单歌曲完整性、mg 图片/歌词、kw/tx 歌词解析、歌曲版本匹配，以及歌曲菜单按曲目清理 URL 缓存。合并的 src 文件逐项与主分支内容核对一致。
+- 仅 package.json / package-lock.json 冲突：保留 RN 0.72.5、RNOH 0.72.144、OH alias、vendor 和 Harmony scripts；纳入应用源码版本 1.9.1 / versionCode 78、Buffer 6.1.2、iconv-lite 0.7.3、lrc-file-parser 2.4.2 和 React 类型更新。以 Harmony 原 lock 为基础让 npm 重新生成所需更新，没有引入主分支 Android 原生依赖。已移除主分支只用于 Wix react-native-navigation 的 lodash override，因为 Harmony 已迁移 react-navigation。
+- `npm install`（含 postinstall）、`npm ci --dry-run --ignore-scripts`、Harmony 全量 JS bundle、ArkTS/C++ 编译和签名 assembleHap 全部通过；四组离线 QuickJS/NAPI/worker/diagnostic CTest 全部通过。额外执行真实 data.ts 的模拟存储检查，确认按歌曲清理全部音质 URL 保留其他歌曲与歌词；新版 Buffer 在 ReactNative 环境选择现有 OH Base64 API，全部字节及中文 emoji 往返通过。
+- 构建仍有现有 Metro 配置和依赖 ArkTS/C++ 警告；此次未做合并后的真机搜索/歌词/缓存菜单验证。signed HAP 已生成在原 build 输出目录，本机签名配置与临时验证脚本未提交。应用 Harmony 安装包 manifest 的现有独立版本号仍为 1.0.0，源码版本与更新日志为 1.9.1。
+- 这 24 个提交没有修改自定义音源 preload 或请求桥；本次合并不代表野花 HTTP 404 或真实播放问题已修复，下一步仍须使用可取流音源进行端到端验证。
 
 | 组件 | 版本 | 说明 |
 |---|---|---|

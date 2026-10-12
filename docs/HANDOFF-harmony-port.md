@@ -364,6 +364,12 @@ BUILD FAILED in 56s
 
 ---
 
+### 2026-10-12 · 应用名称与图标
+
+- AppScope 名称改为与安卓版一致的 `LX Music`，EntryAbility 共用 `$string:app_name`，移除模板名称 `harmony` / `label`。
+- 从安卓 `ic_launcher_foreground.xml` 复用两条绿色音符/箭头路径，新增 Harmony SVG 前景与白色背景；AppScope 和 entry 的分层图标引用同一组资源，启动窗口也使用该音符前景。
+- debug signed HAP 构建、覆盖安装与启动通过；真机桌面确认显示 `LX Music` 与正确绿色图标，点击该图标后焦点窗口为 `com.wingsluo.lxmusic`。未卸载或清空应用数据。
+
 ## 8. 文件地图（本次移植新增/改动）
 
 ```

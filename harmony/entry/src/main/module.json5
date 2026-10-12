@@ -14,6 +14,7 @@
     "pages": "$profile:main_pages",
     "requestPermissions": [
       { "name": "ohos.permission.INTERNET" },
+      { "name": "ohos.permission.FILE_ACCESS_PERSIST" },
       { "name": "ohos.permission.GET_WIFI_INFO" },
       { "name": "ohos.permission.KEEP_BACKGROUND_RUNNING" },
       { "name": "ohos.permission.VIBRATE" }

@@ -4,6 +4,7 @@ import { TrackPlayerModule } from './TrackPlayerModule';
 import { BackgroundTimerModule } from './BackgroundTimerModule';
 import { CryptoModule } from './CryptoModule';
 import { UserApiModule } from './UserApiModule';
+import { DownloadModule } from './DownloadModule';
 
 export class LXMusicPackage extends RNPackage {
   getUITurboModuleFactoryByNameMap(): Map<string, (ctx: UITurboModuleContext) => UITurboModule> {
@@ -13,6 +14,7 @@ export class LXMusicPackage extends RNPackage {
       [BackgroundTimerModule.NAME, (ctx: UITurboModuleContext): UITurboModule => new BackgroundTimerModule(ctx)],
       [CryptoModule.NAME, (ctx: UITurboModuleContext): UITurboModule => new CryptoModule(ctx)],
       [UserApiModule.NAME, (ctx: UITurboModuleContext): UITurboModule => new UserApiModule(ctx)],
+      [DownloadModule.NAME, (ctx: UITurboModuleContext): UITurboModule => new DownloadModule(ctx)],
     ]);
   }
 }

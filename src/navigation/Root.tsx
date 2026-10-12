@@ -19,6 +19,7 @@ import VersionModal from './components/VersionModal'
 import PactModal from './components/PactModal'
 import SyncModeModal from './components/SyncModeModal'
 import { Provider } from '@/store/Provider'
+import MusicDownload from '@/components/MusicDownload'
 import { navigationRef, appReadyPromise } from './navigationRef'
 import { fireAppLaunched } from './regLaunchedEvent'
 import { removeComponentId } from '@/core/common'
@@ -93,6 +94,7 @@ export default function Root() {
               )
             : null}
         </SafeAreaView>
+        {ready ? <MusicDownload /> : null}
       </SafeAreaProvider>
     </Provider>
   )

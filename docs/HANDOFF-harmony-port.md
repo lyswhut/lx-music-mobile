@@ -353,6 +353,8 @@ BUILD FAILED in 56s
 4. **歌单管理与交互继续回归**：列表切换、收藏歌曲播放、管理菜单与新建弹窗可用；新建/重命名/删除的完整保存流程、收藏批量操作、远程歌单同步、备份往返与缓存清理 UI 尚未全面验证。
 5. **发布收尾**：完成 release 安装验证、Harmony 版本与分发方案。现有 APK 自动更新入口不适用于 Harmony。
 
+6. **歌曲下载已新增代码，待真机验证**：统一歌曲菜单入口、音质选择、前台进度与取消、持久目录授权及 `Download/LX Music` 保存。模拟检查与完整构建通过；真实文件夹授权、歌曲下载和文件管理打开尚未验证。详见 `docs/harmony-download.md`。下载与音频磁盘缓存是独立功能。
+
 桌面歌词与本地媒体元数据仍按用户确认的本期范围不做。
 
 ### 2026-10-12 · 个人列表抽屉修复与验证
@@ -369,6 +371,14 @@ BUILD FAILED in 56s
 - AppScope 名称改为与安卓版一致的 `LX Music`，EntryAbility 共用 `$string:app_name`，移除模板名称 `harmony` / `label`。
 - 从安卓 `ic_launcher_foreground.xml` 复用两条绿色音符/箭头路径，新增 Harmony SVG 前景与白色背景；AppScope 和 entry 的分层图标引用同一组资源，启动窗口也使用该音符前景。
 - debug signed HAP 构建、覆盖安装与启动通过；真机桌面确认显示 `LX Music` 与正确绿色图标，点击该图标后焦点窗口为 `com.wingsluo.lxmusic`。未卸载或清空应用数据。
+
+### 2026-10-12 · RNOH 架构图与歌曲下载实现
+
+- 新增 `docs/architecture/harmony-rnoh.excalidraw` 和 SVG 预览，展示业务复用、Metro 平台选择、RNAbility 宿主、Fabric / ArkUI 渲染、JSI / C++ 方法表 / ArkTS TurboModule 双向调用及 Worker / NAPI / QuickJS 音源链路。当前会话未暴露 Excalidraw MCP，使用可编辑的本地 Excalidraw 文件交付。
+- 新增 `LXDownload` 原生模块及 C++ / ArkTS 工厂注册，声明 FILE_ACCESS_PERSIST。使用系统目录授权、preferences 保存授权 URI、HTTP 流与 fs 写入；下载业务独立取流并禁止自动换源，不改变播放队列。
+- 下载窗口支持歌曲音质、进度、取消、失败重试；个人列表与共用在线列表菜单均提供入口。本地歌曲不显示下载。成功后保存到 `Download/LX Music`，根据文件头确认音频格式，同名加序号；失败清理临时文件与不完整输出。
+- 模拟验证覆盖授权恢复、内容一致、HTTP / 非音频 / 截断失败、重名、部分写入、复制失败、取消、并发、格式与 JS 取消竞态。完整 bundle 与 debug signed HAP 构建通过。本轮按用户要求编写代码待其回到手机测试，未操作设备授权或验证真实下载。
+- 仓库默认 TypeScript 配置依赖缺失的 `@react-native/typescript-config`，全量检查还存在既有依赖与业务诊断；以临时定向配置检查时本次下载 JS 文件未出现诊断。未宣称全量 TypeScript 或 lint 通过。
 
 ## 8. 文件地图（本次移植新增/改动）
 

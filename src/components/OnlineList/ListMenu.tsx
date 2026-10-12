@@ -3,6 +3,7 @@ import { useI18n } from '@/lang'
 import Menu, { type Menus, type MenuType, type Position } from '@/components/common/Menu'
 import { hasDislike } from '@/core/dislikeList'
 import { hasMusicUrlByMusic } from '@/utils/data'
+import { isDownloadSupported, requestMusicDownload } from '@/core/download'
 
 export interface SelectInfo {
   musicInfo: LX.Music.MusicInfoOnline
@@ -58,7 +59,7 @@ export default forwardRef<ListMenuType, ListMenuProps>((props: ListMenuProps, re
     const menu = [
       { action: 'play', label: t('play') },
       { action: 'playLater', label: t('play_later') },
-      // { action: 'download', label: '下载' },
+      ...(isDownloadSupported ? [{ action: 'download', label: t('music_download') }] : []),
       { action: 'add', label: t('add_to') },
       { action: 'copyName', label: t('copy_name') },
       { action: 'musicSourceDetail', label: t('music_source_detail') },
@@ -86,6 +87,9 @@ export default forwardRef<ListMenuType, ListMenuProps>((props: ListMenuProps, re
         break
       case 'playLater':
         props.onPlayLater(selectInfo)
+        break
+      case 'download':
+        requestMusicDownload(selectInfo.musicInfo)
         break
       case 'add':
         props.onAdd(selectInfo)

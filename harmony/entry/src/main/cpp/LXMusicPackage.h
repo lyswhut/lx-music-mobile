@@ -116,6 +116,18 @@ class BackgroundTimerModule : public ArkTSTurboModule {
   }
 };
 
+class DownloadModule : public ArkTSTurboModule {
+ public:
+  DownloadModule(const ArkTSTurboModule::Context ctx, const std::string& name)
+      : ArkTSTurboModule(ctx, name) {
+    methodMap_ = {
+        ARK_ASYNC_METHOD_METADATA(prepareDirectory, 0),
+        ARK_ASYNC_METHOD_METADATA(downloadMusic, 3),
+        ARK_SCHEDULE_METHOD_METADATA(cancelDownload, 1),
+    };
+  }
+};
+
 class LXMusicTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
  public:
   SharedTurboModule createTurboModule(Context ctx, const std::string& name) const override {
@@ -124,6 +136,7 @@ class LXMusicTurboModuleFactoryDelegate : public TurboModuleFactoryDelegate {
     if (name == "RNBackgroundTimer") return std::make_shared<BackgroundTimerModule>(ctx, name);
     if (name == "CryptoModule") return std::make_shared<CryptoModule>(ctx, name);
     if (name == "UserApiModule") return std::make_shared<UserApiModule>(ctx, name);
+    if (name == "LXDownload") return std::make_shared<DownloadModule>(ctx, name);
     return nullptr;
   }
 };

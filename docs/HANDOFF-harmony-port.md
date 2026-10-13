@@ -1,6 +1,6 @@
 # lx-music → HarmonyOS 移植 · Handoff 交接文档
 
-> 最后更新：2026-10-13 · 分支 `feat/harmony-port`（**从未动过 master**）
+> 最后更新：2026-10-13 · 仓库默认分支 `feat/harmony-port`（保留原 `master` 分支及其提交记录）
 > 配套阅读：`docs/superpowers/plans/2026-10-10-lx-music-harmony-port.md`（分阶段计划）
 
 把 **lx-music-mobile**（React Native 安卓端）移植到 **HarmonyOS NEXT**，走 **RNOH（React Native for OpenHarmony）** 路线。本文档交接「当前到哪了、怎么构建运行、踩过哪些坑、下一步做什么」。
@@ -414,6 +414,11 @@ BUILD FAILED in 56s
 - 此次没有注入电脑取得的音乐 URL，也没有启用临时网络探针。用户完成下载后，USB 再次断开，未读取此次 HTTP 日志、文件大小或系统播放器结果；不把这些未完成检查列为已验证。
 - 与此前 Wi-Fi 下手机及平板连接音源接口超时形成对比，支持网络路径差异影响可用性；具体路由、运营商或服务端原因尚未定位。野花音源的 HTTP 404 是独立问题。
 - 后续按需补测 320k / FLAC（音源及歌曲支持时）、播放 A 下载 B、真机取消清理，以及文件管理打开与播放。保留现有授权和错误提示修复，无需为本次成功额外修改网络配置或加入代理、DNS 回退。
+
+### 2026-10-13 · 鸿蒙分支设为仓库默认分支
+
+- 按用户要求，将 GitHub 仓库默认分支从 `master` 改为 `feat/harmony-port`；GitHub API 和远端 HEAD 均已验证，当前工作区的 `origin/HEAD` 也已同步。
+- 保留原 `master` 分支和历史，未合并、覆盖或重命名分支。后续克隆及 GitHub 默认浏览使用鸿蒙分支。
 
 ## 8. 文件地图（本次移植新增/改动）
 

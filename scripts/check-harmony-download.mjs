@@ -282,6 +282,12 @@ await flush()
 urlRejecter({ message: 'source unavailable' })
 await rejectedSource
 assert.match(business.getDownloadState().error, /music_download_source_failed.*source unavailable/)
+const emptySourceError = business.startMusicDownload('128k')
+directoryResolver(directory)
+await flush()
+urlRejecter(new Error(''))
+await emptySourceError
+assert.equal(business.getDownloadState().error, 'music_download_source_failed')
 const rejectedDirectory = business.startMusicDownload('128k')
 directoryRejecter({ message: '保存目录授权失败：Operation not permitted (13900001)' })
 await rejectedDirectory

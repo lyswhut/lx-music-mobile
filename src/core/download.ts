@@ -106,7 +106,7 @@ export const startMusicDownload = async(quality: LX.Quality) => {
     if (!cancelled && state.status === 'resolving') {
       message = message === 'Aborted' || message === 'AbortError'
         ? global.i18n.t('music_download_source_timeout')
-        : `${global.i18n.t('music_download_source_failed')}：${message}`
+        : `${global.i18n.t('music_download_source_failed')}${message ? `：${message}` : ''}`
     }
     update({ status: cancelled ? 'cancelled' : 'failed', error: message })
   } finally {

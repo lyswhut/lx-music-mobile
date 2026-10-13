@@ -1,9 +1,19 @@
-import { NativeEventEmitter, NativeModules } from 'react-native'
+import { DeviceEventEmitter, NativeEventEmitter, NativeModules, Platform, TurboModuleRegistry, type TurboModule } from 'react-native'
 
-const { UserApiModule } = NativeModules
+interface UserApiSpec extends TurboModule {
+  loadScript: (info: Omit<LX.UserApi.UserApiInfo, 'allowShowUpdateAlert'> & { script: string }) => void
+  sendAction: (action: string, data: string) => void
+  destroy: () => void
+  addListener: (eventName: string) => void
+  removeListeners: (count: number) => void
+}
+
+const isHarmony = (Platform.OS as string) === 'harmony'
+const UserApiModule = (isHarmony ? TurboModuleRegistry.getEnforcing<UserApiSpec>('UserApiModule') : NativeModules.UserApiModule) as UserApiSpec | undefined
 
 let loadScriptInfo: LX.UserApi.UserApiInfo | null = null
 export const loadScript = (info: LX.UserApi.UserApiInfo & { script: string }) => {
+  if (!UserApiModule) throw new Error('Custom source script engine is unavailable on this platform')
   loadScriptInfo = info
   UserApiModule.loadScript({
     id: info.id,
@@ -31,6 +41,7 @@ export interface SendActions {
   response: SendResponseParams
 }
 export const sendAction = <T extends keyof SendActions>(action: T, data: SendActions[T]) => {
+  if (!UserApiModule) throw new Error('Custom source script engine is unavailable on this platform')
   UserApiModule.sendAction(action, JSON.stringify(data))
 }
 
@@ -77,8 +88,9 @@ export interface Actions {
 export type ActionsEvent = { [K in keyof Actions]: { action: K, data: Actions[K] } }[keyof Actions]
 
 export const onScriptAction = (handler: (event: ActionsEvent) => void): () => void => {
+  if (!UserApiModule) return () => {}
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  const eventEmitter = new NativeEventEmitter(UserApiModule)
+  const eventEmitter = isHarmony ? DeviceEventEmitter : new NativeEventEmitter(UserApiModule)
   const eventListener = eventEmitter.addListener('api-action', event => {
     if (event.data) event.data = JSON.parse(event.data as string)
     if (event.action == 'init') {
@@ -96,5 +108,5 @@ export const onScriptAction = (handler: (event: ActionsEvent) => void): () => vo
 }
 
 export const destroy = () => {
-  UserApiModule.destroy()
+  UserApiModule?.destroy()
 }

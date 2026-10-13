@@ -1,0 +1,1 @@
+{"version":3,"names":["isFabric","getShadowNodeWrapperAndTagFromRef","shadowNodeWrapper","undefined","tag"],"sourceRoot":"..\\..\\..\\src","sources":["gesture-handler/fabricUtils.web.ts"],"mappings":"AAAA,OAAO,SAASA,QAAQA,CAAA,EAAG;EACzB,OAAO,KAAK;AACd;AAEA,OAAO,SAASC,iCAAiCA,CAAA,EAAG;EAClD,OAAO;IACLC,iBAAiB,EAAEC,SAAS;IAC5BC,GAAG,EAAED;EACP,CAAC;AACH","ignoreList":[]}

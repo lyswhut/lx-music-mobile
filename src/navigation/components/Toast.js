@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { useGetter } from '@/store'
-import { Navigation } from 'react-native-navigation'
+import { dismissOverlay } from '../utils'
 
 
 const Toast = ({ componentId }) => {
@@ -12,7 +12,7 @@ const Toast = ({ componentId }) => {
         <Text style={styles.text}>This a very important message!</Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => Navigation.dismissOverlay(componentId)}
+          onPress={() => dismissOverlay(componentId)}
         >
           <Text style={styles.buttonText}>OK</Text>
         </TouchableOpacity>

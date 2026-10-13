@@ -1,0 +1,6 @@
+{
+  "main": "../lib/commonjs/gesture-handler/index",
+  "module": "../lib/module/gesture-handler/index",
+  "react-native": "../src/gesture-handler/index",
+  "types": "../lib/typescript/gesture-handler/index"
+}

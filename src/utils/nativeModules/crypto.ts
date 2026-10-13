@@ -1,6 +1,21 @@
-import { NativeModules } from 'react-native'
+import { NativeModules, Platform, TurboModuleRegistry, type TurboModule } from 'react-native'
 
-const { CryptoModule } = NativeModules
+interface CryptoSpec extends TurboModule {
+  generateRsaKey: () => Promise<{ publicKey: string, privateKey: string }>
+  rsaEncrypt: (text: string, key: string, padding: string) => Promise<string>
+  rsaDecrypt: (text: string, key: string, padding: string) => Promise<string>
+  rsaEncryptSync: (text: string, key: string, padding: string) => string
+  rsaDecryptSync: (text: string, key: string, padding: string) => string
+  aesEncrypt: (text: string, key: string, iv: string, mode: string) => Promise<string>
+  aesDecrypt: (text: string, key: string, iv: string, mode: string) => Promise<string>
+  aesEncryptSync: (text: string, key: string, iv: string, mode: string) => string
+  aesDecryptSync: (text: string, key: string, iv: string, mode: string) => string
+  sha1: (text: string) => Promise<string>
+}
+
+const CryptoModule = ((Platform.OS as string) === 'harmony'
+  ? TurboModuleRegistry.getEnforcing<CryptoSpec>('CryptoModule')
+  : NativeModules.CryptoModule) as CryptoSpec
 
 // export const testRsa = (text: string, key: string) => {
 //   // console.log(sourceFilePath, targetFilePath)

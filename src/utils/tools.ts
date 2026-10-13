@@ -284,6 +284,7 @@ export const checkNotificationPermission = async() => {
 
 
 export const checkIgnoringBatteryOptimization = async() => {
+  if (Platform.OS !== 'android') return
   const isHide = await getData(storageDataPrefix.ignoringBatteryOptimizationTipEnable)
   if (isHide != null) return
   const enabled = await isIgnoringBatteryOptimization()

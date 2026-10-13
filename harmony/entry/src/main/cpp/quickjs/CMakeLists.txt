@@ -1,0 +1,5 @@
+add_library(lx_quickjs STATIC quickjs.c cutils.c libregexp.c libunicode.c dtoa.c)
+set_target_properties(lx_quickjs PROPERTIES POSITION_INDEPENDENT_CODE ON C_STANDARD 11)
+target_compile_definitions(lx_quickjs PRIVATE _GNU_SOURCE CONFIG_VERSION="2025-09-13")
+target_include_directories(lx_quickjs PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(lx_quickjs PUBLIC m)

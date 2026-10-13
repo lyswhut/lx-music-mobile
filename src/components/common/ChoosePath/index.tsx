@@ -1,4 +1,5 @@
 import { useState, useRef, forwardRef, useImperativeHandle } from 'react'
+import { Platform } from 'react-native'
 // import { StyleSheet, View, Text, StatusBar, ScrollView } from 'react-native'
 
 // import { useGetter, useDispatch } from '@/store'
@@ -52,7 +53,7 @@ export default forwardRef<ChoosePathType, ChoosePathProps>(({
 
   useImperativeHandle(ref, () => ({
     show(options) {
-      if (!settingState.setting['common.useSystemFileSelector'] || options.dirOnly) {
+      if ((!settingState.setting['common.useSystemFileSelector'] && (Platform.OS as string) !== 'harmony') || options.dirOnly) {
         // if (options.isPersist) {
         void handleOpenExternalStorage(options)
         // } else {

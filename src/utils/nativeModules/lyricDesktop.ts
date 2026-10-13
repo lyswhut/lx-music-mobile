@@ -1,6 +1,34 @@
-import { NativeModules, NativeEventEmitter } from 'react-native'
+import { NativeModules, NativeEventEmitter, Platform } from 'react-native'
 
-const { LyricModule } = NativeModules
+const ignoreUnavailableLyric = async(..._args: unknown[]): Promise<void> => {}
+const unsupportedDesktopLyric = async(): Promise<void> => {
+  throw new Error('Desktop lyrics are unavailable on HarmonyOS')
+}
+const LyricModule = (Platform.OS as string) === 'harmony' ? {
+  setSendLyricTextEvent: async(enabled: boolean) => {
+    if (enabled) throw new Error('Remote lyric line events are unavailable on HarmonyOS')
+  },
+  showDesktopLyric: unsupportedDesktopLyric,
+  hideDesktopLyric: ignoreUnavailableLyric,
+  setLyric: ignoreUnavailableLyric,
+  play: ignoreUnavailableLyric,
+  pause: ignoreUnavailableLyric,
+  setPlaybackRate: ignoreUnavailableLyric,
+  toggleTranslation: ignoreUnavailableLyric,
+  toggleRoma: ignoreUnavailableLyric,
+  toggleLock: ignoreUnavailableLyric,
+  setColor: ignoreUnavailableLyric,
+  setAlpha: ignoreUnavailableLyric,
+  setTextSize: ignoreUnavailableLyric,
+  setShowToggleAnima: ignoreUnavailableLyric,
+  setSingleLine: ignoreUnavailableLyric,
+  setPosition: ignoreUnavailableLyric,
+  setMaxLineNum: ignoreUnavailableLyric,
+  setWidth: ignoreUnavailableLyric,
+  setLyricTextPosition: ignoreUnavailableLyric,
+  checkOverlayPermission: unsupportedDesktopLyric,
+  openOverlayPermissionActivity: unsupportedDesktopLyric,
+} : NativeModules.LyricModule
 
 // export const themes = [
 //   { id: 'green', value: '#07c556' },
@@ -218,6 +246,7 @@ export const openOverlayPermissionActivity = async(): Promise<void> => {
 }
 
 export const onPositionChange = (handler: (position: { x: number, y: number }) => void): () => void => {
+  if ((Platform.OS as string) === 'harmony' || !LyricModule) return () => {}
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const eventEmitter = new NativeEventEmitter(LyricModule)
   const eventListener = eventEmitter.addListener('set-position', event => {
@@ -230,6 +259,7 @@ export const onPositionChange = (handler: (position: { x: number, y: number }) =
 }
 
 export const onLyricLinePlay = (handler: (lineInfo: { text: string, extendedLyrics: string[] }) => void): () => void => {
+  if ((Platform.OS as string) === 'harmony' || !LyricModule) return () => {}
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const eventEmitter = new NativeEventEmitter(LyricModule)
   const eventListener = eventEmitter.addListener('lyric-line-play', event => {

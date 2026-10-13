@@ -1,0 +1,11 @@
+{
+  "name": "react-native-local-media-metadata",
+  "version": "0.1.0",
+  "description": "Local stub (HarmonyOS port: 本地媒体元数据本期不做). No-op degradation. 原 fork: github:lyswhut/react-native-local-media-metadata",
+  "main": "src/index.ts",
+  "react-native": "src/index.ts",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "layered-image":
+  {
+    "background" : "$media:lx_music_background",
+    "foreground" : "$media:lx_music_foreground"
+  }
+}

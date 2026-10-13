@@ -1,0 +1,5 @@
+{
+  "name": "liblx_user_api.so",
+  "version": "1.0.0",
+  "types": "./index.d.ts"
+}

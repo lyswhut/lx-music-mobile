@@ -1,0 +1,100 @@
+{
+  "name": "react-native-screens",
+  "version": "3.34.0",
+  "description": "Native navigation primitives for your React Native app.",
+  "main": "lib/commonjs/index",
+  "module": "lib/module/index",
+  "react-native": "src/index",
+  "source": "src/index",
+  "types": "lib/typescript/index.d.ts",
+  "files": [
+    "src/",
+    "common/",
+    "lib/",
+    "native-stack/",
+    "gesture-handler/",
+    "reanimated/",
+    "android/src/main/AndroidManifest.xml",
+    "android/src/main/java/",
+    "android/src/main/cpp/",
+    "android/src/main/jni/",
+    "android/src/main/res",
+    "android/src/fabric/",
+    "android/src/paper/",
+    "android/build.gradle",
+    "android/CMakeLists.txt",
+    "ios/",
+    "cpp/",
+    "windows/",
+    "RNScreens.podspec",
+    "react-native.config.js",
+    "README.md",
+    "!**/__tests__",
+    "!android/src/main/java/com/swmansion/rnscreens/LifecycleHelper.kt"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/software-mansion/react-native-screens.git"
+  },
+  "author": {
+    "email": "krzys.magiera@gmail.com",
+    "name": "Krzysztof Magiera"
+  },
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/software-mansion/react-native-screens/issues"
+  },
+  "homepage": "https://github.com/software-mansion/react-native-screens#readme",
+  "dependencies": {
+    "react-freeze": "^1.0.0",
+    "warn-once": "^0.1.0"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "resolutions": {
+    "@react-native-community/cli-platform-android": "^11.3.6",
+    "@react-native-community/cli": "^11.3.6",
+    "@react-native-community/cli-platform-ios": "^11.3.6",
+    "@types/react": "^18.2.72"
+  },
+  "lint-staged": {
+    "{src,Example}/**/*.{js,ts,tsx}": "yarn format-js",
+    "src/**/*.{js,ts,tsx}": "yarn lint-js",
+    "common/**/*.{h,cpp}": "yarn format-common",
+    "cpp/**/*.{h,cpp}": "yarn format-cpp",
+    "android/src/main/cpp/.{cpp, h}": "yarn format-android-cpp",
+    "android/**/*.kt": "yarn format-android",
+    "ios/**/*.{h,m,mm,cpp}": "yarn format-ios",
+    "src/fabric/*.ts": "yarn sync-architectures"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "lib/"
+  ],
+  "codegenConfig": {
+    "name": "rnscreens",
+    "type": "all",
+    "jsSrcsDir": "./src/fabric",
+    "android": {
+      "javaPackageName": "com.swmansion.rnscreens"
+    }
+  },
+  "packageManager": "yarn@4.1.1"
+}

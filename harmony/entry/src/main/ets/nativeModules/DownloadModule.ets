@@ -6,6 +6,7 @@ import fileShare from '@ohos.fileshare';
 import preferences from '@ohos.data.preferences';
 import http from '@ohos.net.http';
 import deviceInfo from '@ohos.deviceInfo';
+import { BusinessError } from '@ohos.base';
 
 class DownloadJob {
   id: string;
@@ -35,8 +36,7 @@ export class DownloadModule extends UITurboModule {
     return [{
       uri,
       operationMode: fileShare.OperationMode.READ_MODE |
-        fileShare.OperationMode.WRITE_MODE |
-        fileShare.OperationMode.CREATE_MODE,
+        fileShare.OperationMode.WRITE_MODE,
     }];
   }
 
@@ -60,43 +60,60 @@ export class DownloadModule extends UITurboModule {
   }
 
   private async authorizeDirectory(): Promise<string> {
-    const store = await preferences.getPreferences(this.ctx.uiAbilityContext, { name: 'lx-download' });
-    const saved = await store.get('directoryUri', '');
-    if (typeof saved === 'string' && saved) {
-      try {
-        await fileShare.activatePermission(this.policy(saved));
-        const path = this.getDirectoryPath(saved);
-        if (!await fs.access(path)) await fs.mkdir(path, true);
-        if (this.destroyed) throw new Error('下载模块已关闭');
-        this.directory = path;
-        return path;
-      } catch (_error) {
-        await store.delete('directoryUri');
-        await store.flush();
+    let stage = '读取目录设置';
+    try {
+      const store = await preferences.getPreferences(this.ctx.uiAbilityContext, { name: 'lx-download' });
+      const saved = await store.get('directoryUri', '');
+      if (typeof saved === 'string' && saved) {
+        try {
+          await fileShare.activatePermission(this.policy(saved));
+          const path = this.getDirectoryPath(saved);
+          if (!await fs.access(path)) await fs.mkdir(path, true);
+          if (this.destroyed) throw new Error('下载模块已关闭');
+          this.directory = path;
+          return path;
+        } catch (_error) {
+          await store.delete('directoryUri');
+          await store.flush();
+        }
       }
+      if (this.destroyed) throw new Error('下载模块已关闭');
+      if (deviceInfo.sdkApiVersion < 26) throw new Error('当前系统不支持手机目录授权，请升级到 API 26 或更新的 HarmonyOS');
+      const documentPicker = new picker.DocumentViewPicker(this.ctx.uiAbilityContext);
+      stage = '定位下载目录';
+      const downloadUris = await documentPicker.save({ pickerMode: picker.DocumentPickerMode.DOWNLOAD });
+      if (!downloadUris.length) return '';
+      const defaultUri = downloadUris[0].replace(/\/+$/, '').replace(/\/[^/]+$/, '');
+      stage = '选择下载目录';
+      const uris = await documentPicker.select({
+        selectMode: picker.DocumentSelectMode.FOLDER,
+        maxSelectNumber: 1,
+        defaultFilePathUri: defaultUri,
+      });
+      if (!uris.length) return '';
+      if (this.destroyed) throw new Error('下载模块已关闭');
+      stage = '校验下载目录';
+      const path = this.getDirectoryPath(uris[0]);
+      stage = '保存目录授权';
+      await fileShare.persistPermission(this.policy(uris[0]));
+      stage = '激活目录授权';
+      await fileShare.activatePermission(this.policy(uris[0]));
+      stage = '检查下载文件夹';
+      if (!await fs.access(path)) {
+        stage = '创建 LX Music 文件夹';
+        await fs.mkdir(path, true);
+      }
+      stage = '保存目录设置';
+      await store.put('directoryUri', uris[0]);
+      await store.flush();
+      if (this.destroyed) throw new Error('下载模块已关闭');
+      this.directory = path;
+      return path;
+    } catch (error) {
+      const detail = error as BusinessError;
+      console.error(`[LXDownload] ${stage}: code=${detail.code}, message=${detail.message}`);
+      throw new Error(`${stage}失败：${detail.message}${detail.code ? ` (${detail.code})` : ''}`);
     }
-    if (this.destroyed) throw new Error('下载模块已关闭');
-    if (deviceInfo.sdkApiVersion < 26) throw new Error('当前系统不支持手机目录授权，请升级到 API 26 或更新的 HarmonyOS');
-    const documentPicker = new picker.DocumentViewPicker(this.ctx.uiAbilityContext);
-    const downloadUris = await documentPicker.save({ pickerMode: picker.DocumentPickerMode.DOWNLOAD });
-    if (!downloadUris.length) return '';
-    const defaultUri = downloadUris[0].replace(/\/+$/, '').replace(/\/[^/]+$/, '');
-    const uris = await documentPicker.select({
-      selectMode: picker.DocumentSelectMode.FOLDER,
-      maxSelectNumber: 1,
-      defaultFilePathUri: defaultUri,
-    });
-    if (!uris.length) return '';
-    if (this.destroyed) throw new Error('下载模块已关闭');
-    const path = this.getDirectoryPath(uris[0]);
-    await fileShare.persistPermission(this.policy(uris[0]));
-    await fileShare.activatePermission(this.policy(uris[0]));
-    if (!await fs.access(path)) await fs.mkdir(path, true);
-    await store.put('directoryUri', uris[0]);
-    await store.flush();
-    if (this.destroyed) throw new Error('下载模块已关闭');
-    this.directory = path;
-    return path;
   }
 
   private detectExtension(path: string): string {

@@ -11,6 +11,8 @@
   "music_download_failed": "Download failed",
   "music_download_close": "Close",
   "music_download_quality_unavailable": "The source does not support the selected quality for this song",
+  "music_download_source_timeout": "The source timed out while resolving the song URL. Check your network or VPN and retry.",
+  "music_download_source_failed": "The source could not resolve the song URL",
   "add_to": "Add to ...",
   "agree": "Sure",
   "agree_go": "Turn it on",

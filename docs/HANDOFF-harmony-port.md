@@ -1,6 +1,6 @@
 # lx-music → HarmonyOS 移植 · Handoff 交接文档
 
-> 最后更新：2026-10-12 · 分支 `feat/harmony-port`（**从未动过 master**）
+> 最后更新：2026-10-13 · 分支 `feat/harmony-port`（**从未动过 master**）
 > 配套阅读：`docs/superpowers/plans/2026-10-10-lx-music-harmony-port.md`（分阶段计划）
 
 把 **lx-music-mobile**（React Native 安卓端）移植到 **HarmonyOS NEXT**，走 **RNOH（React Native for OpenHarmony）** 路线。本文档交接「当前到哪了、怎么构建运行、踩过哪些坑、下一步做什么」。
@@ -353,7 +353,7 @@ BUILD FAILED in 56s
 4. **歌单管理与交互继续回归**：列表切换、收藏歌曲播放、管理菜单与新建弹窗可用；新建/重命名/删除的完整保存流程、收藏批量操作、远程歌单同步、备份往返与缓存清理 UI 尚未全面验证。
 5. **发布收尾**：完成 release 安装验证、Harmony 版本与分发方案。现有 APK 自动更新入口不适用于 Harmony。
 
-6. **歌曲下载已新增代码，待真机验证**：统一歌曲菜单入口、音质选择、前台进度与取消、持久目录授权及 `Download/LX Music` 保存。模拟检查与完整构建通过；真实文件夹授权、歌曲下载和文件管理打开尚未验证。详见 `docs/harmony-download.md`。下载与音频磁盘缓存是独立功能。
+6. **歌曲下载已验证目录授权与原生落盘，完整取流流程待验收**：统一菜单、音质、前台进度与取消已实现；2026-10-13 真机完成 Download 授权、创建 `LX Music`、重启恢复授权、同源真实 MP3 保存（6,753,244 字节）及重名加序号。手机音源接口目前连接超时，原生 HTTP 返回 2300028；需恢复网络后验证完整应用下载、不同音质、取消及文件管理播放。详见 `docs/harmony-download.md`。下载与音频缓存独立。
 
 桌面歌词与本地媒体元数据仍按用户确认的本期范围不做。
 
@@ -386,6 +386,18 @@ BUILD FAILED in 56s
 - 文件夹持久授权策略已加入 `CREATE_MODE`，允许在用户授权的 `Download` 或 `Download/LX Music` 目录中创建目标歌曲；模拟检查覆盖 `206` 响应和目录创建权限。
 - `node scripts/check-harmony-download.mjs` 两组检查通过；`assembleHap` 生成 signed HAP 并成功安装启动。真机已打开下载目录选择器并看到 `Download/LX Music`，但尚未完成一次真实文件落盘和系统播放器复核，不能视为下载功能已完全验收。
 - 本次重写远端下载修复提交时保留实际源码和测试改动，移除不属于当前交接上下文的协作者提交标记；`harmony/build-profile.json5` 仍仅保留在本机，签名凭据不得提交。
+
+### 2026-10-13 · 下载权限真机修复及网络隔离测试
+
+- 真机 `5KTUT25428012210` 复现选择 Download 后 Operation not permitted。授权策略从 READ / WRITE / CREATE 改为 READ / WRITE 后，同一设备完成授权并创建 `/storage/Users/currentUser/Download/LX Music`。此前加入 CREATE_MODE 的方案已撤回；上节为历史记录，不是当前策略。
+- 给目录授权增加阶段与 BusinessError code 诊断。JS 保留原生普通对象中的 message；音源取流阶段的 Aborted 显示「音源获取歌曲地址超时，请检查网络或 VPN 后重试」，区分文件权限失败。简体、繁体、英文均更新。
+- 模拟检查补齐 CREATE_MODE 枚举并断言实际策略值为 3；新增授权失败、错误码保留、取流超时和普通错误对象回归。两组检查通过。
+- 完整应用中已验证首次选择 Download 和强制停止后自动恢复授权，但手机请求长青音源 `https://musicserver.haitangw.cc/v1/music/resolve-url` 连续超时，未开始歌曲文件传输。电脑用用户原脚本及相同请求头取流成功（POST 201）；不能据此宣称完整应用端到端下载已通过。
+- 独立临时诊断页使用电脑同源取到的 Goodnight Saigon（酷我 rid 215582995、128k）地址，调用实际 LXDownload。真机 HTTP 200 完整接收 6,753,244 字节并保存 MP3，RNFS.stat 复核同样大小；重启后继续保存为 `(1)` / `(2)`，证明授权恢复和重名保护。未验证系统播放器打开，未测试所有音质和真机取消。
+- 原生 HTTP 直接 POST 同一音源也超时，错误码 2300028；日志显示 DNS 已完成，但 TCP 连接未建立、没有 HTTP 响应。临时强制 HTTP/1.1 没有解决，已撤回；未引入硬编码源地址、IP、代理绕行或生产回退音源。用户已确认手机当前未开启 VPN。手机 DNS 返回 113.240.66.67；电脑另有 124.72.129.118，两 IP 从电脑均可访问。
+- 临时诊断代码与媒体地址放在忽略的 `harmony/entry/build/`，不提交；生产 DownloadModule 的临时 POST 和诊断日志已移除，恢复完整 index.harmony.js bundle。签名配置与无关本地文件继续保留在工作区、不提交。
+- 已重新构建、覆盖安装并启动完整应用，真机下载失败窗口确认显示新的取流超时提示。11:46 左右 USB 断开，`hdc list targets` 返回空，系统代理检查和移动数据对比未完成；已请用户重新连接并尝试移动数据下载。
+- 下一步：设备重新连接后，检查系统代理、对比 Wi-Fi / 移动数据，并在完整应用重试《Goodnight Saigon》下载；再测 320k / FLAC（歌曲与音源支持时）、播放 A 下载 B、取消清理，以及系统文件管理中打开文件。首次授权应选择 Download 父目录，系统自动生成的包名目录虽然显示 LX Music，但不等同于字面路径 `Download/LX Music`。
 
 ## 8. 文件地图（本次移植新增/改动）
 

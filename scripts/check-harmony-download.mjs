@@ -21,6 +21,7 @@ let partialWrites = false
 let lastHeaders
 let preference = ''
 let activeRequest
+let permissionFailure = false
 const directory = '/storage/Users/currentUser/Download/LX Music'
 const fileSystem = {
   OpenMode: { READ_ONLY: 0, READ_WRITE: 2, CREATE: 64, TRUNC: 512 },
@@ -89,7 +90,18 @@ const dependencies = {
   '@ohos.file.picker': { default: { DocumentViewPicker: DocumentPicker, DocumentPickerMode: { DOWNLOAD: 1 }, DocumentSelectMode: { FOLDER: 1 } } },
   '@ohos.file.fs': { default: fileSystem },
   '@ohos.file.fileuri': { default: { FileUri: class { constructor(uri) { this.path = decodeURI(uri.replace('file://docs', '')) } } } },
-  '@ohos.fileshare': { default: { OperationMode: { READ_MODE: 1, WRITE_MODE: 2 }, activatePermission: async policy => permissions.push(policy), persistPermission: async policy => permissions.push(policy) } },
+  '@ohos.fileshare': { default: {
+    OperationMode: { READ_MODE: 1, WRITE_MODE: 2, CREATE_MODE: 4 },
+    activatePermission: async policy => {
+      assert.equal(policy[0].operationMode, 3, 'phone directory authorization supports read/write policy')
+      permissions.push(policy)
+    },
+    persistPermission: async policy => {
+      assert.equal(policy[0].operationMode, 3, 'do not request unsupported CREATE_MODE from phone picker')
+      if (permissionFailure) throw Object.assign(new Error('Operation not permitted'), { code: 13900001 })
+      permissions.push(policy)
+    },
+  } },
   '@ohos.data.preferences': { default: { getPreferences: async() => ({ get: async() => preference, put: async(_key, value) => { preference = value }, delete: async() => { preference = '' }, flush: async() => {} }) } },
   '@ohos.net.http': { default: { RequestMethod: { GET: 'GET' }, createHttp: () => { activeRequest = new Request(); return activeRequest } } },
   '@ohos.deviceInfo': { default: { sdkApiVersion: 26 } },
@@ -98,7 +110,7 @@ const exports = {}
 vm.runInNewContext(compiled, { exports, require: name => {
   assert.ok(dependencies[name], `unexpected dependency ${name}`)
   return dependencies[name]
-}, Uint8Array, ArrayBuffer, Date, Error, Map, Promise })
+}, Uint8Array, ArrayBuffer, Date, Error, Map, Promise, console })
 const DownloadModule = exports.DownloadModule
 const module = new DownloadModule()
 assert.equal(await module.prepareDirectory(), directory)
@@ -168,6 +180,11 @@ selection = 'file://docs/storage/Users/currentUser/Documents'
 await assert.rejects(new DownloadModule().prepareDirectory(), /Download/)
 selection = ''
 assert.equal(await new DownloadModule().prepareDirectory(), '')
+selection = 'file://docs/storage/Users/currentUser/Download'
+permissionFailure = true
+await assert.rejects(new DownloadModule().prepareDirectory(), /保存目录授权失败.*13900001/)
+assert.equal(preference, '', 'failed authorization must not be remembered')
+permissionFailure = false
 assertClean()
 assert.ok(events.some(event => event.name === 'lx-download-progress' && event.data.received > 0))
 console.log('PASS: folder authorization, persistence, download bytes, headers, duplicate names, HTTP failure, invalid media, truncation, failed copy cleanup, cancellation and retry')
@@ -176,6 +193,8 @@ const businessSource = await readFile('src/core/download.ts', 'utf8')
 const businessCode = ts.transpileModule(businessSource, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 } }).outputText
 let directoryResolver
 let urlResolver
+let urlRejecter
+let directoryRejecter
 let nativeResolver
 let urlRequests = 0
 let nativeRequests = 0
@@ -183,7 +202,7 @@ let progressHandler
 let nativeCancelId = ''
 let capturedArguments
 const fakeNative = {
-  prepareDirectory: () => new Promise(resolve => { directoryResolver = resolve }),
+  prepareDirectory: () => new Promise((resolve, reject) => { directoryResolver = resolve; directoryRejecter = reject }),
   downloadMusic: (id, url, name) => {
     nativeRequests++
     capturedArguments = { id, url, name }
@@ -198,7 +217,7 @@ const businessDependencies = {
     assert.equal(options.isRefresh, true)
     assert.equal(options.quality, '128k')
     urlRequests++
-    return new Promise(resolve => { urlResolver = resolve })
+    return new Promise((resolve, reject) => { urlResolver = resolve; urlRejecter = reject })
   } },
   '@/core/music/utils': { getPlayQuality: () => '128k' },
   '@/store/setting/state': { default: { setting: { 'player.playQuality': '128k' } } },
@@ -250,4 +269,21 @@ assert.equal(capturedArguments.name, 'Vienna - Billy Joel [128k]')
 assert.ok(nativeCancelId.startsWith('download-'))
 business.closeDownload()
 assert.equal(business.getDownloadState().visible, false)
+const timedOut = business.startMusicDownload('128k')
+directoryResolver(directory)
+await flush()
+urlRejecter(new Error('Aborted'))
+await timedOut
+assert.equal(business.getDownloadState().status, 'failed')
+assert.equal(business.getDownloadState().error, 'music_download_source_timeout')
+const rejectedSource = business.startMusicDownload('128k')
+directoryResolver(directory)
+await flush()
+urlRejecter({ message: 'source unavailable' })
+await rejectedSource
+assert.match(business.getDownloadState().error, /music_download_source_failed.*source unavailable/)
+const rejectedDirectory = business.startMusicDownload('128k')
+directoryRejecter({ message: '保存目录授权失败：Operation not permitted (13900001)' })
+await rejectedDirectory
+assert.match(business.getDownloadState().error, /保存目录授权失败.*13900001/)
 console.log('PASS: business states, cancellation during authorization and URL resolution, supported quality, explicit source, progress isolation and completed path')

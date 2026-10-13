@@ -102,7 +102,13 @@ export const startMusicDownload = async(quality: LX.Quality) => {
     const path = await nativeModule().downloadMusic(id, url, `${musicInfo.name} - ${musicInfo.singer} [${quality}]`)
     update({ status: 'completed', path })
   } catch (error: unknown) {
-    update({ status: cancelled ? 'cancelled' : 'failed', error: error instanceof Error ? error.message : String(error) })
+    let message = typeof error === 'object' && error !== null && 'message' in error ? String(error.message) : String(error)
+    if (!cancelled && state.status === 'resolving') {
+      message = message === 'Aborted' || message === 'AbortError'
+        ? global.i18n.t('music_download_source_timeout')
+        : `${global.i18n.t('music_download_source_failed')}：${message}`
+    }
+    update({ status: cancelled ? 'cancelled' : 'failed', error: message })
   } finally {
     if (activeId === id) activeId = ''
   }

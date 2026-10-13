@@ -380,6 +380,13 @@ BUILD FAILED in 56s
 - 模拟验证覆盖授权恢复、内容一致、HTTP / 非音频 / 截断失败、重名、部分写入、复制失败、取消、并发、格式与 JS 取消竞态。完整 bundle 与 debug signed HAP 构建通过。本轮按用户要求编写代码待其回到手机测试，未操作设备授权或验证真实下载。
 - 仓库默认 TypeScript 配置依赖缺失的 `@react-native/typescript-config`，全量检查还存在既有依赖与业务诊断；以临时定向配置检查时本次下载 JS 文件未出现诊断。未宣称全量 TypeScript 或 lint 通过。
 
+### 2026-10-13 · 下载修复与真机构建
+
+- 音源取流可能返回 `206 Partial Content`；`DownloadModule` 已接受全部 `2xx` 响应，仍校验完整字节数和音频文件头，避免把有效分段响应误报为失败。
+- 文件夹持久授权策略已加入 `CREATE_MODE`，允许在用户授权的 `Download` 或 `Download/LX Music` 目录中创建目标歌曲；模拟检查覆盖 `206` 响应和目录创建权限。
+- `node scripts/check-harmony-download.mjs` 两组检查通过；`assembleHap` 生成 signed HAP 并成功安装启动。真机已打开下载目录选择器并看到 `Download/LX Music`，但尚未完成一次真实文件落盘和系统播放器复核，不能视为下载功能已完全验收。
+- 本次重写远端下载修复提交时保留实际源码和测试改动，移除不属于当前交接上下文的协作者提交标记；`harmony/build-profile.json5` 仍仅保留在本机，签名凭据不得提交。
+
 ## 8. 文件地图（本次移植新增/改动）
 
 ```

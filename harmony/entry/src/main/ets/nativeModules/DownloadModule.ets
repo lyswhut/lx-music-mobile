@@ -32,7 +32,12 @@ export class DownloadModule extends UITurboModule {
   private preparing: boolean = false;
 
   private policy(uri: string): fileShare.PolicyInfo[] {
-    return [{ uri, operationMode: fileShare.OperationMode.READ_MODE | fileShare.OperationMode.WRITE_MODE }];
+    return [{
+      uri,
+      operationMode: fileShare.OperationMode.READ_MODE |
+        fileShare.OperationMode.WRITE_MODE |
+        fileShare.OperationMode.CREATE_MODE,
+    }];
   }
 
   private getDirectoryPath(uri: string): string {
@@ -177,7 +182,7 @@ export class DownloadModule extends UITurboModule {
       const results = await Promise.all([response, ended]);
       if (job.cancelled) throw new Error('下载已取消');
       if (streamError) throw streamError;
-      if (results[0] !== 200) throw new Error(`下载失败：HTTP ${results[0]}（未请求分段内容）`);
+      if (results[0] < 200 || results[0] >= 300) throw new Error(`下载失败：HTTP ${results[0]}（未请求分段内容）`);
       if (!received || (total > 0 && received !== total)) throw new Error('下载内容不完整，请重试');
       await fs.close(output);
       output = undefined;

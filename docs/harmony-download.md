@@ -13,7 +13,7 @@
 - JS 入口 `src/core/download.ts` 独立获取新歌曲地址，显式禁止自动换源，避免下载内容与选择的歌曲不一致；取流不修改当前播放队列。
 - `MusicDownload.tsx` 在导航根部挂载，菜单只负责触发统一弹窗。支持简体中文、繁体中文与英文。
 - `LXDownload` 通过 JS TurboModuleRegistry → C++ `LXMusicPackage.h` 方法表 → ArkTS `DownloadModule.ets` 调用文件选择器、持久授权和 HTTP 流式读取。
-- 下载先写入 cache 下的 `.part`；验证 HTTP 200、长度与音频文件头后再写入公开下载目录。根据实际内容识别 MP3、FLAC、WAV、M4A、OGG、APE、AAC；不把 JSON、HTML 或 HLS 播放列表保存为歌曲。
+- 下载先写入 cache 下的 `.part`；验证 HTTP 2xx（包括音源常见的 `206 Partial Content`）、长度与音频文件头后再写入公开下载目录。根据实际内容识别 MP3、FLAC、WAV、M4A、OGG、APE、AAC；不把 JSON、HTML 或 HLS 播放列表保存为歌曲。
 - 网络请求沿用播放器 User-Agent。当前自定义音源协议提供歌曲 URL；若后续音源要求额外媒体请求头，需要扩展取流返回值与下载接口。
 - 第一版支持单首前台下载，不支持下载队列、后台下载、断点续传、HLS 合并或下载记录页。桌面歌词、本地元数据读取与离线播放列表不属于本次改动。
 - 手机文件夹授权要求 API 26 或更新版本。系统默认 DOWNLOAD 保存模式生成包名目录，无法设置应用名；本实现再授权下载父目录，将歌曲保存到用户指定的 `LX Music` 文件夹。取消授权不会启动下载。

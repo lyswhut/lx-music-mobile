@@ -112,6 +112,10 @@ const partial = await module.downloadMusic('partial-write', 'https://example.tes
 assert.deepEqual(files.get(partial), responseBody)
 partialWrites = false
 assert.match(lastHeaders['User-Agent'], /Mozilla/)
+responseCode = 206
+const partialResponse = await module.downloadMusic('partial-response', 'https://example.test/song', 'Partial response')
+assert.deepEqual(files.get(partialResponse), responseBody)
+responseCode = 200
 const second = await module.downloadMusic('second', 'https://example.test/song', 'Song/Name - Artist')
 assert.equal(second, `${directory}/Song_Name - Artist (1).mp3`)
 assert.deepEqual(files.get(first), responseBody)

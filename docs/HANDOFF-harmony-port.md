@@ -420,6 +420,12 @@ BUILD FAILED in 56s
 - 按用户要求，将 GitHub 仓库默认分支从 `master` 改为 `feat/harmony-port`；GitHub API 和远端 HEAD 均已验证，当前工作区的 `origin/HEAD` 也已同步。
 - 保留原 `master` 分支和历史，未合并、覆盖或重命名分支。后续克隆及 GitHub 默认浏览使用鸿蒙分支。
 
+### 2026-10-13 · 上游草稿 PR
+
+- 用户明确要求向 LX Music 原项目上游申请合入鸿蒙支持。按上游 README 的贡献说明，创建 Draft PR [lyswhut/lx-music-mobile#1164](https://github.com/lyswhut/lx-music-mobile/pull/1164)，来源 `wingsluo1123:feat/harmony-port`，目标 `dev`。
+- 标题为 `feat(harmony): explore HarmonyOS NEXT support via RNOH`。正文说明宿主、桥接、播放器、自定义源、下载和真机验证，并明确现有实现为鸿蒙独立移植，原安卓构建不兼容、上游 CI 尚未适配、全量 lint / TypeScript 未通过验收；不可直接作为兼容安卓的平台扩展合并。
+- 当前未获得上游需求确认。合并前需要讨论平台隔离、依赖分发、导航方案和分批评审；下载是额外功能，是否纳入或单独提 PR 待维护者决定。保留草稿状态，不自动请求评审或合并。
+
 ## 8. 文件地图（本次移植新增/改动）
 
 ```

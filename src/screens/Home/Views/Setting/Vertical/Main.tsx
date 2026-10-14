@@ -1,5 +1,5 @@
-import { memo } from 'react'
-import { FlatList, type FlatListProps } from 'react-native'
+import { memo, useCallback, useRef, useState } from 'react'
+import { FlatList, View, type FlatListProps, type ViewToken } from 'react-native'
 
 import Basic from '../settings/Basic'
 import Player from '../settings/Player'
@@ -13,11 +13,15 @@ import Version from '../settings/Version'
 import About from '../settings/About'
 import { createStyle } from '@/utils/tools'
 import { SETTING_SCREENS, type SettingScreenIds } from '../Main'
+import SettingTabs from './SettingTabs'
 
 type FlatListType = FlatListProps<SettingScreenIds>
 
 
 const styles = createStyle({
+  container: {
+    flex: 1,
+  },
   content: {
     paddingLeft: 15,
     paddingRight: 15,
@@ -45,21 +49,60 @@ const ListItem = memo(({
 }, () => true)
 
 export default () => {
+  const flatListRef = useRef<FlatList<SettingScreenIds>>(null)
+  const [activeIndex, setActiveIndex] = useState(0)
+
   const renderItem: FlatListType['renderItem'] = ({ item }) => <ListItem id={item} />
   const getkey: FlatListType['keyExtractor'] = item => item
 
+  const handleTabChange = useCallback((index: number) => {
+    flatListRef.current?.scrollToIndex({ index, animated: true, viewPosition: 0, viewOffset: 4 })
+    setActiveIndex(index)
+  }, [])
+
+  const handleScrollToIndexFailed = useCallback((info: {
+    index: number
+    highestMeasuredFrameIndex: number
+    averageItemLength: number
+  }) => {
+    // 目标分区尚未渲染时，先按平均高度滚动到附近，待渲染完成后再精确定位
+    flatListRef.current?.scrollToOffset({
+      offset: info.averageItemLength * info.index,
+      animated: true,
+    })
+    setTimeout(() => {
+      flatListRef.current?.scrollToIndex({ index: info.index, animated: false, viewPosition: 0, viewOffset: 4 })
+    }, 350)
+  }, [])
+
+  const handleViewableItemsChanged = useCallback(({ viewableItems }: {
+    viewableItems: Array<ViewToken<SettingScreenIds>>
+  }) => {
+    const first = viewableItems[0]
+    if (first?.index != null) setActiveIndex(prev => prev == first.index ? prev : first.index)
+  }, [])
+
+  const viewabilityConfig = useRef({ itemVisiblePercentThreshold: 40 }).current
+
   return (
-    <FlatList
-      data={SETTING_SCREENS}
-      keyboardShouldPersistTaps={'always'}
-      renderItem={renderItem}
-      keyExtractor={getkey}
-      contentContainerStyle={styles.content}
-      maxToRenderPerBatch={2}
-      // updateCellsBatchingPeriod={80}
-      windowSize={2}
-      // removeClippedSubviews={true}
-      initialNumToRender={1}
-    />
+    <View style={styles.container}>
+      <SettingTabs activeIndex={activeIndex} onChange={handleTabChange} />
+      <FlatList
+        ref={flatListRef}
+        data={SETTING_SCREENS}
+        keyboardShouldPersistTaps={'always'}
+        renderItem={renderItem}
+        keyExtractor={getkey}
+        onViewableItemsChanged={handleViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
+        onScrollToIndexFailed={handleScrollToIndexFailed}
+        contentContainerStyle={styles.content}
+        maxToRenderPerBatch={2}
+        // updateCellsBatchingPeriod={80}
+        windowSize={9}
+        // removeClippedSubviews={true}
+        initialNumToRender={3}
+      />
+    </View>
   )
 }

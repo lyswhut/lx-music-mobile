@@ -42,8 +42,8 @@ const TogglePlayBtn = ({ size }: { size: number }) => {
   )
 }
 
-const MAX_SIZE = BTN_WIDTH * 1.6
-const MIN_SIZE = BTN_WIDTH * 1.2
+const MAX_SIZE = BTN_WIDTH * 1.2
+const MIN_SIZE = BTN_WIDTH * 0.85
 
 export default () => {
   const winSize = useWindowSize()
@@ -54,7 +54,7 @@ export default () => {
       maxHeight,
     }
   }, [maxHeight])
-  const size = Math.min(Math.max(winSize.width * 0.33 * global.lx.fontSize * 0.4, MIN_SIZE), MAX_SIZE, maxHeight)
+  const size = Math.min(Math.max(winSize.width * 0.22 * global.lx.fontSize * 0.4, MIN_SIZE), MAX_SIZE, maxHeight)
 
   return (
     <View style={containerStyle}>
@@ -71,10 +71,8 @@ const styles = createStyle({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    flexGrow: 1,
-    flexShrink: 1,
     paddingHorizontal: '4%',
-    paddingVertical: 22,
+    paddingVertical: 2,
     // backgroundColor: 'rgba(0, 0, 0, .1)',
   },
   cotrolBtn: {

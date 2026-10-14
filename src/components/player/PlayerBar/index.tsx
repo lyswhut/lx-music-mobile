@@ -48,7 +48,7 @@ const styles = createStyle({
     // marginTop: -progressContentPadding,
     // backgroundColor: 'rgba(0, 0, 0, .1)',
     // borderTopWidth: BorderWidths.normal2,
-    paddingVertical: 5,
+    paddingVertical: 3,
     paddingLeft: 5,
     // backgroundColor: AppColors.primary,
     // backgroundColor: 'red',

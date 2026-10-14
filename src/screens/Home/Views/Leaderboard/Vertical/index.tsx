@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import { createStyle } from '@/utils/tools'
 
 import MusicList, { type MusicListType } from '../MusicList'
-import { getLeaderboardSetting, saveLeaderboardSetting } from '@/utils/data'
+import { saveLeaderboardSetting } from '@/utils/data'
 import DrawerLayoutFixed, { type DrawerLayoutFixedType } from '@/components/common/DrawerLayoutFixed'
 import HeaderBar, { type HeaderBarType, type HeaderBarProps } from './HeaderBar'
 import { scaleSizeW } from '@/utils/pixelRatio'
@@ -11,7 +11,7 @@ import { useTheme } from '@/store/theme/hook'
 // import { BorderWidths } from '@/theme'
 // import { useTheme } from '@/store/theme/hook'
 import BoardsList, { type BoardsListType, type BoardsListProps } from '../BoardsList'
-import type { InitState as CommonState } from '@/store/common/state'
+import commonState, { type InitState as CommonState } from '@/store/common/state'
 import settingState from '@/store/setting/state'
 import { getBoardsList } from '@/core/leaderboard'
 import { COMPONENT_IDS } from '@/config/constant'
@@ -72,11 +72,25 @@ export default () => {
       requestAnimationFrame(() => {
         boardsListRef.current?.setList(list, id)
         headerBarRef.current?.setBound(source, id, name ?? 'Unknown')
+        headerBarRef.current?.setBoards(list, id)
         requestAnimationFrame(() => {
           handleBoundChange(source, id)
         })
       })
     })
+  }
+
+  const onBoardChange: HeaderBarProps['onBoardChange'] = (board) => {
+    boundInfo.current.id = board.id
+    headerBarRef.current?.setBound(boundInfo.current.source, board.id, board.name ?? 'Unknown')
+    handleBoundChange(boundInfo.current.source, board.id)
+  }
+
+  // 两个标签行恢复默认：第一个音源 + 该音源的第一个榜单
+  const resetToDefault = () => {
+    const source = boardState.sources[0]
+    if (!source) return
+    onSourceChange(source)
   }
 
   const navigationView = () => {
@@ -94,26 +108,23 @@ export default () => {
 
 
   useEffect(() => {
-    const handleFixDrawer = (id: CommonState['navActiveId']) => {
+    let prevNavId: CommonState['navActiveId'] = commonState.navActiveId
+    const handleNavUpdate = (id: CommonState['navActiveId']) => {
       if (id == 'nav_top') drawer.current?.fixWidth()
+      const wasTop = prevNavId == 'nav_top'
+      prevNavId = id
+      // 从其他页面切回排行榜时，两个标签行恢复默认
+      if (id == 'nav_top' && !wasTop) resetToDefault()
     }
-    global.state_event.on('navActiveIdUpdated', handleFixDrawer)
+    global.state_event.on('navActiveIdUpdated', handleNavUpdate)
 
 
     isUnmountedRef.current = false
-    void getLeaderboardSetting().then(({ source, boardId }) => {
-      boundInfo.current.source = source
-      boundInfo.current.id = boardId
-      void getBoardsList(source).then(list => {
-        const bound = list.find(l => l.id == boardId)
-        boardsListRef.current?.setList(list, boardId)
-        headerBarRef.current?.setBound(source, boardId, bound?.name ?? 'Unknown')
-      })
-      musicListRef.current?.loadList(source, boardId)
-    })
+    // 首次进入也加载默认音源的第一个榜单
+    resetToDefault()
 
     return () => {
-      global.state_event.off('navActiveIdUpdated', handleFixDrawer)
+      global.state_event.off('navActiveIdUpdated', handleNavUpdate)
       isUnmountedRef.current = true
     }
   }, [])
@@ -132,7 +143,7 @@ export default () => {
       style={{ elevation: 1 }}
     >
       <View style={styles.container}>
-        <HeaderBar ref={headerBarRef} onShowBound={onShowBound} onSourceChange={onSourceChange} />
+        <HeaderBar ref={headerBarRef} onShowBound={onShowBound} onSourceChange={onSourceChange} onBoardChange={onBoardChange} />
         <MusicList ref={musicListRef} />
       </View>
     </DrawerLayoutFixed>

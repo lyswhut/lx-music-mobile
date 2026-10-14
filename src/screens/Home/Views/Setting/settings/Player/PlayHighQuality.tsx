@@ -44,7 +44,6 @@ export default memo(() => {
 const styles = StyleSheet.create({
   list: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
   },
 })
 
@@ -69,4 +68,3 @@ const styles = StyleSheet.create({
 //     marginTop: 5,
 //   },
 // })
-

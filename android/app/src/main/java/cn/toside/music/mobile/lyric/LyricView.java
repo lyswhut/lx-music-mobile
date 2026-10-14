@@ -65,6 +65,7 @@ public class LyricView extends Activity implements View.OnTouchListener {
   private int maxHeight = 0;
 
   private int maxLineNum = 5;
+  private int minTopMargin = -1;
   // private float lineHeight = 1;
   private String currentLyric = "LX Music ^-^";
   private ArrayList<String> currentExtendedLyrics = new ArrayList<>();
@@ -124,6 +125,20 @@ public class LyricView extends Activity implements View.OnTouchListener {
   }
 
   /**
+   * 悬浮窗与屏幕顶部的最小间距（状态栏高度 + 8dp），避免歌词悬浮窗紧贴屏幕顶部
+   * @return 最小间距（像素）
+   */
+  private int getMinTopMargin() {
+    if (minTopMargin >= 0) return minTopMargin;
+    int statusBarHeight = 0;
+    int resId = reactContext.getResources().getIdentifier("status_bar_height", "dimen", "android");
+    if (resId > 0) statusBarHeight = reactContext.getResources().getDimensionPixelSize(resId);
+    int extra = (int)(reactContext.getResources().getDisplayMetrics().density * 8);
+    minTopMargin = statusBarHeight + extra;
+    return minTopMargin;
+  }
+
+  /**
    * update screen width and height
    * @return has updated
    */
@@ -156,7 +171,8 @@ public class LyricView extends Activity implements View.OnTouchListener {
 
     int maxY = maxHeight - layoutParams.height;
     int y = (int)(maxHeight * prevViewPercentageY);
-    if (y < 0) y = 0;
+    int minY = getMinTopMargin();
+    if (y < minY) y = minY;
     else if (y > maxY) y = maxY;
     if (layoutParams.y != y) layoutParams.y = y;
   }
@@ -395,7 +411,8 @@ public class LyricView extends Activity implements View.OnTouchListener {
 
     int maxY = maxHeight - layoutParams.height;
     int y = layoutParams.y;
-    if (y < 0) y = 0;
+    int minY = getMinTopMargin();
+    if (y < minY) y = minY;
     else if (y > maxY) y = maxY;
     if (layoutParams.y != y) layoutParams.y = y;
 
@@ -445,7 +462,8 @@ public class LyricView extends Activity implements View.OnTouchListener {
         if (x < 0) x = 0;
         else if (x > maxX) x = maxX;
         int y = layoutParams.y + (int)tranY;
-        if (y < 0) y = 0;
+        int minY = getMinTopMargin();
+        if (y < minY) y = minY;
         else if (y > maxY) y = maxY;
 
         // 移动悬浮窗

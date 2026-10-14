@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ScrollView, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 
 import { createStyle } from '@/utils/tools'
 import { type SearchType } from '@/store/search/state'
@@ -7,7 +7,7 @@ import { useI18n } from '@/lang'
 import Text from '@/components/common/Text'
 import { useTheme } from '@/store/theme/hook'
 import { getSearchSetting } from '@/utils/data'
-import { BorderWidths } from '@/theme'
+
 
 const SEARCH_TYPE_LIST = [
   'music',
@@ -35,46 +35,52 @@ export default () => {
   }
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps={'always'} horizontal={true}>
+    <View style={styles.container}>
       {
         list.map(t => (
-          <TouchableOpacity style={styles.button} onPress={() => { handleTypeChange(t.id) }} key={t.id}>
-            <Text style={{ ...styles.buttonText, borderBottomColor: type == t.id ? theme['c-primary-background-active'] : 'transparent' }} color={type == t.id ? theme['c-primary-font-active'] : theme['c-font']}>{t.label}</Text>
+          <TouchableOpacity
+            style={{
+              ...styles.button,
+              backgroundColor: type == t.id ? theme['c-content-background'] : 'transparent',
+              ...(type == t.id ? styles.buttonSelected : {}),
+            }}
+            onPress={() => { handleTypeChange(t.id) }}
+            key={t.id}
+          >
+            <Text style={styles.buttonText} color={type == t.id ? theme['c-primary-font-active'] : theme['c-font']}>{t.label}</Text>
           </TouchableOpacity>
         ))
       }
-    </ScrollView>
+    </View>
   )
 }
 
 const styles = createStyle({
   container: {
-    height: '100%',
-    flexGrow: 0,
-    flexShrink: 1,
-    // paddingLeft: 5,
-    // paddingRight: 5,
-    // backgroundColor: 'rgba(0,0,0,0.1)',
+    height: 28,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(128,128,128,0.15)',
+    borderRadius: 14,
+    padding: 2,
   },
   button: {
-    // height: 38,
-    // lineHeight: 38,
     justifyContent: 'center',
-    paddingLeft: 8,
-    paddingRight: 8,
-    // width: 80,
-    // backgroundColor: 'rgba(0,0,0,0.1)',
+    alignItems: 'center',
+    paddingLeft: 12,
+    paddingRight: 12,
+    height: 24,
+    borderRadius: 12,
+  },
+  buttonSelected: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.15,
+    shadowRadius: 2,
+    elevation: 2,
   },
   buttonText: {
-    // height: 38,
-    // lineHeight: 38,
     textAlign: 'center',
-    paddingLeft: 2,
-    paddingRight: 2,
-    // paddingTop: 10,
-    paddingTop: 3,
-    paddingBottom: 3,
-    borderBottomWidth: BorderWidths.normal3,
-    // width: 80,
+    fontSize: 13,
   },
 })

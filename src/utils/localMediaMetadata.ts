@@ -13,11 +13,13 @@ export {
 let cleared = false
 const picCachePath = temporaryDirectoryPath + '/local-media-metadata'
 
+const audioExt = ['mp3', 'flac', 'ogg', 'wav', 'm4a', 'aac', 'wma', 'opus', 'ape', 'mka']
+
 export const scanAudioFiles = async(dirPath: string) => {
   const files = await readDir(dirPath)
   return files.filter(file => {
     if (file.mimeType?.startsWith('audio/')) return true
-    if (extname(file?.name ?? '') === 'ogg') return true
+    if (audioExt.includes(extname(file?.name ?? ''))) return true
     return false
   }).map(file => file)
 }

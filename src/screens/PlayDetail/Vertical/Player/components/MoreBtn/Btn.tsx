@@ -23,7 +23,7 @@ export default ({ icon, color, onPress, onLongPress }: {
 
 const styles = createStyle({
   cotrolBtn: {
-    marginLeft: 5,
+    marginTop: 5,
     justifyContent: 'center',
     alignItems: 'center',
 

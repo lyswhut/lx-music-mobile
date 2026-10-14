@@ -23,17 +23,35 @@ export default () => {
     void getSongListSetting().then(info => {
       songlistInfo.current.source = info.source
       songlistInfo.current.sortId = info.sortId
-      songlistInfo.current.tagId = info.tagId
-      headerBarRef.current?.setSource(info.source, info.sortId, info.tagName, info.tagId)
-      listRef.current?.loadList(info.source, info.sortId, info.tagId)
+      // 每次进入歌单页，标签行恢复默认选中第一个标签
+      songlistInfo.current.tagId = ''
+      void saveSongListSetting({ tagId: '', tagName: '' })
+      headerBarRef.current?.setSource(info.source, info.sortId, '', '')
+      listRef.current?.loadList(info.source, info.sortId, '')
     })
-  }, [])
 
-  const handleSortChange: HeaderBarProps['onSortChange'] = (id) => {
-    songlistInfo.current.sortId = id
-    void saveSongListSetting({ sortId: id })
-    listRef.current?.loadList(songlistInfo.current.source, id, songlistInfo.current.tagId)
-  }
+    const handleSortChange = (id: string) => {
+      songlistInfo.current.sortId = id
+      void saveSongListSetting({ sortId: id })
+      listRef.current?.loadList(songlistInfo.current.source, id, songlistInfo.current.tagId)
+    }
+    global.app_event.on('songlistSortChanged', handleSortChange)
+
+    const handleSourceChange = (source: InitState['sources'][number]) => {
+      songlistInfo.current.source = source
+      songlistInfo.current.tagId = ''
+      songlistInfo.current.sortId = songlistState.sortList[source]![0].id
+      void saveSongListSetting({ sortId: songlistInfo.current.sortId, source, tagId: '', tagName: '' })
+      headerBarRef.current?.setSource(source, songlistInfo.current.sortId, '', songlistInfo.current.tagId)
+      listRef.current?.loadList(source, songlistInfo.current.sortId, songlistInfo.current.tagId)
+    }
+    global.app_event.on('songlistSourceChanged', handleSourceChange)
+
+    return () => {
+      global.app_event.off('songlistSortChanged', handleSortChange)
+      global.app_event.off('songlistSourceChanged', handleSourceChange)
+    }
+  }, [])
 
   const handleTagChange: HeaderBarProps['onTagChange'] = (name, id) => {
     songlistInfo.current.tagId = id
@@ -41,22 +59,11 @@ export default () => {
     listRef.current?.loadList(songlistInfo.current.source, songlistInfo.current.sortId, id)
   }
 
-  const handleSourceChange: HeaderBarProps['onSourceChange'] = (source) => {
-    songlistInfo.current.source = source
-    songlistInfo.current.tagId = ''
-    songlistInfo.current.sortId = songlistState.sortList[source]![0].id
-    void saveSongListSetting({ sortId: songlistInfo.current.sortId, source, tagId: '', tagName: '' })
-    headerBarRef.current?.setSource(source, songlistInfo.current.sortId, '', songlistInfo.current.tagId)
-    listRef.current?.loadList(source, songlistInfo.current.sortId, songlistInfo.current.tagId)
-  }
-
   return (
     <View style={styles.container}>
       <HeaderBar
         ref={headerBarRef}
-        onSortChange={handleSortChange}
         onTagChange={handleTagChange}
-        onSourceChange={handleSourceChange}
       />
       <List ref={listRef} />
     </View>
@@ -69,4 +76,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 })
-

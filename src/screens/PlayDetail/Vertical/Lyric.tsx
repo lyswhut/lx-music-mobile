@@ -339,7 +339,7 @@ const styles = createStyle({
     // backgroundColor: 'rgba(0,0,0,0.1)',
   },
   space: {
-    paddingTop: '100%',
+    paddingTop: '50%',
   },
   line: {
     paddingTop: 10,

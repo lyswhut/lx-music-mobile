@@ -62,12 +62,18 @@ export default memo(() => {
   return (
     <>
       <SubTitle title={t('setting_other_log')}>
-        <View style={styles.checkBox}>
-          <CheckBoxItem check={isEnableSyncErrorLog} label={t('setting_other_log_sync_log')} onChange={handleSetEnableSyncErrorLog} />
-          <CheckBoxItem check={isEnableUserApiLog} label={t('setting_other_log_user_api_log')} onChange={handleSetEnableUserApiLog} />
+        <View style={styles.checkBoxRow}>
+          <View style={styles.checkBoxItem}>
+            <CheckBoxItem check={isEnableSyncErrorLog} label={t('setting_other_log_sync_log')} onChange={handleSetEnableSyncErrorLog} />
+          </View>
+          <View style={styles.checkBoxItem}>
+            <CheckBoxItem check={isEnableUserApiLog} label={t('setting_other_log_user_api_log')} onChange={handleSetEnableUserApiLog} />
+          </View>
         </View>
-        <View style={styles.btn}>
-          <Button onPress={openLogModal}>{t('setting_other_log_btn_show')}</Button>
+        <View style={styles.btnRow}>
+          <View style={styles.btn}>
+            <Button onPress={openLogModal}>{t('setting_other_log_btn_show')}</Button>
+          </View>
         </View>
       </SubTitle>
       <ConfirmAlert
@@ -91,12 +97,17 @@ export default memo(() => {
 })
 
 const styles = createStyle({
-  checkBox: {
-    // paddingTop: 10,
-    paddingBottom: 15,
-    marginLeft: -25,
+  checkBoxRow: {
+    flexDirection: 'row',
+  },
+  checkBoxItem: {
+    flex: 1,
+  },
+  btnRow: {
+    marginTop: 5,
+    alignItems: 'flex-start',
   },
   btn: {
-    flexDirection: 'row',
+    flex: 0,
   },
 })

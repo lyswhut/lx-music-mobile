@@ -1,18 +1,13 @@
 import { useRef, forwardRef, useImperativeHandle } from 'react'
-// import { Icon } from '@/components/common/Icon'
 import Button from '@/components/common/Button'
-// import { navigations } from '@/navigation'
 import Modal, { type ModalType } from './Modal'
 import { type Source } from '@/store/songlist/state'
 import { createStyle } from '@/utils/tools'
 import Text from '@/components/common/Text'
 import { useI18n } from '@/lang'
+import { useTheme } from '@/store/theme/hook'
 import { navigations } from '@/navigation'
 import commonState from '@/store/common/state'
-
-// export interface OpenListProps {
-//   onTagChange: (name: string, id: string) => void
-// }
 
 export interface OpenListType {
   setInfo: (source: Source) => void
@@ -20,6 +15,7 @@ export interface OpenListType {
 
 export default forwardRef<OpenListType, {}>((props, ref) => {
   const t = useI18n()
+  const theme = useTheme()
   const modalRef = useRef<ModalType>(null)
   const songlistInfoRef = useRef<{ source: Source }>({ source: 'kw' })
 
@@ -30,7 +26,6 @@ export default forwardRef<OpenListType, {}>((props, ref) => {
   }))
 
   const handleOpenSonglist = (id: string) => {
-    // console.log(id, songlistInfoRef.current.source)
     navigations.pushSonglistDetailScreen(commonState.componentIds.home!, {
       play_count: undefined,
       id,
@@ -42,27 +37,27 @@ export default forwardRef<OpenListType, {}>((props, ref) => {
     })
   }
 
-  // const handleSourceChange: ModalProps['onSourceChange'] = (source) => {
-  //   songlistInfoRef.current.source = source
-  // }
-
+  const handleModalSourceChange = (source: Source) => {
+    songlistInfoRef.current.source = source
+  }
 
   return (
     <>
-      <Button style={styles.button} onPress={() => modalRef.current?.show(songlistInfoRef.current.source)}>
-        <Text>{t('songlist_open')}</Text>
+      <Button style={{ ...styles.button, backgroundColor: theme['c-primary-background-active'] }} onPress={() => modalRef.current?.show(songlistInfoRef.current.source)}>
+        <Text size={13} color={theme['c-primary-font-active']}>{t('songlist_open_list')}</Text>
       </Button>
-      <Modal ref={modalRef} onOpenId={handleOpenSonglist} />
+      <Modal ref={modalRef} onOpenId={handleOpenSonglist} onSourceChange={handleModalSourceChange} />
     </>
   )
 })
 
 const styles = createStyle({
   button: {
-    // backgroundColor: '#ccc',
     alignItems: 'center',
     justifyContent: 'center',
     paddingLeft: 12,
     paddingRight: 12,
+    borderRadius: 14,
+    height: 28,
   },
 })

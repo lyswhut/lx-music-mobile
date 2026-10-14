@@ -139,20 +139,13 @@ export default memo(({ setHost }: {
 
   return (
     <>
-      <View style={styles.btn}>
-        <Button disabled={isEnableSync} onPress={showPopup}>{t('setting_sync_history')}</Button>
-      </View>
+      <Button disabled={isEnableSync} onPress={showPopup}>{t('setting_sync_history')}</Button>
       <HistoryList ref={listRef} onSelect={handleSelect} />
     </>
   )
 })
 
 const styles = createStyle({
-  btn: {
-    flexDirection: 'row',
-    marginLeft: 25,
-    marginBottom: 15,
-  },
   tipText: {
     textAlign: 'center',
     marginTop: 15,

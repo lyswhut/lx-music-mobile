@@ -24,7 +24,11 @@ const Item = ({ id, name }: {
 }) => {
   const isActive = useActive(id)
   // const [toggleCheckBox, setToggleCheckBox] = useState(false)
-  return <CheckBox marginRight={8} check={isActive} label={name} onChange={() => { setAddMusicLocationType(id) }} need />
+  return (
+    <View style={styles.item}>
+      <CheckBox marginRight={8} check={isActive} label={name} onChange={() => { setAddMusicLocationType(id) }} need />
+    </View>
+  )
 }
 
 
@@ -44,6 +48,8 @@ export default memo(() => {
 const styles = StyleSheet.create({
   list: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+  },
+  item: {
+    flex: 1,
   },
 })

@@ -30,10 +30,14 @@ export default forwardRef<SourceSelectorType, SourceSelectorProps>(({ style, onS
     },
   }), [])
 
+  const handleSourceChange: SourceSelectorCommonProps['onSourceChange'] = (source) => {
+    onSourceChange(source)
+    global.app_event.songlistSourceChanged(source)
+  }
 
   return (
     <View style={StyleSheet.compose<ViewStyle>(styles.selector, style)}>
-      <SourceSelector ref={sourceSelectorRef} onSourceChange={onSourceChange} center />
+      <SourceSelector ref={sourceSelectorRef} onSourceChange={handleSourceChange} center />
     </View>
   )
 })

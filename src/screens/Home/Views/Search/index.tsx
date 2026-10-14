@@ -38,10 +38,12 @@ export default () => {
       searchInfo.current.searchType = info.type
       switch (info.type) {
         case 'music':
-          headerBarRef.current?.setSourceList(searchMusicState.sources, info.source)
+          searchInfo.current.source = searchMusicState.sources[0]
+          headerBarRef.current?.setSourceList(searchMusicState.sources, searchMusicState.sources[0])
           break
         case 'songlist':
-          headerBarRef.current?.setSourceList(searchSonglistState.sources, info.source)
+          searchInfo.current.source = searchSonglistState.sources[0]
+          headerBarRef.current?.setSourceList(searchSonglistState.sources, searchSonglistState.sources[0])
           break
       }
       headerBarRef.current?.setText(searchState.searchText)

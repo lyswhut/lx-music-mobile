@@ -16,9 +16,8 @@ export default memo((props: CheckBoxProps) => {
 
 const styles = createStyle({
   container: {
-    paddingLeft: 25,
+    paddingLeft: 10,
     // marginTop: -10,
     // marginBottom: 0,
   },
 })
-

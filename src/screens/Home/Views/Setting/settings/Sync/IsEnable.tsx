@@ -74,13 +74,14 @@ export default memo(({ host, setHost }: {
 
   useEffect(() => {
     isUnmountedRef.current = false
-    void getSyncHost().then(host => {
+    void Promise.all([
+      getSyncHost(),
+      getWIFIIPV4Address(),
+    ]).then(([savedHost, ip]) => {
       if (isUnmountedRef.current) return
-      setHost(host)
-    })
-    void getWIFIIPV4Address().then(address => {
-      if (isUnmountedRef.current) return
-      setAddress(address)
+      setAddress(ip)
+      // 输入框不再自动填充由本机 IP 拼出的默认地址，仅在点击「自动搜索」或选择历史地址时填充
+      setHost(savedHost ?? '')
     })
 
     return () => {

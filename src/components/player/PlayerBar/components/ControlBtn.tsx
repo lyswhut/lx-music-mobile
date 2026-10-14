@@ -6,7 +6,7 @@ import { playNext, playPrev, togglePlay } from '@/core/player/player'
 import { createStyle } from '@/utils/tools'
 import { useHorizontalMode } from '@/utils/hooks'
 
-const BTN_SIZE = 24
+const BTN_SIZE = 20
 const handlePlayPrev = () => {
   void playPrev()
 }
@@ -66,8 +66,8 @@ export default () => {
 
 const styles = createStyle({
   cotrolBtn: {
-    width: 46,
-    height: 46,
+    width: 38,
+    height: 38,
     justifyContent: 'center',
     alignItems: 'center',
 

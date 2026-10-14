@@ -19,12 +19,10 @@ export default () => {
 
 const styles = createStyle({
   container: {
-    // flexShrink: 0,
-    // flexGrow: 0,
-    width: '100%',
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
+    paddingRight: 5,
     // backgroundColor: 'rgba(0,0,0,0.1)',
   },
 })

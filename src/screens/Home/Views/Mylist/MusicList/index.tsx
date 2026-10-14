@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 import listState from '@/store/list/state'
 import ListMenu, { type ListMenuType, type Position, type SelectInfo } from './ListMenu'
@@ -8,22 +8,20 @@ import ListMusicAdd, { type MusicAddModalType as ListMusicAddType } from '@/comp
 import ListMusicMultiAdd, { type MusicMultiAddModalType as ListAddMultiType } from '@/components/MusicMultiAddModal'
 import { createStyle } from '@/utils/tools'
 import { type LayoutChangeEvent, View } from 'react-native'
-import ActiveList, { type ActiveListType } from './ActiveList'
+import HorizontalListSelector from './HorizontalListSelector'
 import MultipleModeBar, { type SelectMode, type MultipleModeBarType } from './MultipleModeBar'
-import ListSearchBar, { type ListSearchBarType } from './ListSearchBar'
 import ListMusicSearch, { type ListMusicSearchType } from './ListMusicSearch'
 import MusicPositionModal, { type MusicPositionModalType } from './MusicPositionModal'
 import MetadataEditModal, { type MetadataEditType, type MetadataEditProps } from '@/components/MetadataEditModal'
 import MusicToggleModal, { type MusicToggleModalType } from './MusicToggleModal'
+import { useTheme } from '@/store/theme/hook'
+import Input, { type InputType } from '@/components/common/Input'
 
 
 export default () => {
-  // const t = useI18n()
-  const activeListRef = useRef<ActiveListType>(null)
   const listMusicSearchRef = useRef<ListMusicSearchType>(null)
   const listRef = useRef<ListType>(null)
   const multipleModeBarRef = useRef<MultipleModeBarType>(null)
-  const listSearchBarRef = useRef<ListSearchBarType>(null)
   const listMusicAddRef = useRef<ListMusicAddType>(null)
   const listMusicMultiAddRef = useRef<ListAddMultiType>(null)
   const musicPositionModalRef = useRef<MusicPositionModalType>(null)
@@ -32,27 +30,27 @@ export default () => {
   const musicToggleModalRef = useRef<MusicToggleModalType>(null)
   const layoutHeightRef = useRef<number>(0)
   const isShowMultipleModeBar = useRef(false)
-  const isShowSearchBarModeBar = useRef(false)
   const selectedInfoRef = useRef<SelectInfo>()
-  // console.log('render index list')
+  const theme = useTheme()
+  const searchInputRef = useRef<InputType>(null)
+  const [keyword, setKeyword] = useState('')
 
   const hancelMultiSelect = useCallback(() => {
-    if (isShowSearchBarModeBar.current) {
+    if (keyword.trim()) {
       multipleModeBarRef.current?.setVisibleBar(false)
-    } else activeListRef.current?.setVisibleBar(false)
+    }
     isShowMultipleModeBar.current = true
     multipleModeBarRef.current?.show()
     listRef.current?.setIsMultiSelectMode(true)
-  }, [])
+  }, [keyword])
   const hancelExitSelect = useCallback(() => {
-    if (isShowSearchBarModeBar.current) {
+    if (keyword.trim()) {
       multipleModeBarRef.current?.setVisibleBar(true)
-    } else activeListRef.current?.setVisibleBar(true)
-    // console.log('hancelExitSelect', isShowSearchBarModeBar.current)
+    }
     multipleModeBarRef.current?.exitSelectMode()
     listRef.current?.setIsMultiSelectMode(false)
     isShowMultipleModeBar.current = false
-  }, [])
+  }, [keyword])
   const hancelSwitchSelectMode = useCallback((mode: SelectMode) => {
     multipleModeBarRef.current?.setSwitchMode(mode)
     listRef.current?.setSelectMode(mode)
@@ -70,26 +68,13 @@ export default () => {
       selectedList: listRef.current!.getSelectedList(),
     }, position)
   }, [])
-  const handleShowSearch = useCallback(() => {
-    isShowSearchBarModeBar.current = true
-    if (isShowMultipleModeBar.current) {
-      multipleModeBarRef.current?.setVisibleBar(false)
-    } else activeListRef.current?.setVisibleBar(false)
-    listSearchBarRef.current?.show()
-  }, [])
-  const handleExitSearch = useCallback(() => {
-    isShowSearchBarModeBar.current = false
-    listMusicSearchRef.current?.hide()
-    listSearchBarRef.current?.hide()
-    // console.log('handleExitSearch', isShowMultipleModeBar.current)
-    if (isShowMultipleModeBar.current) {
-      multipleModeBarRef.current?.setVisibleBar(true)
-    } else activeListRef.current?.setVisibleBar(true)
+  const handleSearch = useCallback((text: string) => {
+    setKeyword(text)
+    listMusicSearchRef.current?.search(text.trim(), layoutHeightRef.current)
   }, [])
   const handleScrollToInfo = useCallback((info: LX.Music.MusicInfo) => {
     listRef.current?.scrollToInfo(info)
-    handleExitSearch()
-  }, [handleExitSearch])
+  }, [])
   const onLayout = useCallback((e: LayoutChangeEvent) => {
     layoutHeightRef.current = e.nativeEvent.layout.height
   }, [])
@@ -122,17 +107,24 @@ export default () => {
   return (
     <View style={styles.container}>
       <View style={{ zIndex: 2 }}>
-        <ActiveList ref={activeListRef} onShowSearchBar={handleShowSearch} onScrollToTop={hancelScrollToTop} />
+        <HorizontalListSelector />
+        <View style={styles.searchBar}>
+          <View style={{ ...styles.searchInputWrapper, backgroundColor: theme['c-primary-background'] }}>
+            <Input
+              ref={searchInputRef}
+              placeholder="Search for something..."
+              value={keyword}
+              onChangeText={handleSearch}
+              style={styles.searchInput}
+              clearBtn
+            />
+          </View>
+        </View>
         <MultipleModeBar
           ref={multipleModeBarRef}
           onSwitchMode={hancelSwitchSelectMode}
           onSelectAll={isAll => listRef.current?.selectAll(isAll)}
           onExitSelectMode={hancelExitSelect}
-        />
-        <ListSearchBar
-          ref={listSearchBarRef}
-          onSearch={keyword => listMusicSearchRef.current?.search(keyword, layoutHeightRef.current)}
-          onExitSearch={handleExitSearch}
         />
       </View>
       <View style={{ flex: 1 }} onLayout={onLayout}>
@@ -180,5 +172,27 @@ const styles = createStyle({
   container: {
     flex: 1,
     flexDirection: 'column',
+  },
+  searchBar: {
+    height: 36,
+    paddingHorizontal: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  searchInput: {
+    borderRadius: 0,
+    height: '100%',
+    flexGrow: 1,
+    flexShrink: 1,
+  },
+  searchInputWrapper: {
+    flexDirection: 'row',
+    flexGrow: 1,
+    flexShrink: 1,
+    alignItems: 'center',
+    borderRadius: 20,
+    paddingLeft: 10,
+    paddingRight: 5,
+    height: 32,
   },
 })

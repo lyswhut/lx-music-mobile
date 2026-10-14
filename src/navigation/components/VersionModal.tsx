@@ -149,7 +149,7 @@ const VersionModal = ({ componentId }: { componentId: string }) => {
           break
       }
     }
-    ignoreBtnConfig.text = t(ignoreVersion == versionInfo.newVersion?.version ? 'version_btn_ignore_cancel' : 'version_btn_ignore')
+    ignoreBtnConfig.text = t(ignoreVersion != versionInfo.newVersion?.version ? 'version_btn_ignore_cancel' : 'version_btn_ignore')
     setIgnoreBtn(ignoreBtnConfig)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -260,4 +260,3 @@ const styles = createStyle({
 })
 
 export default VersionModal
-

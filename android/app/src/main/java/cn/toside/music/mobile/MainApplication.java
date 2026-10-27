@@ -9,6 +9,7 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
 import java.util.List;
 
+import cn.toside.music.mobile.soundEffect.SoundEffectPackage;
 import cn.toside.music.mobile.cache.CachePackage;
 import cn.toside.music.mobile.crypto.CryptoPackage;
 import cn.toside.music.mobile.lyric.LyricPackage;
@@ -30,6 +31,7 @@ public class MainApplication extends NavigationApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
+          packages.add(new SoundEffectPackage());
           packages.add(new CachePackage());
           packages.add(new LyricPackage());
           packages.add(new UtilsPackage());

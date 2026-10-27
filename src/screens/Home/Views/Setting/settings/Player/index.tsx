@@ -1,6 +1,7 @@
 import { memo } from 'react'
 
 import Section from '../../components/Section'
+import SoundEffectButton from '@/components/SoundEffectButton'
 import IsSavePlayTime from './IsSavePlayTime'
 import PlayHighQuality from './PlayHighQuality'
 import IsHandleAudioFocus from './IsHandleAudioFocus'
@@ -21,6 +22,7 @@ export default memo(() => {
 
   return (
     <Section title={t('setting_player')}>
+      <SoundEffectButton />
       <IsSavePlayTime />
       <IsAutoCleanPlayedList />
       <IsHandleAudioFocus />

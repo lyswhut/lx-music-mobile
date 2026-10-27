@@ -4,11 +4,13 @@ import { setStatusText, setIsPlay } from '@/core/player/playStatus'
 // import { resetPlayerMusicInfo } from '@/core/player/playInfo'
 import { setStop } from '@/plugins/player'
 import { delayUpdateMusicInfo } from '@/plugins/player/playList'
+import { initSoundEffect } from '@/plugins/player/soundEffect'
 import playerState from '@/store/player/state'
 import settingState from '@/store/setting/state'
 
 
 export default async(setting: LX.AppSetting) => {
+  await initSoundEffect()
   const setPlayStatus = () => {
     setIsPlay(true)
   }

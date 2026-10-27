@@ -136,6 +136,23 @@ declare global {
        */
       'player.volume': number
 
+      'player.soundEffect.equalizer.enable': boolean
+      'player.soundEffect.biquadFilter.hz31': number
+      'player.soundEffect.biquadFilter.hz62': number
+      'player.soundEffect.biquadFilter.hz125': number
+      'player.soundEffect.biquadFilter.hz250': number
+      'player.soundEffect.biquadFilter.hz500': number
+      'player.soundEffect.biquadFilter.hz1000': number
+      'player.soundEffect.biquadFilter.hz2000': number
+      'player.soundEffect.biquadFilter.hz4000': number
+      'player.soundEffect.biquadFilter.hz8000': number
+      'player.soundEffect.biquadFilter.hz16000': number
+      'player.soundEffect.convolution.fileName': string
+      'player.soundEffect.convolution.mainGain': number
+      'player.soundEffect.convolution.sendGain': number
+      'player.soundEffect.presets': string
+
+
       /**
        * 播放速率
        */

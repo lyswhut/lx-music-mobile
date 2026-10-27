@@ -1,0 +1,19 @@
+apply plugin: 'com.android.library'
+
+android {
+    namespace 'cn.toside.music.effects'
+    compileSdk rootProject.ext.compileSdkVersion
+    defaultConfig {
+        consumerProguardFiles "consumer-rules.pro"
+        minSdk rootProject.ext.minSdkVersion
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation 'androidx.media3:media3-exoplayer:1.8.0'
+    implementation 'com.github.wendykierp:JTransforms:3.1'
+}

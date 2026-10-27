@@ -1,4 +1,5 @@
 import TrackPlayer from 'react-native-track-player'
+import { initSoundEffect } from './soundEffect'
 import { updateOptions, setVolume, setPlaybackRate, migratePlayerCache } from './utils'
 
 // const listenEvent = () => {
@@ -27,6 +28,7 @@ const initial = async({ volume, playRate, cacheSize, isHandleAudioFocus, isEnabl
   global.lx.playerStatus.isIniting = true
   console.log('Cache Size', cacheSize * 1024)
   await migratePlayerCache()
+  await initSoundEffect()
   await TrackPlayer.setupPlayer({
     maxCacheSize: cacheSize * 1024,
     maxBuffer: 1000,

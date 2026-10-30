@@ -1,0 +1,14 @@
+<p>LX Music is a music search and playback tool developed based on React native. </p>
+<h3>Free and open source</h3>
+<p>LX Music is a <strong><a href="https://www.gnu.org/philosophy/free-sw.html">free software</a></strong> licensed and published under Apache2.0 License. This project is open source and released on GitHub. You can freely run, copy, distribute, learn, modify and improve LX Music. </p>
+<h3>Rich in functions</h3>
+<p>LX Music supports multiple formats and online music sources. You can easily retrieve and import them. LX Music supports subscription to music sources and gets updates immediately. </p>
+<p>LX Music provides rich functions such as access to Internet playlists, song list backup, music cache, music download, dislike song rule lyrics, translation of desktop lyrics, etc., with strong customizability. </p>
+<h3>Excellent cross-platform and multi-terminal interoperability</h3>
+<p>This project supports running on Windows, Mac OS, GNU/Linux and Android platforms. The exported song list can be used on all three platforms. </p>
+<h3>Extraordinary robustness</h3>
+<p>The LX Music project started in 2021 and has a three-year history. So far, the project has accepted more than 520 Github Issues and more than 20 Pull Requests, solving most of the known vulnerabilities. Excellent stability has been achieved through the tempering of time. </p>
+<h3>Friendly community</h3>
+LX Music has an official QQ group, and Github Issues are active for a long time.
+<h3>Notes:</h3>
+<p>This project does not plan to support IOS. The current version of the sound quality higher than 128k is invalid. Due to a complaint from Tencent asking us to stop providing the built-in online playback and download service connected to their platform, we will no longer provide this service from October 18, 2023. You should not promote LX Music in any public place. LX Music has always been a free software. If you bought it from some places, you were cheated. The QQ group is only for feedback. We recommend using GitHub to report issues. Only if you don't know GitHub, you can provide suggestions or feedback in the QQ group. Before giving feedback, read and make sure you are aware of the "How to Feedback" tips on the LX Music official website. </a> Please submit a Pull Request after submitting Github Issues. </p>

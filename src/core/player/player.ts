@@ -266,6 +266,27 @@ const handlePlay = async() => {
 }
 
 /**
+ * 将「已播放列表」中指定的歌曲移动到末尾。
+ *
+ * 随机模式下 playNext/playPrev 会优先复用已播放列表中当前歌曲的**后一条**记录
+ * （见 playNext 的 playedList 分支），因此手动点选一首曾经播放过的歌曲时，
+ * 会原样复现上一次的播放链路 —— 表现为「点第 1 首永远是 1-9-4-8」。
+ *
+ * 手动点歌时把该歌曲移到已播放列表末尾，它就失去了「已记录的后继」，
+ * 下一首因此重新随机（开启新链路）；同时其余历史记录仍然保留，
+ * 「上一首」依旧可以回退到这首歌之前实际播放的歌曲。
+ */
+const movePlayedInfoToEnd = (listId: string | null, id: string) => {
+  const playedList = playerState.playedList
+  let index = playedList.findIndex(m => m.listId == listId && m.musicInfo.id == id)
+  if (index < 0) index = playedList.findIndex(m => m.musicInfo.id == id)
+  if (index < 0 || index === playedList.length - 1) return
+  const info = playedList[index]
+  removePlayedList(index)
+  addPlayedList(info)
+}
+
+/**
  * 播放列表内歌曲
  * @param listId 列表id
  * @param id 歌曲id
@@ -277,6 +298,7 @@ export const playListById = async(listId: string, id: string) => {
   if (!musicInfo) return
   setPlayMusicInfo(listId, musicInfo)
   if (settingState.setting['player.isAutoCleanPlayedList'] || prevListId != listId) clearPlayedList()
+  else movePlayedInfoToEnd(listId, musicInfo.id)
   clearTempPlayeList()
   await handlePlay()
 }
@@ -289,8 +311,10 @@ export const playListById = async(listId: string, id: string) => {
 export const playList = async(listId: string, index: number) => {
   const prevListId = playerState.playInfo.playerListId
   setPlayListId(listId)
-  setPlayMusicInfo(listId, getList(listId)[index])
+  const musicInfo = getList(listId)[index]
+  setPlayMusicInfo(listId, musicInfo)
   if (settingState.setting['player.isAutoCleanPlayedList'] || prevListId != listId) clearPlayedList()
+  else if (musicInfo) movePlayedInfoToEnd(listId, musicInfo.id)
   clearTempPlayeList()
   await handlePlay()
 }

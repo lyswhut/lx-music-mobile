@@ -1,20 +1,56 @@
-name: Build
+name: Build & Release (jovi-dev)
 
+# 触发：推送到 jovi-dev（上游同步合并后会自动触发）、或手动点击 Run workflow
 on:
   push:
     branches:
-      - master
+      - jovi-dev
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
 
 jobs:
   Android:
-    name: Android
+    name: Build APK
     runs-on: ubuntu-latest
+    outputs:
+      package_version: ${{ steps.vars.outputs.package_version }}
+      new_code: ${{ steps.vars.outputs.new_code }}
+      build_tag: ${{ steps.vars.outputs.build_tag }}
     steps:
       - name: Check out git repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Setup Env
+      - name: Setup Env (Node / Java / npm ci)
         uses: ./.github/actions/setup
+
+      # 关键：把私有 fork 的车机歌词(uCar/ICCOA)补丁打进 node_modules
+      - name: Patch react-native-track-player (uCar metadata)
+        run: node dependencies-patch.js
+
+      - name: Setup Android SDK & NDK
+        uses: android-actions/setup-android@v3
+      - name: Install SDK packages
+        run: |
+          yes | sdkmanager --licenses >/dev/null 2>&1 || true
+          sdkmanager "platforms;android-36" "build-tools;35.0.0" "ndk;26.1.10909125" "cmake;3.22.1.1" "platform-tools"
+          echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+
+      - name: Compute version & bump versionCode
+        id: vars
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          NEW_CODE=$(( $(node -p "require('./package.json').versionCode || 1000079") + 1 ))
+          BUILD_TAG="v${PACKAGE_VERSION}-${GITHUB_SHA::7}"
+          node -e "const fs=require('fs');const p='package.json';const j=JSON.parse(fs.readFileSync(p));j.versionCode=${NEW_CODE};fs.writeFileSync(p,JSON.stringify(j,null,2)+'\n')"
+          echo "package_version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
+          echo "new_code=$NEW_CODE" >> $GITHUB_OUTPUT
+          echo "build_tag=$BUILD_TAG" >> $GITHUB_OUTPUT
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
 
       - name: Build Packages
         env:
@@ -22,24 +58,9 @@ jobs:
         shell: bash
         run: |
           cd android
-          echo ${{ secrets.KEYSTORE_STORE_FILE_BASE64 }} | base64 --decode > app/${{ secrets.KEYSTORE_STORE_FILE }}
+          echo ${{ secrets.KEYSTORE_STORE_FILE_BASE64 }} | base64 --decode > ${{ secrets.KEYSTORE_STORE_FILE }}
           ./gradlew assembleRelease -PMYAPP_UPLOAD_STORE_FILE='${{ secrets.KEYSTORE_STORE_FILE }}' -PMYAPP_UPLOAD_KEY_ALIAS='${{ secrets.KEYSTORE_KEY_ALIAS }}' -PMYAPP_UPLOAD_STORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}' -PMYAPP_UPLOAD_KEY_PASSWORD='${{ secrets.KEYSTORE_KEY_PASSWORD }}'
-          rm -f app/${{ secrets.KEYSTORE_STORE_FILE }}
-
-      # Push tag to GitHub if package.json version's tag is not tagged
-      - name: Get package version
-        run: |
-          PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
-
-      - name: Create git tag
-        uses: pkgdeps/git-tag-action@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          github_repo: ${{ github.repository }}
-          version: ${{ env.PACKAGE_VERSION }}
-          git_commit_sha: ${{ github.sha }}
-          git_tag_prefix: "v"
+          rm -f ${{ secrets.KEYSTORE_STORE_FILE }}
 
       - name: Generate file MD5
         run: |
@@ -51,108 +72,19 @@ jobs:
         env:
           PACKAGE_VERSION: ${{ env.PACKAGE_VERSION }}
 
-  # Android_SL:
-  #   name: Android_SL
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Check out git repository
-  #       uses: actions/checkout@v4
-  #       with:
-  #         ref: statusbar_lyric
-
-  #     - name: Setup Env
-  #       uses: ./.github/actions/setup
-
-  #     - name: Build Packages
-  #       shell: bash
-  #       run: |
-  #         cd android
-  #         echo ${{ secrets.KEYSTORE_STORE_FILE_BASE64 }} | base64 --decode > app/${{ secrets.KEYSTORE_STORE_FILE }}
-  #         ./gradlew assembleRelease -PMYAPP_UPLOAD_STORE_FILE='${{ secrets.KEYSTORE_STORE_FILE }}' -PMYAPP_UPLOAD_KEY_ALIAS='${{ secrets.KEYSTORE_KEY_ALIAS }}' -PMYAPP_UPLOAD_STORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}' -PMYAPP_UPLOAD_KEY_PASSWORD='${{ secrets.KEYSTORE_KEY_PASSWORD }}'
-  #         rm -f app/${{ secrets.KEYSTORE_STORE_FILE }}
-
-  #     # Push tag to GitHub if package.json version's tag is not tagged
-  #     - name: Get package version
-  #       run: |
-  #         node -p -e '`PACKAGE_VERSION=${require("./package.json").version}`' >> $GITHUB_ENV
-  #         echo "COMMIT_SHA=$(git show -s --format=%H)" >> $GITHUB_ENV
-
-  #     - name: Create git tag
-  #       uses: pkgdeps/git-tag-action@v3
-  #       with:
-  #         github_token: ${{ secrets.GITHUB_TOKEN }}
-  #         github_repo: ${{ github.repository }}
-  #         version: ${{ env.PACKAGE_VERSION }}
-  #         git_commit_sha: ${{ env.COMMIT_SHA }}
-  #         git_tag_prefix: "v"
-
-  #     - name: Generate file MD5
-  #       run: |
-  #         echo "current commit sha: ${{ env.COMMIT_SHA }}"
-  #         cd android/app/build/outputs/apk/release
-  #         md5sum *.apk
-
-  #     - name: Upload Artifact
-  #       uses: ./.github/actions/upload-artifact
-  #       env:
-  #         PACKAGE_TYPE: 'Android_SL'
-  #         PACKAGE_VERSION: ${{ env.PACKAGE_VERSION }}
-
-  # Android_5:
-  #   name: Android_5
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Check out git repository
-  #       uses: actions/checkout@v4
-  #       with:
-  #         ref: android_5
-
-  #     - name: Setup Env
-  #       uses: ./.github/actions/setup
-
-  #     - name: Build Packages
-  #       shell: bash
-  #       run: |
-  #         cd android
-  #         echo ${{ secrets.KEYSTORE_STORE_FILE_BASE64 }} | base64 --decode > app/${{ secrets.KEYSTORE_STORE_FILE }}
-  #         ./gradlew assembleRelease -PMYAPP_UPLOAD_STORE_FILE='${{ secrets.KEYSTORE_STORE_FILE }}' -PMYAPP_UPLOAD_KEY_ALIAS='${{ secrets.KEYSTORE_KEY_ALIAS }}' -PMYAPP_UPLOAD_STORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}' -PMYAPP_UPLOAD_KEY_PASSWORD='${{ secrets.KEYSTORE_KEY_PASSWORD }}'
-  #         rm -f app/${{ secrets.KEYSTORE_STORE_FILE }}
-
-  #     # Push tag to GitHub if package.json version's tag is not tagged
-  #     - name: Get package version
-  #       run: |
-  #         node -p -e '`PACKAGE_VERSION=${require("./package.json").version}`' >> $GITHUB_ENV
-  #         echo "COMMIT_SHA=$(git show -s --format=%H)" >> $GITHUB_ENV
-
-  #     - name: Create git tag
-  #       uses: pkgdeps/git-tag-action@v3
-  #       with:
-  #         github_token: ${{ secrets.GITHUB_TOKEN }}
-  #         github_repo: ${{ github.repository }}
-  #         version: ${{ env.PACKAGE_VERSION }}
-  #         git_commit_sha: ${{ env.COMMIT_SHA }}
-  #         git_tag_prefix: "v"
-
-  #     - name: Generate file MD5
-  #       run: |
-  #         echo "current commit sha: ${{ env.COMMIT_SHA }}"
-  #         cd android/app/build/outputs/apk/release
-  #         md5sum *.apk
-
-  #     - name: Upload Artifact
-  #       uses: ./.github/actions/upload-artifact
-  #       env:
-  #         PACKAGE_TYPE: 'Android_5'
-  #         PACKAGE_VERSION: ${{ env.PACKAGE_VERSION }}
-
   Release:
-    name: Release
+    name: Release & OTA
     runs-on: ubuntu-latest
-    # needs: [Android, Android_SL]
     needs: [Android]
+    env:
+      PACKAGE_VERSION: ${{ needs.Android.outputs.package_version }}
+      BUILD_TAG: ${{ needs.Android.outputs.build_tag }}
+      NEW_CODE: ${{ needs.Android.outputs.new_code }}
     steps:
       - name: Check out git repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Download Artifacts
         uses: actions/download-artifact@v4
@@ -166,12 +98,6 @@ jobs:
           cd artifacts
           md5sum *.apk >> ../publish/changeLog.md
           echo -e '```\n' >> ../publish/changeLog.md
-          echo -e '\n[软件安装包说明](https://lyswhut.github.io/lx-music-doc/download#%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85%E5%8C%85%E8%AF%B4%E6%98%8E)\n' >> ../publish/changeLog.md
-
-      - name: Get package version
-        run: |
-          PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
 
       - name: Release
         uses: softprops/action-gh-release@v2
@@ -179,15 +105,30 @@ jobs:
           body_path: ./publish/changeLog.md
           prerelease: false
           draft: false
-          tag_name: v${{ env.PACKAGE_VERSION }}
+          tag_name: ${{ env.BUILD_TAG }}
           files: |
             artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-arm64-v8a.apk
             artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-armeabi-v7a.apk
             artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86_64.apk
             artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86.apk
             artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-universal.apk
-
-          # artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-sl-arm64-v8a.apk
-          # artifacts/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-android_5-universal.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 自动回写 OTA：version 用「主版本.构建号」保证恒大于本机；apkUrl 指向本次 Release 的 universal 包
+      - name: Update OTA metadata
+        run: |
+          OTA_VER="${{ env.PACKAGE_VERSION }}.${{ env.NEW_CODE }}"
+          OTA_URL="https://github.com/zb463816216/lx-music-mobile/releases/download/${{ env.BUILD_TAG }}/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-universal.apk"
+          node -e "const fs=require('fs');const p='ota/update.json';const j=JSON.parse(fs.readFileSync(p));j.version=process.env.OTA_VER;j.apkUrl=process.env.OTA_URL;fs.writeFileSync(p,JSON.stringify(j,null,2)+'\n')"
+        env:
+          OTA_VER: ${{ env.PACKAGE_VERSION }}.${{ env.NEW_CODE }}
+          OTA_URL: https://github.com/zb463816216/lx-music-mobile/releases/download/${{ env.BUILD_TAG }}/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-universal.apk
+
+      - name: Commit OTA & versionCode [skip ci]
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: bump versionCode & update OTA [skip ci]" || echo "nothing to commit"
+          git push

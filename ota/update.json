@@ -1,6 +1,6 @@
 {
   "version": "1.9.2-salt.1",
-  "apkUrl": "https://github.com/zb463816216/lx-music-mobile/releases/download/salt-v1.9.2.1/app-release.apk",
-  "changelog": "初始 com.salt.music 构建：重命名包名、内置 Jovi InCar 歌词支持、加入 OTA 自升级。",
+  "apkUrl": "https://github.com/zb463816216/lx-music-mobile/releases/download/v1.9.2-salt.1/lx-music-mobile-v1.9.2-salt.1-universal.apk",
+  "changelog": "初始 com.salt.music 构建：重命名包名、内置 Jovi InCar 歌词支持(uCar/ICCOA 标准)、加入 OTA 自升级。后续由 CI 自动更新此文件。",
   "force": false
 }

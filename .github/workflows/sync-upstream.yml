@@ -1,0 +1,68 @@
+name: Sync Upstream
+
+# 自动把官方仓库 lyswhut/lx-music-mobile 的最新代码合并进本 fork 的 jovi-dev 分支。
+# 触发：每日 03:17(北京) 自动跑；也可在 Actions 页面手动 Run workflow。
+on:
+  schedule:
+    - cron: '17 19 * * *'
+  workflow_dispatch:
+    inputs:
+      upstream_branch:
+        description: '上游要合并的分支'
+        required: false
+        default: 'master'
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out jovi-dev
+        uses: actions/checkout@v4
+        with:
+          ref: jovi-dev
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add upstream & fetch
+        run: |
+          git remote add upstream https://github.com/lyswhut/lx-music-mobile.git || true
+          git fetch upstream --tags
+
+      - name: Merge upstream
+        id: merge
+        run: |
+          UP="${{ github.event.inputs.upstream_branch || 'master' }}"
+          echo "Merging upstream/$UP ..."
+          if git merge "upstream/$UP" --no-edit; then
+            echo "merged=1" >> $GITHUB_OUTPUT
+          else
+            # 有冲突：放弃合并并上报
+            git merge --abort
+            echo "merged=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Push to jovi-dev (triggers auto build/release)
+        if: steps.merge.outputs.merged == '1'
+        run: git push origin jovi-dev
+
+      - name: Open issue on conflict
+        if: steps.merge.outputs.merged == '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '⚠️ 上游合并冲突，需要人工处理',
+              body: '自动同步上游代码时出现冲突，已中止合并。请手动 `git fetch upstream && git merge upstream/master` 解决冲突后推送 jovi-dev。\n\n触发时间：' + new Date().toISOString()
+            })
+            core.setFailed('Upstream merge conflict, please resolve manually.')

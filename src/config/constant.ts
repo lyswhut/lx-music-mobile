@@ -99,8 +99,8 @@ export const APP_PROVIDER_NAME = 'com.salt.music.provider'
 
 // OTA 自升级：指向你自己的 update.json。
 // 推荐使用 GitHub Releases 做托管：把 update.json 作为 release 资源，或用仓库里的 salt-release 分支 + raw/jsdelivr 访问。
-// 上线前把 <YOUR_GITHUB_USER> 替换成你的 GitHub 用户名。
-export const OTA_VERSION_URL = 'https://raw.githubusercontent.com/<YOUR_GITHUB_USER>/lx-music-mobile/jovi-dev/ota/update.json'
+// OTA 检查地址：本仓库 jovi-dev 分支下的 ota/update.json（随代码同步发布）。
+export const OTA_VERSION_URL = 'https://raw.githubusercontent.com/zb463816216/lx-music-mobile/jovi-dev/ota/update.json'
 
 
 export const NAV_MENUS = [

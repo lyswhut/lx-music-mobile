@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState } from 'react'
 import { View, ScrollView, Alert } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 
@@ -69,7 +69,6 @@ const Footer = ({ componentId }: { componentId: string }) => {
   const theme = useTheme()
   const isAgreePact = useSettingValue('common.isAgreePact')
   // const checkUpdate = useDispatch('common', 'checkUpdate')
-  const [time, setTime] = useState(20)
 
   const handleRejct = () => {
     exitApp()
@@ -100,33 +99,8 @@ const Footer = ({ componentId }: { componentId: string }) => {
 
   const confirmBtn = useMemo(() => {
     if (isAgreePact) return { disabled: false, text: '关闭' }
-    return time ? { disabled: true, text: `接受（${time}）` } : { disabled: false, text: '接受' }
-  }, [isAgreePact, time])
-
-  useEffect(() => {
-    if (isAgreePact) return
-    const timeoutTools = {
-      timeout: null as NodeJS.Timeout | null,
-      start() {
-        this.timeout = setTimeout(() => {
-          setTime(time => {
-            time--
-            if (time > 0) this.start()
-            return time
-          })
-        }, 1000)
-      },
-      clear() {
-        if (!this.timeout) return
-        clearTimeout(this.timeout)
-      },
-    }
-    timeoutTools.start()
-    return () => {
-      timeoutTools.clear()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    return { disabled: false, text: '接受' }
+  }, [isAgreePact])
 
   return (
     <>

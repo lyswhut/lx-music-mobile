@@ -33,7 +33,9 @@ const formatMusicInfo = (musicInfo: LX.Player.PlayMusic) => {
 }
 
 const getCurrentFullLyric = (targetId: string | null) => {
-  return (settingState.setting['player.isShowBluetoothFullLyric'] && targetId &&
+  const isCarLyric = settingState.setting['player.isShowCarLyric']
+  const isFullLyric = settingState.setting['player.isShowBluetoothFullLyric']
+  return ((isCarLyric || isFullLyric) && targetId &&
       playerState.musicInfo.id == targetId && playerState.musicInfo.lrc)
     ? playerState.musicInfo.lrc
     : undefined

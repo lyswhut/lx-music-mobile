@@ -9,7 +9,10 @@ import { createStyle, openUrl } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'
 import Text from '@/components/common/Text'
-import { showPactModal } from '@/core/common'
+import { showPactModal, updateSetting } from '@/core/common'
+import { useSettingValue } from '@/store/setting/hook'
+import CheckBoxItem from '../components/CheckBoxItem'
+import { checkOta } from '@/utils/ota'
 
 // const qqGroupUrl = 'mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26jump_from%3Dwebapi%26k%3Du1zyxek8roQAwic44nOkBXtG9CfbAxFw'
 // const qqGroupUrl2 = 'mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26jump_from%3Dwebapi%26k%3D-l4kNZ2bPQAuvfCQFFhl1UoibvF5wcrQ'
@@ -40,6 +43,9 @@ export default memo(() => {
   const openPartPage = () => {
     void openUrl('https://github.com/lyswhut/lx-music-mobile#%E9%A1%B9%E7%9B%AE%E5%8D%8F%E8%AE%AE')
   }
+  const otaAutoCheck = useSettingValue('common.otaAutoCheck')
+  const setOtaAutoCheck = (v: boolean) => updateSetting({ 'common.otaAutoCheck': v })
+  const checkOtaNow = () => void checkOta(false)
 
   // const goToQQGroup = () => {
   //   openUrl(qqGroupUrl).catch(() => {
@@ -113,6 +119,14 @@ export default memo(() => {
       <View style={styles.part}>
         <Text style={styles.text}>By: </Text>
         <Text style={styles.text}>落雪无痕</Text>
+      </View>
+      <View style={styles.part}>
+        <TouchableOpacity onPress={checkOtaNow}>
+          <Text style={textLinkStyle}>{t('setting_check_update')}</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.part}>
+        <CheckBoxItem check={otaAutoCheck} onChange={setOtaAutoCheck} label={t('setting_ota_auto_check')} />
       </View>
     </Section>
   )

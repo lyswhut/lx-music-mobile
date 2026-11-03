@@ -7,7 +7,7 @@ import { useSettingValue } from '@/store/setting/hook'
 
 
 import CheckBoxItem from '../../components/CheckBoxItem'
-import { showRemoteLyric } from '@/core/desktopLyric'
+import { setLyricSendState } from '@/core/lyric'
 import { setLastLyric } from '@/core/player/playInfo'
 import { updateNowPlayingTitles } from '@/plugins/player/utils'
 import playerState from '@/store/player/state'
@@ -20,7 +20,7 @@ export default memo(() => {
       await remoteLyricTip()
     }
     updateSetting({ 'player.isShowBluetoothLyric': isShowBluetoothLyric })
-    void showRemoteLyric(isShowBluetoothLyric)
+    setLyricSendState()
     if (!isShowBluetoothLyric) {
       setLastLyric()
       void updateNowPlayingTitles({

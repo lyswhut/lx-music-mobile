@@ -14,7 +14,9 @@ import {
   setDesktopLyricPlaybackRate,
   toggleDesktopLyricTranslation,
   toggleDesktopLyricRoma,
+  showRemoteLyric,
 } from '@/core/desktopLyric'
+import { updateSetting } from '@/core/common'
 import { getPosition } from '@/plugins/player'
 import playerState from '@/store/player/state'
 import settingState from '@/store/setting/state'
@@ -120,4 +122,19 @@ export const setLyric = async() => {
   }
 
   if (playerState.isPlay) play()
+}
+
+// 「显示蓝牙歌词」或「车载歌词」任一开启，都需让原生持续发送歌词文本。
+// 否则 LyricModule 不发 lyric-line-play 事件，JS 端 onLyricLinePlay 不触发，
+// updateNowPlayingTitles({ title: 当前行 }) 不会被调用，UCAR_TITLE 也就不会滚动。
+export const setLyricSendState = () => {
+  const isBt = settingState.setting['player.isShowBluetoothLyric']
+  const isCar = settingState.setting['player.isShowCarLyric']
+  if (isBt || isCar) {
+    void showRemoteLyric(true).catch(() => {
+      updateSetting({ 'player.isShowBluetoothLyric': false, 'player.isShowCarLyric': false })
+    })
+  } else {
+    void showRemoteLyric(false)
+  }
 }

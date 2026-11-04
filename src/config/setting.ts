@@ -1,7 +1,7 @@
 import { storageDataPrefix, storageDataPrefixOld } from '@/config/constant'
 import defaultSetting from '@/config/defaultSetting'
 import { getData, removeData, saveData } from '@/plugins/storage'
-import migrateSetting from './migrateSetting'
+import { migrateOldSetting, migrateSetting } from './migrateSetting'
 import settingState from '@/store/setting/state'
 import { migrateMetaData, migrateListData } from './migrate'
 import { exitApp, tipDialog } from '@/utils/tools'
@@ -81,10 +81,12 @@ export const initSetting = async() => {
 
 
   // try migrate setting before v1
-  if (!setting) {
+  if (setting) {
+    setting = migrateSetting(setting)
+  } else {
     const config = await getData<{ setting?: any }>(storageDataPrefixOld.setting)
     if (config != null) {
-      setting = migrateSetting(config)
+      setting = migrateOldSetting(config)
       try {
         await migrateListData()
         await migrateMetaData()

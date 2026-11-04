@@ -1,6 +1,6 @@
 import { compareVer } from '@/utils'
 
-export default (setting: any): Partial<LX.AppSetting> => {
+export const migrateOldSetting = (setting: any): Partial<LX.AppSetting> => {
   setting = { ...setting }
 
   // 迁移 v1 之前的配置
@@ -44,9 +44,17 @@ export default (setting: any): Partial<LX.AppSetting> => {
     setting['sync.enable'] = setting.sync?.enable
     setting['theme.id'] = setting.themeId
   }
-  if (setting.version == '2.0') {
+
+
+  return setting
+}
+
+export const migrateSetting = (setting: any): Partial<LX.AppSetting> => {
+  setting = { ...setting }
+
+  if (setting.version == '2.0') setting.version = '2.1'
+  if (setting.version == '2.1') {
     if (setting['player.isEnableAudioOffload']) setting['player.isEnableAudioOffload'] = false
   }
-
   return setting
 }

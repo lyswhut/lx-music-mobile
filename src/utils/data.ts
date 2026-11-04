@@ -590,3 +590,84 @@ export const setUserApiAllowShowUpdateAlert = async(id: string, enable: boolean)
   targetApi.allowShowUpdateAlert = enable
   await saveData(userApiPrefix, userApis)
 }
+
+
+// ========== Yearly Listening Report ==========
+
+export interface ListeningSongEntry {
+  id: string
+  name: string
+  singer: string
+  source: string
+  duration: number
+  lastPlayed: number
+}
+
+export interface YearlyListeningData {
+  year: number
+  songs: Record<string, ListeningSongEntry>
+}
+
+const yearlyListeningKey = storageDataPrefix.yearlyListening
+
+let yearlyListeningData: YearlyListeningData | undefined
+
+const saveYearlyListeningThrottle = throttle(() => {
+  void saveData(yearlyListeningKey, yearlyListeningData)
+}, 5000)
+
+const initYearlyListening = async() => {
+  if (yearlyListeningData != null) {
+    const currentYear = new Date().getFullYear()
+    if (yearlyListeningData.year !== currentYear) {
+      yearlyListeningData = { year: currentYear, songs: {} }
+      void saveData(yearlyListeningKey, yearlyListeningData)
+    }
+    return
+  }
+  // eslint-disable-next-line require-atomic-updates
+  yearlyListeningData = await getData<YearlyListeningData>(yearlyListeningKey) ?? {
+    year: new Date().getFullYear(),
+    songs: {},
+  }
+  const currentYear = new Date().getFullYear()
+  if (yearlyListeningData.year !== currentYear) {
+    yearlyListeningData = { year: currentYear, songs: {} }
+    void saveData(yearlyListeningKey, yearlyListeningData)
+  }
+}
+
+export const getYearlyListening = async(): Promise<YearlyListeningData> => {
+  await initYearlyListening()
+  return yearlyListeningData!
+}
+
+export const addListeningDuration = async(
+  musicInfo: { id: string, name: string, singer: string, source: string },
+  seconds: number,
+) => {
+  await initYearlyListening()
+  const entry = yearlyListeningData!.songs[musicInfo.id]
+  if (entry) {
+    entry.duration += seconds
+    entry.lastPlayed = Date.now()
+  } else {
+    yearlyListeningData!.songs[musicInfo.id] = {
+      id: musicInfo.id,
+      name: musicInfo.name,
+      singer: musicInfo.singer,
+      source: musicInfo.source,
+      duration: seconds,
+      lastPlayed: Date.now(),
+    }
+  }
+  saveYearlyListeningThrottle()
+}
+
+export const clearYearlyListening = async() => {
+  yearlyListeningData = {
+    year: new Date().getFullYear(),
+    songs: {},
+  }
+  await saveData(yearlyListeningKey, yearlyListeningData)
+}

@@ -341,8 +341,10 @@ export const getNextPlayMusicInfo = async(): Promise<LX.Player.PlayMusicInfo | n
       currentId = playMusicInfo.musicInfo!.id
     }
     // 从已播放列表移除播放列表已删除的歌曲
-    let index
-    for (index = playedList.findIndex(m => m.musicInfo.id === currentId) + 1; index < playedList.length; index++) {
+    const currentIndex = playedList.findIndex(m => m.musicInfo.id === currentId)
+    // 未找到当前歌曲时跳过历史回放，沿用后续选曲逻辑。
+    let index = currentIndex < 0 ? playedList.length : currentIndex + 1
+    for (; index < playedList.length; index++) {
       const playMusicInfo = playedList[index]
       const currentId = playMusicInfo.musicInfo.id
       if (playMusicInfo.listId == currentListId && !currentList.some(m => m.id === currentId)) {
@@ -436,8 +438,10 @@ export const playNext = async(isAutoToggle = false): Promise<void> => {
       currentId = playMusicInfo.musicInfo.id
     }
     // 从已播放列表移除播放列表已删除的歌曲
-    let index
-    for (index = playedList.findIndex(m => m.musicInfo.id === currentId) + 1; index < playedList.length; index++) {
+    const currentIndex = playedList.findIndex(m => m.musicInfo.id === currentId)
+    // 未找到当前歌曲时跳过历史回放，沿用后续选曲逻辑。
+    let index = currentIndex < 0 ? playedList.length : currentIndex + 1
+    for (; index < playedList.length; index++) {
       const playMusicInfo = playedList[index]
       const currentId = playMusicInfo.musicInfo.id
       if (playMusicInfo.listId == currentListId && !currentList.some(m => m.id === currentId)) {

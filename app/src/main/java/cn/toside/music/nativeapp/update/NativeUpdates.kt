@@ -10,6 +10,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Environment
+import android.os.Build
 import android.provider.Settings
 import android.util.AtomicFile
 import androidx.core.content.FileProvider
@@ -120,7 +121,10 @@ internal class NativeUpdates(private val context: Context) {
         @Suppress("DEPRECATION")
         internal fun verifyArchive(context: Context, file: File, version: String) {
             val manager = context.packageManager
-            val candidate = manager.getPackageArchiveInfo(file.absolutePath, PackageManager.GET_SIGNING_CERTIFICATES) ?: error(context.getString(R.string.update_apk_invalid))
+            // Android 9 only collects archive certificates when GET_SIGNATURES is also requested.
+            val archiveFlags = PackageManager.GET_SIGNING_CERTIFICATES or
+                if (Build.VERSION.SDK_INT == 28) PackageManager.GET_SIGNATURES else 0
+            val candidate = manager.getPackageArchiveInfo(file.absolutePath, archiveFlags) ?: error(context.getString(R.string.update_apk_invalid))
             val installed = manager.getPackageInfo(context.packageName, PackageManager.GET_SIGNING_CERTIFICATES)
             check(candidate.packageName == context.packageName && candidate.versionName == version && candidate.longVersionCode > installed.longVersionCode) { context.getString(R.string.update_version_invalid) }
             check(signaturesMatch(installed, candidate)) { context.getString(R.string.update_signature_invalid) }

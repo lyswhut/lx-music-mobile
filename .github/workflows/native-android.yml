@@ -88,3 +88,4 @@ jobs:
           path: |
             app/build/reports/androidTests/
             app/build/outputs/androidTest-results/
+            build/permission-flow/

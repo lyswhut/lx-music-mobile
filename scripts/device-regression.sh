@@ -11,6 +11,13 @@ keytool -genkeypair -keystore build/update-fixtures/wrong-signer.jks -storepass 
 "$ANDROID_HOME/build-tools/36.0.0/apksigner" sign --ks build/update-fixtures/wrong-signer.jks --ks-pass pass:fixturepass --key-pass pass:fixturepass --out build/update-fixtures/wrong-signer.apk build/update-fixtures/updated.apk
 adb push build/update-fixtures/updated.apk /data/local/tmp/lx-native-update-fixture.apk
 adb push build/update-fixtures/wrong-signer.apk /data/local/tmp/lx-native-wrong-signer.apk
+# Exercise first-use permission dialogs before download tests grant legacy storage access.
 bash ./gradlew --no-daemon :app:connectedDebugAndroidTest \
+  -Pandroid.testInstrumentationRunnerArguments.class=cn.toside.music.nativeapp.ui.PermissionFlowTest
+mkdir -p build/permission-flow/reports build/permission-flow/results
+cp -a app/build/reports/androidTests/. build/permission-flow/reports/
+cp -a app/build/outputs/androidTest-results/. build/permission-flow/results/
+bash ./gradlew --no-daemon :app:connectedDebugAndroidTest \
+  -Pandroid.testInstrumentationRunnerArguments.notClass=cn.toside.music.nativeapp.ui.PermissionFlowTest \
   -Pandroid.testInstrumentationRunnerArguments.updateFixture=/data/local/tmp/lx-native-update-fixture.apk \
   -Pandroid.testInstrumentationRunnerArguments.wrongSignerFixture=/data/local/tmp/lx-native-wrong-signer.apk

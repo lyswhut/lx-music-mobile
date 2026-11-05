@@ -107,3 +107,13 @@ adb pull /sdcard/Android/data/cn.toside.music.nativeapp/files/adaptive-validatio
 ```
 
 本轮输出位于 `build/adaptive-validation/verified/`，其中 `measured-360-*`、`measured-600-*`、`measured-1024-*` 为三种尺寸的 View 渲染；`tablet-dark-player.png`、`tablet-sync.png` 等为设备窗口内的 View 渲染。最终测试输出保存在 `build/adaptive-validation/final-tests.txt`，调试包为 `app/build/outputs/apk/debug/app-debug.apk`。
+
+## Android 9 CI 兼容修复（2026-11-05）
+
+检查 [运行 41966937543 的 API 28 作业](https://github.com/savet-save/lx-music-android/actions/runs/41966937543/job/127046002197)，确认有四项失败：下载测试缺少旧版写入权限、授权测试无法点击旧版系统弹窗、随后播放详情启动超时、更新 APK 的签名信息读取失败。同次运行的构建检查与 API 35 作业通过。
+
+- 下载测试在 Android 9 按实际下载策略授予 `WRITE_EXTERNAL_STORAGE`；CI 先单独执行首次授权流程测试，再执行其余回归，避免预先授予的存储权限影响授权测试。两阶段报告均上传为设备测试产物。
+- 授权测试同时识别 Android 9 的 PackageInstaller 和新版 PermissionController，重试时重新获取按钮节点，并在结束时关闭两种系统授权窗口，避免遗留弹窗影响下一项界面测试。
+- Android 9 的 `getPackageArchiveInfo` 仅在包含 `GET_SIGNATURES` 时收集 APK 证书；解析时额外传入该标志，仍通过 `SigningInfo` 严格验证签名、包名和版本，没有放宽安装校验。[Android 9 框架实现](https://android.googlesource.com/platform/frameworks/base/+/android-9.0.0_r61/core/java/android/content/pm/PackageManager.java)
+
+本地 Debug/测试 APK 构建、14 项 JVM 单元测试、Debug Lint（0 错误、53 警告）和 `bash -n scripts/device-regression.sh` 均通过。API 28 与 API 35 的完整设备回归结果以本次修复提交对应的 Native Android Actions 运行为准；本地 Android 12 设备不能替代 Android 9 的兼容性验收。

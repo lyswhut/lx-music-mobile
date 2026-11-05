@@ -60,7 +60,6 @@ import android.graphics.Bitmap
 import android.graphics.Typeface
 import android.content.res.ColorStateList
 import android.content.res.Configuration
-import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
@@ -132,6 +131,13 @@ class MainActivity : Activity() {
     private var pactDialog: AlertDialog? = null
     private lateinit var preferences: AppPreferences
     private lateinit var palette: UiPalette
+    private lateinit var uiLayout: AdaptiveLayout
+    private lateinit var lx: LxStyles
+    private val navigationItems = mutableMapOf<Int, TextView>()
+    private var tableHeader: FrameLayout? = null
+    private var playerRestorePending = false
+    private var restoreDetailLyrics = false
+    private var highlightedSong: String? = null
     private lateinit var miniBar: LinearLayout
     private var artworkKey: String? = null
     private var artworkBitmap: Bitmap? = null
@@ -246,6 +252,7 @@ class MainActivity : Activity() {
         setTheme(if (activeTheme.dark) R.style.NativeDark else R.style.NativeLight)
         super.onCreate(savedInstanceState)
         palette = UiPalette(this, activeTheme)
+        uiLayout = AdaptiveLayout(resources.configuration.screenWidthDp, resources.configuration.screenHeightDp)
         playlists = Playlists(applicationContext)
         lyrics = Lyrics(applicationContext)
         playerSettings = PlayerSettings(applicationContext)
@@ -254,6 +261,9 @@ class MainActivity : Activity() {
         preferences = AppPreferences(applicationContext)
         startupPlayerPending = savedInstanceState == null && preferences.startupPlayer
         iconFont = Typeface.createFromAsset(assets, "fonts/icomoon.ttf")
+        lx = LxStyles(this, palette, iconFont)
+        playerRestorePending = savedInstanceState?.getBoolean("player-open") == true
+        restoreDetailLyrics = savedInstanceState?.getBoolean("player-lyrics") == true
         pendingLyricSongId = savedInstanceState?.let { if (it.containsKey("lyricSongId")) it.getLong("lyricSongId") else null }
         pendingLyricSource = savedInstanceState?.getString("lyricSource") ?: "local"
         savedInstanceState?.getBundle("pendingDownload")?.let { pendingDownload = songFromBundle(it) }
@@ -324,6 +334,8 @@ class MainActivity : Activity() {
         page.board?.let { outState.putStringArray("home-board", arrayOf(it.id, it.name, it.source)) }
         page.onlinePlaylist?.let { outState.putStringArray("home-online-list", arrayOf(it.id, it.digest, it.name, it.author, it.source)) }
         outState.putBoolean("incoming-handled", incomingHandled)
+        outState.putBoolean("player-open", playerDialog?.isShowing == true || playerRestorePending)
+        outState.putBoolean("player-lyrics", detailShowingLyrics)
         pendingLyricSongId?.let { outState.putLong("lyricSongId", it) }
         outState.putString("lyricSource", pendingLyricSource)
         pendingDownload?.let { outState.putBundle("pendingDownload", songToBundle(it)) }
@@ -512,10 +524,15 @@ class MainActivity : Activity() {
         val foreground = palette.foreground
         val root = HomeNavigationLayout(this).apply {
             orientation = LinearLayout.VERTICAL
+            tag = if (uiLayout.expanded) "home-expanded" else "home-compact"
             setBackgroundColor(palette.surface); fitsSystemWindows = true
-            eligible = { y -> preferences.bool("common.homePageScroll", true) &&
-                (!::miniBar.isInitialized || y < miniBar.top) &&
-                (!::search.isInitialized || search.visibility != View.VISIBLE || y < search.top || y > search.bottom) }
+            eligible = { y ->
+                val searchBounds = android.graphics.Rect()
+                val location = IntArray(2); getLocationOnScreen(location)
+                val inSearch = ::search.isInitialized && search.visibility == View.VISIBLE &&
+                    search.getGlobalVisibleRect(searchBounds) && y + location[1] >= searchBounds.top && y + location[1] <= searchBounds.bottom
+                preferences.bool("common.homePageScroll", true) && (!::miniBar.isInitialized || y < miniBar.top) && !inSearch
+            }
             navigate = { direction ->
                 val current = when { boardMode -> 2; onlinePlaylistMode -> 3; onlineMode -> 1; else -> 0 }
                 when ((current + direction).coerceIn(0, 3).takeIf { it != current }) {
@@ -526,56 +543,85 @@ class MainActivity : Activity() {
                 }
             }
         }
-        val header = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; orientation = LinearLayout.HORIZONTAL }
-        val menu = TextView(this).apply {
-            text = 59680.toChar().toString(); typeface = iconFont; textSize = 18f; gravity = Gravity.CENTER; setTextColor(foreground); contentDescription = getString(R.string.ui_e35a36e26d52)
-            setOnClickListener { showNavigation() }
+        val workspace = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        val main = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        if (uiLayout.expanded && !preferences.menuOnRight) workspace.addView(buildSidebar(), LinearLayout.LayoutParams(dp(uiLayout.sidebarWidth), -1))
+        workspace.addView(main, LinearLayout.LayoutParams(0, -1, 1f))
+        if (uiLayout.expanded && preferences.menuOnRight) workspace.addView(buildSidebar(), LinearLayout.LayoutParams(dp(uiLayout.sidebarWidth), -1))
+        root.addView(workspace, LinearLayout.LayoutParams(-1, 0, 1f))
+        val header = LinearLayout(this).apply {
+            gravity = Gravity.CENTER_VERTICAL; minimumHeight = dp(56)
+            setPadding(dp(if (uiLayout.expanded) 20 else 4), dp(4), dp(8), dp(4))
         }
-        pageTitle = TextView(this).apply { text = getString(R.string.ui_27c95ec6b766); textSize = 18f; setTextColor(foreground); gravity = Gravity.CENTER_VERTICAL }
-        if (!preferences.menuOnRight) header.addView(menu, LinearLayout.LayoutParams(dp(48), dp(42)))
-        header.addView(pageTitle, LinearLayout.LayoutParams(0, dp(42), 1f))
-        if (preferences.menuOnRight) header.addView(menu, LinearLayout.LayoutParams(dp(48), dp(42)))
-        root.addView(header)
-        val listHeader = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; orientation = LinearLayout.HORIZONTAL }
+        val menu = lx.icon(59680, getString(R.string.ui_e35a36e26d52), 19f) { showNavigation() }
+        pageTitle = lx.label(getString(R.string.ui_27c95ec6b766), 19f).apply {
+            setPadding(dp(8), 0, dp(8), 0); setTypeface(null, Typeface.BOLD)
+        }
+        if (!uiLayout.expanded && !preferences.menuOnRight) header.addView(menu, LinearLayout.LayoutParams(dp(48), dp(48)))
+        header.addView(pageTitle, LinearLayout.LayoutParams(0, -2, 1f))
+        header.addView(lx.icon(59687, getString(R.string.ui_727036c7fc2a)) { showSyncSettings() }, LinearLayout.LayoutParams(dp(48), dp(48)))
+        if (uiLayout.expanded || preferences.menuOnRight) header.addView(menu, LinearLayout.LayoutParams(dp(48), dp(48)))
+        main.addView(header)
+        if (!uiLayout.expanded) main.addView(buildPageTabs())
+        val listHeader = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(if (uiLayout.expanded) 12 else 0), dp(2), dp(4), dp(2)) }
         heading = TextView(this).apply {
             text = getString(R.string.ui_33eeaa47c231); textSize = 14f; setTextColor(foreground); gravity = Gravity.CENTER_VERTICAL
-            setPadding(dp(15), 0, 0, 0); setOnClickListener {
+            background = lx.touch(); isFocusable = true; maxLines = 1; ellipsize = android.text.TextUtils.TruncateAt.END
+            setPadding(dp(15), 0, dp(8), 0); setOnClickListener {
                 if (boardMode) showBoards() else if (onlinePlaylistMode) showOnlinePlaylists() else if (onlineMode) showSearchSources() else showPlaylists()
             }
             setOnLongClickListener {
                 if ((boardMode || onlinePlaylistMode) && allSongs.isNotEmpty()) { saveCurrentOnlineList(); true } else false
             }
         }
-        listHeader.addView(heading, LinearLayout.LayoutParams(0, dp(40), 1f))
+        listHeader.addView(heading, LinearLayout.LayoutParams(0, dp(48), 1f))
         listActionButton = TextView(this).apply {
             text = 59660.toChar().toString(); typeface = iconFont; textSize = 18f; gravity = Gravity.CENTER; setTextColor(foreground); contentDescription = getString(R.string.ui_073a0d57165c)
+            background = lx.touch(); isFocusable = true
             setOnClickListener {
                 if (boardMode || onlinePlaylistMode) showOnlineListActions()
                 else search.visibility = if (search.visibility == View.VISIBLE) View.GONE else View.VISIBLE
             }
             setOnLongClickListener { showBatchSongs(); true }
         }
-        listHeader.addView(listActionButton, LinearLayout.LayoutParams(dp(48), dp(40)))
-        root.addView(listHeader)
-        root.addView(View(this).apply { setBackgroundColor(palette.divider) }, LinearLayout.LayoutParams(-1, dp(1)))
+        listHeader.addView(listActionButton, LinearLayout.LayoutParams(dp(48), dp(48)))
+        main.addView(listHeader)
+        main.addView(View(this).apply { setBackgroundColor(palette.divider) }, LinearLayout.LayoutParams(-1, dp(1)))
         search = AutoCompleteTextView(this).apply {
             threshold = 1
             setOnItemClickListener { _, _, _, _ -> if (onlineMode && !boardMode && !onlinePlaylistMode) searchOnline() }
             setOnLongClickListener { if (onlineMode) { showSearchTools(); true } else false }
             hint = getString(R.string.ui_7ad45199f05a); textSize = 14f; setSingleLine(true); visibility = View.GONE; imeOptions = EditorInfo.IME_ACTION_SEARCH
-            setPadding(dp(16), 0, dp(16), 0)
+            setPadding(dp(16), dp(8), dp(16), dp(8)); setTextColor(foreground); setHintTextColor(palette.muted)
+            background = lx.shape(lx.panel, border = palette.divider)
+            backgroundTintList = null
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH && onlineMode) { searchOnline(); true } else false
             }
         }
-        root.addView(search, LinearLayout.LayoutParams(-1, dp(44)))
+        main.addView(search, LinearLayout.LayoutParams(-1, dp(48)).apply { setMargins(dp(16), dp(8), dp(16), dp(4)) })
         status = TextView(this).apply {
             text = getString(R.string.ui_2e14553ec90c); textSize = 12f; setTextColor(palette.muted); setPadding(dp(16), dp(6), dp(16), dp(6))
             setOnClickListener { if (!onlineMode && activePlaylist == null && !hasAudioPermission()) requestAudioAccess(AudioAction.OpenLibrary) }
         }
-        root.addView(status)
+        main.addView(status)
+        if (uiLayout.expanded) {
+            tableHeader = FrameLayout(this).apply { addView(buildTableHeader()) }
+            main.addView(tableHeader)
+        }
         list = ListView(this).apply { divider = null; isVerticalScrollBarEnabled = false }
-        root.addView(list, LinearLayout.LayoutParams(-1, 0, 1f))
+        val listContainer = FrameLayout(this)
+        listContainer.addView(list, FrameLayout.LayoutParams(-1, -1))
+        val empty = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER
+            setPadding(dp(24), dp(16), dp(24), dp(16)); isClickable = false
+            addView(lx.label(59669.toChar().toString(), 52f, palette.primary).apply { typeface = iconFont; gravity = Gravity.CENTER; alpha = .35f })
+            addView(lx.label(getString(R.string.layout_empty_hint), 13f, palette.muted).apply {
+                maxLines = 3; gravity = Gravity.CENTER; setPadding(0, dp(16), 0, 0)
+            }, LinearLayout.LayoutParams(-1, -2))
+        }
+        listContainer.addView(empty, FrameLayout.LayoutParams(-1, -1)); list.emptyView = empty
+        main.addView(listContainer, LinearLayout.LayoutParams(-1, 0, 1f))
         loadMore = TextView(this).apply {
             text = getString(R.string.ui_af90a08fec8e); textSize = 13f; gravity = Gravity.CENTER; setTextColor(primary); visibility = View.GONE
             setOnClickListener {
@@ -584,39 +630,40 @@ class MainActivity : Activity() {
                 else searchOnline(append = true)
             }
         }
-        root.addView(loadMore, LinearLayout.LayoutParams(-1, dp(38)))
+        main.addView(loadMore, LinearLayout.LayoutParams(-1, dp(48)))
         val playerBar = LinearLayout(this).apply {
-            gravity = Gravity.CENTER_VERTICAL; orientation = LinearLayout.HORIZONTAL; setPadding(dp(5), dp(5), dp(5), dp(5))
-            setBackgroundColor(palette.surface); elevation = dp(10).toFloat()
+            tag = "mini-player"; gravity = Gravity.CENTER_VERTICAL; orientation = LinearLayout.HORIZONTAL
+            setPadding(dp(if (uiLayout.expanded) 20 else 10), dp(8), dp(8), dp(4))
+            setBackgroundColor(lx.panel)
         }
         miniBar = playerBar
         val cover = FrameLayout(this).apply {
-            background = GradientDrawable().apply { setColor(palette.placeholder); cornerRadius = dp(3).toFloat() }
+            background = lx.shape(palette.placeholder); clipToOutline = true
             contentDescription = getString(R.string.ui_f518674b61f6); setOnClickListener { showPlayerDetails() }
         }
         cover.addView(TextView(this).apply { text = "LX"; textSize = 17f; gravity = Gravity.CENTER; setTextColor(primary) }, FrameLayout.LayoutParams(-1, -1))
         miniCoverImage = ImageView(this).apply { scaleType = ImageView.ScaleType.CENTER_CROP; visibility = View.GONE }
         cover.addView(miniCoverImage, FrameLayout.LayoutParams(-1, -1))
-        playerBar.addView(cover, LinearLayout.LayoutParams(dp(46), dp(46)))
+        playerBar.addView(cover, LinearLayout.LayoutParams(dp(48), dp(48)))
         val info = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(8), 0, 0, 0) }
-        title = TextView(this).apply { text = getString(R.string.ui_2389f5b06bce); textSize = 14f; setTextColor(foreground); maxLines = 1 }
+        title = lx.label(getString(R.string.ui_2389f5b06bce)).apply { setTypeface(null, Typeface.BOLD) }
         info.addView(title)
         lyric = TextView(this).apply { text = ""; textSize = 11f; setTextColor(primary); maxLines = 1 }
         info.addView(lyric)
         time = TextView(this).apply { text = "00:00 / 00:00"; textSize = 11f; setTextColor(palette.muted) }
         info.addView(time)
         info.setOnClickListener { showPlayerDetails() }
-        playerBar.addView(info, LinearLayout.LayoutParams(0, dp(46), 1f))
+        playerBar.addView(info, LinearLayout.LayoutParams(0, -2, 1f))
+        if (uiLayout.expanded) playerBar.addView(lx.icon(59668, getString(R.string.ui_8c747908bf69), 24f) { service?.previous() }, LinearLayout.LayoutParams(dp(48), dp(48)))
         toggle = TextView(this).apply {
             text = 59653.toChar().toString(); typeface = iconFont; textSize = 24f; gravity = Gravity.CENTER; setTextColor(foreground); contentDescription = getString(R.string.ui_c3396195e91c)
+            background = lx.touch(lx.selected, 24); setTextColor(primary); isFocusable = true
             setOnClickListener {
             togglePlayback()
         } }
-        playerBar.addView(toggle, LinearLayout.LayoutParams(dp(46), dp(46)))
-        playerBar.addView(TextView(this).apply {
-            text = 59654.toChar().toString(); typeface = iconFont; textSize = 24f; gravity = Gravity.CENTER; setTextColor(foreground)
-            contentDescription = getString(R.string.ui_486e42475adb); setOnClickListener { service?.next() }
-        }, LinearLayout.LayoutParams(dp(46), dp(46)))
+        playerBar.addView(toggle, LinearLayout.LayoutParams(dp(48), dp(48)))
+        playerBar.addView(lx.icon(59654, getString(R.string.ui_486e42475adb), 24f) { service?.next() }, LinearLayout.LayoutParams(dp(48), dp(48)))
+        playerBar.addView(lx.icon(59651, getString(R.string.ui_f01b6815d826)) { showPlaybackQueue() }, LinearLayout.LayoutParams(dp(48), dp(48)))
         root.addView(playerBar)
         seek = SeekBar(this).apply {
             progressTintList = ColorStateList.valueOf(primary); thumbTintList = ColorStateList.valueOf(primary)
@@ -625,6 +672,7 @@ class MainActivity : Activity() {
         root.addView(seek, LinearLayout.LayoutParams(-1, dp(18)))
         palette.background(root); palette.textStyle(root)
         setContentView(root)
+        updateNavigationSelection()
         ScreenInsets.install(window, root)
         search.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
@@ -648,6 +696,72 @@ class MainActivity : Activity() {
             override fun onStartTrackingTouch(bar: SeekBar?) { changingSeek = true }
             override fun onStopTrackingTouch(bar: SeekBar?) { changingSeek = false; service?.seekTo(bar?.progress ?: 0) }
         })
+    }
+    private fun navigateToPage(page: Int) {
+        when (page) {
+            0 -> if (activePlaylist != null) showPlaylists() else openLocalPage(false)
+            1 -> openSearchPage(false)
+            2 -> selectedBoard?.let { loadBoard(it) } ?: showBoards()
+            3 -> selectedOnlinePlaylist?.let { loadOnlinePlaylist(it) } ?: showOnlinePlaylists()
+        }
+    }
+    private fun buildPageTabs() = LinearLayout(this).apply {
+        tag = "home-tabs"; setPadding(dp(8), 0, dp(8), dp(4))
+        val labels = listOf(R.string.ui_27c95ec6b766, R.string.layout_search, R.string.ui_1ee95aa94712, R.string.layout_songlists)
+        labels.forEachIndexed { page, label ->
+            val item = lx.label(getString(label)).apply {
+                gravity = Gravity.CENTER; isFocusable = true; setOnClickListener { navigateToPage(page) }
+            }
+            navigationItems[page] = item; addView(item, LinearLayout.LayoutParams(0, dp(48), 1f))
+        }
+    }
+    private fun buildSidebar() = LinearLayout(this).apply {
+        tag = "home-sidebar"; orientation = LinearLayout.VERTICAL; setBackgroundColor(lx.panel)
+        setPadding(dp(8), dp(8), dp(8), dp(8))
+        addView(lx.label("LX Music", 23f, palette.primary).apply {
+            setTypeface(null, Typeface.BOLD); setPadding(dp(14), 0, 0, 0)
+        }, LinearLayout.LayoutParams(-1, dp(72)))
+        val items = LinearLayout(this@MainActivity).apply { orientation = LinearLayout.VERTICAL }
+        fun entry(code: Int, label: Int, page: Int? = null, click: () -> Unit) {
+            val row = LinearLayout(this@MainActivity).apply { gravity = Gravity.CENTER_VERTICAL; background = lx.touch(); isFocusable = true; setOnClickListener { click() } }
+            row.addView(lx.label(code.toChar().toString(), 19f).apply { typeface = iconFont; gravity = Gravity.CENTER }, LinearLayout.LayoutParams(dp(40), dp(48)))
+            val text = lx.label(getString(label), 14f)
+            row.addView(text, LinearLayout.LayoutParams(0, -2, 1f))
+            if (page != null) { navigationItems[page] = text; row.tag = "navigation-$page" }
+            items.addView(row, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(4) })
+        }
+        entry(59660, R.string.ui_87a2113eb66f, 1) { navigateToPage(1) }
+        entry(59657, R.string.ui_27c95ec6b766, 0) { navigateToPage(0) }
+        entry(59658, R.string.ui_1ee95aa94712, 2) { navigateToPage(2) }
+        entry(59659, R.string.ui_259597bf6ca7, 3) { navigateToPage(3) }
+        items.addView(View(this@MainActivity).apply { setBackgroundColor(palette.divider) }, LinearLayout.LayoutParams(-1, dp(1)).apply { setMargins(dp(10), dp(16), dp(10), dp(16)) })
+        entry(59696, R.string.ui_a9531e47b75d) { openLocalPage(true) }
+        entry(59666, R.string.ui_c2dd14825672) { showPlaylists() }
+        entry(59687, R.string.ui_727036c7fc2a) { showSyncSettings() }
+        entry(59655, R.string.ui_18a9d61deeb3) { showGeneralSettings(this@MainActivity, scope, service) { service?.refreshPreferences(); filterSongs(); service?.state?.value?.let(::renderPlayer) } }
+        entry(59659, R.string.ui_788db1cfec2a) { showThemeSettings(this@MainActivity) }
+        addView(ScrollView(this@MainActivity).apply { isVerticalScrollBarEnabled = false; addView(items) }, LinearLayout.LayoutParams(-1, 0, 1f))
+        addView(lx.icon(59680, getString(R.string.ui_e35a36e26d52), 19f) { showNavigation() }, LinearLayout.LayoutParams(-1, dp(48)))
+    }
+    private fun updateNavigationSelection() {
+        val current = when { boardMode -> 2; onlinePlaylistMode -> 3; onlineMode -> 1; else -> 0 }
+        navigationItems.forEach { (page, item) ->
+            val selected = current == page
+            item.isSelected = selected; item.setTextColor(if (selected) palette.primary else palette.muted)
+            item.setTypeface(null, if (selected) Typeface.BOLD else Typeface.NORMAL)
+            val target = if (uiLayout.expanded) item.parent as View else item
+            target.isSelected = selected; target.background = lx.touch(if (selected) lx.selected else Color.TRANSPARENT)
+            if (uiLayout.expanded) ((item.parent as ViewGroup).getChildAt(0) as TextView).setTextColor(if (selected) palette.primary else palette.muted)
+        }
+    }
+    private fun buildTableHeader() = LinearLayout(this).apply {
+        tag = "song-table-header"; gravity = Gravity.CENTER_VERTICAL; setBackgroundColor(lx.panel)
+        fun cell(label: String, weight: Float) { addView(lx.label(label, 12f, palette.muted).apply { setPadding(dp(8), 0, dp(8), 0) }, LinearLayout.LayoutParams(0, -2, weight)) }
+        addView(lx.label("#", 12f, palette.muted).apply { gravity = Gravity.CENTER }, LinearLayout.LayoutParams(dp(48), dp(36)))
+        cell(getString(R.string.layout_track), 2f); cell(getString(R.string.layout_artist), 1f)
+        if (uiLayout.albumColumn && preferences.showAlbum) cell(getString(R.string.layout_album), 1f)
+        addView(lx.label(getString(R.string.layout_duration), 12f, palette.muted).apply { gravity = Gravity.CENTER; visibility = if (preferences.showDuration) View.VISIBLE else View.GONE }, LinearLayout.LayoutParams(dp(60), -2))
+        addView(View(this@MainActivity), LinearLayout.LayoutParams(dp(48), 1))
     }
     private fun showNavigation() {
         val labels = mutableListOf(getString(R.string.ui_a9531e47b75d), getString(R.string.ui_c2dd14825672), getString(R.string.ui_87a2113eb66f), getString(R.string.ui_1ee95aa94712), getString(R.string.ui_259597bf6ca7), getString(R.string.ui_3158c8d56b7b), getString(R.string.ui_a5cd0a9169e8), getString(R.string.ui_3facd3e00be5), getString(R.string.ui_599818eb56df), getString(R.string.ui_727036c7fc2a), getString(R.string.ui_2a3ec620e12c), getString(R.string.ui_8c38525734c0), getString(R.string.ui_486b54a7b0af), getString(R.string.ui_6e763b71e69c), getString(R.string.ui_f01b6815d826), getString(R.string.ui_cad84b75d661), getString(R.string.ui_426744e26e7e), getString(R.string.ui_ac7aa03a458f), getString(R.string.ui_18a9d61deeb3), getString(R.string.ui_788db1cfec2a), getString(R.string.ui_4fd38bc4f6d4), getString(R.string.ui_bb1d19b85634))
@@ -740,23 +854,35 @@ class MainActivity : Activity() {
             }.setNegativeButton(getString(R.string.ui_2cd0f3be8738), null).show()
     }
     private fun showSyncSettings() {
+        syncSettingsDialog?.dismiss()
         val current = syncService?.state?.value
-        val background = BackgroundSyncSettings(applicationContext)
-        if (current?.active == true || background.enabled) {
+        val syncBackground = BackgroundSyncSettings(applicationContext)
+        if (current?.active == true || syncBackground.enabled) {
             showingSyncStatus = true
             syncSettingsDialog = AlertDialog.Builder(this).setTitle(getString(R.string.ui_727036c7fc2a))
                 .setMessage(current?.message?.takeIf { it.isNotBlank() }?.let(::syncMessage) ?: getString(R.string.ui_9daac0f16f9a))
                 .setNegativeButton(getString(R.string.ui_572cf45ba436), null).setPositiveButton(getString(R.string.ui_a33f3804768e)) { _, _ ->
                     SyncService.disconnect(this); toast(getString(R.string.ui_49d0208f4a94))
-                }.show().also { it.setOnDismissListener { showingSyncStatus = false } }
+                }.show().also { it.setOnDismissListener { showingSyncStatus = false }; styleSyncDialog(it) }
             return
         }
         val store = SyncCredentialStore(applicationContext)
-        val address = EditText(this).apply { hint = getString(R.string.ui_9f9e4c872ae8); setSingleLine(true); setText(store.lastAddress()) }
-        val code = EditText(this).apply { hint = getString(R.string.ui_0464d293b4f4); setSingleLine(true); inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD }
-        val layout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(20), dp(8), dp(20), 0); addView(address); addView(code) }
+        fun input(label: String, type: Int) = EditText(this).apply {
+            hint = label; contentDescription = label; setSingleLine(true); inputType = type; textSize = 14f
+            setTextColor(palette.foreground); setHintTextColor(palette.muted); setPadding(dp(12), dp(12), dp(12), dp(12))
+            backgroundTintList = null; background = lx.shape(lx.panel, border = palette.divider)
+        }
+        val address = input(getString(R.string.ui_9f9e4c872ae8), InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI).apply { setText(store.lastAddress()) }
+        val code = input(getString(R.string.ui_0464d293b4f4), InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)
+        val layout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(24), dp(8), dp(24), dp(8)) }
+        fun field(label: Int, view: View) {
+            layout.addView(lx.label(getString(label), 12f, palette.muted), LinearLayout.LayoutParams(-1, -2).apply { setMargins(0, dp(16), 0, dp(8)) })
+            layout.addView(view, LinearLayout.LayoutParams(-1, -2).apply { (view as? TextView)?.minHeight = dp(48) })
+        }
+        field(R.string.layout_sync_address, address); field(R.string.layout_sync_code, code)
         layout.addView(android.widget.Button(this).apply {
             text = getString(R.string.sync_history)
+            isAllCaps = false; setTextColor(palette.primary); background = lx.touch(lx.selected)
             setOnClickListener {
                 val hosts = store.history()
                 if (hosts.isEmpty()) { toast(getString(R.string.sync_history_empty)); return@setOnClickListener }
@@ -775,15 +901,24 @@ class MainActivity : Activity() {
                     true
                 }
             }
-        })
-        syncSettingsDialog = AlertDialog.Builder(this).setTitle(getString(R.string.ui_727036c7fc2a)).setView(layout)
-            .setMessage(listOf(syncMessage(background.message), getString(R.string.ui_f40e986f62c5))
+        }, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(20) })
+        syncSettingsDialog = AlertDialog.Builder(this).setTitle(getString(R.string.ui_727036c7fc2a)).setView(ScrollView(this).apply { addView(layout) })
+            .setMessage(listOf(syncMessage(syncBackground.message), getString(R.string.ui_f40e986f62c5))
                 .filter { it.isNotBlank() }.joinToString("\n\n"))
             .setNegativeButton(getString(R.string.ui_2cd0f3be8738), null).setPositiveButton(getString(R.string.ui_a5574109f020)) { _, _ ->
                 val host = address.text.toString().trim().trimEnd('/')
                 val authCode = code.text.toString()
                 if (host.isBlank()) toast(getString(R.string.ui_686944dc637e)) else connectSync(host, authCode)
-            }.show()
+            }.show().also(::styleSyncDialog)
+    }
+    private fun styleSyncDialog(dialog: AlertDialog) {
+        dialog.window?.apply {
+            setBackgroundDrawable(lx.shape(palette.surface, 10))
+            setLayout(minOf(dp(560), dp(uiLayout.widthDp) - dp(32)), ViewGroup.LayoutParams.WRAP_CONTENT)
+            setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        }
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(palette.primary)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(palette.muted)
     }
     private fun connectSync(address: String, authCode: String) {
         try {
@@ -959,6 +1094,7 @@ class MainActivity : Activity() {
         }.show()
     }
     private fun updateListAction() {
+        updateNavigationSelection()
         val menu = boardMode || onlinePlaylistMode
         listActionButton.text = (if (menu) 59667 else 59660).toChar().toString()
         listActionButton.contentDescription = if (menu) getString(R.string.ui_7b1b6d54c192) else getString(R.string.ui_073a0d57165c)
@@ -1195,6 +1331,7 @@ class MainActivity : Activity() {
         playerDialog = dialog
         val content = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL; setBackgroundColor(palette.surface); fitsSystemWindows = true
+            tag = if (uiLayout.splitPlayer) "player-expanded" else "player-compact"
         }
         val header = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
         header.addView(TextView(this).apply {
@@ -1205,14 +1342,20 @@ class MainActivity : Activity() {
         header.addView(detailTitle, LinearLayout.LayoutParams(0, dp(48), 1f))
         detailPageToggle = TextView(this).apply {
             text = getString(R.string.ui_9dbfa9b42bb3); textSize = 14f; gravity = Gravity.CENTER; setTextColor(primary)
+            visibility = if (uiLayout.splitPlayer) View.GONE else View.VISIBLE; background = lx.touch()
             setOnClickListener { toggleDetailPage() }
         }
         header.addView(detailPageToggle, LinearLayout.LayoutParams(dp(56), dp(48)))
-        header.addView(TextView(this).apply {
-            text = getString(R.string.ui_df3d58c7d84b); textSize = 14f; gravity = Gravity.CENTER; setTextColor(primary); contentDescription = getString(R.string.ui_8c38525734c0)
-            setOnClickListener { showPlaybackSettings() }
-        }, LinearLayout.LayoutParams(dp(56), dp(48)))
+        header.addView(lx.icon(59655, getString(R.string.ui_8c38525734c0)) { showPlaybackSettings() }, LinearLayout.LayoutParams(dp(48), dp(48)))
         content.addView(header)
+        val splitBody = if (uiLayout.splitPlayer) LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL } else null
+        val playerArea = if (splitBody != null) LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL; setPadding(dp(16), 0, dp(16), dp(16))
+        } else content
+        if (splitBody != null) {
+            content.addView(splitBody, LinearLayout.LayoutParams(-1, 0, 1f))
+            splitBody.addView(playerArea, LinearLayout.LayoutParams(0, -1, .45f))
+        }
         val scroll = ScrollView(this).apply { isVerticalScrollBarEnabled = false; isFillViewport = true }
         val lyricContainer = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER_HORIZONTAL
@@ -1221,20 +1364,25 @@ class MainActivity : Activity() {
         detailLyrics = lyricContainer; detailScroll = scroll
         scroll.addView(lyricContainer, FrameLayout.LayoutParams(-1, -2))
         val page = FrameLayout(this)
-        detailCover = FrameLayout(this).apply { setOnClickListener { toggleDetailPage() } }
-        val coverSize = (resources.displayMetrics.widthPixels * 0.78f).toInt().coerceAtMost(dp(340))
+        detailCover = AlbumCoverLayout(this).apply { setOnClickListener { if (!uiLayout.splitPlayer) toggleDetailPage() } }
+        val coverSize = dp(240)
         val album = FrameLayout(this).apply {
-            background = GradientDrawable().apply { setColor(palette.placeholder); cornerRadius = dp(3).toFloat() }
+            background = lx.shape(palette.placeholder, 10); clipToOutline = true
         }
         album.addView(TextView(this).apply { text = "LX"; textSize = 58f; gravity = Gravity.CENTER; setTextColor(primary) }, FrameLayout.LayoutParams(-1, -1))
         detailCoverImage = ImageView(this).apply { scaleType = ImageView.ScaleType.CENTER_CROP; visibility = View.GONE }
         album.addView(detailCoverImage, FrameLayout.LayoutParams(-1, -1))
         detailCover?.addView(album, FrameLayout.LayoutParams(coverSize, coverSize, Gravity.CENTER))
-        page.addView(detailCover, FrameLayout.LayoutParams(-1, -1)); page.addView(scroll, FrameLayout.LayoutParams(-1, -1))
-        detailShowingLyrics = false; scroll.visibility = View.GONE
-        content.addView(page, LinearLayout.LayoutParams(-1, 0, 1f))
+        page.addView(detailCover, FrameLayout.LayoutParams(-1, -1))
+        if (splitBody == null) page.addView(scroll, FrameLayout.LayoutParams(-1, -1))
+        else {
+            splitBody.addView(View(this).apply { setBackgroundColor(palette.divider) }, LinearLayout.LayoutParams(dp(1), -1).apply { setMargins(0, dp(24), 0, dp(24)) })
+            splitBody.addView(scroll, LinearLayout.LayoutParams(0, -1, .55f))
+        }
+        detailShowingLyrics = uiLayout.splitPlayer; scroll.visibility = if (uiLayout.splitPlayer) View.VISIBLE else View.GONE
+        playerArea.addView(page, LinearLayout.LayoutParams(-1, 0, 1f))
         detailTime = TextView(this).apply { textSize = 12f; gravity = Gravity.CENTER; setTextColor(palette.muted) }
-        content.addView(detailTime)
+        playerArea.addView(detailTime)
         detailSeek = SeekBar(this).apply {
             progressTintList = ColorStateList.valueOf(primary); thumbTintList = ColorStateList.valueOf(primary)
             contentDescription = getString(R.string.ui_fc16e2a0fca6)
@@ -1244,32 +1392,33 @@ class MainActivity : Activity() {
                 override fun onStopTrackingTouch(bar: SeekBar?) { detailSeeking = false; service?.seekTo(bar?.progress ?: 0) }
             })
         }
-        content.addView(detailSeek, LinearLayout.LayoutParams(-1, dp(40)).apply { setMargins(dp(20), 0, dp(20), 0) })
+        playerArea.addView(detailSeek, LinearLayout.LayoutParams(-1, dp(if (uiLayout.compactPlayer) 32 else 40)).apply { setMargins(dp(12), 0, dp(12), 0) })
         val controls = LinearLayout(this).apply { gravity = Gravity.CENTER; orientation = LinearLayout.HORIZONTAL }
         fun button(code: Int, label: String, click: () -> Unit) = TextView(this).apply {
             text = code.toChar().toString(); typeface = iconFont; textSize = 28f; gravity = Gravity.CENTER
-            setTextColor(primary); contentDescription = label; setOnClickListener { click() }
+            setTextColor(primary); contentDescription = label; background = lx.touch(); isFocusable = true; setOnClickListener { click() }
         }
         controls.addView(button(59668, getString(R.string.ui_8c747908bf69)) { service?.previous() }, LinearLayout.LayoutParams(dp(72), dp(64)))
         detailToggle = button(59653, getString(R.string.ui_c3396195e91c)) { togglePlayback() }
+        detailToggle?.background = lx.touch(lx.selected, 32)
         controls.addView(detailToggle, LinearLayout.LayoutParams(dp(72), dp(64)))
         controls.addView(button(59654, getString(R.string.ui_486e42475adb)) { service?.next() }, LinearLayout.LayoutParams(dp(72), dp(64)))
-        content.addView(controls)
+        playerArea.addView(controls)
         val options = LinearLayout(this).apply { gravity = Gravity.CENTER; orientation = LinearLayout.HORIZONTAL }
-        detailMode = TextView(this).apply {
-            textSize = 14f; gravity = Gravity.CENTER; setTextColor(palette.muted)
+        detailMode = lx.label("", 13f, palette.muted).apply {
+            gravity = Gravity.CENTER; background = lx.touch()
             setOnClickListener { service?.cycleMode() }
         }
-        options.addView(detailMode, LinearLayout.LayoutParams(dp(120), dp(48)))
-        options.addView(TextView(this).apply {
-            text = getString(R.string.ui_7afda7dc6745); textSize = 14f; gravity = Gravity.CENTER; setTextColor(palette.muted)
+        options.addView(detailMode, LinearLayout.LayoutParams(0, dp(48), 1f))
+        options.addView(lx.label(getString(R.string.ui_7afda7dc6745), 13f, palette.muted).apply {
+            gravity = Gravity.CENTER; background = lx.touch()
             setOnClickListener { showSleepTimer() }
-        }, LinearLayout.LayoutParams(dp(120), dp(48)))
-        options.addView(TextView(this).apply {
-            text = getString(R.string.ui_f01b6815d826); textSize = 14f; gravity = Gravity.CENTER; setTextColor(palette.muted)
+        }, LinearLayout.LayoutParams(0, dp(48), 1f))
+        options.addView(lx.label(getString(R.string.ui_f01b6815d826), 13f, palette.muted).apply {
+            gravity = Gravity.CENTER; background = lx.touch()
             setOnClickListener { showPlaybackQueue() }
-        }, LinearLayout.LayoutParams(dp(100), dp(48)))
-        content.addView(options)
+        }, LinearLayout.LayoutParams(0, dp(48), 1f))
+        playerArea.addView(options)
         palette.background(content); palette.textStyle(content)
         dialog.setContentView(content)
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(palette.surface))
@@ -1285,6 +1434,7 @@ class MainActivity : Activity() {
         renderDetails(state)
     }
     private fun toggleDetailPage() {
+        if (uiLayout.splitPlayer) return
         detailShowingLyrics = !detailShowingLyrics
         detailCover?.visibility = if (detailShowingLyrics) View.GONE else View.VISIBLE
         detailScroll?.visibility = if (detailShowingLyrics) View.VISIBLE else View.GONE
@@ -2004,6 +2154,8 @@ class MainActivity : Activity() {
         }
     }
     private fun filterSongs() {
+        updateNavigationSelection()
+        tableHeader?.apply { removeAllViews(); addView(buildTableHeader()) }
         val query = search.text.toString().trim()
         visibleSongs = if (onlineMode) allSongs else allSongs.filter { it.title.contains(query, true) || it.artist.contains(query, true) }
         status.setTextColor(palette.muted); status.contentDescription = null
@@ -2017,27 +2169,36 @@ class MainActivity : Activity() {
         list.adapter = object : ArrayAdapter<Song>(this, android.R.layout.simple_list_item_1, visibleSongs) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val song = getItem(position)!!
-                val row = LinearLayout(context).apply { gravity = Gravity.CENTER_VERTICAL; orientation = LinearLayout.HORIZONTAL }
+                val playing = highlightedSong == "${song.source}:${song.id}"
+                val row = LinearLayout(context).apply {
+                    gravity = Gravity.CENTER_VERTICAL; orientation = LinearLayout.HORIZONTAL; minimumHeight = dp(if (uiLayout.expanded) 52 else 64)
+                    setPadding(0, dp(6), 0, dp(6)); background = lx.touch(if (playing) lx.selected else Color.TRANSPARENT, 0)
+                    isActivated = playing
+                }
                 row.addView(TextView(context).apply {
-                    text = "${position + 1}"; textSize = 13f; setTextColor(palette.faint); gravity = Gravity.CENTER
-                }, LinearLayout.LayoutParams(dp(38), dp(54)))
-                val info = LinearLayout(context).apply { orientation = LinearLayout.VERTICAL }
-                info.addView(TextView(context).apply { text = song.title; textSize = 14f; setTextColor(palette.foreground); maxLines = 1 })
+                    text = if (playing) "♪" else "${position + 1}"; textSize = 13f; setTextColor(if (playing) palette.primary else palette.faint); gravity = Gravity.CENTER
+                }, LinearLayout.LayoutParams(dp(if (uiLayout.expanded) 48 else 40), -1))
+                val info = LinearLayout(context).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(if (uiLayout.expanded) 8 else 0), 0, dp(8), 0) }
+                info.addView(lx.label(song.title, 14f, if (playing) palette.primary else palette.foreground))
+                val album = if (preferences.showAlbum) song.sourceInfo?.let { runCatching { org.json.JSONObject(it).optString("albumName") }.getOrNull() } else null
                 info.addView(TextView(context).apply {
                     val source = if (preferences.showSource) "${UiPreferences.sourceName(context, song.source)}  " else ""
-                    val album = if (preferences.showAlbum) song.sourceInfo?.let { runCatching { org.json.JSONObject(it).optString("albumName") }.getOrNull() } else null
-                    text = source + song.artist + if (album.isNullOrBlank()) "" else " · $album"
-                    textSize = 11f; setTextColor(palette.muted); maxLines = 1
+                    text = if (uiLayout.expanded) source.trim() else source + song.artist + if (album.isNullOrBlank()) "" else " · $album"
+                    textSize = 11f; setTextColor(palette.muted); maxLines = 1; ellipsize = android.text.TextUtils.TruncateAt.END
+                    visibility = if (text.isBlank()) View.GONE else View.VISIBLE
                 })
-                row.addView(info, LinearLayout.LayoutParams(0, -2, 1f))
-                row.addView(TextView(context).apply {
-                    text = formatTime(song.duration.coerceIn(0, Int.MAX_VALUE.toLong()).toInt()); textSize = 12f; setTextColor(palette.faint)
+                row.addView(info, LinearLayout.LayoutParams(0, -2, if (uiLayout.expanded) 2f else 1f))
+                if (uiLayout.expanded) {
+                    row.addView(lx.label(song.artist, 13f, palette.muted).apply { setPadding(dp(8), 0, dp(8), 0) }, LinearLayout.LayoutParams(0, -2, 1f))
+                    if (uiLayout.albumColumn && preferences.showAlbum) row.addView(lx.label(album?.takeIf { it.isNotBlank() } ?: "—", 13f, palette.muted).apply {
+                        setPadding(dp(8), 0, dp(8), 0)
+                    }, LinearLayout.LayoutParams(0, -2, 1f))
+                }
+                row.addView(lx.label(formatTime(song.duration.coerceIn(0, Int.MAX_VALUE.toLong()).toInt()), 12f, palette.faint).apply {
+                    gravity = Gravity.CENTER
                     visibility = if (preferences.showDuration) View.VISIBLE else View.GONE
-                })
-                row.addView(TextView(context).apply {
-                    text = 59667.toChar().toString(); typeface = iconFont; textSize = 12f; gravity = Gravity.CENTER; setTextColor(palette.faint)
-                    contentDescription = getString(R.string.ui_507e04d42f14); setOnClickListener { showSongActions(song) }
-                }, LinearLayout.LayoutParams(dp(46), dp(54)))
+                }, LinearLayout.LayoutParams(dp(if (uiLayout.expanded) 60 else 46), -2))
+                row.addView(lx.icon(59667, getString(R.string.ui_507e04d42f14), 16f) { showSongActions(song) }, LinearLayout.LayoutParams(dp(48), dp(48)))
                 palette.textStyle(row)
                 return row
             }
@@ -2050,6 +2211,10 @@ class MainActivity : Activity() {
     private fun renderPlayer(state: PlayerState) {
         val song = state.song
         val nextLyricKey = song?.let { "${it.source}:${it.id}" }
+        if (highlightedSong != nextLyricKey) {
+            highlightedSong = nextLyricKey
+            (list.adapter as? ArrayAdapter<*>)?.notifyDataSetChanged()
+        }
         if (nextLyricKey != artworkKey) {
             artworkKey = nextLyricKey; artworkBitmap = service?.artworkState?.value?.takeIf { it.key == nextLyricKey }?.bitmap; updateArtwork()
         }
@@ -2070,6 +2235,10 @@ class MainActivity : Activity() {
         if (!changingSeek) seek.progress = state.position
         time.text = "${formatTime(state.position)} / ${formatTime(state.duration)}"
         renderDetails(state)
+        if (playerRestorePending) {
+            playerRestorePending = false; showPlayerDetails()
+            if (restoreDetailLyrics && !uiLayout.splitPlayer) toggleDetailPage()
+        }
         if (startupPlayerPending && song != null) { startupPlayerPending = false; showPlayerDetails() }
     }
     private fun updateLyric(position: Int) {

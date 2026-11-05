@@ -80,3 +80,30 @@ API 28/35 模拟器回归、签名及原生发布草稿工作流已写入，但�
 Android 工程已移至仓库根目录，`app/`、`gradle/`、`scripts/`、Gradle 配置与 Wrapper 可直接使用；CI 的触发路径、构建目录、设备回归入口、产物归档及发布草稿报告路径已同步更新。详细使用与开发说明位于 [DEVELOPMENT.md](DEVELOPMENT.md)。迁移的 197 个源码、资源、构建及脚本文件与 Git 中的原文件逐字节一致，文档中的本地链接检查通过。
 
 在仓库根目录执行 `:app:assembleDebug :app:assembleDebugAndroidTest :app:testDebugUnitTest :app:lintDebug` 全部通过；JVM 单元测试 14 项通过，Lint 为 0 错误、58 警告。设备回归脚本和 Unix Gradle Wrapper 均通过 `bash -n` 语法检查。
+
+## 手机与平板样式验证（2026-11-05）
+
+参考桌面版的侧栏、歌曲分列及移动版的导航、播放器结构，实现随当前窗口宽度切换的原生界面。手机与平板共用主题、图标、选中背景、触摸反馈和同步设置表单。封面在测量阶段限制为容器内的正方形，避免首次布局或窗口缩小时越界。
+
+| 验证 | 本轮结果 |
+| --- | --- |
+| Debug APK、仪器测试 APK 构建 | 通过 |
+| JVM 单元测试 | 14 项通过，0 失败 |
+| Debug Lint | 0 错误、53 警告 |
+| Android 12 界面回归 | 12 项通过，0 失败、0 跳过 |
+
+界面回归包含新增的 `AdaptiveLayoutTest` 5 项，以及 `HomeNavigationTest`、`PlayerDetailTest`、`ScreenInsetsTest`、`LocalizationTest`、`PreferencesAndThemesTest`。覆盖导航与歌曲列、播放详情重建后保留歌词页、同步字段及对话框宽度、深色主题、英文、1.3 倍字号、右侧导航，以及既有手势和窗口 Insets。
+
+在设备上使用 Android 原生 View 的测量和绘制，验证 360×800、600×800、1024×768 dp 的完整界面，检查歌曲区域有足够高度、底部控制不越界、封面尺寸和歌词分栏，并导出列表及播放详情预览。测试歌曲仅存在于 Activity 内，没有写入歌单数据库。
+
+设备为 YYA-H618（Android 12，电视固件）。该固件会把竖屏 Activity 压成横屏窗口，因此三种尺寸预览属于原生 View 测量渲染，不是手机硬件截图；手机竖屏的系统窗口和实际输入法行为尚未完成硬件实测。交互、重建、主题和 Insets 测试在设备原有窗口运行。测试后物理显示保持 1920×1080、213 dpi。
+
+```powershell
+.\gradlew.bat :app:assembleDebug :app:assembleDebugAndroidTest :app:testDebugUnitTest :app:lintDebug
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+adb install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+adb shell am instrument -w -e class cn.toside.music.nativeapp.ui.AdaptiveLayoutTest,cn.toside.music.nativeapp.ui.HomeNavigationTest,cn.toside.music.nativeapp.ui.PlayerDetailTest,cn.toside.music.nativeapp.ui.ScreenInsetsTest,cn.toside.music.nativeapp.ui.LocalizationTest,cn.toside.music.nativeapp.ui.PreferencesAndThemesTest -e adaptiveScreenshots true cn.toside.music.nativeapp.test/cn.toside.music.nativeapp.NativeTestRunner
+adb pull /sdcard/Android/data/cn.toside.music.nativeapp/files/adaptive-validation build/adaptive-validation/verified
+```
+
+本轮输出位于 `build/adaptive-validation/verified/`，其中 `measured-360-*`、`measured-600-*`、`measured-1024-*` 为三种尺寸的 View 渲染；`tablet-dark-player.png`、`tablet-sync.png` 等为设备窗口内的 View 渲染。最终测试输出保存在 `build/adaptive-validation/final-tests.txt`，调试包为 `app/build/outputs/apk/debug/app-debug.apk`。

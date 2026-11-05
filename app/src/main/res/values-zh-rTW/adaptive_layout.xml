@@ -1,0 +1,11 @@
+<resources>
+    <string name="layout_search">搜尋</string>
+    <string name="layout_songlists">歌單</string>
+    <string name="layout_track">歌曲</string>
+    <string name="layout_artist">歌手</string>
+    <string name="layout_album">專輯</string>
+    <string name="layout_duration">時長</string>
+    <string name="layout_empty_hint">選擇音樂列表，或搜尋喜歡的歌曲</string>
+    <string name="layout_sync_address">服務位址</string>
+    <string name="layout_sync_code">同步碼</string>
+</resources>

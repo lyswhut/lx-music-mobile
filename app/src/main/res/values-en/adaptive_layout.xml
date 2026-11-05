@@ -1,0 +1,11 @@
+<resources>
+    <string name="layout_search">Search</string>
+    <string name="layout_songlists">Playlists</string>
+    <string name="layout_track">Track</string>
+    <string name="layout_artist">Artist</string>
+    <string name="layout_album">Album</string>
+    <string name="layout_duration">Time</string>
+    <string name="layout_empty_hint">Choose a music list or search for your favorite songs</string>
+    <string name="layout_sync_address">Server address</string>
+    <string name="layout_sync_code">Sync code</string>
+</resources>

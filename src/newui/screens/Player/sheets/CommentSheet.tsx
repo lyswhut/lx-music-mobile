@@ -234,6 +234,11 @@ export const CommentSheet = ({ visible, musicInfo, onClose, bottomInset }: Comme
             )
       : null
 
+  // 失败态不绑触底：Sheet 的触底判定除了滚动，还会在内容尺寸变化等时机补判（首屏短内容靠它自动续页），
+  // 若失败态也放行，「加载中」换成「没翻到」页脚高度一变就会自动再撞一次网——失败保持页脚点按重试。
+  // 其余态（loading / ready）一律交给 handleLoadMore 内部闸门（phase / isLoading / isEnd）挡。
+  const handleListEndReached = moreState === 'error' ? undefined : handleLoadMore
+
   return (
     <Sheet
       visible={visible}
@@ -241,7 +246,7 @@ export const CommentSheet = ({ visible, musicInfo, onClose, bottomInset }: Comme
       subtitle={NEW_UI_SHEET_COMMENT.sub}
       onClose={onClose}
       bottomInset={bottomInset}
-      onEndReached={handleLoadMore}
+      onEndReached={handleListEndReached}
       list={{
         data: comments,
         renderItem,

@@ -3,6 +3,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import type { ListInfoItem } from '@/store/songlist/state'
+import { LIST_LOAD_LIMIT } from '@/core/songlist'
 
 import {
   Chip,
@@ -183,6 +184,10 @@ export const SearchResultPanel = memo(({
         contentContainerStyle={[styles.scrollContent, { paddingBottom: contentPaddingBottom }, boxStyle]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
+        // —— 虚拟化精细化参数（同根因：RN 默认 initialNumToRender=10，首批 mount 不够铺满屏）——
+        initialNumToRender={LIST_LOAD_LIMIT}
+        maxToRenderPerBatch={14}
+        windowSize={7}
         // 不加 removeClippedSubviews：回收单元格里的 SVG 封面在 Android 上有整格变白的老毛病，
         // 虚拟化本身已把挂载行数砍到屏内十条上下，不需要再叠一层原生裁剪
         renderItem={({ item, index }) => (
@@ -241,6 +246,12 @@ export const SearchResultPanel = memo(({
       showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled"
       columnWrapperStyle={plColumnStyle}
+      // —— 虚拟化精细化参数（同根因：RN 默认 initialNumToRender=10 行 = 20 张卡，可能不够铺满屏）——
+      // initialNumToRender 按「行」计，numColumns=2 时 LIST_LOAD_LIMIT=30 item 刚好 15 行，
+      // 首批 mount 15 行 = 30 张卡，语义与单曲列表对齐（平台一批最大条数）
+      initialNumToRender={Math.max(Math.floor(LIST_LOAD_LIMIT / gridColumns), 8)}
+      maxToRenderPerBatch={14}
+      windowSize={7}
       renderItem={({ item }) => (
         <View style={plItemStyle}>
           <PlCard

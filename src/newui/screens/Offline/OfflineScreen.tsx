@@ -8,6 +8,7 @@ import { MinibarHost } from '@/newui/components/Minibar'
 import { PlTop } from '@/newui/components/PlTop'
 import { SongRow } from '@/newui/components/SongRow'
 import { NEW_UI_OFFLINE, QUALITY_LABEL } from '@/newui/const'
+import { LIST_LOAD_LIMIT } from '@/core/songlist'
 import {
   useMyPlaylists,
   useNewUiSystemBar,
@@ -184,6 +185,12 @@ export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
         ListEmptyComponent={listEmpty}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={listContentStyle}
+        // —— 虚拟化精细化参数（2026-11-05，同根因：RN 默认 initialNumToRender=10，10 行 × 46px = 460px 铺不满屏）——
+        // 已缓存屏不分页、整单一次性到位，LIST_LOAD_LIMIT=30 首批 mount 30 行 × 46px = 1380px 足够覆盖任何设备一屏；
+        // maxToRenderPerBatch=14 / windowSize=7 与 SonglistDetailScreen 判例同档，滚动补渲染速度与窗口余量平衡
+        initialNumToRender={LIST_LOAD_LIMIT}
+        maxToRenderPerBatch={14}
+        windowSize={7}
       />
       {/* 常驻迷你播放条：本层默认磁吸圆点（原型 miniPageSnapped：不在首页就是圆点）。
           挂在轴之后、屏幕根层最后——圆点浮在列表内容之上 */}

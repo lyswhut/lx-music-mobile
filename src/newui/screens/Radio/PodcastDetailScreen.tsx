@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { BackHandler, FlatList, StyleSheet, Text, View } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 
+import { LIST_LOAD_LIMIT } from '@/core/songlist'
+
 import { pickArtPalette } from '@/newui/components/Art'
 import { CoverWash } from '@/newui/components/CoverWash'
 import { EmptyTip } from '@/newui/components/EmptyTip'
@@ -345,9 +347,9 @@ export const PodcastDetailScreen = ({ componentId, show }: PodcastDetailScreenPr
         keyExtractor={keyExtractor}
         ListEmptyComponent={axisEmpty}
         ListFooterComponent={axisFooter}
-        // 虚拟化参数照 SonglistDetailScreen.tsx:717-740 那组现成判例（本列不分页，所以没有
+        // 虚拟化参数照 SonglistDetailScreen LIST_LOAD_LIMIT=30 判例（本列不分页，所以没有
         // onEndReached；尾巴只有一行「没有更多了」收行，见 axisFooter）
-        initialNumToRender={10}
+        initialNumToRender={LIST_LOAD_LIMIT}
         maxToRenderPerBatch={14}
         windowSize={9}
         showsVerticalScrollIndicator={false}

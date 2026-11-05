@@ -52,8 +52,8 @@ import { clearNewUiRecentPlays, playQueue, showNewUiToast, toSongDisplay } from 
 
 import type { NewUiPageProps } from '../../types'
 
-/** 最近播放列表最多列几首（原型 state.history 上限就是 30 条） */
-const RECENT_LIMIT = 30
+/** 最近播放列表最多列几首（原型 state.history 上限是 30 条，2026-11-05 产品改 10 条） */
+const RECENT_LIMIT = 10
 
 /**
  * 「我的歌单」卡副行（件 parts/mine/my-pl-mine.html U46，原型 plCardMine L1276 /

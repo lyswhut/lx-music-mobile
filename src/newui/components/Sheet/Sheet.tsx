@@ -11,7 +11,10 @@ import {
   Text,
   useWindowDimensions,
   View,
+  type LayoutChangeEvent,
   type ListRenderItem,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { BlurView } from '@react-native-community/blur'
@@ -158,14 +161,79 @@ export function Sheet<T = unknown>({
   }, [visible, onClose])
 
   /**
-   * list 模式给 FlatList 的触底回调：引用永不变（VirtualizedList 对回调引用变化会告警且重建内部监听），
+   * list 模式给 FlatList 的触底链路：引用永不变（VirtualizedList 对回调引用变化会告警且重建内部监听），
    * 经 ref 透传当前 props.onEndReached。ScrollView 模式不用它（走内联 onScroll 距底判定，与旧行为一致）。
+   *
+   * **不使用 FlatList 原生 onEndReached**——动态高度列表（评论卡含回复线程）下，VirtualizedList
+   * 靠 cellsAroundViewport 估算"视口末 cell = 数据末条"来决定是否触发，估算不准时（首批 15 条评论
+   * 高度 > Sheet 窗口、但 VirtualizedList 按平均行高估窗口只覆盖到第 7 条）永远不触发。
+   *
+   * 改为自记滚动度量（offset / 视口高 / 内容高），在**四个时机**共用同一条 SHEET.endReachThreshold：
+   * - onScroll                             滚动过程中；
+   * - onScrollEndDrag / onMomentumScrollEnd 滚动停手（甩到底后虚拟化补齐渲染、不再有滚动事件的窗口）；
+   * - onContentSizeChange                  内容从短变长的瞬间（首屏数据在 FlatList 挂载之后才到、
+   *                                        短内容不足一屏时用户根本滚不动，也就永远等不到滚动事件）；
+   * - onLayout                             视口测量到位。
+   * 同一内容高只发一次（滚离底部即解除），与调用方的 isLoading/isEnd 闸门叠加，等价 VirtualizedList
+   * 的 contentLength 去重。
+   *
+   * 2026-11-03 评论浮窗「首次打开拉到底不加载更多、关闭重开一次才好」的根因就是漏掉
+   * onContentSizeChange 这一类时机：重开时数据已在场，布局一量到就补判补齐；首开时列表先以空数据挂载、
+   * 数据到了才长高，若只认滚动事件，短内容永远等不到触发（与歌单详情 2026-10-15 同一套判例）。
    */
   const endReachedRef = useRef(onEndReached)
   endReachedRef.current = onEndReached
-  const handleListEndReached = useCallback(() => {
-    endReachedRef.current?.()
+  /** 最近一次的滚动度量（供非滚动时机补判用） */
+  const listScrollMetricsRef = useRef({ offset: 0, visible: 0, content: 0 })
+  /** 上次触底触发时的内容高；同一高度只发一次，滚离底部或内容变化才允许重新触发 */
+  const listSentEndForContentLengthRef = useRef(0)
+
+  const checkListEndReached = useCallback(() => {
+    const callback = endReachedRef.current
+    if (callback == null) return
+    const { offset, visible, content } = listScrollMetricsRef.current
+    // 首帧未测量（0）不判，防把「还没布局」误读成「已触底」
+    if (visible <= 0 || content <= 0) return
+    // 偏移按当前内容高钳位：数据变短（如重开回到第 1 页）时平台不一定回抛 onScroll
+    const maxOffset = Math.max(0, content - visible)
+    const distanceFromEnd = maxOffset - Math.min(offset, maxOffset)
+    if (distanceFromEnd >= SHEET.endReachThreshold) {
+      // 滚离底部了 → 解除同内容高去重，允许滚回来时再次触发
+      listSentEndForContentLengthRef.current = 0
+      return
+    }
+    if (content === listSentEndForContentLengthRef.current) return
+    listSentEndForContentLengthRef.current = content
+    callback()
   }, [])
+
+  /** 滚动事件（含拖拽结束 / 惯性结束）：收三段度量后补判一次 */
+  const handleListScrollForEndReached = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { contentOffset, contentSize, layoutMeasurement } = e.nativeEvent
+    listScrollMetricsRef.current = {
+      offset: contentOffset.y,
+      visible: layoutMeasurement.height,
+      content: contentSize.height,
+    }
+    checkListEndReached()
+  }, [checkListEndReached])
+
+  const handleListContentSizeChange = useCallback((_width: number, height: number) => {
+    listScrollMetricsRef.current.content = height
+    checkListEndReached()
+  }, [checkListEndReached])
+
+  const handleListLayout = useCallback((e: LayoutChangeEvent) => {
+    listScrollMetricsRef.current.visible = e.nativeEvent.layout.height
+    checkListEndReached()
+  }, [checkListEndReached])
+
+  // 每次浮层重新打开：度量与去重锁归零——列表已重新挂载（回到顶部），旧会话的值不该拦新会话的触底
+  useEffect(() => {
+    if (!visible) return
+    listScrollMetricsRef.current = { offset: 0, visible: 0, content: 0 }
+    listSentEndForContentLengthRef.current = 0
+  }, [visible])
 
   if (!mounted) return null
 
@@ -191,16 +259,6 @@ export function Sheet<T = unknown>({
         <Text style={[styles.sub, { color: theme.colors.text3 }]}>{subtitle}</Text>
       )}
     </>
-  )
-
-  /**
-   * FlatList 的 onEndReachedThreshold 是「视口高的倍数」，与 ScrollView 路径的 300px 定值不同量纲；
-   * 按体贴满格（78% 窗口高）折算近似对齐。体贴不满格（内容很短）时会更早触发，
-   * 但重入由调用方挡闸（与旧路径「连发」同一语义），无副作用。
-   */
-  const listEndReachedThreshold = Math.max(
-    SHEET.endReachThreshold / Math.max(windowHeight * SHEET.maxHeightRatio, 1),
-    0.05,
   )
 
   return (
@@ -302,8 +360,13 @@ export function Sheet<T = unknown>({
                 maxToRenderPerBatch={SHEET.listMaxToRenderPerBatch}
                 windowSize={SHEET.listWindowSize}
                 onScrollToIndexFailed={list.onScrollToIndexFailed}
-                onEndReached={onEndReached ? handleListEndReached : undefined}
-                onEndReachedThreshold={listEndReachedThreshold}
+                // 不用 FlatList 原生 onEndReached——动态高度下 cellsAroundViewport 估算不准，
+                // 改自记滚动度量 + 四个时机补判（说明见 handleListScrollForEndReached 上方注释）
+                onScroll={onEndReached ? handleListScrollForEndReached : undefined}
+                onScrollEndDrag={onEndReached ? handleListScrollForEndReached : undefined}
+                onMomentumScrollEnd={onEndReached ? handleListScrollForEndReached : undefined}
+                onContentSizeChange={onEndReached ? handleListContentSizeChange : undefined}
+                onLayout={onEndReached ? handleListLayout : undefined}
               />
             </>
           ) : (

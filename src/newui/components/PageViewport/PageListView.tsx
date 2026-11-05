@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react'
 import { FlatList, StyleSheet, type ListRenderItem, type StyleProp, type ViewStyle } from 'react-native'
 
+import { LIST_LOAD_LIMIT } from '@/core/songlist'
 import { LAYOUT, TAB_BAR } from '@/newui/theme'
 // 直连具体 hook（不走 @/newui/hooks 桶口），与兄弟件 PageViewport 同一做法
 import { useWideLayout } from '@/newui/hooks/useWideLayout'
@@ -50,8 +51,9 @@ export interface PageListViewProps<T> {
  *
  * 刻意**不加** `removeClippedSubviews`：回收单元格里的 SVG 封面（Art 内圈层）在 Android 上
  * 有整格变白的老毛病（SearchResultPanel 2026-10-12 同轮结论）；windowSize 回收已够用。
- * 参数取现成范式（SonglistDetailScreen L731-749 / SearchResultPanel）：
- * initialNumToRender / maxToRenderPerBatch / windowSize，网格行高约 220px，按行计。
+ * 参数取现成范式（SonglistDetailScreen LIST_LOAD_LIMIT=30 判例，歌单详情 OOM 修复轮已验证）：
+ * initialNumToRender 对齐 LIST_LOAD_LIMIT 覆盖平台一批最大条数；maxToRenderPerBatch=14 跟详情屏同档；
+ * windowSize=7 保窗口余量、不把未滚到的行过早回收。网格行高约 220px，按行计。
  *
  * 泛型用普通函数组件而非 memo 包装：memo 会把泛型塌成 any/unknown，这里入参引用稳定性
  * 由页面侧（useCallback rows）保证。
@@ -98,8 +100,8 @@ export function PageListView<T>({
       ]}
       showsVerticalScrollIndicator={false}
       scrollEventThrottle={16}
-      initialNumToRender={6}
-      maxToRenderPerBatch={4}
+      initialNumToRender={LIST_LOAD_LIMIT}
+      maxToRenderPerBatch={14}
       windowSize={7}
       updateCellsBatchingPeriod={50}
       {...scrollHandlers}

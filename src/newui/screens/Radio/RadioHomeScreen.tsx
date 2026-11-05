@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Animated, BackHandler, FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 
+import { LIST_LOAD_LIMIT } from '@/core/songlist'
+
 import { Art } from '@/newui/components/Art'
 import { HScroll } from '@/newui/components/HScroll'
 import { Icon } from '@/newui/components/Icon'
@@ -317,7 +319,8 @@ export const RadioHomeScreen = ({ componentId }: RadioHomeScreenProps) => {
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ListFooterComponent={listFooter}
-        initialNumToRender={10}
+        // LIST_LOAD_LIMIT=30：覆盖榜列固定 50 条中首批可挂载量；maxToRenderPerBatch/windowSize 同 SonglistDetailScreen
+        initialNumToRender={LIST_LOAD_LIMIT}
         maxToRenderPerBatch={14}
         windowSize={9}
         showsVerticalScrollIndicator={false}

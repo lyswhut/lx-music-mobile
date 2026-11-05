@@ -248,40 +248,7 @@ export const PlaylistPage = ({
         </View>
       )}
 
-      <Section
-        sub
-        title={NEW_UI_PLAYLIST_TITLES.mine}
-        more={NEW_UI_PLAYLIST_MANAGE}
-        onMorePress={() => onSwitchTab('mine')}
-      >
-        {myLists.length
-          ? (
-            <HScroll>
-              {myLists.map(list => {
-                // 卡面与详情头图同一口径（原型 listCover，app.js L909-913）：平台收藏来的用平台
-                // 那张真图，纯自建用单子里第一首歌的封面（空单才回落内置版式）
-                const builtInSeed = `${NEW_UI_PLAYLIST_ART_SEED.mine}:${list.id}`
-                const collected = hasPlatformHome(list)
-                return (
-                  <MyPlCard
-                    key={list.id}
-                    name={list.name}
-                    sub={
-                      // 副行口径按原型 my-pl（app.js L745 `${n} 首 · ${p.desc}`，QA D16）：项目里的
-                      // 本地歌单没有「描述」字段（store/list 只存 name / source / sourceListId），
-                      // 如实只报首数——不再拿「来自某平台」顶替描述位（那是另一回事的信息）
-                      list.count == null ? '还在数有几首' : `${list.count} 首`
-                    }
-                    artSeed={collected ? builtInSeed : (list.firstArtSeed ?? builtInSeed)}
-                    artUri={collected ? listCovers[list.id] : list.firstArtUri}
-                    onPress={() => handleMyPlPress(list)}
-                  />
-                )
-              })}
-            </HScroll>
-          )
-          : <EmptyTip text={NEW_UI_PLAYLIST_EMPTY.mine} />}
-      </Section>
+      {/* 2026-11-05 产品撤掉歌单页「我的歌单」横排；统一留在「我的」Tab，歌单页只剩池子 */}
 
       {/* 池子标题行（Section 无 children：只出头，卡行由列表体承载、尾巴进 ListFooterComponent，
           与旧「Section 头 + CardGrid 体」的间距口径一致：root margin 26 + head margin-bottom 12） */}

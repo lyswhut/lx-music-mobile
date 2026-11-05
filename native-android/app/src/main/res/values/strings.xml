@@ -1,0 +1,503 @@
+<resources>
+    <string name="ui_7894327145b0">"%1$s 更新提示"</string>
+    <string name="ui_3fd47edce45b" formatted="false">"关闭"</string>
+    <string name="ui_d74a71e7af34" formatted="false">"打开更新地址"</string>
+    <string name="ui_671ad117f5de">"无法恢复后台同步：%1$s"</string>
+    <string name="ui_cbe111f9db69" formatted="false">"需要存储权限才能下载"</string>
+    <string name="ui_936ed13655b8" formatted="false">"不支持的文件地址"</string>
+    <string name="ui_93c862a05840" formatted="false">"导入音源脚本？"</string>
+    <string name="ui_2cd0f3be8738" formatted="false">"取消"</string>
+    <string name="ui_576d81bb0631" formatted="false">"导入"</string>
+    <string name="ui_f327410a7cc1" formatted="false">"不支持的文件类型"</string>
+    <string name="ui_11d9e3c1753d">"打开失败：%1$s"</string>
+    <string name="ui_5903b3b5a9ca" formatted="false">"无法读取音源"</string>
+    <string name="ui_7ca47a28e695" formatted="false">"播放服务尚未连接"</string>
+    <string name="ui_18710cc58894" formatted="false">"音源已导入"</string>
+    <string name="ui_0874f11320ab">"音源导入失败：%1$s"</string>
+    <string name="ui_908fd41b724a" formatted="false">"未知的播放操作"</string>
+    <string name="ui_93f8317b3c21" formatted="false">"未知的歌单操作"</string>
+    <string name="ui_477a0fc0b291" formatted="false">"正在读取歌单…"</string>
+    <string name="ui_ed2156c5f636" formatted="false">"歌单没有歌曲"</string>
+    <string name="ui_0fea25b96961" formatted="false">"缺少歌曲信息"</string>
+    <string name="ui_4f751ba03fed" formatted="false">"歌曲信息无效"</string>
+    <string name="ui_5bfaaf2346e1" formatted="false">"缺少歌曲名"</string>
+    <string name="ui_6c9ad7b94469" formatted="false">"没有找到匹配的歌曲"</string>
+    <string name="ui_bf5201384405" formatted="false">"未知的音乐操作"</string>
+    <string name="ui_fd2c0650c75b" formatted="false">"歌单链接或编号"</string>
+    <string name="ui_ac7aa03a458f" formatted="false">"打开歌单链接"</string>
+    <string name="ui_acfc4e74a650" formatted="false">"下一步"</string>
+    <string name="ui_03c68e4bc44d">"读取链接失败：%1$s"</string>
+    <string name="ui_72477c9eeff6" formatted="false">"选择歌单平台"</string>
+    <string name="ui_2a6eaaa1f30c" formatted="false">"酷我"</string>
+    <string name="ui_6f5fe8042a63" formatted="false">"酷狗"</string>
+    <string name="ui_3ef42060a2e5" formatted="false">"QQ音乐"</string>
+    <string name="ui_a62864e8c353" formatted="false">"网易"</string>
+    <string name="ui_017e2d45158b" formatted="false">"咪咕"</string>
+    <string name="ui_f5d5d510fdfe" formatted="false">"刷新歌单？"</string>
+    <string name="ui_ca37ac5cc4f6" formatted="false">"完整读取平台歌单后替换本地歌曲；本地添加和排序将被更新。"</string>
+    <string name="ui_aee887434131" formatted="false">"刷新"</string>
+    <string name="ui_129963b15e11" formatted="false">"正在读取完整歌单…"</string>
+    <string name="ui_07c05b19b201">"已刷新 %1$s 首歌曲"</string>
+    <string name="ui_e7f735120024">"刷新失败：%1$s"</string>
+    <string name="ui_e35a36e26d52" formatted="false">"导航菜单"</string>
+    <string name="ui_27c95ec6b766" formatted="false">"我的列表"</string>
+    <string name="ui_33eeaa47c231" formatted="false">"›   本地音乐"</string>
+    <string name="ui_073a0d57165c" formatted="false">"搜索歌曲"</string>
+    <string name="ui_7ad45199f05a" formatted="false">"搜索歌曲或歌手"</string>
+    <string name="ui_2e14553ec90c" formatted="false">"正在读取音乐…"</string>
+    <string name="ui_af90a08fec8e" formatted="false">"加载更多"</string>
+    <string name="ui_f518674b61f6" formatted="false">"播放详情"</string>
+    <string name="ui_2389f5b06bce" formatted="false">"选择歌曲开始播放"</string>
+    <string name="ui_c3396195e91c" formatted="false">"播放"</string>
+    <string name="ui_486e42475adb" formatted="false">"下一首"</string>
+    <string name="ui_fc16e2a0fca6" formatted="false">"播放进度"</string>
+    <string name="ui_a9531e47b75d" formatted="false">"本地音乐"</string>
+    <string name="ui_c2dd14825672" formatted="false">"我的歌单"</string>
+    <string name="ui_87a2113eb66f" formatted="false">"在线搜索"</string>
+    <string name="ui_1ee95aa94712" formatted="false">"排行榜"</string>
+    <string name="ui_259597bf6ca7" formatted="false">"在线歌单"</string>
+    <string name="ui_3158c8d56b7b" formatted="false">"导入自定义音源"</string>
+    <string name="ui_a5cd0a9169e8" formatted="false">"导入旧版歌单备份"</string>
+    <string name="ui_3facd3e00be5" formatted="false">"导出歌单备份"</string>
+    <string name="ui_599818eb56df" formatted="false">"播放音质"</string>
+    <string name="ui_727036c7fc2a" formatted="false">"数据同步"</string>
+    <string name="ui_2a3ec620e12c" formatted="false">"不喜欢列表"</string>
+    <string name="ui_8c38525734c0" formatted="false">"播放与歌词设置"</string>
+    <string name="ui_486b54a7b0af" formatted="false">"桌面歌词"</string>
+    <string name="ui_6e763b71e69c" formatted="false">"音源管理"</string>
+    <string name="ui_f01b6815d826" formatted="false">"播放队列"</string>
+    <string name="ui_cad84b75d661" formatted="false">"搜索历史与热搜"</string>
+    <string name="ui_426744e26e7e" formatted="false">"播放历史"</string>
+    <string name="ui_18a9d61deeb3" formatted="false">"通用设置"</string>
+    <string name="ui_788db1cfec2a" formatted="false">"主题"</string>
+    <string name="ui_4fd38bc4f6d4" formatted="false">"关于与版本"</string>
+    <string name="ui_bb1d19b85634" formatted="false">"诊断日志"</string>
+    <string name="ui_f75a93326a3c" formatted="false">"返回桌面"</string>
+    <string name="ui_b0d269c8707c" formatted="false">"退出应用"</string>
+    <string name="ui_0c5f909e92d2" formatted="false">"退出应用？"</string>
+    <string name="ui_2474ed447b00" formatted="false">"停止播放和本次后台同步；保留队列与未同步的修改。"</string>
+    <string name="ui_498e1d59b4d7" formatted="false">"退出"</string>
+    <string name="ui_44ce7ae909bb" formatted="false">"搜索"</string>
+    <string name="ui_e07216a6d505">"›   在线搜索（%1$s）"</string>
+    <string name="ui_bd997b86cde1" formatted="false">"输入关键词后按键盘搜索"</string>
+    <string name="ui_14b8d12a0ed6" formatted="false">"每行一条：歌曲名、@歌手或歌曲名@歌手"</string>
+    <string name="ui_a3030bf8f16d" formatted="false">"保存"</string>
+    <string name="ui_1ef3de06b32e" formatted="false">"清空"</string>
+    <string name="ui_e2e7a21aa13b" formatted="false">"不喜欢列表已保存"</string>
+    <string name="ui_749d84b5fa76">"保存失败：%1$s"</string>
+    <string name="ui_9b3d69ae09ce" formatted="false">"添加到不喜欢"</string>
+    <string name="ui_a5c2cb376cf6" formatted="false">"屏蔽这首歌和歌手"</string>
+    <string name="ui_3ab737d3e7d1" formatted="false">"屏蔽歌曲名"</string>
+    <string name="ui_024a5e862936" formatted="false">"屏蔽歌手"</string>
+    <string name="ui_b7f9c185ce8e" formatted="false">"歌曲信息为空"</string>
+    <string name="ui_9daac0f16f9a" formatted="false">"正在恢复后台同步…"</string>
+    <string name="ui_572cf45ba436" formatted="false">"返回"</string>
+    <string name="ui_a33f3804768e" formatted="false">"断开连接"</string>
+    <string name="ui_49d0208f4a94" formatted="false">"同步已断开"</string>
+    <string name="ui_9f9e4c872ae8" formatted="false">"同步服务地址，例如 http://192.168.1.2:9527"</string>
+    <string name="ui_0464d293b4f4" formatted="false">"同步码（已授权时可留空）"</string>
+    <string name="ui_f40e986f62c5" formatted="false">"连接后在后台同步歌单和不喜欢列表，通知中可随时断开；首次连接或授权失效时请输入同步码。"</string>
+    <string name="ui_a5574109f020" formatted="false">"连接"</string>
+    <string name="ui_686944dc637e" formatted="false">"请输入同步服务地址"</string>
+    <string name="ui_79110e8d2e06">"无法启动后台同步：%1$s"</string>
+    <string name="ui_9bc599d27f67">"本机%1$s合并远程%2$s"</string>
+    <string name="ui_d46592bdaed4">"远程%1$s合并本机%2$s"</string>
+    <string name="ui_039142dac5c0">"本机%1$s覆盖远程%2$s"</string>
+    <string name="ui_3e4d21031b6b">"远程%1$s覆盖本机%2$s"</string>
+    <string name="ui_318ed0b4705c" formatted="false">"本机歌单完全覆盖远程歌单"</string>
+    <string name="ui_155471e97da7" formatted="false">"远程歌单完全覆盖本机歌单"</string>
+    <string name="ui_5034ddc8102c" formatted="false">"取消同步"</string>
+    <string name="ui_5265436b89fb">"选择%1$s同步方式%2$s"</string>
+    <string name="ui_3cda5816cb6e" formatted="false">"›   我的歌单"</string>
+    <string name="ui_e48ff968de78" formatted="false">"当前歌单已被远程删除"</string>
+    <string name="ui_c9bccc27768b" formatted="false">"播放服务正在连接，请稍后重试"</string>
+    <string name="ui_350260df62b8" formatted="false">"导入网络音源"</string>
+    <string name="ui_98e96c39ccf6" formatted="false">"停用音源"</string>
+    <string name="ui_8052c1f1c0ab" formatted="false">"http(s) 音源脚本链接"</string>
+    <string name="ui_6a7c1a0a3a3e" formatted="false">"请输入有效的 HTTP(S) 链接"</string>
+    <string name="ui_03f6f90cdb7a">"网络音源导入失败：%1$s"</string>
+    <string name="ui_7f1c18aeb640" formatted="false">"音源已停用"</string>
+    <string name="ui_903f7809008b">"停用失败：%1$s"</string>
+    <string name="ui_b0f9363c052f">"读取音源失败：%1$s"</string>
+    <string name="ui_09679f956e0e" formatted="false">"播放队列为空"</string>
+    <string name="ui_827be73ec6db">"播放队列 · %1$s 首"</string>
+    <string name="ui_d18e02739127" formatted="false">"清空队列"</string>
+    <string name="ui_f853a70b1204" formatted="false">"上移"</string>
+    <string name="ui_e75e8b4e5c97" formatted="false">"下移"</string>
+    <string name="ui_6135d4159e89" formatted="false">"移除"</string>
+    <string name="ui_f4f0ead1116b" formatted="false">"启用"</string>
+    <string name="ui_0e6252224f58" formatted="false">"查看信息"</string>
+    <string name="ui_0fd5cd79a1b5" formatted="false">"导出脚本"</string>
+    <string name="ui_ba9a8defba4e">"%1$s更新提示"</string>
+    <string name="ui_8da97ddda990" formatted="false">"开启"</string>
+    <string name="ui_2f9daa828907" formatted="false">"删除"</string>
+    <string name="ui_032d025aff70" formatted="false">"音源已启用"</string>
+    <string name="ui_ced3fddd61e0">"启用失败：%1$s"</string>
+    <string name="ui_88f46c701fba">"版本：%1$s"</string>
+    <string name="ui_962844a38d3e">"作者：%1$s"</string>
+    <string name="ui_3e0d676d2d85" formatted="false">"主页"</string>
+    <string name="ui_5c73d0fff5e2" formatted="false">"更新提示设置已保存"</string>
+    <string name="ui_852174674832">"删除音源“%1$s”？"</string>
+    <string name="ui_a1bfd178ab34" formatted="false">"音源已删除"</string>
+    <string name="ui_57deb333c04b">"删除失败：%1$s"</string>
+    <string name="ui_7b1b6d54c192" formatted="false">"列表菜单"</string>
+    <string name="ui_5dd238551428" formatted="false">"切换榜单"</string>
+    <string name="ui_0650128981bd" formatted="false">"切换歌单"</string>
+    <string name="ui_68f0bc744846" formatted="false">"列表操作"</string>
+    <string name="ui_7f7653be272b" formatted="false">"保存已加载的歌曲"</string>
+    <string name="ui_24f59c4dbea0" formatted="false">"当前列表没有歌曲"</string>
+    <string name="ui_48a4cd426376" formatted="false">"歌单平台"</string>
+    <string name="ui_d6319126b753" formatted="false">"搜索歌单"</string>
+    <string name="ui_b0e14cdb6fad" formatted="false">"网易歌单分类"</string>
+    <string name="ui_367e0be118ac" formatted="false">"酷狗歌单分类"</string>
+    <string name="ui_3cfe8d81c220" formatted="false">"酷我歌单分类"</string>
+    <string name="ui_13873c4c8594" formatted="false">"QQ音乐歌单分类"</string>
+    <string name="ui_02afd374b929" formatted="false">"咪咕歌单分类"</string>
+    <string name="ui_abb4e1c88b47" formatted="false">"正在加载歌单分类…"</string>
+    <string name="ui_b42ea22b8aec" formatted="false">"没有找到歌单分类"</string>
+    <string name="ui_7e6b573e77bd">"歌单分类加载失败：%1$s"</string>
+    <string name="ui_d8f2ca6f12b4" formatted="false">"搜索歌单 · 选择平台"</string>
+    <string name="ui_7c5a4bea69d3" formatted="false">"输入歌单关键词"</string>
+    <string name="ui_ed43b8a78d98" formatted="false">"请输入歌单关键词"</string>
+    <string name="ui_3d3ec32220b1" formatted="false">"正在搜索歌单…"</string>
+    <string name="ui_fd45345182bb">"没有找到%1$s歌单"</string>
+    <string name="ui_38844b135cf7" formatted="false">"更多"</string>
+    <string name="ui_ea36ef28dfcd" formatted="false">"下一页 ›"</string>
+    <string name="ui_ca3e84f738ad">"搜索：%1$s · 第 %2$s 页"</string>
+    <string name="ui_c9b9ae7a6144" formatted="false">"上一页"</string>
+    <string name="ui_be54d7d43555">"歌单搜索失败：%1$s"</string>
+    <string name="ui_d88b9c569e32" formatted="false">"正在加载推荐歌单…"</string>
+    <string name="ui_8c440faad4bb" formatted="false">"没有找到更多推荐歌单"</string>
+    <string name="ui_7a8b9a2e85c6" formatted="false">"酷我推荐歌单"</string>
+    <string name="ui_c67c5ff0011d" formatted="false">"网易推荐歌单"</string>
+    <string name="ui_c63d7e27139b" formatted="false">"咪咕推荐歌单"</string>
+    <string name="ui_df93dcc2ee4a" formatted="false">"酷狗推荐歌单"</string>
+    <string name="ui_13d9fbc47bef" formatted="false">"QQ音乐推荐歌单"</string>
+    <string name="ui_d1d187349a65">"%1$s%2$s · 第 %3$s 页"</string>
+    <string name="ui_31206f5478ba">"歌单加载失败：%1$s"</string>
+    <string name="ui_006d2287b3ea" formatted="false">"收藏的歌单"</string>
+    <string name="ui_ce626c5abcb8">"将保存当前已加载的 %1$s 首歌曲到新歌单。"</string>
+    <string name="ui_ff45f8f5d491" formatted="false">"请输入歌单名称"</string>
+    <string name="ui_1d8c2c9c0aba">"已保存 %1$s 首歌曲"</string>
+    <string name="ui_473e57b72072" formatted="false">"歌单"</string>
+    <string name="ui_aed6f82d382c" formatted="false">"正在加载歌单…"</string>
+    <string name="ui_122bd549791d" formatted="false">"排行榜平台"</string>
+    <string name="ui_018c1fe1fe88" formatted="false">"酷狗排行榜"</string>
+    <string name="ui_f96c99ccd4dc" formatted="false">"QQ音乐排行榜"</string>
+    <string name="ui_4f971250a44d" formatted="false">"网易排行榜"</string>
+    <string name="ui_4a4e5155b457" formatted="false">"酷我排行榜"</string>
+    <string name="ui_f9e46d37aa9f" formatted="false">"咪咕排行榜"</string>
+    <string name="ui_4760ac1e18cc" formatted="false">"正在加载榜单…"</string>
+    <string name="ui_22a7c1cdbc29">"榜单加载失败：%1$s"</string>
+    <string name="ui_9b980a0136e4" formatted="false">"搜索平台"</string>
+    <string name="ui_9dbfa9b42bb3" formatted="false">"歌词"</string>
+    <string name="ui_df3d58c7d84b" formatted="false">"设置"</string>
+    <string name="ui_8c747908bf69" formatted="false">"上一首"</string>
+    <string name="ui_7afda7dc6745" formatted="false">"定时停止"</string>
+    <string name="ui_ccbb5ee62b1a" formatted="false">"封面"</string>
+    <string name="ui_13f910fe7cce" formatted="false">"到时播放完当前歌曲再停止"</string>
+    <string name="ui_0446dbd36ecc" formatted="false">"关闭定时"</string>
+    <string name="ui_015feae6f8e4" formatted="false">"15 分钟"</string>
+    <string name="ui_a01a28d147ac" formatted="false">"30 分钟"</string>
+    <string name="ui_bf6201684e5b" formatted="false">"60 分钟"</string>
+    <string name="ui_928ff220b57b" formatted="false">"90 分钟"</string>
+    <string name="ui_0b41f8fb1d48" formatted="false">"120 分钟"</string>
+    <string name="ui_c6414cdd4464" formatted="false">"本曲结束后停止"</string>
+    <string name="ui_db424926e343" formatted="false">"已关闭定时停止"</string>
+    <string name="ui_dd38be1cc98a">"已设置 %1$s 分钟定时停止"</string>
+    <string name="ui_8d12fc0d4eb2" formatted="false">"暂停"</string>
+    <string name="ui_0245e1b77ac5" formatted="false">"暂无歌词"</string>
+    <string name="ui_799c8f89223c" formatted="false">"点击这里授权并加载本地音乐"</string>
+    <string name="ui_ccdab23ef0b3" formatted="false">"授权并加载本地音乐"</string>
+    <string name="ui_172fc36a4a5c" formatted="false">"需要访问音频"</string>
+    <string name="ui_9d0bbc51b8d2" formatted="false">"请在系统设置中允许访问音频文件，然后继续操作。"</string>
+    <string name="ui_37aa6ad6a36d" formatted="false">"打开设置"</string>
+    <string name="ui_75f6a07d7c9d" formatted="false">"未获得音频访问权限，点击这里重试"</string>
+    <string name="ui_7b9143ea8eb8" formatted="false">"未获得音频访问权限，已取消导出"</string>
+    <string name="ui_bb0ff4f9b826" formatted="false">"未获得音频访问权限"</string>
+    <string name="ui_a65a40087086" formatted="false">"找不到要播放的歌曲"</string>
+    <string name="ui_7aea1779d123">"读取歌曲失败：%1$s"</string>
+    <string name="ui_7ee7cd3a2806">"读取音乐失败：%1$s"</string>
+    <string name="ui_ef6e30183259">"读取歌单失败：%1$s"</string>
+    <string name="ui_9e638dd9d71b" formatted="false">"＋ 新建歌单"</string>
+    <string name="ui_9d3981ee6aa3" formatted="false">"歌单名称"</string>
+    <string name="ui_13eeeadb23fb" formatted="false">"新建歌单"</string>
+    <string name="ui_cde2cd071d25" formatted="false">"创建"</string>
+    <string name="ui_a5164865c034">"创建失败：%1$s"</string>
+    <string name="ui_02a61399982d" formatted="false">"打开歌单"</string>
+    <string name="ui_b6cd52c6fe92" formatted="false">"全部加入队列"</string>
+    <string name="ui_4abdef1f2424" formatted="false">"歌曲排序"</string>
+    <string name="ui_4e0ca928260e" formatted="false">"清空歌单"</string>
+    <string name="ui_31448436755a" formatted="false">"从平台刷新歌单"</string>
+    <string name="ui_0d0cbac2eee5" formatted="false">"重命名"</string>
+    <string name="ui_46a150506a48" formatted="false">"歌单上移"</string>
+    <string name="ui_77037dd314bf" formatted="false">"歌单下移"</string>
+    <string name="ui_0a1d79c26e3b" formatted="false">"删除歌单"</string>
+    <string name="ui_e31d650c716b">"操作失败：%1$s"</string>
+    <string name="ui_51a4e2f9dea0" formatted="false">"已加入播放队列"</string>
+    <string name="ui_7ec5153cfab4" formatted="false">"歌曲名"</string>
+    <string name="ui_cfb624b8a25b" formatted="false">"歌手"</string>
+    <string name="ui_04a95e0654d3" formatted="false">"时长"</string>
+    <string name="ui_9e9d4588c7f0" formatted="false">"反转顺序"</string>
+    <string name="ui_b4262f363f77" formatted="false">"重命名歌单"</string>
+    <string name="ui_88ff633c9cdd">"%1$s歌单“%2$s”？歌曲文件不会被删除。"</string>
+    <string name="ui_fac2a67ad878" formatted="false">"确定"</string>
+    <string name="ui_92503cecb0e4" formatted="false">"批量选择歌曲"</string>
+    <string name="ui_3a5040b68abf" formatted="false">"全选"</string>
+    <string name="ui_7c75b6ccc72a" formatted="false">"请先选择歌曲"</string>
+    <string name="ui_2cd77e843e22" formatted="false">"播放所选"</string>
+    <string name="ui_f655b3c8a2b6" formatted="false">"加入播放队列"</string>
+    <string name="ui_cc143006b20d" formatted="false">"添加到歌单"</string>
+    <string name="ui_2b96f6a6a976" formatted="false">"移动到歌单"</string>
+    <string name="ui_c7d9494f6392" formatted="false">"从歌单移除"</string>
+    <string name="ui_e44c6ed9b6a6">"已选择 %1$s 首歌曲"</string>
+    <string name="ui_74f577267660">"从歌单移除所选 %1$s 首歌曲？"</string>
+    <string name="ui_4f0536be4304" formatted="false">"已移除所选歌曲"</string>
+    <string name="ui_1dd0b9466445">"移除失败：%1$s"</string>
+    <string name="ui_158871d8b201" formatted="false">"已处理所选歌曲"</string>
+    <string name="ui_f4d4bae588c4" formatted="false">"取消全选"</string>
+    <string name="ui_792336bc0bbf" formatted="false">"导入 LRC 歌词"</string>
+    <string name="ui_9c2f512b6594" formatted="false">"刷新歌词"</string>
+    <string name="ui_94ca0a7bf933" formatted="false">"下一首播放"</string>
+    <string name="ui_804151aa3e97" formatted="false">"分享歌曲"</string>
+    <string name="ui_732807e9a807" formatted="false">"搜索其他来源"</string>
+    <string name="ui_9be60bb7ddeb" formatted="false">"下载歌曲"</string>
+    <string name="ui_07f73642e525" formatted="false">"查看评论"</string>
+    <string name="ui_44c2c89152c7" formatted="false">"从当前歌单移除"</string>
+    <string name="ui_de23dedafe75" formatted="false">"歌曲上移"</string>
+    <string name="ui_d092b4040c1f" formatted="false">"歌曲下移"</string>
+    <string name="ui_72b5f22035d2">"分享失败：%1$s"</string>
+    <string name="ui_d2678cc07f14" formatted="false">"正在匹配其他平台…"</string>
+    <string name="ui_cb355d5c3da2" formatted="false">"其他来源"</string>
+    <string name="ui_f6baa7a2ba08">"匹配失败：%1$s"</string>
+    <string name="ui_9706d4890951">"移动失败：%1$s"</string>
+    <string name="ui_3d085075c12b">"排序失败：%1$s"</string>
+    <string name="ui_698d047aee02" formatted="false">"歌词缓存已刷新"</string>
+    <string name="ui_ee8644062426" formatted="false">"需要存储权限"</string>
+    <string name="ui_5657f8f32261" formatted="false">"请在系统设置中允许存储权限，然后继续下载。"</string>
+    <string name="ui_6b7ce36f8aa9" formatted="false">"已加入系统下载队列"</string>
+    <string name="ui_42fb22bc6277">"下载失败：%1$s"</string>
+    <string name="ui_bc86fe4ef5a1" formatted="false">"无法写入文件"</string>
+    <string name="ui_7f05d4a5267c" formatted="false">"日志已导出"</string>
+    <string name="ui_94477acc433d">"导出失败：%1$s"</string>
+    <string name="ui_d002a3c70b6f" formatted="false">"音源已不存在"</string>
+    <string name="ui_f09d848b26d5" formatted="false">"脚本已导出"</string>
+    <string name="ui_96d30301c75b" formatted="false">"无法读取备份"</string>
+    <string name="ui_e67137044b3b">"读取备份失败：%1$s"</string>
+    <string name="ui_2dcda639f980" formatted="false">"无法读取音源文件"</string>
+    <string name="ui_2b06ad3fc97c" formatted="false">"歌词已导入"</string>
+    <string name="ui_e57c5262074b">"导入歌词失败：%1$s"</string>
+    <string name="ui_ce34bb9dcbed" formatted="false">"无法写入备份"</string>
+    <string name="ui_d8d9cfef9027" formatted="false">"歌单备份已导出"</string>
+    <string name="ui_1aa0f000b1e1">"已导出；%1$s 首本地歌曲未能记录文件路径"</string>
+    <string name="ui_735faa049036">"导出备份失败：%1$s"</string>
+    <string name="ui_9587a26d9a2c">"备份包含 %1$s 个歌单、%2$s 首可导入歌曲。可新建副本；完整匹配时也可按歌单 ID 覆盖同一歌单，保留其他歌单。"</string>
+    <string name="ui_fbefd6976ef5">"\n%1$s 首歌曲无法匹配本地文件或格式不受支持，不能导入。"</string>
+    <string name="ui_63802f7b0c9b" formatted="false">"导入旧版歌单"</string>
+    <string name="ui_d75d8ce65fed" formatted="false">"新建副本"</string>
+    <string name="ui_f301e960381c">"已导入 %1$s 首歌曲"</string>
+    <string name="ui_dd5c3f8f623f">"导入失败：%1$s"</string>
+    <string name="ui_d02f0ac55e15" formatted="false">"按 ID 恢复"</string>
+    <string name="ui_8f3a82ea5eda">"已恢复 %1$s 首歌曲"</string>
+    <string name="ui_edc6992a1230">"恢复失败：%1$s"</string>
+    <string name="ui_bf12c5906f59" formatted="false">"请先创建歌单"</string>
+    <string name="ui_889839915c3f" formatted="false">"已添加"</string>
+    <string name="ui_54a28a424697" formatted="false">"歌曲已在歌单中"</string>
+    <string name="ui_3350538a51ed">"添加失败：%1$s"</string>
+    <string name="ui_dcd3c46d127f">"查看%1$s热搜"</string>
+    <string name="ui_02c0ab8fbd15" formatted="false">"清空搜索历史"</string>
+    <string name="ui_6d0b959193ab" formatted="false">"搜索历史与热搜（长按历史可删除）"</string>
+    <string name="ui_fa0ead846beb" formatted="false">"正在加载热搜…"</string>
+    <string name="ui_50933f24c7aa" formatted="false">"平台没有返回热搜词"</string>
+    <string name="ui_2a61478eeecf">"%1$s热搜"</string>
+    <string name="ui_bf00a3daba4a">"获取热搜失败：%1$s"</string>
+    <string name="ui_4f03b04808e7">"播放历史 · %1$s 首"</string>
+    <string name="ui_82abac1a7ffd">"读取播放历史失败：%1$s"</string>
+    <string name="ui_c975aa812f44" formatted="false">"请输入搜索关键词"</string>
+    <string name="ui_c37059a3d9df" formatted="false">"正在搜索…"</string>
+    <string name="ui_3ce71e5b6037">"搜索失败：%1$s"</string>
+    <string name="ui_88034b35be15" formatted="false">"没有找到歌曲"</string>
+    <string name="ui_119b62e66b9d">"%1$s 首歌曲"</string>
+    <string name="ui_507e04d42f14" formatted="false">"歌曲菜单"</string>
+    <string name="ui_d04fcbda737f" formatted="false">"加载中"</string>
+    <string name="ui_8a47499c40e0" formatted="false">"启动时自动播放"</string>
+    <string name="ui_d6320dc2f6f6" formatted="false">"启动时打开播放详情"</string>
+    <string name="ui_5da5740ba417" formatted="false">"保存播放进度"</string>
+    <string name="ui_4a79cf8d0791" formatted="false">"记录播放历史"</string>
+    <string name="ui_1a232faf3bfe" formatted="false">"音源请求失败时自动匹配其他平台"</string>
+    <string name="ui_4affe217c432" formatted="false">"顺序播放时自动移除已播歌曲"</string>
+    <string name="ui_2f9d06b47ed2" formatted="false">"处理音频焦点"</string>
+    <string name="ui_ff6ed64098b9" formatted="false">"音频卸载（下次播放生效，按设备能力回退）"</string>
+    <string name="ui_46749ca81e12" formatted="false">"通知栏显示封面"</string>
+    <string name="ui_d5b0714beafd" formatted="false">"通过媒体信息发送蓝牙歌词"</string>
+    <string name="ui_7a36a9f3c4ab" formatted="false">"蓝牙歌词包含歌曲名和歌手"</string>
+    <string name="ui_6e34875b6fe3" formatted="false">"列表与搜索"</string>
+    <string name="ui_0aec06d42251" formatted="false">"点击歌单直接播放"</string>
+    <string name="ui_c41fc8ebc9bb" formatted="false">"显示歌曲来源"</string>
+    <string name="ui_1855017a0392" formatted="false">"显示专辑名"</string>
+    <string name="ui_5b5ca57648a2" formatted="false">"显示歌曲时长"</string>
+    <string name="ui_3b432f3fe1df" formatted="false">"保存列表滚动位置"</string>
+    <string name="ui_9d379ca17d16" formatted="false">"搜索建议包含历史"</string>
+    <string name="ui_02eeee3c6016" formatted="false">"打开搜索时显示热搜入口"</string>
+    <string name="ui_e3b61ed71904" formatted="false">"允许拖动播放进度"</string>
+    <string name="ui_d7295a6e9a5a" formatted="false">"无播放歌曲时隐藏播放栏"</string>
+    <string name="ui_0e32883df479" formatted="false">"添加歌曲的位置"</string>
+    <string name="ui_6f2a4a02e60e" formatted="false">"顶部"</string>
+    <string name="ui_3f049887991b" formatted="false">"底部"</string>
+    <string name="ui_94cbb4dbf89e" formatted="false">"下载文件命名"</string>
+    <string name="ui_7df84c1fad91" formatted="false">"歌名 - 歌手"</string>
+    <string name="ui_5b43dcf6bbaa" formatted="false">"歌手 - 歌名"</string>
+    <string name="ui_a01594f78908" formatted="false">"歌名"</string>
+    <string name="ui_729baeb8ad16" formatted="false">"分享方式"</string>
+    <string name="ui_13a1c63fb5dc" formatted="false">"系统分享"</string>
+    <string name="ui_ae788c9d4b50" formatted="false">"复制到剪贴板"</string>
+    <string name="ui_b23ed4004e18" formatted="false">"歌曲来源名称"</string>
+    <string name="ui_7bc846cd34a3" formatted="false">"平台别名"</string>
+    <string name="ui_23fbf53da512" formatted="false">"平台全名"</string>
+    <string name="ui_9e820f904830" formatted="false">"界面（关闭设置后应用）"</string>
+    <string name="ui_11c5a044b748" formatted="false">"导航中显示返回桌面"</string>
+    <string name="ui_c9edbe7646fb" formatted="false">"导航中显示退出应用"</string>
+    <string name="ui_d715550e650d" formatted="false">"导航菜单位置"</string>
+    <string name="ui_6a24b14f33c7" formatted="false">"左侧"</string>
+    <string name="ui_1cf1d4d0b24b" formatted="false">"右侧"</string>
+    <string name="ui_6089721beb10" formatted="false">"界面字号"</string>
+    <string name="ui_b58fafc108f2" formatted="false">"较小"</string>
+    <string name="ui_6bea77acefb3" formatted="false">"标准"</string>
+    <string name="ui_ff3e02138450" formatted="false">"较大"</string>
+    <string name="ui_7d4ca7f48eff" formatted="false">"大"</string>
+    <string name="ui_a90304cdfb87" formatted="false">"特大"</string>
+    <string name="ui_e3ca04a9cb13" formatted="false">"缓存"</string>
+    <string name="ui_0269e7020043" formatted="false">"播放缓存上限"</string>
+    <string name="ui_363b6afc345c" formatted="false">"关闭缓存"</string>
+    <string name="ui_3ea7896aff54" formatted="false">"正在统计歌词缓存…"</string>
+    <string name="ui_31b0dd704fee">"播放缓存：%1$s MB\n封面缓存：%2$s KB\n在线歌词缓存：%3$s KB（保留手动导入歌词）"</string>
+    <string name="ui_12ccb655405b" formatted="false">"清理封面缓存"</string>
+    <string name="ui_ca88f243ff2a">"清理失败：%1$s"</string>
+    <string name="ui_26cc8d0af3e5" formatted="false">"清理播放缓存"</string>
+    <string name="ui_a84c68e6881a" formatted="false">"清理在线歌词缓存"</string>
+    <string name="ui_e4272bc9fe9f" formatted="false">"清除歌单访问凭据"</string>
+    <string name="ui_2619b193e7ef" formatted="false">"已清除歌单访问凭据"</string>
+    <string name="ui_2ff467120772">"清除失败：%1$s"</string>
+    <string name="ui_c0b3fbff51cc" formatted="false">"完成"</string>
+    <string name="ui_e919e87486b4" formatted="false">"无法应用设置"</string>
+    <string name="ui_f7fbdb84467e" formatted="false">"播放倍速"</string>
+    <string name="ui_7e3f2f88c8fc">"播放倍速：%1$s×"</string>
+    <string name="ui_dc0e25979181" formatted="false">"应用内音量"</string>
+    <string name="ui_f3978b48d365">"应用内音量：%1$s%%"</string>
+    <string name="ui_7eb039f21dbd" formatted="false">"歌词字号"</string>
+    <string name="ui_c99707d3d601">"歌词字号（%1$s）：%2$s sp"</string>
+    <string name="ui_055a6b3a3de7" formatted="false">"横屏"</string>
+    <string name="ui_c35bd83b94b4" formatted="false">"竖屏"</string>
+    <string name="ui_f5f431a88186" formatted="false">"歌词对齐"</string>
+    <string name="ui_6e30e4ed3423" formatted="false">"显示歌词译文"</string>
+    <string name="ui_1dd07ef2a8c1" formatted="false">"显示罗马音"</string>
+    <string name="ui_e17be4f4d18f" formatted="false">"逐字高亮"</string>
+    <string name="ui_f3ee75d994c7" formatted="false">"简体歌词转繁体"</string>
+    <string name="ui_9f47534dbad2" formatted="false">"歌词时间微调"</string>
+    <string name="ui_76fd6993ada5" formatted="false">"选择歌曲后可调整歌词时间"</string>
+    <string name="ui_b54e1d73efc8" formatted="false">"提前 0.5 秒"</string>
+    <string name="ui_c9aeeabf6acc" formatted="false">"歌词归零"</string>
+    <string name="ui_896a97e85ced" formatted="false">"延后 0.5 秒"</string>
+    <string name="ui_ba2e93e73037" formatted="false">"恢复默认"</string>
+    <string name="ui_3a89dbc96a55" formatted="false">"无法恢复设置"</string>
+    <string name="ui_87f152e81f80" formatted="false">"歌词时间："</string>
+    <string name="ui_e3f1123bb38b" formatted="false">"不偏移"</string>
+    <string name="ui_e207e127367b">"%1$s %2$s 秒"</string>
+    <string name="ui_876d80cccc0c" formatted="false">"延后"</string>
+    <string name="ui_728e91804a2f" formatted="false">"提前"</string>
+    <string name="ui_edcdd4eb5145" formatted="false">"热门评论 · 切换最新评论"</string>
+    <string name="ui_cf945e21ddef" formatted="false">"回复"</string>
+    <string name="ui_04348c8824f5">"%1$s 的回复"</string>
+    <string name="ui_7270f21b0d99">"%1$s · 评论"</string>
+    <string name="ui_148bcfd6d534">"\n[图片 %1$s]"</string>
+    <string name="ui_ecb8ffea43a2" formatted="false">"\n回复 "</string>
+    <string name="ui_21bd738e0d71" formatted="false">"正在加载…"</string>
+    <string name="ui_65b9115c0973">"已加载 %1$s 条 · 共 %2$s 条"</string>
+    <string name="ui_4d8c1c5b4283" formatted="false">"未知"</string>
+    <string name="ui_06d9bbeb3af9" formatted="false">"没有更多评论"</string>
+    <string name="ui_e6e79ef974ed">"加载失败：%1$s"</string>
+    <string name="ui_b8784c8dd563" formatted="false">"重试"</string>
+    <string name="ui_5805f0b9bcce" formatted="false">"评论图片"</string>
+    <string name="ui_b231587899f3" formatted="false">"浏览器打开"</string>
+    <string name="ui_7206c39ccf2e" formatted="false">"图片加载失败，可使用浏览器打开"</string>
+    <string name="ui_95d495fa65a5" formatted="false">"复制评论"</string>
+    <string name="ui_bec9edaffccd" formatted="false">"展开已加载回复"</string>
+    <string name="ui_8273d8d3de88" formatted="false">"加载更多回复"</string>
+    <string name="ui_475d38917292">"查看图片 %1$s"</string>
+    <string name="ui_6849b8254d20" formatted="false">"评论"</string>
+    <string name="ui_cd807c58b9cf" formatted="false">"最新评论 · 切换热门评论"</string>
+    <string name="ui_37e60fc85ddb" formatted="false">"LX Music 桌面歌词"</string>
+    <string name="ui_fbd649d1c94d" formatted="false">"启用桌面歌词"</string>
+    <string name="ui_6de595beb4c0" formatted="false">"锁定位置并允许触摸穿透"</string>
+    <string name="ui_ad6fb7bbb54d" formatted="false">"锁定时透明度受系统上限限制，以允许触摸穿透。"</string>
+    <string name="ui_1c3ff44df48b" formatted="false">"单行显示"</string>
+    <string name="ui_7459e7da0ad4" formatted="false">"切换动画"</string>
+    <string name="ui_f71561b5af0a" formatted="false">"字号"</string>
+    <string name="ui_4b7334f3d8ae" formatted="false">"宽度百分比"</string>
+    <string name="ui_eda53a9cf5c1" formatted="false">"最大行数"</string>
+    <string name="ui_04405e4a9ffd" formatted="false">"不透明度"</string>
+    <string name="ui_d1b14abbc00a" formatted="false">"水平对齐"</string>
+    <string name="ui_e2e0c454e5d5" formatted="false">"左"</string>
+    <string name="ui_a567bdaa1136" formatted="false">"中"</string>
+    <string name="ui_14ab1f2bce0a" formatted="false">"右"</string>
+    <string name="ui_128f6e763147" formatted="false">"垂直对齐"</string>
+    <string name="ui_4cc3885c182e" formatted="false">"居中"</string>
+    <string name="ui_f56e7eff58bf" formatted="false">"白色"</string>
+    <string name="ui_30c83dc25b12" formatted="false">"绿色"</string>
+    <string name="ui_67035e6b7f82" formatted="false">"蓝色"</string>
+    <string name="ui_789f61dbfcc7" formatted="false">"红色"</string>
+    <string name="ui_ed7d2c54184b" formatted="false">"黑色"</string>
+    <string name="ui_d451c07d739b" formatted="false">"黄色"</string>
+    <string name="ui_6f6364983f72" formatted="false">"未播放颜色"</string>
+    <string name="ui_5b4844acaf2f" formatted="false">"已播放颜色"</string>
+    <string name="ui_2b40dbdb39f9" formatted="false">"阴影颜色"</string>
+    <string name="ui_d874760c91f0" formatted="false">"需要允许显示在其他应用上层；锁定后可回到此处解锁。"</string>
+    <string name="ui_8143c43db805" formatted="false">"重置位置"</string>
+    <string name="ui_22425f239f2d">"LX Music 原生版\n版本：%1$s (%2$s)\n\n本软件免费、开源。基于落雪无痕的 LX Music Mobile 迁移，原项目与原生迁移工程的发布入口见下方。"</string>
+    <string name="ui_4db966cc21a9" formatted="false">"检查原生版更新"</string>
+    <string name="ui_6b72c3d6855c" formatted="false">"正在检查…"</string>
+    <string name="ui_ca985784214d" formatted="false">"尚无已发布的原生版安装包"</string>
+    <string name="ui_cda525a300a1">"当前已是最新原生版（%1$s）"</string>
+    <string name="ui_3f07b0d41217">"发现原生版 %1$s"</string>
+    <string name="ui_936707017ead">"原生版 %1$s"</string>
+    <string name="ui_1c947644f8de" formatted="false">"请在发布页查看更新说明。"</string>
+    <string name="ui_7eb97e5b947e" formatted="false">"打开发布页"</string>
+    <string name="ui_506c6f6ae493">"检查失败：%1$s"</string>
+    <string name="ui_88e03b310fe2" formatted="false">"原生工程主页"</string>
+    <string name="ui_bac19e2d086b" formatted="false">"原生版发布页"</string>
+    <string name="ui_397b5581b4a9" formatted="false">"原项目主页"</string>
+    <string name="ui_45a6d115fdfb" formatted="false">"常见问题"</string>
+    <string name="ui_31882138222f" formatted="false">"反馈问题"</string>
+    <string name="ui_038ad816c53f" formatted="false">"开源许可"</string>
+    <string name="ui_c7520af426a5" formatted="false">"记录同步状态与错误"</string>
+    <string name="ui_8a57b342c746" formatted="false">"记录音源脚本日志"</string>
+    <string name="ui_10fafbeaa7fd" formatted="false">"暂无日志"</string>
+    <string name="ui_76420433f22d" formatted="false">"导出"</string>
+    <string name="ui_c7970c3d538e" formatted="false">"跟随系统明暗主题"</string>
+    <string name="ui_76a0950acd56" formatted="false">"深色模式隐藏背景图"</string>
+    <string name="ui_7c0f1e4ec56f" formatted="false">"背景缓慢移动"</string>
+    <string name="ui_490573c22811" formatted="false">"文字阴影"</string>
+    <string name="ui_8874d3825cf1" formatted="false">"选择主题；系统模式下分别保存明亮和深色主题。"</string>
+    <string name="ui_63c73c4730f4" formatted="false">"应用"</string>
+    <string name="ui_2fe0943eacb3" formatted="false">"列表循环"</string>
+    <string name="ui_5bbcac595bc6" formatted="false">"顺序播放"</string>
+    <string name="ui_8cde791504d2" formatted="false">"单曲循环"</string>
+    <string name="ui_f34b7ce61098" formatted="false">"随机播放"</string>
+    <string name="ui_2bd74486069f" formatted="false">"左对齐"</string>
+    <string name="ui_331c711e0660" formatted="false">"右对齐"</string>
+    <string name="ui_9f6fee1aba17" formatted="false">"语言"</string>
+    <string name="ui_217cfe7db1e3" formatted="false">"跟随系统"</string>
+    <string name="ui_9937e365aaf3" formatted="false">"简体中文"</string>
+    <string name="ui_1c95ab9b144e" formatted="false">"繁體中文"</string>
+    <string name="ui_ba118bf7fc9c" formatted="false">"English"</string>
+    <string name="ui_bf4ad761840f" formatted="false">"本地"</string>
+    <string name="ui_5b9757b493aa" formatted="false">"小蜗音乐"</string>
+    <string name="ui_883798ba73cb" formatted="false">"小枸音乐"</string>
+    <string name="ui_0bef848c17a7" formatted="false">"小秋音乐"</string>
+    <string name="ui_6e2dc7dc5b3c" formatted="false">"小芸音乐"</string>
+    <string name="ui_7f11bc755c6f" formatted="false">"小蜜音乐"</string>
+    <string name="ui_7920e0816ab9" formatted="false">"酷我音乐"</string>
+    <string name="ui_7d0e8317588d" formatted="false">"酷狗音乐"</string>
+    <string name="ui_f2a5bbaf0de8" formatted="false">"网易音乐"</string>
+    <string name="ui_3b6993b997df" formatted="false">"咪咕音乐"</string>
+</resources>

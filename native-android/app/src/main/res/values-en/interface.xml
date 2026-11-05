@@ -1,0 +1,28 @@
+<resources>
+    <string name="pact_title">Project usage agreement</string>
+    <string name="pact_accept">Accept</string>
+    <string name="pact_reject">Decline and exit</string>
+    <string name="pact_countdown">Accept (%1$d)</string>
+    <string name="sync_history">Sync server history (hold to remove authorization)</string>
+    <string name="sync_history_empty">No saved sync servers</string>
+    <string name="sync_history_remove">Remove this server and its saved authorization?</string>
+    <string name="matching_cache_count">Cross-provider match cache: %1$d entries</string>
+    <string name="matching_cache_clear">Clear cross-provider match cache</string>
+    <string name="app_name">LX Music Native</string>
+    <string name="interface_language">Language (applied when settings close)</string>
+    <string name="language_system">Follow system</string>
+    <string name="home_page_swipe">Swipe horizontally to change home pages</string>
+    <string name="reserve_status_bar">Reserve status bar height in landscape</string>
+    <string name="sync_connecting">Connecting to sync server…</string>
+    <string name="sync_active">Syncing %1$s in the background</string>
+    <string name="sync_choose">Return to the app to choose how to sync %1$s</string>
+    <string name="sync_timeout_retry">Sync connection timed out. Retrying…</string>
+    <string name="sync_interrupted_retry">Sync connection interrupted. Retrying…</string>
+    <string name="sync_stopped">Sync stopped: %1$s</string>
+    <string name="sync_cancelled">Sync cancelled</string>
+    <string name="sync_time_limit">System background sync time limit reached. Return to the app to resume.</string>
+    <string name="sync_notification_title">LX Music data sync</string>
+    <string name="sync_disconnect">Disconnect sync</string>
+    <string name="share_song">Share song</string>
+    <string name="share_copied">Song link copied</string>
+</resources>

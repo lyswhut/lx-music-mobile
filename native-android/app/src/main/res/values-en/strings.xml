@@ -1,0 +1,503 @@
+<resources>
+    <string name="ui_7894327145b0">"%1$s update notice"</string>
+    <string name="ui_3fd47edce45b" formatted="false">"Close"</string>
+    <string name="ui_d74a71e7af34" formatted="false">"Open update address"</string>
+    <string name="ui_671ad117f5de">"Could not resume background sync: %1$s"</string>
+    <string name="ui_cbe111f9db69" formatted="false">"Storage permission is required to download"</string>
+    <string name="ui_936ed13655b8" formatted="false">"Unsupported file address"</string>
+    <string name="ui_93c862a05840" formatted="false">"Import source script?"</string>
+    <string name="ui_2cd0f3be8738" formatted="false">"Cancel"</string>
+    <string name="ui_576d81bb0631" formatted="false">"Import"</string>
+    <string name="ui_f327410a7cc1" formatted="false">"Unsupported file type"</string>
+    <string name="ui_11d9e3c1753d">"Could not open: %1$s"</string>
+    <string name="ui_5903b3b5a9ca" formatted="false">"Could not read the source"</string>
+    <string name="ui_7ca47a28e695" formatted="false">"Playback service is not connected yet"</string>
+    <string name="ui_18710cc58894" formatted="false">"Source imported"</string>
+    <string name="ui_0874f11320ab">"Source import failed: %1$s"</string>
+    <string name="ui_908fd41b724a" formatted="false">"Unknown playback action"</string>
+    <string name="ui_93f8317b3c21" formatted="false">"Unknown playlist action"</string>
+    <string name="ui_477a0fc0b291" formatted="false">"Reading playlist…"</string>
+    <string name="ui_ed2156c5f636" formatted="false">"This playlist has no songs"</string>
+    <string name="ui_0fea25b96961" formatted="false">"Song information is missing"</string>
+    <string name="ui_4f751ba03fed" formatted="false">"Invalid song information"</string>
+    <string name="ui_5bfaaf2346e1" formatted="false">"Song title is missing"</string>
+    <string name="ui_6c9ad7b94469" formatted="false">"No matching song found"</string>
+    <string name="ui_bf5201384405" formatted="false">"Unknown music action"</string>
+    <string name="ui_fd2c0650c75b" formatted="false">"Playlist link or ID"</string>
+    <string name="ui_ac7aa03a458f" formatted="false">"Open playlist link"</string>
+    <string name="ui_acfc4e74a650" formatted="false">"Next"</string>
+    <string name="ui_03c68e4bc44d">"Could not read link: %1$s"</string>
+    <string name="ui_72477c9eeff6" formatted="false">"Choose playlist provider"</string>
+    <string name="ui_2a6eaaa1f30c" formatted="false">"Kuwo"</string>
+    <string name="ui_6f5fe8042a63" formatted="false">"Kugou"</string>
+    <string name="ui_3ef42060a2e5" formatted="false">"QQ Music"</string>
+    <string name="ui_a62864e8c353" formatted="false">"NetEase"</string>
+    <string name="ui_017e2d45158b" formatted="false">"Migu"</string>
+    <string name="ui_f5d5d510fdfe" formatted="false">"Refresh playlist?"</string>
+    <string name="ui_ca37ac5cc4f6" formatted="false">"Read the entire provider playlist, then replace the local songs. Locally added songs and their order will be updated."</string>
+    <string name="ui_aee887434131" formatted="false">"Refresh"</string>
+    <string name="ui_129963b15e11" formatted="false">"Reading the entire playlist…"</string>
+    <string name="ui_07c05b19b201">"Refreshed %1$s songs"</string>
+    <string name="ui_e7f735120024">"Refresh failed: %1$s"</string>
+    <string name="ui_e35a36e26d52" formatted="false">"Navigation menu"</string>
+    <string name="ui_27c95ec6b766" formatted="false">"Your Library"</string>
+    <string name="ui_33eeaa47c231" formatted="false">"›   Local music"</string>
+    <string name="ui_073a0d57165c" formatted="false">"Search songs"</string>
+    <string name="ui_7ad45199f05a" formatted="false">"Search songs or artists"</string>
+    <string name="ui_2e14553ec90c" formatted="false">"Reading music…"</string>
+    <string name="ui_af90a08fec8e" formatted="false">"Load more"</string>
+    <string name="ui_f518674b61f6" formatted="false">"Player details"</string>
+    <string name="ui_2389f5b06bce" formatted="false">"Select a song to start playing"</string>
+    <string name="ui_c3396195e91c" formatted="false">"Play"</string>
+    <string name="ui_486e42475adb" formatted="false">"Next song"</string>
+    <string name="ui_fc16e2a0fca6" formatted="false">"Playback progress"</string>
+    <string name="ui_a9531e47b75d" formatted="false">"Local music"</string>
+    <string name="ui_c2dd14825672" formatted="false">"My playlists"</string>
+    <string name="ui_87a2113eb66f" formatted="false">"Online search"</string>
+    <string name="ui_1ee95aa94712" formatted="false">"Charts"</string>
+    <string name="ui_259597bf6ca7" formatted="false">"Online playlists"</string>
+    <string name="ui_3158c8d56b7b" formatted="false">"Import custom source"</string>
+    <string name="ui_a5cd0a9169e8" formatted="false">"Import legacy playlist backup"</string>
+    <string name="ui_3facd3e00be5" formatted="false">"Export playlist backup"</string>
+    <string name="ui_599818eb56df" formatted="false">"Audio quality"</string>
+    <string name="ui_727036c7fc2a" formatted="false">"Sync"</string>
+    <string name="ui_2a3ec620e12c" formatted="false">"Dislike list"</string>
+    <string name="ui_8c38525734c0" formatted="false">"Playback and lyrics settings"</string>
+    <string name="ui_486b54a7b0af" formatted="false">"Desktop Lyric"</string>
+    <string name="ui_6e763b71e69c" formatted="false">"Manage sources"</string>
+    <string name="ui_f01b6815d826" formatted="false">"Play queue"</string>
+    <string name="ui_cad84b75d661" formatted="false">"Search history and trending searches"</string>
+    <string name="ui_426744e26e7e" formatted="false">"Playback history"</string>
+    <string name="ui_18a9d61deeb3" formatted="false">"General settings"</string>
+    <string name="ui_788db1cfec2a" formatted="false">"Theme"</string>
+    <string name="ui_4fd38bc4f6d4" formatted="false">"About and version"</string>
+    <string name="ui_bb1d19b85634" formatted="false">"Diagnostic log"</string>
+    <string name="ui_f75a93326a3c" formatted="false">"Back to Desktop"</string>
+    <string name="ui_b0d269c8707c" formatted="false">"Exit App"</string>
+    <string name="ui_0c5f909e92d2" formatted="false">"Exit application?"</string>
+    <string name="ui_2474ed447b00" formatted="false">"Stop playback and this background sync session. Keep the queue and unsynced changes."</string>
+    <string name="ui_498e1d59b4d7" formatted="false">"Exit"</string>
+    <string name="ui_44ce7ae909bb" formatted="false">"Search"</string>
+    <string name="ui_e07216a6d505">"›   Online search (%1$s)"</string>
+    <string name="ui_bd997b86cde1" formatted="false">"Enter a keyword and press Search on the keyboard"</string>
+    <string name="ui_14b8d12a0ed6" formatted="false">"One rule per line: song title, @artist, or song title@artist"</string>
+    <string name="ui_a3030bf8f16d" formatted="false">"Save"</string>
+    <string name="ui_1ef3de06b32e" formatted="false">"Clear"</string>
+    <string name="ui_e2e7a21aa13b" formatted="false">"Dislike list saved"</string>
+    <string name="ui_749d84b5fa76">"Save failed: %1$s"</string>
+    <string name="ui_9b3d69ae09ce" formatted="false">"Add to dislikes"</string>
+    <string name="ui_a5c2cb376cf6" formatted="false">"Block this song and artist"</string>
+    <string name="ui_3ab737d3e7d1" formatted="false">"Block song title"</string>
+    <string name="ui_024a5e862936" formatted="false">"Block artist"</string>
+    <string name="ui_b7f9c185ce8e" formatted="false">"Song information is empty"</string>
+    <string name="ui_9daac0f16f9a" formatted="false">"Resuming background sync…"</string>
+    <string name="ui_572cf45ba436" formatted="false">"Back"</string>
+    <string name="ui_a33f3804768e" formatted="false">"Disconnect"</string>
+    <string name="ui_49d0208f4a94" formatted="false">"Sync disconnected"</string>
+    <string name="ui_9f9e4c872ae8" formatted="false">"Sync server address, e.g. http://192.168.1.2:9527"</string>
+    <string name="ui_0464d293b4f4" formatted="false">"Sync code (optional if already authorized)"</string>
+    <string name="ui_f40e986f62c5" formatted="false">"Sync playlists and dislikes in the background. Disconnect from the notification at any time. Enter a sync code for the first connection or after authorization expires."</string>
+    <string name="ui_a5574109f020" formatted="false">"Connect"</string>
+    <string name="ui_686944dc637e" formatted="false">"Enter a sync server address"</string>
+    <string name="ui_79110e8d2e06">"Could not start background sync: %1$s"</string>
+    <string name="ui_9bc599d27f67">"Merge local %1$s into remote %2$s"</string>
+    <string name="ui_d46592bdaed4">"Merge remote %1$s into local %2$s"</string>
+    <string name="ui_039142dac5c0">"Replace remote %2$s with local %1$s"</string>
+    <string name="ui_3e4d21031b6b">"Replace local %2$s with remote %1$s"</string>
+    <string name="ui_318ed0b4705c" formatted="false">"Replace all remote playlists with local playlists"</string>
+    <string name="ui_155471e97da7" formatted="false">"Replace all local playlists with remote playlists"</string>
+    <string name="ui_5034ddc8102c" formatted="false">"Cancel Sync"</string>
+    <string name="ui_5265436b89fb">"Choose %1$s sync method%2$s"</string>
+    <string name="ui_3cda5816cb6e" formatted="false">"›   My playlists"</string>
+    <string name="ui_e48ff968de78" formatted="false">"The current playlist was deleted remotely"</string>
+    <string name="ui_c9bccc27768b" formatted="false">"Playback service is connecting. Try again shortly."</string>
+    <string name="ui_350260df62b8" formatted="false">"Import source from URL"</string>
+    <string name="ui_98e96c39ccf6" formatted="false">"Disable source"</string>
+    <string name="ui_8052c1f1c0ab" formatted="false">"HTTP(S) source script URL"</string>
+    <string name="ui_6a7c1a0a3a3e" formatted="false">"Enter a valid HTTP(S) URL"</string>
+    <string name="ui_03f6f90cdb7a">"Source URL import failed: %1$s"</string>
+    <string name="ui_7f1c18aeb640" formatted="false">"Source disabled"</string>
+    <string name="ui_903f7809008b">"Could not disable source: %1$s"</string>
+    <string name="ui_b0f9363c052f">"Could not read sources: %1$s"</string>
+    <string name="ui_09679f956e0e" formatted="false">"The play queue is empty"</string>
+    <string name="ui_827be73ec6db">"Play queue · %1$s songs"</string>
+    <string name="ui_d18e02739127" formatted="false">"Clear queue"</string>
+    <string name="ui_f853a70b1204" formatted="false">"Move up"</string>
+    <string name="ui_e75e8b4e5c97" formatted="false">"Move down"</string>
+    <string name="ui_6135d4159e89" formatted="false">"Remove"</string>
+    <string name="ui_f4f0ead1116b" formatted="false">"Enable"</string>
+    <string name="ui_0e6252224f58" formatted="false">"View information"</string>
+    <string name="ui_0fd5cd79a1b5" formatted="false">"Export script"</string>
+    <string name="ui_ba9a8defba4e">"%1$s update notices"</string>
+    <string name="ui_8da97ddda990" formatted="false">"On"</string>
+    <string name="ui_2f9daa828907" formatted="false">"Delete"</string>
+    <string name="ui_032d025aff70" formatted="false">"Source enabled"</string>
+    <string name="ui_ced3fddd61e0">"Could not enable source: %1$s"</string>
+    <string name="ui_88f46c701fba">"Version: %1$s"</string>
+    <string name="ui_962844a38d3e">"Author: %1$s"</string>
+    <string name="ui_3e0d676d2d85" formatted="false">"Homepage"</string>
+    <string name="ui_5c73d0fff5e2" formatted="false">"Update notice preference saved"</string>
+    <string name="ui_852174674832">"Delete source “%1$s”?"</string>
+    <string name="ui_a1bfd178ab34" formatted="false">"Source deleted"</string>
+    <string name="ui_57deb333c04b">"Delete failed: %1$s"</string>
+    <string name="ui_7b1b6d54c192" formatted="false">"List menu"</string>
+    <string name="ui_5dd238551428" formatted="false">"Change chart"</string>
+    <string name="ui_0650128981bd" formatted="false">"Change playlist"</string>
+    <string name="ui_68f0bc744846" formatted="false">"List actions"</string>
+    <string name="ui_7f7653be272b" formatted="false">"Save loaded songs"</string>
+    <string name="ui_24f59c4dbea0" formatted="false">"The current list has no songs"</string>
+    <string name="ui_48a4cd426376" formatted="false">"Playlist provider"</string>
+    <string name="ui_d6319126b753" formatted="false">"Search playlists"</string>
+    <string name="ui_b0e14cdb6fad" formatted="false">"NetEase playlist categories"</string>
+    <string name="ui_367e0be118ac" formatted="false">"Kugou playlist categories"</string>
+    <string name="ui_3cfe8d81c220" formatted="false">"Kuwo playlist categories"</string>
+    <string name="ui_13873c4c8594" formatted="false">"QQ Music playlist categories"</string>
+    <string name="ui_02afd374b929" formatted="false">"Migu playlist categories"</string>
+    <string name="ui_abb4e1c88b47" formatted="false">"Loading playlist categories…"</string>
+    <string name="ui_b42ea22b8aec" formatted="false">"No playlist categories found"</string>
+    <string name="ui_7e6b573e77bd">"Could not load playlist categories: %1$s"</string>
+    <string name="ui_d8f2ca6f12b4" formatted="false">"Search playlists · Choose provider"</string>
+    <string name="ui_7c5a4bea69d3" formatted="false">"Enter playlist keywords"</string>
+    <string name="ui_ed43b8a78d98" formatted="false">"Enter playlist keywords"</string>
+    <string name="ui_3d3ec32220b1" formatted="false">"Searching playlists…"</string>
+    <string name="ui_fd45345182bb">"No %1$s playlists found"</string>
+    <string name="ui_38844b135cf7" formatted="false">"More"</string>
+    <string name="ui_ea36ef28dfcd" formatted="false">"Next page ›"</string>
+    <string name="ui_ca3e84f738ad">"Search: %1$s · Page %2$s"</string>
+    <string name="ui_c9b9ae7a6144" formatted="false">"Previous page"</string>
+    <string name="ui_be54d7d43555">"Playlist search failed: %1$s"</string>
+    <string name="ui_d88b9c569e32" formatted="false">"Loading recommended playlists…"</string>
+    <string name="ui_8c440faad4bb" formatted="false">"No more recommended playlists found"</string>
+    <string name="ui_7a8b9a2e85c6" formatted="false">"Kuwo recommended playlists"</string>
+    <string name="ui_c67c5ff0011d" formatted="false">"NetEase recommended playlists"</string>
+    <string name="ui_c63d7e27139b" formatted="false">"Migu recommended playlists"</string>
+    <string name="ui_df93dcc2ee4a" formatted="false">"Kugou recommended playlists"</string>
+    <string name="ui_13d9fbc47bef" formatted="false">"QQ Music recommended playlists"</string>
+    <string name="ui_d1d187349a65">"%1$s%2$s · Page %3$s"</string>
+    <string name="ui_31206f5478ba">"Could not load playlist: %1$s"</string>
+    <string name="ui_006d2287b3ea" formatted="false">"Saved playlist"</string>
+    <string name="ui_ce626c5abcb8">"Save the %1$s currently loaded songs to a new playlist."</string>
+    <string name="ui_ff45f8f5d491" formatted="false">"Enter a playlist name"</string>
+    <string name="ui_1d8c2c9c0aba">"Saved %1$s songs"</string>
+    <string name="ui_473e57b72072" formatted="false">"Playlists"</string>
+    <string name="ui_aed6f82d382c" formatted="false">"Loading playlist…"</string>
+    <string name="ui_122bd549791d" formatted="false">"Chart provider"</string>
+    <string name="ui_018c1fe1fe88" formatted="false">"Kugou charts"</string>
+    <string name="ui_f96c99ccd4dc" formatted="false">"QQ Music charts"</string>
+    <string name="ui_4f971250a44d" formatted="false">"NetEase charts"</string>
+    <string name="ui_4a4e5155b457" formatted="false">"Kuwo charts"</string>
+    <string name="ui_f9e46d37aa9f" formatted="false">"Migu charts"</string>
+    <string name="ui_4760ac1e18cc" formatted="false">"Loading chart…"</string>
+    <string name="ui_22a7c1cdbc29">"Could not load chart: %1$s"</string>
+    <string name="ui_9b980a0136e4" formatted="false">"Search provider"</string>
+    <string name="ui_9dbfa9b42bb3" formatted="false">"Lyrics"</string>
+    <string name="ui_df3d58c7d84b" formatted="false">"Settings"</string>
+    <string name="ui_8c747908bf69" formatted="false">"Previous song"</string>
+    <string name="ui_7afda7dc6745" formatted="false">"Sleep timer"</string>
+    <string name="ui_ccbb5ee62b1a" formatted="false">"Artwork"</string>
+    <string name="ui_13f910fe7cce" formatted="false">"Finish the current song when the timer expires"</string>
+    <string name="ui_0446dbd36ecc" formatted="false">"Turn timer off"</string>
+    <string name="ui_015feae6f8e4" formatted="false">"15 minutes"</string>
+    <string name="ui_a01a28d147ac" formatted="false">"30 minutes"</string>
+    <string name="ui_bf6201684e5b" formatted="false">"60 minutes"</string>
+    <string name="ui_928ff220b57b" formatted="false">"90 minutes"</string>
+    <string name="ui_0b41f8fb1d48" formatted="false">"120 minutes"</string>
+    <string name="ui_c6414cdd4464" formatted="false">"Stop after this song"</string>
+    <string name="ui_db424926e343" formatted="false">"Sleep timer turned off"</string>
+    <string name="ui_dd38be1cc98a">"Sleep timer set for %1$s minutes"</string>
+    <string name="ui_8d12fc0d4eb2" formatted="false">"Pause"</string>
+    <string name="ui_0245e1b77ac5" formatted="false">"No lyrics"</string>
+    <string name="ui_799c8f89223c" formatted="false">"Tap here to grant access and load local music"</string>
+    <string name="ui_ccdab23ef0b3" formatted="false">"Grant access and load local music"</string>
+    <string name="ui_172fc36a4a5c" formatted="false">"Audio access required"</string>
+    <string name="ui_9d0bbc51b8d2" formatted="false">"Allow access to audio files in system settings, then continue."</string>
+    <string name="ui_37aa6ad6a36d" formatted="false">"Open settings"</string>
+    <string name="ui_75f6a07d7c9d" formatted="false">"Audio access was denied. Tap here to retry."</string>
+    <string name="ui_7b9143ea8eb8" formatted="false">"Audio access was denied. Export cancelled."</string>
+    <string name="ui_bb0ff4f9b826" formatted="false">"Audio access was denied"</string>
+    <string name="ui_a65a40087086" formatted="false">"Could not find the song to play"</string>
+    <string name="ui_7aea1779d123">"Could not read songs: %1$s"</string>
+    <string name="ui_7ee7cd3a2806">"Could not read music: %1$s"</string>
+    <string name="ui_ef6e30183259">"Could not read playlist: %1$s"</string>
+    <string name="ui_9e638dd9d71b" formatted="false">"＋ New playlist"</string>
+    <string name="ui_9d3981ee6aa3" formatted="false">"Playlist name"</string>
+    <string name="ui_13eeeadb23fb" formatted="false">"New playlist"</string>
+    <string name="ui_cde2cd071d25" formatted="false">"Create"</string>
+    <string name="ui_a5164865c034">"Could not create playlist: %1$s"</string>
+    <string name="ui_02a61399982d" formatted="false">"Open playlist"</string>
+    <string name="ui_b6cd52c6fe92" formatted="false">"Add all to queue"</string>
+    <string name="ui_4abdef1f2424" formatted="false">"Sort songs"</string>
+    <string name="ui_4e0ca928260e" formatted="false">"Clear playlist"</string>
+    <string name="ui_31448436755a" formatted="false">"Refresh playlist from provider"</string>
+    <string name="ui_0d0cbac2eee5" formatted="false">"Rename"</string>
+    <string name="ui_46a150506a48" formatted="false">"Move playlist up"</string>
+    <string name="ui_77037dd314bf" formatted="false">"Move playlist down"</string>
+    <string name="ui_0a1d79c26e3b" formatted="false">"Delete playlist"</string>
+    <string name="ui_e31d650c716b">"Action failed: %1$s"</string>
+    <string name="ui_51a4e2f9dea0" formatted="false">"Added to play queue"</string>
+    <string name="ui_7ec5153cfab4" formatted="false">"Title"</string>
+    <string name="ui_cfb624b8a25b" formatted="false">"Artist"</string>
+    <string name="ui_04a95e0654d3" formatted="false">"Length"</string>
+    <string name="ui_9e9d4588c7f0" formatted="false">"Reverse order"</string>
+    <string name="ui_b4262f363f77" formatted="false">"Rename playlist"</string>
+    <string name="ui_88ff633c9cdd">"%1$s playlist “%2$s”? Song files will be kept."</string>
+    <string name="ui_fac2a67ad878" formatted="false">"Confirm"</string>
+    <string name="ui_92503cecb0e4" formatted="false">"Select multiple songs"</string>
+    <string name="ui_3a5040b68abf" formatted="false">"Select All"</string>
+    <string name="ui_7c75b6ccc72a" formatted="false">"Select songs first"</string>
+    <string name="ui_2cd77e843e22" formatted="false">"Play selected"</string>
+    <string name="ui_f655b3c8a2b6" formatted="false">"Add to play queue"</string>
+    <string name="ui_cc143006b20d" formatted="false">"Add to playlist"</string>
+    <string name="ui_2b96f6a6a976" formatted="false">"Move to playlist"</string>
+    <string name="ui_c7d9494f6392" formatted="false">"Remove from playlist"</string>
+    <string name="ui_e44c6ed9b6a6">"Selected %1$s songs"</string>
+    <string name="ui_74f577267660">"Remove %1$s selected songs from this playlist?"</string>
+    <string name="ui_4f0536be4304" formatted="false">"Selected songs removed"</string>
+    <string name="ui_1dd0b9466445">"Could not remove songs: %1$s"</string>
+    <string name="ui_158871d8b201" formatted="false">"Selected songs processed"</string>
+    <string name="ui_f4d4bae588c4" formatted="false">"Deselect all"</string>
+    <string name="ui_792336bc0bbf" formatted="false">"Import LRC lyrics"</string>
+    <string name="ui_9c2f512b6594" formatted="false">"Refresh lyrics"</string>
+    <string name="ui_94ca0a7bf933" formatted="false">"Play next"</string>
+    <string name="ui_804151aa3e97" formatted="false">"Share Song"</string>
+    <string name="ui_732807e9a807" formatted="false">"Search other providers"</string>
+    <string name="ui_9be60bb7ddeb" formatted="false">"Download song"</string>
+    <string name="ui_07f73642e525" formatted="false">"View comments"</string>
+    <string name="ui_44c2c89152c7" formatted="false">"Remove from current playlist"</string>
+    <string name="ui_de23dedafe75" formatted="false">"Move song up"</string>
+    <string name="ui_d092b4040c1f" formatted="false">"Move song down"</string>
+    <string name="ui_72b5f22035d2">"Could not share: %1$s"</string>
+    <string name="ui_d2678cc07f14" formatted="false">"Matching other providers…"</string>
+    <string name="ui_cb355d5c3da2" formatted="false">"Other providers"</string>
+    <string name="ui_f6baa7a2ba08">"Matching failed: %1$s"</string>
+    <string name="ui_9706d4890951">"Could not move song: %1$s"</string>
+    <string name="ui_3d085075c12b">"Could not sort songs: %1$s"</string>
+    <string name="ui_698d047aee02" formatted="false">"Lyrics cache refreshed"</string>
+    <string name="ui_ee8644062426" formatted="false">"Storage permission required"</string>
+    <string name="ui_5657f8f32261" formatted="false">"Allow storage permission in system settings, then continue downloading."</string>
+    <string name="ui_6b7ce36f8aa9" formatted="false">"Added to system download queue"</string>
+    <string name="ui_42fb22bc6277">"Download failed: %1$s"</string>
+    <string name="ui_bc86fe4ef5a1" formatted="false">"Could not write file"</string>
+    <string name="ui_7f05d4a5267c" formatted="false">"Log exported"</string>
+    <string name="ui_94477acc433d">"Export failed: %1$s"</string>
+    <string name="ui_d002a3c70b6f" formatted="false">"Source no longer exists"</string>
+    <string name="ui_f09d848b26d5" formatted="false">"Script exported"</string>
+    <string name="ui_96d30301c75b" formatted="false">"Could not read backup"</string>
+    <string name="ui_e67137044b3b">"Could not read backup: %1$s"</string>
+    <string name="ui_2dcda639f980" formatted="false">"Could not read source file"</string>
+    <string name="ui_2b06ad3fc97c" formatted="false">"Lyrics imported"</string>
+    <string name="ui_e57c5262074b">"Could not import lyrics: %1$s"</string>
+    <string name="ui_ce34bb9dcbed" formatted="false">"Could not write backup"</string>
+    <string name="ui_d8d9cfef9027" formatted="false">"Playlist backup exported"</string>
+    <string name="ui_1aa0f000b1e1">"Exported; file paths could not be recorded for %1$s local songs"</string>
+    <string name="ui_735faa049036">"Could not export backup: %1$s"</string>
+    <string name="ui_9587a26d9a2c">"The backup contains %1$s playlists and %2$s importable songs. Create copies, or restore matching playlists by ID when all files are available. Other playlists will be kept."</string>
+    <string name="ui_fbefd6976ef5">"\n%1$s songs cannot be imported because their local files are missing or their format is unsupported."</string>
+    <string name="ui_63802f7b0c9b" formatted="false">"Import legacy playlists"</string>
+    <string name="ui_d75d8ce65fed" formatted="false">"Create copies"</string>
+    <string name="ui_f301e960381c">"Imported %1$s songs"</string>
+    <string name="ui_dd5c3f8f623f">"Import failed: %1$s"</string>
+    <string name="ui_d02f0ac55e15" formatted="false">"Restore by ID"</string>
+    <string name="ui_8f3a82ea5eda">"Restored %1$s songs"</string>
+    <string name="ui_edc6992a1230">"Restore failed: %1$s"</string>
+    <string name="ui_bf12c5906f59" formatted="false">"Create a playlist first"</string>
+    <string name="ui_889839915c3f" formatted="false">"Added"</string>
+    <string name="ui_54a28a424697" formatted="false">"This song is already in the playlist"</string>
+    <string name="ui_3350538a51ed">"Could not add song: %1$s"</string>
+    <string name="ui_dcd3c46d127f">"View %1$s trending searches"</string>
+    <string name="ui_02c0ab8fbd15" formatted="false">"Clear search history"</string>
+    <string name="ui_6d0b959193ab" formatted="false">"Search history and trending searches (hold a history item to delete)"</string>
+    <string name="ui_fa0ead846beb" formatted="false">"Loading trending searches…"</string>
+    <string name="ui_50933f24c7aa" formatted="false">"The provider returned no trending searches"</string>
+    <string name="ui_2a61478eeecf">"%1$s trending searches"</string>
+    <string name="ui_bf00a3daba4a">"Could not load trending searches: %1$s"</string>
+    <string name="ui_4f03b04808e7">"Playback history · %1$s songs"</string>
+    <string name="ui_82abac1a7ffd">"Could not read playback history: %1$s"</string>
+    <string name="ui_c975aa812f44" formatted="false">"Enter search keywords"</string>
+    <string name="ui_c37059a3d9df" formatted="false">"Searching…"</string>
+    <string name="ui_3ce71e5b6037">"Search failed: %1$s"</string>
+    <string name="ui_88034b35be15" formatted="false">"No songs found"</string>
+    <string name="ui_119b62e66b9d">"%1$s songs"</string>
+    <string name="ui_507e04d42f14" formatted="false">"Song menu"</string>
+    <string name="ui_d04fcbda737f" formatted="false">"Loading"</string>
+    <string name="ui_8a47499c40e0" formatted="false">"Play automatically on startup"</string>
+    <string name="ui_d6320dc2f6f6" formatted="false">"Open player details on startup"</string>
+    <string name="ui_5da5740ba417" formatted="false">"Save playback position"</string>
+    <string name="ui_4a79cf8d0791" formatted="false">"Record playback history"</string>
+    <string name="ui_1a232faf3bfe" formatted="false">"Match other providers when the source request fails"</string>
+    <string name="ui_4affe217c432" formatted="false">"Remove played songs during sequential playback"</string>
+    <string name="ui_2f9d06b47ed2" formatted="false">"Handle audio focus"</string>
+    <string name="ui_ff6ed64098b9" formatted="false">"Audio offload (next playback; falls back according to device support)"</string>
+    <string name="ui_46749ca81e12" formatted="false">"Show artwork in notifications"</string>
+    <string name="ui_d5b0714beafd" formatted="false">"Send Bluetooth lyrics through media metadata"</string>
+    <string name="ui_7a36a9f3c4ab" formatted="false">"Include song title and artist in Bluetooth lyrics"</string>
+    <string name="ui_6e34875b6fe3" formatted="false">"Lists and search"</string>
+    <string name="ui_0aec06d42251" formatted="false">"Play playlists when tapped"</string>
+    <string name="ui_c41fc8ebc9bb" formatted="false">"Show song provider"</string>
+    <string name="ui_1855017a0392" formatted="false">"Show album name"</string>
+    <string name="ui_5b5ca57648a2" formatted="false">"Show song length"</string>
+    <string name="ui_3b432f3fe1df" formatted="false">"Save list scroll position"</string>
+    <string name="ui_9d379ca17d16" formatted="false">"Include history in search suggestions"</string>
+    <string name="ui_02eeee3c6016" formatted="false">"Show trending searches when opening search"</string>
+    <string name="ui_e3b61ed71904" formatted="false">"Allow seeking with the progress bar"</string>
+    <string name="ui_d7295a6e9a5a" formatted="false">"Hide player bar when no song is selected"</string>
+    <string name="ui_0e32883df479" formatted="false">"Position for added songs"</string>
+    <string name="ui_6f2a4a02e60e" formatted="false">"Top"</string>
+    <string name="ui_3f049887991b" formatted="false">"Bottom"</string>
+    <string name="ui_94cbb4dbf89e" formatted="false">"Download file naming"</string>
+    <string name="ui_7df84c1fad91" formatted="false">"Title - Artist"</string>
+    <string name="ui_5b43dcf6bbaa" formatted="false">"Artist - Title"</string>
+    <string name="ui_a01594f78908" formatted="false">"Title"</string>
+    <string name="ui_729baeb8ad16" formatted="false">"Share"</string>
+    <string name="ui_13a1c63fb5dc" formatted="false">"System share sheet"</string>
+    <string name="ui_ae788c9d4b50" formatted="false">"Copy to clipboard"</string>
+    <string name="ui_b23ed4004e18" formatted="false">"Music Streaming Service Name"</string>
+    <string name="ui_7bc846cd34a3" formatted="false">"Provider aliases"</string>
+    <string name="ui_23fbf53da512" formatted="false">"Full provider names"</string>
+    <string name="ui_9e820f904830" formatted="false">"Interface (applied when settings close)"</string>
+    <string name="ui_11c5a044b748" formatted="false">"Show Return to desktop in navigation"</string>
+    <string name="ui_c9edbe7646fb" formatted="false">"Show Exit application in navigation"</string>
+    <string name="ui_d715550e650d" formatted="false">"Navigation menu position"</string>
+    <string name="ui_6a24b14f33c7" formatted="false">"Left Side"</string>
+    <string name="ui_1cf1d4d0b24b" formatted="false">"Right Side"</string>
+    <string name="ui_6089721beb10" formatted="false">"Interface font size"</string>
+    <string name="ui_b58fafc108f2" formatted="false">"Smaller"</string>
+    <string name="ui_6bea77acefb3" formatted="false">"Standard"</string>
+    <string name="ui_ff3e02138450" formatted="false">"Larger"</string>
+    <string name="ui_7d4ca7f48eff" formatted="false">"Big"</string>
+    <string name="ui_a90304cdfb87" formatted="false">"Extra large"</string>
+    <string name="ui_e3ca04a9cb13" formatted="false">"Cache"</string>
+    <string name="ui_0269e7020043" formatted="false">"Playback cache limit"</string>
+    <string name="ui_363b6afc345c" formatted="false">"Disable cache"</string>
+    <string name="ui_3ea7896aff54" formatted="false">"Measuring lyrics cache…"</string>
+    <string name="ui_31b0dd704fee">"Playback cache: %1$s MB\nArtwork cache: %2$s KB\nOnline lyrics cache: %3$s KB (keep imported lyrics)"</string>
+    <string name="ui_12ccb655405b" formatted="false">"Clear artwork cache"</string>
+    <string name="ui_ca88f243ff2a">"Could not clear cache: %1$s"</string>
+    <string name="ui_26cc8d0af3e5" formatted="false">"Clear playback cache"</string>
+    <string name="ui_a84c68e6881a" formatted="false">"Clear online lyrics cache"</string>
+    <string name="ui_e4272bc9fe9f" formatted="false">"Clear playlist access credentials"</string>
+    <string name="ui_2619b193e7ef" formatted="false">"Playlist access credentials cleared"</string>
+    <string name="ui_2ff467120772">"Could not clear credentials: %1$s"</string>
+    <string name="ui_c0b3fbff51cc" formatted="false">"Done"</string>
+    <string name="ui_e919e87486b4" formatted="false">"Could not apply settings"</string>
+    <string name="ui_f7fbdb84467e" formatted="false">"Playback speed"</string>
+    <string name="ui_7e3f2f88c8fc">"Playback speed: %1$s×"</string>
+    <string name="ui_dc0e25979181" formatted="false">"App volume"</string>
+    <string name="ui_f3978b48d365">"App volume: %1$s%%"</string>
+    <string name="ui_7eb039f21dbd" formatted="false">"Lyrics font size"</string>
+    <string name="ui_c99707d3d601">"Lyrics font size (%1$s): %2$s sp"</string>
+    <string name="ui_055a6b3a3de7" formatted="false">"landscape"</string>
+    <string name="ui_c35bd83b94b4" formatted="false">"portrait"</string>
+    <string name="ui_f5f431a88186" formatted="false">"Lyrics alignment"</string>
+    <string name="ui_6e30e4ed3423" formatted="false">"Show lyric translation"</string>
+    <string name="ui_1dd07ef2a8c1" formatted="false">"Show romanization"</string>
+    <string name="ui_e17be4f4d18f" formatted="false">"Highlight individual words"</string>
+    <string name="ui_f3ee75d994c7" formatted="false">"Convert simplified lyrics to traditional Chinese"</string>
+    <string name="ui_9f47534dbad2" formatted="false">"Lyrics timing adjustment"</string>
+    <string name="ui_76fd6993ada5" formatted="false">"Select a song to adjust lyrics timing"</string>
+    <string name="ui_b54e1d73efc8" formatted="false">"0.5 seconds earlier"</string>
+    <string name="ui_c9aeeabf6acc" formatted="false">"Reset timing"</string>
+    <string name="ui_896a97e85ced" formatted="false">"0.5 seconds later"</string>
+    <string name="ui_ba2e93e73037" formatted="false">"Restore defaults"</string>
+    <string name="ui_3a89dbc96a55" formatted="false">"Could not restore settings"</string>
+    <string name="ui_87f152e81f80" formatted="false">"Lyrics timing: "</string>
+    <string name="ui_e3f1123bb38b" formatted="false">"No offset"</string>
+    <string name="ui_e207e127367b">"%1$s %2$s seconds"</string>
+    <string name="ui_876d80cccc0c" formatted="false">"Later"</string>
+    <string name="ui_728e91804a2f" formatted="false">"Earlier"</string>
+    <string name="ui_edcdd4eb5145" formatted="false">"Top comments · Switch to newest"</string>
+    <string name="ui_cf945e21ddef" formatted="false">"Replies"</string>
+    <string name="ui_04348c8824f5">"Replies to %1$s"</string>
+    <string name="ui_7270f21b0d99">"%1$s · Comments"</string>
+    <string name="ui_148bcfd6d534">"\n[Image %1$s]"</string>
+    <string name="ui_ecb8ffea43a2" formatted="false">"\nReply to "</string>
+    <string name="ui_21bd738e0d71" formatted="false">"Loading…"</string>
+    <string name="ui_65b9115c0973">"Loaded %1$s · Total %2$s"</string>
+    <string name="ui_4d8c1c5b4283" formatted="false">"Unknown"</string>
+    <string name="ui_06d9bbeb3af9" formatted="false">"No more comments"</string>
+    <string name="ui_e6e79ef974ed">"Could not load: %1$s"</string>
+    <string name="ui_b8784c8dd563" formatted="false">"Retry"</string>
+    <string name="ui_5805f0b9bcce" formatted="false">"Comment image"</string>
+    <string name="ui_b231587899f3" formatted="false">"Open in browser"</string>
+    <string name="ui_7206c39ccf2e" formatted="false">"Could not load image. Open it in a browser instead."</string>
+    <string name="ui_95d495fa65a5" formatted="false">"Copy comment"</string>
+    <string name="ui_bec9edaffccd" formatted="false">"Show loaded replies"</string>
+    <string name="ui_8273d8d3de88" formatted="false">"Load more replies"</string>
+    <string name="ui_475d38917292">"View image %1$s"</string>
+    <string name="ui_6849b8254d20" formatted="false">"Comments"</string>
+    <string name="ui_cd807c58b9cf" formatted="false">"Newest comments · Switch to top"</string>
+    <string name="ui_37e60fc85ddb" formatted="false">"LX Music desktop lyrics"</string>
+    <string name="ui_fbd649d1c94d" formatted="false">"Enable desktop lyrics"</string>
+    <string name="ui_6de595beb4c0" formatted="false">"Lock position and let touches pass through"</string>
+    <string name="ui_ad6fb7bbb54d" formatted="false">"When locked, opacity is limited by the system so touches can pass through."</string>
+    <string name="ui_1c3ff44df48b" formatted="false">"Single line"</string>
+    <string name="ui_7459e7da0ad4" formatted="false">"Transition animation"</string>
+    <string name="ui_f71561b5af0a" formatted="false">"Font size"</string>
+    <string name="ui_4b7334f3d8ae" formatted="false">"Width percentage"</string>
+    <string name="ui_eda53a9cf5c1" formatted="false">"Maximum Number of Lines"</string>
+    <string name="ui_04405e4a9ffd" formatted="false">"Opacity"</string>
+    <string name="ui_d1b14abbc00a" formatted="false">"Horizontal alignment"</string>
+    <string name="ui_e2e0c454e5d5" formatted="false">"Left"</string>
+    <string name="ui_a567bdaa1136" formatted="false">"Center"</string>
+    <string name="ui_14ab1f2bce0a" formatted="false">"Right"</string>
+    <string name="ui_128f6e763147" formatted="false">"Vertical alignment"</string>
+    <string name="ui_4cc3885c182e" formatted="false">"Center"</string>
+    <string name="ui_f56e7eff58bf" formatted="false">"White"</string>
+    <string name="ui_30c83dc25b12" formatted="false">"Green"</string>
+    <string name="ui_67035e6b7f82" formatted="false">"Blue"</string>
+    <string name="ui_789f61dbfcc7" formatted="false">"Red"</string>
+    <string name="ui_ed7d2c54184b" formatted="false">"Black"</string>
+    <string name="ui_d451c07d739b" formatted="false">"Yellow"</string>
+    <string name="ui_6f6364983f72" formatted="false">"Unplayed color"</string>
+    <string name="ui_5b4844acaf2f" formatted="false">"Played color"</string>
+    <string name="ui_2b40dbdb39f9" formatted="false">"Shadow color"</string>
+    <string name="ui_d874760c91f0" formatted="false">"Allow display over other apps. Return here to unlock the lyrics window."</string>
+    <string name="ui_8143c43db805" formatted="false">"Reset position"</string>
+    <string name="ui_22425f239f2d">"LX Music Native\nVersion: %1$s (%2$s)\n\nFree and open source. Migrated from LX Music Mobile by lyswhut. Links to the original project and native migration are below."</string>
+    <string name="ui_4db966cc21a9" formatted="false">"Check for native updates"</string>
+    <string name="ui_6b72c3d6855c" formatted="false">"Checking…"</string>
+    <string name="ui_ca985784214d" formatted="false">"No native installation package has been published yet"</string>
+    <string name="ui_cda525a300a1">"You have the latest native version (%1$s)"</string>
+    <string name="ui_3f07b0d41217">"Native version %1$s is available"</string>
+    <string name="ui_936707017ead">"Native version %1$s"</string>
+    <string name="ui_1c947644f8de" formatted="false">"See the release page for update notes."</string>
+    <string name="ui_7eb97e5b947e" formatted="false">"Open release page"</string>
+    <string name="ui_506c6f6ae493">"Update check failed: %1$s"</string>
+    <string name="ui_88e03b310fe2" formatted="false">"Native project homepage"</string>
+    <string name="ui_bac19e2d086b" formatted="false">"Native releases"</string>
+    <string name="ui_397b5581b4a9" formatted="false">"Original project homepage"</string>
+    <string name="ui_45a6d115fdfb" formatted="false">"FAQ"</string>
+    <string name="ui_31882138222f" formatted="false">"Report an issue"</string>
+    <string name="ui_038ad816c53f" formatted="false">"Open source license"</string>
+    <string name="ui_c7520af426a5" formatted="false">"Record sync status and errors"</string>
+    <string name="ui_8a57b342c746" formatted="false">"Record source script logs"</string>
+    <string name="ui_10fafbeaa7fd" formatted="false">"No log entries"</string>
+    <string name="ui_76420433f22d" formatted="false">"Export"</string>
+    <string name="ui_c7970c3d538e" formatted="false">"Follow system light/dark theme"</string>
+    <string name="ui_76a0950acd56" formatted="false">"Hide background images in dark mode"</string>
+    <string name="ui_7c0f1e4ec56f" formatted="false">"Slow background movement"</string>
+    <string name="ui_490573c22811" formatted="false">"Text shadow"</string>
+    <string name="ui_8874d3825cf1" formatted="false">"Choose a theme. In system mode, light and dark themes are saved separately."</string>
+    <string name="ui_63c73c4730f4" formatted="false">"Apply"</string>
+    <string name="ui_2fe0943eacb3" formatted="false">"Repeat playlist"</string>
+    <string name="ui_5bbcac595bc6" formatted="false">"In order"</string>
+    <string name="ui_8cde791504d2" formatted="false">"Repeat one"</string>
+    <string name="ui_f34b7ce61098" formatted="false">"Shuffle"</string>
+    <string name="ui_2bd74486069f" formatted="false">"Align left"</string>
+    <string name="ui_331c711e0660" formatted="false">"Align right"</string>
+    <string name="ui_9f6fee1aba17" formatted="false">"Language"</string>
+    <string name="ui_217cfe7db1e3" formatted="false">"Follow system"</string>
+    <string name="ui_9937e365aaf3" formatted="false">"简体中文"</string>
+    <string name="ui_1c95ab9b144e" formatted="false">"繁體中文"</string>
+    <string name="ui_ba118bf7fc9c" formatted="false">"English"</string>
+    <string name="ui_bf4ad761840f" formatted="false">"Local"</string>
+    <string name="ui_5b9757b493aa" formatted="false">"KW Music"</string>
+    <string name="ui_883798ba73cb" formatted="false">"KG Music"</string>
+    <string name="ui_0bef848c17a7" formatted="false">"TX Music"</string>
+    <string name="ui_6e2dc7dc5b3c" formatted="false">"WY Music"</string>
+    <string name="ui_7f11bc755c6f" formatted="false">"MG Music"</string>
+    <string name="ui_7920e0816ab9" formatted="false">"Kuwo"</string>
+    <string name="ui_7d0e8317588d" formatted="false">"Kugou"</string>
+    <string name="ui_f2a5bbaf0de8" formatted="false">"NetEase"</string>
+    <string name="ui_3b6993b997df" formatted="false">"Migu"</string>
+</resources>

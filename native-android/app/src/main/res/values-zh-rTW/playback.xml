@@ -1,0 +1,14 @@
+<resources>
+    <string name="playback_channel">音樂播放</string>
+    <string name="playback_lyrics_error">讀取歌詞失敗：%1$s</string>
+    <string name="playback_rate_range">播放倍速應在 0.60 到 2.00 之間</string>
+    <string name="playback_rate_unsupported">目前音訊不支援此倍速</string>
+    <string name="playback_volume_range">音量應在 0%% 到 100%% 之間</string>
+    <string name="playback_local_download">本機歌曲無需下載</string>
+    <string name="playback_source_missing">歌曲缺少音源資訊</string>
+    <string name="playback_focus_error">無法取得音訊焦點</string>
+    <string name="playback_error">無法播放：%1$s</string>
+    <string name="playback_settings_error">無法套用播放設定：%1$s</string>
+    <string name="playback_open_error">無法開啟音訊：%1$s</string>
+    <string name="playback_queue_error">儲存播放佇列失敗：%1$s</string>
+</resources>

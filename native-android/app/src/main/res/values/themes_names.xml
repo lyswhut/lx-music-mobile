@@ -1,0 +1,18 @@
+<resources>
+    <string name="theme_green">绿意盎然</string>
+    <string name="theme_blue">蓝田生玉</string>
+    <string name="theme_blue_plus">蛋雅深蓝</string>
+    <string name="theme_orange">橙黄橘绿</string>
+    <string name="theme_brown">泥牛入海</string>
+    <string name="theme_red">热情似火</string>
+    <string name="theme_pink">粉装玉琢</string>
+    <string name="theme_purple">重斤球紫</string>
+    <string name="theme_grey">灰常美丽</string>
+    <string name="theme_ming">青出于黑</string>
+    <string name="theme_blue2">清热版蓝</string>
+    <string name="theme_black">黑灯瞎火</string>
+    <string name="theme_mid_autumn">月里嫦娥</string>
+    <string name="theme_naruto">木叶之村</string>
+    <string name="theme_china_ink">近墨者黑</string>
+    <string name="theme_happy_new_year">新年快乐</string>
+</resources>

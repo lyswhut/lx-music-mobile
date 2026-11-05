@@ -1,0 +1,26 @@
+<resources>
+    <string name="metadata_edit">Edit local song information</string>
+    <string name="metadata_title">Song title</string>
+    <string name="metadata_artist">Artist</string>
+    <string name="metadata_album">Album</string>
+    <string name="metadata_lyric">Embedded lyrics (LRC supported)</string>
+    <string name="metadata_image_pick">Choose cover (PNG/JPEG, up to 8 MB)</string>
+    <string name="metadata_image_remove">Remove embedded cover</string>
+    <string name="metadata_image_removed">Cover will be removed when saved</string>
+    <string name="metadata_image_present">Embedded cover loaded and will be retained</string>
+    <string name="metadata_image_selected">New cover selected and will be written on save</string>
+    <string name="metadata_save">Save to audio file</string>
+    <string name="metadata_error">Could not edit song information: %1$s</string>
+    <string name="metadata_title_required">Enter a song title</string>
+    <string name="metadata_format">Tag editing is not supported for this audio format</string>
+    <string name="metadata_image_invalid">Choose a valid PNG or JPEG cover</string>
+    <string name="song_clear_cache">Clear this song’s playback and matching cache</string>
+    <string name="song_cache_cleared">Song cache cleared</string>
+    <string name="song_copy_name">Copy song title and artist</string>
+    <string name="song_source_details">Song source details</string>
+    <string name="song_position">Move to position</string>
+    <string name="song_position_hint">Enter a position, starting from 1</string>
+    <string name="song_position_invalid">Enter a valid position</string>
+    <string name="song_range">Select a range</string>
+    <string name="song_range_hint">Enter start-end positions, such as 2-10</string>
+</resources>

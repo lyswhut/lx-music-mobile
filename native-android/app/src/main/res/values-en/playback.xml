@@ -1,0 +1,14 @@
+<resources>
+    <string name="playback_channel">Music playback</string>
+    <string name="playback_lyrics_error">Could not read lyrics: %1$s</string>
+    <string name="playback_rate_range">Playback speed must be between 0.60 and 2.00</string>
+    <string name="playback_rate_unsupported">This audio does not support that playback speed</string>
+    <string name="playback_volume_range">Volume must be between 0%% and 100%%</string>
+    <string name="playback_local_download">Local songs do not need downloading</string>
+    <string name="playback_source_missing">The song has no source information</string>
+    <string name="playback_focus_error">Could not obtain audio focus</string>
+    <string name="playback_error">Could not play audio: %1$s</string>
+    <string name="playback_settings_error">Could not apply playback settings: %1$s</string>
+    <string name="playback_open_error">Could not open audio: %1$s</string>
+    <string name="playback_queue_error">Could not save the playback queue: %1$s</string>
+</resources>

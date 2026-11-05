@@ -1,0 +1,26 @@
+<resources>
+    <string name="metadata_edit">编辑本地歌曲信息</string>
+    <string name="metadata_title">歌曲名</string>
+    <string name="metadata_artist">歌手</string>
+    <string name="metadata_album">专辑</string>
+    <string name="metadata_lyric">内嵌歌词（支持 LRC）</string>
+    <string name="metadata_image_pick">选择封面（PNG/JPEG，最多 8 MB）</string>
+    <string name="metadata_image_remove">移除内嵌封面</string>
+    <string name="metadata_image_removed">保存时移除封面</string>
+    <string name="metadata_image_present">已读取内嵌封面，保存时保留</string>
+    <string name="metadata_image_selected">已选择新封面，保存后写入</string>
+    <string name="metadata_save">保存到音频文件</string>
+    <string name="metadata_error">歌曲信息编辑失败：%1$s</string>
+    <string name="metadata_title_required">请填写歌曲名</string>
+    <string name="metadata_format">此音频格式不支持标签编辑</string>
+    <string name="metadata_image_invalid">封面应为有效的 PNG 或 JPEG 图片</string>
+    <string name="song_clear_cache">清除此歌曲的播放与匹配缓存</string>
+    <string name="song_cache_cleared">已清除此歌曲的缓存</string>
+    <string name="song_copy_name">复制歌曲名与歌手</string>
+    <string name="song_source_details">歌曲来源详情</string>
+    <string name="song_position">移动到指定位置</string>
+    <string name="song_position_hint">输入位置，从 1 开始</string>
+    <string name="song_position_invalid">请输入有效的位置</string>
+    <string name="song_range">区间选择</string>
+    <string name="song_range_hint">输入起止位置，例如 2-10</string>
+</resources>

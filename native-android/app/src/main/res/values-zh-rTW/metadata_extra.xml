@@ -1,0 +1,9 @@
+<resources>
+    <string name="metadata_parse_title">從檔名解析：歌名 - 歌手</string>
+    <string name="metadata_parse_artist">從檔名解析：歌手 - 歌名</string>
+    <string name="metadata_match_lyric">使用音源比對歌詞</string>
+    <string name="metadata_match_cover">使用音源比對封面</string>
+    <string name="metadata_match_source">請選擇支援本機歌詞或封面的自訂音源</string>
+    <string name="metadata_match_empty">音源未傳回歌詞</string>
+    <string name="song_open_provider">開啟平台歌曲頁面</string>
+</resources>

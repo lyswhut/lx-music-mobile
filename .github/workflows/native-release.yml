@@ -1,0 +1,77 @@
+name: Native Android release draft
+
+on:
+  push:
+    tags: ['native-v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: native-android
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v4
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Validate native version
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python3 - <<'PY'
+          import os, re
+          tag = os.environ['RELEASE_TAG']
+          match = re.fullmatch(r'native-v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)', tag)
+          if not match:
+              raise SystemExit('Expected native-vMAJOR.MINOR.PATCH')
+          major, minor, patch = map(int, match.groups())
+          code = major * 1_000_000 + minor * 1_000 + patch
+          if not (major <= 2000 and minor <= 999 and patch <= 999 and code > 0):
+              raise SystemExit('Version is outside the supported Android versionCode range')
+          with open(os.environ['GITHUB_ENV'], 'a') as env:
+              env.write(f'NATIVE_VERSION={tag[8:]}\nNATIVE_CODE={code}\n')
+          PY
+      - name: Install Android SDK
+        run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - name: Prepare native signing key
+        env:
+          KEYSTORE_BASE64: ${{ secrets.NATIVE_KEYSTORE_BASE64 }}
+        run: |
+          test -n "$KEYSTORE_BASE64"
+          umask 077
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/native-release.jks"
+      - name: Verify and build signed native release
+        env:
+          NATIVE_KEYSTORE_PATH: ${{ runner.temp }}/native-release.jks
+          NATIVE_STORE_PASSWORD: ${{ secrets.NATIVE_STORE_PASSWORD }}
+          NATIVE_KEY_ALIAS: ${{ secrets.NATIVE_KEY_ALIAS }}
+          NATIVE_KEY_PASSWORD: ${{ secrets.NATIVE_KEY_PASSWORD }}
+        run: |
+          bash ./gradlew --no-daemon :app:testDebugUnitTest :app:lintRelease :app:assembleRelease -PnativeRequireSigning=true -PnativeVersionName="$NATIVE_VERSION" -PnativeVersionCode="$NATIVE_CODE"
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose app/build/outputs/apk/release/app-release.apk
+          mkdir -p release-artifacts
+          cp app/build/outputs/apk/release/app-release.apk "release-artifacts/lx-music-native-$NATIVE_VERSION-universal.apk"
+          cd release-artifacts
+          sha256sum *.apk > SHA256SUMS.txt
+      - name: Save build reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-release-reports
+          path: native-android/app/build/reports/
+      - name: Create reviewable draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: gh release create "$RELEASE_TAG" release-artifacts/* --verify-tag --draft --title "LX Music Native $NATIVE_VERSION" --generate-notes
+      - name: Remove temporary signing key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/native-release.jks"

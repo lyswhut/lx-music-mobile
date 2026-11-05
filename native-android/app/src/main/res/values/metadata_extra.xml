@@ -1,0 +1,9 @@
+<resources>
+    <string name="metadata_parse_title">从文件名解析：歌名 - 歌手</string>
+    <string name="metadata_parse_artist">从文件名解析：歌手 - 歌名</string>
+    <string name="metadata_match_lyric">使用音源匹配歌词</string>
+    <string name="metadata_match_cover">使用音源匹配封面</string>
+    <string name="metadata_match_source">请选择支持本地歌词或封面的自定义音源</string>
+    <string name="metadata_match_empty">音源未返回歌词</string>
+    <string name="song_open_provider">打开平台歌曲页面</string>
+</resources>

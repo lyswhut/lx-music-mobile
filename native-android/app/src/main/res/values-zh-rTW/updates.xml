@@ -1,0 +1,24 @@
+<resources>
+    <string name="update_download">下載原生版更新</string>
+    <string name="update_install">驗證並安裝更新</string>
+    <string name="update_cancel">取消並清除更新下載</string>
+    <string name="update_ignore">忽略此版本</string>
+    <string name="update_no_apk">發佈中沒有原生安裝包</string>
+    <string name="update_download_title">LX Music 原生版 %1$s</string>
+    <string name="update_save_failed">無法儲存更新下載狀態</string>
+    <string name="update_expired">更新下載已不存在，請重新下載</string>
+    <string name="update_size_invalid">更新檔案大小無效或下載不完整</string>
+    <string name="update_hash_invalid">更新檔案 SHA-256 驗證失敗</string>
+    <string name="update_apk_invalid">無法讀取更新安裝包</string>
+    <string name="update_version_invalid">更新包的應用、版本名稱或版本號不符</string>
+    <string name="update_signature_invalid">更新包簽章與已安裝應用不相容</string>
+    <string name="update_failed">更新失敗：%1$s</string>
+    <string name="update_cancelled">已取消更新下載</string>
+    <string name="update_verifying">正在驗證更新安裝包…</string>
+    <string name="update_install_permission">請允許此應用安裝更新，返回後再次點選安裝。</string>
+    <string name="update_ready">更新已下載，安裝前將驗證檔案和應用簽章</string>
+    <string name="update_download_error">更新下載失敗（原因 %1$d）</string>
+    <string name="update_progress">正在下載更新：%1$s / %2$s</string>
+    <string name="update_waiting">更新下載正在等待網路或系統排程</string>
+    <string name="update_auto_check">啟動時自動檢查原生版更新</string>
+</resources>

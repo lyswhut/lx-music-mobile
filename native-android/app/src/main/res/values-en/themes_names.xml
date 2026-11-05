@@ -1,0 +1,18 @@
+<resources>
+    <string name="theme_green">Green</string>
+    <string name="theme_blue">Blue</string>
+    <string name="theme_blue_plus">Blue Plus</string>
+    <string name="theme_orange">Orange</string>
+    <string name="theme_brown">Brown</string>
+    <string name="theme_red">Red</string>
+    <string name="theme_pink">Pink</string>
+    <string name="theme_purple">Purple</string>
+    <string name="theme_grey">Grey</string>
+    <string name="theme_ming">Ming</string>
+    <string name="theme_blue2">Purple Blue</string>
+    <string name="theme_black">Black</string>
+    <string name="theme_mid_autumn">Mid-Autumn</string>
+    <string name="theme_naruto">Naruto</string>
+    <string name="theme_china_ink">China Ink</string>
+    <string name="theme_happy_new_year">New Year</string>
+</resources>

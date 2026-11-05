@@ -1,0 +1,130 @@
+[
+  {
+    "id": "green",
+    "name": "绿意盎然",
+    "dark": false,
+    "primary": "rgb(77, 175, 124)",
+    "background": "rgba(255, 255, 255, 1)",
+    "image": ""
+  },
+  {
+    "id": "blue",
+    "name": "蓝田生玉",
+    "dark": false,
+    "primary": "rgb(52, 152, 219)",
+    "background": "rgba(255, 255, 255, 1)",
+    "image": ""
+  },
+  {
+    "id": "blue_plus",
+    "name": "蛋雅深蓝",
+    "dark": false,
+    "primary": "rgb(77, 131, 175)",
+    "background": "rgba(255, 255, 255, 1)",
+    "image": ""
+  },
+  {
+    "id": "orange",
+    "name": "橙黄橘绿",
+    "dark": false,
+    "primary": "rgb(245, 171, 53)",
+    "background": "rgba(255, 255, 255, 1)",
+    "image": ""
+  },
+  {
+    "id": "brown",
+    "name": "泥牛入海",
+    "dark": false,
+    "primary": "rgba(188, 128, 68, 1)",
+    "background": "rgba(255, 255, 255, 1)",
+    "image": ""
+  },
+  {
+    "id": "red",
+    "name": "热情似火",
+    "dark": false,
+    "primary": "rgb(214, 69, 65)",
+    "background": "rgba(255, 255, 255, 1)",
+    "image": ""
+  },
+  {
+    "id": "pink",
+    "name": "粉装玉琢",
+    "dark": false,
+    "primary": "rgb(241, 130, 141)",
+    "background": "rgba(255, 255, 255, 1)",
+    "image": ""
+  },
+  {
+    "id": "purple",
+    "name": "重斤球紫",
+    "dark": false,
+    "primary": "rgb(155, 89, 182)",
+    "background": "rgba(255, 255, 255, 1)",
+    "image": ""
+  },
+  {
+    "id": "grey",
+    "name": "灰常美丽",
+    "dark": false,
+    "primary": "rgb(108, 122, 137)",
+    "background": "rgba(255, 255, 255, 1)",
+    "image": ""
+  },
+  {
+    "id": "ming",
+    "name": "青出于黑",
+    "dark": false,
+    "primary": "rgb(51, 110, 123)",
+    "background": "rgba(255, 255, 255, 1)",
+    "image": ""
+  },
+  {
+    "id": "blue2",
+    "name": "清热板蓝",
+    "dark": false,
+    "primary": "rgb(79, 98, 208)",
+    "background": "rgba(255, 255, 255, 1)",
+    "image": ""
+  },
+  {
+    "id": "black",
+    "name": "黑灯瞎火",
+    "dark": true,
+    "primary": "rgb(190, 190, 190)",
+    "background": "rgba(19, 19, 19, 0.95)",
+    "image": "landingMoon.png"
+  },
+  {
+    "id": "mid_autumn",
+    "name": "月里嫦娥",
+    "dark": false,
+    "primary": "rgb(74, 55, 82)",
+    "background": "rgba(255, 255, 255, 0.9)",
+    "image": "jqbg.jpg"
+  },
+  {
+    "id": "naruto",
+    "name": "木叶之村",
+    "dark": false,
+    "primary": "rgb(87, 144, 167)",
+    "background": "rgba(255, 255, 255, 0.8)",
+    "image": "myzcbg.jpg"
+  },
+  {
+    "id": "china_ink",
+    "name": "近墨者黑",
+    "dark": false,
+    "primary": "rgba(47, 47, 47, 1)",
+    "background": "rgba(255, 255, 255, 0.8)",
+    "image": "china_ink.jpg"
+  },
+  {
+    "id": "happy_new_year",
+    "name": "新年快乐",
+    "dark": false,
+    "primary": "rgb(192, 57, 43)",
+    "background": "rgba(255, 255, 255, 0.8)",
+    "image": "xnkl.png"
+  }
+]

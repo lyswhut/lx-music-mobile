@@ -1,0 +1,28 @@
+<resources>
+    <string name="pact_title">项目使用协议</string>
+    <string name="pact_accept">接受</string>
+    <string name="pact_reject">不接受并退出</string>
+    <string name="pact_countdown">接受（%1$d）</string>
+    <string name="sync_history">同步服务器历史（长按移除授权）</string>
+    <string name="sync_history_empty">暂无同步服务器历史</string>
+    <string name="sync_history_remove">移除此服务器和保存的授权？</string>
+    <string name="matching_cache_count">跨平台匹配缓存：%1$d 项</string>
+    <string name="matching_cache_clear">清除跨平台匹配缓存</string>
+    <string name="app_name">LX Music 原生版</string>
+    <string name="interface_language">语言（关闭设置后应用）</string>
+    <string name="language_system">跟随系统</string>
+    <string name="home_page_swipe">左右滑动切换主页</string>
+    <string name="reserve_status_bar">横屏时保留状态栏高度</string>
+    <string name="sync_connecting">正在连接同步服务…</string>
+    <string name="sync_active">正在后台同步%1$s</string>
+    <string name="sync_choose">请返回应用选择%1$s同步方式</string>
+    <string name="sync_timeout_retry">同步连接超时，正在重试…</string>
+    <string name="sync_interrupted_retry">同步连接中断，正在重试…</string>
+    <string name="sync_stopped">同步已停止：%1$s</string>
+    <string name="sync_cancelled">同步已取消</string>
+    <string name="sync_time_limit">已达到系统后台同步时限，返回应用后继续</string>
+    <string name="sync_notification_title">LX Music 数据同步</string>
+    <string name="sync_disconnect">断开同步</string>
+    <string name="share_song">分享歌曲</string>
+    <string name="share_copied">歌曲链接已复制</string>
+</resources>

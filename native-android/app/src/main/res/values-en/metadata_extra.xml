@@ -1,0 +1,9 @@
+<resources>
+    <string name="metadata_parse_title">Parse filename: title - artist</string>
+    <string name="metadata_parse_artist">Parse filename: artist - title</string>
+    <string name="metadata_match_lyric">Match lyrics using source script</string>
+    <string name="metadata_match_cover">Match cover using source script</string>
+    <string name="metadata_match_source">Select a source script that supports local lyrics or artwork</string>
+    <string name="metadata_match_empty">Source script returned no lyrics</string>
+    <string name="song_open_provider">Open provider song page</string>
+</resources>

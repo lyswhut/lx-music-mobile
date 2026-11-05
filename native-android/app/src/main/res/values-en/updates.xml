@@ -1,0 +1,24 @@
+<resources>
+    <string name="update_download">Download native update</string>
+    <string name="update_install">Verify and install update</string>
+    <string name="update_cancel">Cancel and clear update download</string>
+    <string name="update_ignore">Ignore this version</string>
+    <string name="update_no_apk">The release has no native APK</string>
+    <string name="update_download_title">LX Music Native %1$s</string>
+    <string name="update_save_failed">Could not save update download state</string>
+    <string name="update_expired">The update download is no longer available. Download it again.</string>
+    <string name="update_size_invalid">Invalid or incomplete update file size</string>
+    <string name="update_hash_invalid">Update file SHA-256 verification failed</string>
+    <string name="update_apk_invalid">Could not read the update APK</string>
+    <string name="update_version_invalid">The update package, version name or version code does not match</string>
+    <string name="update_signature_invalid">The update signing certificate is incompatible with the installed app</string>
+    <string name="update_failed">Update failed: %1$s</string>
+    <string name="update_cancelled">Update download cancelled</string>
+    <string name="update_verifying">Verifying update APK…</string>
+    <string name="update_install_permission">Allow this app to install updates, then return and tap Install again.</string>
+    <string name="update_ready">Update downloaded. The file and signing certificate will be checked before installation.</string>
+    <string name="update_download_error">Update download failed (reason %1$d)</string>
+    <string name="update_progress">Downloading update: %1$s / %2$s</string>
+    <string name="update_waiting">Update download is waiting for the network or system scheduler</string>
+    <string name="update_auto_check">Check for native updates on startup</string>
+</resources>

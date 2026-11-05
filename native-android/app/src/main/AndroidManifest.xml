@@ -11,9 +11,14 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application android:label="@string/app_name" android:theme="@android:style/Theme.Material.Light.NoActionBar" android:allowBackup="false" android:usesCleartextTraffic="true" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round">
-        <activity android:name=".MetadataActivity" android:exported="false" />
-        <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop">
+        <activity
+            android:name=".ui.MetadataActivity"
+            android:exported="false"
+        />
+
+        <activity android:name=".ui.MainActivity" android:exported="true" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -45,10 +50,28 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <service android:name=".PlaybackService" android:exported="false" android:foregroundServiceType="mediaPlayback" />
-        <service android:name=".SyncService" android:exported="false" android:foregroundServiceType="dataSync" android:stopWithTask="false" />
-        <provider android:name=".UpdateFileProvider" android:authorities="${applicationId}.updates" android:exported="false" android:grantUriPermissions="true">
-            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/update_paths" />
+
+        <service
+            android:name=".player.PlaybackService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback"
+        />
+
+        <service
+            android:name=".sync.SyncService"
+            android:exported="false" android:foregroundServiceType="dataSync"
+            android:stopWithTask="false"
+        />
+
+        <provider
+            android:name=".update.UpdateFileProvider"
+            android:authorities="${applicationId}.updates"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/update_paths"
+            />
         </provider>
     </application>
 </manifest>

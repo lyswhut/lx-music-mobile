@@ -32,6 +32,22 @@ Android 15 及以上对 `dataSync` 前台服务有后台时长限制，通常为
 
 工程目前使用独立的应用 ID `cn.toside.music.nativeapp`，可以与原应用并存，不会自动读取或覆盖原应用私有数据。最低支持 Android 9（API 28），编译和目标版本为 API 36。
 
+Kotlin 源码位于 `app/src/main/java/cn/toside/music/nativeapp/`，按职责分包：
+
+| 包 | 职责 |
+| --- | --- |
+| `ui` | Activity、对话框、布局、主题、歌词显示和界面本地化 |
+| `utils` | 有界读取、HTTP、文本转换、链接解析、分享、权限策略和诊断日志 |
+| `data` | 本地歌曲、元数据、歌单、偏好、队列、历史、备份和下载 |
+| `player` | 播放服务、音频引擎、流式缓存、播放设置和换源匹配 |
+| `lyrics` | 歌词加载、解析、格式转换和解码 |
+| `online` | 在线搜索、歌单、排行榜、评论、歌词和平台接口 |
+| `source` | 自定义音源脚本运行和音源库管理 |
+| `sync` | 后台同步服务、协议、传输、认证和待发送队列 |
+| `update` | 版本查询、更新下载、校验和安装入口 |
+
+`test` 和 `androidTest` 中的测试按相同职责分包；仪器测试入口 `NativeTestRunner` 保留在根包。应用 ID 和资源命名空间保持为 `cn.toside.music.nativeapp`。
+
 使用 JDK 17 和 Android SDK 36，在此目录执行：
 
 ```powershell
@@ -57,7 +73,7 @@ Android 15 及以上对 `dataSync` 前台服务有后台时长限制，通常为
 显式运行联网验收：
 
 ```powershell
-.\gradlew.bat :app:connectedDebugAndroidTest '-Pandroid.testInstrumentationRunnerArguments.class=cn.toside.music.nativeapp.ProviderSmokeTest' '-Pandroid.testInstrumentationRunnerArguments.liveProviders=true'
+.\gradlew.bat :app:connectedDebugAndroidTest '-Pandroid.testInstrumentationRunnerArguments.class=cn.toside.music.nativeapp.online.ProviderSmokeTest' '-Pandroid.testInstrumentationRunnerArguments.liveProviders=true'
 ```
 
 原生 CI 位于根目录 `.github/workflows/native-android.yml`，构建调试 APK/测试 APK、执行单元测试与 Lint，并配置 API 28/35 模拟器回归。远程工作流尚未执行；本地实际结果见验证记录。原生发布流程和签名配置见 [RELEASING.md](RELEASING.md)。Gradle Wrapper 可直接用于构建，不需要 Node 或 npm。主题、字体及音源脚本沿用项目现有许可，简繁字表 MIT 许可及 JAudiotagger LGPL 许可均保存在原生资源中。

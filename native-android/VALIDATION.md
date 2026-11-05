@@ -52,7 +52,7 @@ Lint 警告包括依赖新版本提示、RTL、可访问性、原平台协议所
   '-Pandroid.testInstrumentationRunnerArguments.migrationScreenshots=true'
 ```
 
-Linux/CI 可用 `bash scripts/device-regression.sh` 自动准备测试 APK 并运行不含真实平台联网的回归。单独启用联网检查可传 `class=cn.toside.music.nativeapp.ProviderSmokeTest` 和 `liveProviders=true`。脚本不会发布或自动确认安装。
+Linux/CI 可用 `bash scripts/device-regression.sh` 自动准备测试 APK 并运行不含真实平台联网的回归。单独启用联网检查可传 `class=cn.toside.music.nativeapp.online.ProviderSmokeTest` 和 `liveProviders=true`。脚本不会发布或自动确认安装。
 
 ## 报告和边界
 
@@ -61,3 +61,16 @@ Linux/CI 可用 `bash scripts/device-regression.sh` 自动准备测试 APK 并�
 本次没有解析或下载真实音乐音频。真实 DSP 卸载、蓝牙终端、其他系统/设备/音频格式、所有第三方脚本、真实私有或过期分享仍需对应样本覆盖。系统同步超时回调在 Android 12 模拟调用，未在 Android 15 真机运行到时限。
 
 API 28/35 模拟器回归、签名及原生发布草稿工作流已写入，但没有在远程执行，也没有推送、打标签或发布版本。RN 源码与工具链已在全量回归通过后移除，删除后完成独立构建与关键功能复验。
+
+## 分包重构验证（2026-11-05）
+
+源码及测试按 `ui`、`utils`、`data`、`player`、`lyrics`、`online`、`source`、`sync`、`update` 职责分包，同时更新 Manifest 组件路径和跨包引用。版本查询与发布模型从“关于”对话框提取到 `update/NativeReleases.kt`。逐文件比对确认原有 134 个 Kotlin 文件的业务及测试代码、提取的版本查询逻辑保持一致。
+
+| 验证 | 本轮结果 |
+| --- | --- |
+| Debug APK 和仪器测试 APK 构建 | 通过 |
+| JVM 单元测试 | 14 项通过，0 失败 |
+| Debug Lint | 0 错误、58 警告 |
+| Android 12 定向设备回归（YYA-H618） | 29 项通过，0 失败、0 跳过 |
+
+设备回归范围为 `cn.toside.music.nativeapp` 下的 `ui.HomeNavigationTest`、`ui.PlayerDetailTest`、`ui.AboutDiagnosticsTest`、`data.LocalMetadataTest`、`player.PlaybackSettingsTest`、`sync.SyncServiceTest`，覆盖导航、关于与版本查询、日志、元数据编辑、播放与界面重建、后台同步服务等入口。

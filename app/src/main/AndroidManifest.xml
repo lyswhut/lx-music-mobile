@@ -12,13 +12,22 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <application android:label="@string/app_name" android:theme="@android:style/Theme.Material.Light.NoActionBar" android:allowBackup="false" android:usesCleartextTraffic="true" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round">
+    <application 
+        android:label="@string/app_name" 
+        android:theme="@android:style/Theme.Material.Light.NoActionBar" 
+        android:allowBackup="false" 
+        android:usesCleartextTraffic="true" 
+        android:icon="@mipmap/ic_launcher" 
+        android:roundIcon="@mipmap/ic_launcher_round">
+
         <activity
             android:name=".ui.MetadataActivity"
-            android:exported="false"
-        />
+            android:exported="false"/>
 
-        <activity android:name=".ui.MainActivity" android:exported="true" android:launchMode="singleTop">
+        <activity 
+            android:name=".ui.MainActivity" 
+            android:exported="true" 
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -54,14 +63,13 @@
         <service
             android:name=".player.PlaybackService"
             android:exported="false"
-            android:foregroundServiceType="mediaPlayback"
-        />
+            android:foregroundServiceType="mediaPlayback"/>
 
         <service
             android:name=".sync.SyncService"
-            android:exported="false" android:foregroundServiceType="dataSync"
-            android:stopWithTask="false"
-        />
+            android:exported="false" 
+            android:foregroundServiceType="dataSync"
+            android:stopWithTask="false"/>
 
         <provider
             android:name=".update.UpdateFileProvider"
@@ -70,8 +78,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/update_paths"
-            />
+                android:resource="@xml/update_paths"/>
         </provider>
     </application>
 </manifest>

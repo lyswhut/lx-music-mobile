@@ -4,7 +4,7 @@
 
 ## 本地构建
 
-在本目录使用 JDK 17、Android SDK 36 和 Gradle Wrapper：
+在仓库根目录使用 JDK 17、Android SDK 36 和 Gradle Wrapper：
 
 ```powershell
 .\gradlew.bat :app:assembleDebug :app:testDebugUnitTest :app:lintDebug

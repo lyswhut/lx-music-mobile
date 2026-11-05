@@ -2,7 +2,7 @@
 
 ## 如何运行？
 
-使用 JDK 17 和 Android SDK 36，在 `native-android` 目录执行 `gradlew.bat :app:assembleDebug`。最低 Android 9，无需 React Native、Node 或 npm。完整说明见 [原生工程](native-android/README.md)。
+使用 JDK 17 和 Android SDK 36，在仓库根目录执行 `.\gradlew.bat :app:assembleDebug`。最低 Android 9，无需 React Native、Node 或 npm。完整说明见 [使用与开发说明](DEVELOPMENT.md)。
 
 ## 旧版数据如何迁移？
 
@@ -26,4 +26,4 @@
 
 ## 哪些测试已执行？
 
-见 [验证记录](native-android/VALIDATION.md)。本地测试设备为 Android 12；API 28/35 模拟器回归已配置到 CI，但尚未远程执行。
+见 [验证记录](VALIDATION.md)。本地测试设备为 Android 12；API 28/35 模拟器回归已配置到 CI，但尚未远程执行。

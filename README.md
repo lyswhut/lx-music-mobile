@@ -15,18 +15,17 @@
 使用 JDK 17、Android SDK 36；最低 Android 9。无需 Node 或 npm：
 
 ```powershell
-cd native-android
 .\gradlew.bat :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
 ```
 
-调试包：`native-android/app/build/outputs/apk/debug/app-debug.apk`。
+在仓库根目录执行以上命令。调试包：`app/build/outputs/apk/debug/app-debug.apk`。
 
 Android 12 真机已完成 145 项设备测试（含五平台 60 个联网分项）、14 项 JVM 单元测试，均通过；Debug/Release Lint 均无错误。已验证临时签名 Release 构建，以及同签名 APK 覆盖升级后私有数据保留。其他系统版本、硬件卸载、蓝牙终端和全部第三方脚本不在此次实测覆盖内。
 
-- [使用与开发说明](native-android/README.md)
-- [迁移功能对照](native-android/MIGRATION.md)
-- [测试记录与复现命令](native-android/VALIDATION.md)
-- [原生签名和发布](native-android/RELEASING.md)
+- [使用与开发说明](DEVELOPMENT.md)
+- [迁移功能对照](MIGRATION.md)
+- [测试记录与复现命令](VALIDATION.md)
+- [原生签名和发布](RELEASING.md)
 - [常见问题](FAQ.md)
 
 原生应用 ID 为 `cn.toside.music.nativeapp`，可与旧版并存。旧版私有数据不会自动转入，请使用歌单备份或 LX 同步服务迁移。

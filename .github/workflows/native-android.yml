@@ -3,12 +3,24 @@ name: Native Android
 on:
   pull_request:
     paths:
-      - 'native-android/**'
-      - '.github/workflows/native-android.yml'
+      - 'app/**'
+      - 'gradle/**'
+      - 'scripts/**'
+      - '*.gradle.kts'
+      - 'gradle.properties'
+      - 'gradlew'
+      - 'gradlew.bat'
+      - '.github/workflows/native-*.yml'
   push:
     paths:
-      - 'native-android/**'
-      - '.github/workflows/native-android.yml'
+      - 'app/**'
+      - 'gradle/**'
+      - 'scripts/**'
+      - '*.gradle.kts'
+      - 'gradle.properties'
+      - 'gradlew'
+      - 'gradlew.bat'
+      - '.github/workflows/native-*.yml'
   workflow_dispatch:
 
 permissions:
@@ -17,9 +29,6 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: native-android
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-java@v5
@@ -38,9 +47,9 @@ jobs:
         with:
           name: native-android-debug
           path: |
-            native-android/app/build/outputs/apk/debug/*.apk
-            native-android/app/build/outputs/apk/androidTest/debug/*.apk
-            native-android/app/build/reports/
+            app/build/outputs/apk/debug/*.apk
+            app/build/outputs/apk/androidTest/debug/*.apk
+            app/build/reports/
   device-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 40
@@ -70,12 +79,12 @@ jobs:
           arch: x86_64
           target: google_apis
           disable-animations: true
-          script: bash native-android/scripts/device-regression.sh
+          script: bash scripts/device-regression.sh
       - name: Upload device reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: native-device-api-${{ matrix.api-level }}
           path: |
-            native-android/app/build/reports/androidTests/
-            native-android/app/build/outputs/androidTest-results/
+            app/build/reports/androidTests/
+            app/build/outputs/androidTest-results/

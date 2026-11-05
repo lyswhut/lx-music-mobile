@@ -10,9 +10,6 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: native-android
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-java@v5
@@ -65,7 +62,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: native-release-reports
-          path: native-android/app/build/reports/
+          path: app/build/reports/
       - name: Create reviewable draft release
         env:
           GH_TOKEN: ${{ github.token }}

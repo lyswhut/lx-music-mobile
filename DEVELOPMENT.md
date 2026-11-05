@@ -1,4 +1,4 @@
-# LX Music 原生 Android 迁移
+# LX Music 使用与开发说明
 
 这是项目的原生 Android 工程，使用 Kotlin、协程、MediaPlayer/Media3，不依赖 React Native。已实现本地媒体库、五个平台的歌曲/歌单搜索及建议、热搜、排行榜、推荐歌单和分类、多自定义音源、本地歌单编辑和批量操作、备份恢复、逐字和扩展歌词、桌面歌词、后台同步/播放、系统媒体控制、队列编辑、播放历史、定时停止、下载、分享、外部入口和主题等。迁移验收通过后已移除旧 RN 源码、桥接工程及 Node 工具链，功能对照和验证范围见 [MIGRATION.md](MIGRATION.md)。
 
@@ -48,7 +48,7 @@ Kotlin 源码位于 `app/src/main/java/cn/toside/music/nativeapp/`，按职责�
 
 `test` 和 `androidTest` 中的测试按相同职责分包；仪器测试入口 `NativeTestRunner` 保留在根包。应用 ID 和资源命名空间保持为 `cn.toside.music.nativeapp`。
 
-使用 JDK 17 和 Android SDK 36，在此目录执行：
+Android 工程直接位于仓库根目录：`app/` 为应用模块，`gradle/` 保存 Wrapper，`scripts/` 保存设备回归脚本。使用 JDK 17 和 Android SDK 36，在仓库根目录执行：
 
 ```powershell
 .\gradlew.bat :app:assembleDebug

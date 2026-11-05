@@ -33,7 +33,7 @@ Lint 警告包括依赖新版本提示、RTL、可访问性、原平台协议所
 
 ## 复现
 
-在 `native-android` 目录，连接 Android 测试设备：
+在仓库根目录，连接 Android 测试设备：
 
 ```powershell
 .\gradlew.bat :app:testDebugUnitTest :app:assembleDebug :app:assembleDebugAndroidTest :app:lintDebug
@@ -74,3 +74,9 @@ API 28/35 模拟器回归、签名及原生发布草稿工作流已写入，但�
 | Android 12 定向设备回归（YYA-H618） | 29 项通过，0 失败、0 跳过 |
 
 设备回归范围为 `cn.toside.music.nativeapp` 下的 `ui.HomeNavigationTest`、`ui.PlayerDetailTest`、`ui.AboutDiagnosticsTest`、`data.LocalMetadataTest`、`player.PlaybackSettingsTest`、`sync.SyncServiceTest`，覆盖导航、关于与版本查询、日志、元数据编辑、播放与界面重建、后台同步服务等入口。
+
+## 工程根目录调整验证（2026-11-05）
+
+Android 工程已移至仓库根目录，`app/`、`gradle/`、`scripts/`、Gradle 配置与 Wrapper 可直接使用；CI 的触发路径、构建目录、设备回归入口、产物归档及发布草稿报告路径已同步更新。详细使用与开发说明位于 [DEVELOPMENT.md](DEVELOPMENT.md)。迁移的 197 个源码、资源、构建及脚本文件与 Git 中的原文件逐字节一致，文档中的本地链接检查通过。
+
+在仓库根目录执行 `:app:assembleDebug :app:assembleDebugAndroidTest :app:testDebugUnitTest :app:lintDebug` 全部通过；JVM 单元测试 14 项通过，Lint 为 0 错误、58 警告。设备回归脚本和 Unix Gradle Wrapper 均通过 `bash -n` 语法检查。

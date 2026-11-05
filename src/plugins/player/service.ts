@@ -2,7 +2,7 @@
 import TrackPlayer, { State as TPState, Event as TPEvent } from 'react-native-track-player'
 // import { store } from '@/store'
 // import { action as playerAction, STATUS } from '@/store/modules/player'
-import { isTempId, isEmpty } from './utils'
+import { destroy as destroyPlayer, isTempId, isEmpty } from './utils'
 // import { play as lrcPlay, pause as lrcPause } from '@/core/lyric'
 import { exitApp } from '@/core/common'
 import { getCurrentTrackId } from './playList'
@@ -21,6 +21,13 @@ let isInitialized = false
 const handleExitApp = async(reason: string) => {
   global.lx.isPlayedStop = false
   exitApp(reason)
+}
+
+const handleRemoteStop = async() => {
+  global.lx.isPlayedStop = false
+  await destroyPlayer()
+  global.app_event.playerPause()
+  global.app_event.pause()
 }
 
 
@@ -50,7 +57,7 @@ const registerPlaybackService = async() => {
 
   TrackPlayer.addEventListener(TPEvent.RemoteStop, () => {
     // console.log('remote-stop')
-    void handleExitApp('Remote Stop')
+    void handleRemoteStop()
   })
 
   // TrackPlayer.addEventListener(TPEvent.RemoteDuck, async({ permanent, paused, ducking }) => {

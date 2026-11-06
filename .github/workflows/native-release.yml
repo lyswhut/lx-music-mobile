@@ -37,21 +37,30 @@ jobs:
           PY
       - name: Install Android SDK
         run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
-      - name: Prepare native signing key
+      - name: Prepare native signing configuration
         env:
           KEYSTORE_BASE64: ${{ secrets.NATIVE_KEYSTORE_BASE64 }}
-        run: |
-          test -n "$KEYSTORE_BASE64"
-          umask 077
-          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/native-release.jks"
-      - name: Verify and build signed native release
-        env:
           NATIVE_KEYSTORE_PATH: ${{ runner.temp }}/native-release.jks
           NATIVE_STORE_PASSWORD: ${{ secrets.NATIVE_STORE_PASSWORD }}
           NATIVE_KEY_ALIAS: ${{ secrets.NATIVE_KEY_ALIAS }}
           NATIVE_KEY_PASSWORD: ${{ secrets.NATIVE_KEY_PASSWORD }}
         run: |
-          bash ./gradlew --no-daemon :app:testDebugUnitTest :app:lintRelease :app:assembleRelease -PnativeRequireSigning=true -PnativeVersionName="$NATIVE_VERSION" -PnativeVersionCode="$NATIVE_CODE"
+          test -n "$KEYSTORE_BASE64"
+          umask 077
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/native-release.jks"
+          python3 - <<'PY'
+          import os
+          escapes = {'\\': '\\\\', '\n': '\\n', '\r': '\\r', '\t': '\\t', '\f': '\\f', ' ': '\\ '}
+          keys = ('NATIVE_KEYSTORE_PATH', 'NATIVE_STORE_PASSWORD', 'NATIVE_KEY_ALIAS', 'NATIVE_KEY_PASSWORD')
+          with open('local.properties', 'a', encoding='utf-8') as properties:
+              properties.write('\n')
+              for key in keys:
+                  value = ''.join(escapes.get(char, char) for char in os.environ[key])
+                  properties.write(f'{key}={value}\n')
+          PY
+      - name: Verify and build signed native release
+        run: |
+          bash ./gradlew --no-daemon :app:testDebugUnitTest :app:lintRelease :app:assembleRelease -PnativeVersionName="$NATIVE_VERSION" -PnativeVersionCode="$NATIVE_CODE"
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose app/build/outputs/apk/release/app-release.apk
           mkdir -p release-artifacts
           cp app/build/outputs/apk/release/app-release.apk "release-artifacts/lx-music-native-$NATIVE_VERSION-universal.apk"
@@ -69,6 +78,6 @@ jobs:
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ github.ref_name }}
         run: gh release create "$RELEASE_TAG" release-artifacts/* --verify-tag --draft --title "LX Music Native $NATIVE_VERSION" --generate-notes
-      - name: Remove temporary signing key
+      - name: Remove temporary signing configuration
         if: always()
-        run: rm -f "$RUNNER_TEMP/native-release.jks"
+        run: rm -f "$RUNNER_TEMP/native-release.jks" local.properties

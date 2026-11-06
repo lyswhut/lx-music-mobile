@@ -12,24 +12,33 @@
 
 默认调试版本为 `0.1.0`、versionCode `1`。可以通过 `-PnativeVersionName=0.1.1 -PnativeVersionCode=2` 构建升级测试包。测试包与正式包须保持各自的固定签名，正式分发勿使用调试密钥或验证目录内的临时密钥。
 
-Release 签名从以下环境变量读取，四项需一起提供：
+Release 签名仅从仓库根目录的 `local.properties` 读取。将 `NewKeyStrore.jks` 放到仓库根目录，在现有 `sdk.dir` 配置后追加以下内容，并填写实际密码和密钥别名：
 
-| 环境变量 | 用途 |
+```properties
+NATIVE_KEYSTORE_PATH=NewKeyStrore.jks
+NATIVE_STORE_PASSWORD=
+NATIVE_KEY_ALIAS=
+NATIVE_KEY_PASSWORD=
+```
+
+| 配置项 | 用途 |
 | --- | --- |
-| `NATIVE_KEYSTORE_PATH` | 签名库的绝对路径 |
+| `NATIVE_KEYSTORE_PATH` | 签名库路径，相对仓库根目录或绝对路径；省略时默认 `NewKeyStrore.jks` |
 | `NATIVE_STORE_PASSWORD` | 签名库密码 |
 | `NATIVE_KEY_ALIAS` | 密钥别名 |
 | `NATIVE_KEY_PASSWORD` | 密钥密码 |
 
 ```powershell
-.\gradlew.bat :app:assembleRelease :app:lintRelease -PnativeRequireSigning=true -PnativeVersionName=0.1.1 -PnativeVersionCode=1001
+.\gradlew.bat :app:assembleRelease :app:lintRelease -PnativeVersionName=0.1.1 -PnativeVersionCode=1001
 ```
 
-未配置签名时本地 Release 为未签名产物；`nativeRequireSigning=true` 会阻止此情况，始终不会自动改用调试签名。
+缺少密码、密钥别名或签名文件时，Release 构建会失败，并提示缺失项和配置位置；不会生成未签名 Release，也不会自动改用调试签名。Debug 构建不要求 Release 签名配置。
+
+`local.properties`、`*.jks` 和 `*.keystore` 均被 Git 忽略，不要提交密码或密钥。路径建议使用 `/`；配置值中的反斜杠需写成 `\\`，开头空格需写成 `\ `。签名库密码和密钥密码即使相同，也需分别填写。
 
 ## GitHub 发布草稿
 
-`.github/workflows/native-release.yml` 只响应 `native-v*` 标签。配置仓库 Secrets `NATIVE_KEYSTORE_BASE64`（签名库 Base64）、`NATIVE_STORE_PASSWORD`、`NATIVE_KEY_ALIAS`、`NATIVE_KEY_PASSWORD` 后，由维护者推送标签触发。
+`.github/workflows/native-release.yml` 只响应 `native-v*` 标签。配置仓库 Secrets `NATIVE_KEYSTORE_BASE64`（签名库 Base64）、`NATIVE_STORE_PASSWORD`、`NATIVE_KEY_ALIAS`、`NATIVE_KEY_PASSWORD` 后，由维护者推送标签触发。工作流会还原临时签名库，将签名配置写入 `local.properties`，构建结束后清理这两个文件。
 
 工作流校验版本、运行单元测试和 Release Lint、构建并校验签名，生成 `lx-music-native-VERSION-universal.apk` 和 `SHA256SUMS.txt`，创建 GitHub Release **草稿**。维护者审核并发布后，应用才会识别。此次迁移仅写入工作流并在本地验证临时签名构建，没有推送标签或创建远程发布。
 

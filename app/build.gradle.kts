@@ -1,6 +1,39 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+}
+
+val localProperties = Properties().apply {
+    val propertiesFile = rootProject.file("local.properties")
+    if (propertiesFile.isFile) propertiesFile.reader(Charsets.UTF_8).use { load(it) }
+}
+val releaseSigningValues = listOf("NATIVE_STORE_PASSWORD", "NATIVE_KEY_ALIAS", "NATIVE_KEY_PASSWORD")
+    .associateWith { localProperties.getProperty(it) }
+val releaseKeystore = rootProject.file(
+    localProperties.getProperty("NATIVE_KEYSTORE_PATH")?.takeIf { it.isNotBlank() } ?: "NewKeyStrore.jks"
+)
+val validateNativeReleaseSigning = tasks.register("validateNativeReleaseSigning") {
+    group = "verification"
+    description = "Checks local.properties and the keystore before building a release."
+    val missingProperties = releaseSigningValues.filterValues { it.isNullOrBlank() }.keys.toList()
+    val keystore = releaseKeystore
+    doLast {
+        if (missingProperties.isNotEmpty() || !keystore.isFile) {
+            throw GradleException(buildString {
+                appendLine("Release 签名配置不完整，无法构建。请检查仓库根目录的 local.properties：")
+                if (missingProperties.isNotEmpty()) {
+                    appendLine("缺少或为空的配置项：${missingProperties.joinToString()}")
+                }
+                if (!keystore.isFile) {
+                    appendLine("签名文件不存在：$keystore")
+                    appendLine("请放入 NewKeyStrore.jks，或设置 NATIVE_KEYSTORE_PATH（相对仓库根目录或绝对路径）。")
+                }
+                append("配置示例见 RELEASING.md；local.properties 和密钥文件已被 Git 忽略。")
+            })
+        }
+    }
 }
 
 android {
@@ -15,29 +48,24 @@ android {
         versionName = providers.gradleProperty("nativeVersionName").orElse("0.1.0").get().also { require(it.matches(Regex("\\d+\\.\\d+\\.\\d+"))) }
         testInstrumentationRunner = "cn.toside.music.nativeapp.NativeTestRunner"
     }
-    val signingVariables = listOf("NATIVE_KEYSTORE_PATH", "NATIVE_STORE_PASSWORD", "NATIVE_KEY_ALIAS", "NATIVE_KEY_PASSWORD")
-    val signingValues = signingVariables.map { providers.environmentVariable(it).orNull }
-    require(signingValues.all { it.isNullOrBlank() } || signingValues.none { it.isNullOrBlank() }) {
-        "Provide all native release signing environment variables, or none."
-    }
-    val hasReleaseSigning = signingValues.none { it.isNullOrBlank() }
-    require(providers.gradleProperty("nativeRequireSigning").orNull != "true" || hasReleaseSigning) {
-        "Native release signing credentials are required."
-    }
-    if (hasReleaseSigning) signingConfigs.create("nativeRelease") {
-        storeFile = file(signingValues[0]!!)
-        storePassword = signingValues[1]
-        keyAlias = signingValues[2]
-        keyPassword = signingValues[3]
+    signingConfigs.create("nativeRelease") {
+        storeFile = releaseKeystore
+        storePassword = releaseSigningValues["NATIVE_STORE_PASSWORD"]
+        keyAlias = releaseSigningValues["NATIVE_KEY_ALIAS"]
+        keyPassword = releaseSigningValues["NATIVE_KEY_PASSWORD"]
     }
     buildTypes.getByName("release") {
-        if (hasReleaseSigning) signingConfig = signingConfigs.getByName("nativeRelease")
+        signingConfig = signingConfigs.getByName("nativeRelease")
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = "17" }
+}
+
+tasks.matching { it.name == "preReleaseBuild" || it.name == "validateSigningRelease" }.configureEach {
+    dependsOn(validateNativeReleaseSigning)
 }
 
 dependencies {

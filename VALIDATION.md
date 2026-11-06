@@ -1,5 +1,22 @@
 # 原生迁移验证记录
 
+## 2026-11-05：设置适配与在线音源导入
+
+设备为 YYA-H618 / Android 12（API 31）；JDK 17、Gradle 8.13、SDK 36。Debug 构建成功，14 项 JVM 单元测试通过；24 项相关设备测试全部通过，无失败或跳过，覆盖设置页、音源下载/脚本库及主页导航、屏幕适配、语言与主题回归。状态文案修正后 6 项设置页测试再次通过；最终 Debug Lint 为 0 错误、64 警告、1 提示。
+
+- 对实际 Android View 分别按 360×800、600×800、1024×768、640×360 dp 测量和绘制，检查八个分类及其控件边界；检查深色主题、英文和 130% 字号。尺寸渲染在同一台 Android 12 设备上完成，并非四种实体手机/平板实测。
+- 验证分类和链接草稿跨 Activity 重建恢复、开关持久化、关闭设置应用主题、导入期间切换分类仍保持忙碌状态，以及关闭页面取消下载。
+- 本地 HTTP 测试验证重定向、无扩展名链接、UTF-8/BOM、非法协议、404、空响应、HTML 网页、带/不带 Content-Length 的 2 MB 上限及请求取消。下载脚本经真实 QuickJS 验证，导入成功后列表显示启用状态；下载/脚本失败保留旧选择，支持重试。
+- 原有 32 个通用设置键均保留。截图人工检查后修正返回按钮、平板侧栏背景、横向分类可见位置和停用音源的状态文案。
+
+本次相关结果归档于 `build/settings-validation/device-tests.xml` 和 `settings-final-tests.xml`；手机、平板和深色英文设置截图位于同目录的 `phone-sources.png`、`tablet-sources.png`、`phone-dark-sources.png`。Gradle 原始截图输出在 `app/build/outputs/connected_android_test_additional_output/debugAndroidTest/connected/YYA-H618 - 12/settings-validation/`。
+
+设置与下载专项可复现为：
+
+```powershell
+.\gradlew.bat :app:assembleDebug :app:testDebugUnitTest :app:lintDebug :app:connectedDebugAndroidTest '-Pandroid.testInstrumentationRunnerArguments.class=cn.toside.music.nativeapp.ui.SettingsDialogTest,cn.toside.music.nativeapp.source.OnlineSourceImportTest' '-Pandroid.testInstrumentationRunnerArguments.adaptiveScreenshots=true'
+```
+
 日期：2026-11-04。设备：YYA-H618，Android 12（API 31）。JDK 17，Gradle 8.13，Android SDK 36。
 
 ## 实际执行结果

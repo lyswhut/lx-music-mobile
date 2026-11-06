@@ -1,0 +1,24 @@
+<resources>
+    <string name="settings_title">Settings</string>
+    <string name="settings_basic">Basic settings</string>
+    <string name="settings_playback">Playback</string>
+    <string name="settings_sources">Custom sources</string>
+    <string name="settings_about">About and updates</string>
+    <string name="settings_selected">Enabled</string>
+    <string name="settings_apply_hint">Theme, language and layout changes apply when you close settings.</string>
+    <string name="settings_source_hint">Import an LX-compatible source script for online playback and downloads.</string>
+    <string name="settings_source_online">Import from URL</string>
+    <string name="settings_source_url">Source URL</string>
+    <string name="settings_source_url_hint">Paste a direct HTTP or HTTPS script URL, up to 2 MB. Use a source you trust.</string>
+    <string name="settings_source_installed">Imported sources</string>
+    <string name="settings_source_no_sources">No sources imported yet. Import from a URL above or choose a local script.</string>
+    <string name="settings_source_invalid_url">Enter a valid HTTP or HTTPS source URL</string>
+    <string name="settings_source_http_error">Download failed (HTTP %1$d)</string>
+    <string name="settings_source_too_large">The source file exceeds 2 MB</string>
+    <string name="settings_source_empty_response">The URL returned empty content. Check the source address.</string>
+    <string name="settings_source_html_response">The URL returned a web page. Use a direct script URL.</string>
+    <string name="settings_source_downloading">Downloading source…</string>
+    <string name="settings_source_validating">Validating source…</string>
+    <string name="settings_source_importing">Importing…</string>
+    <string name="settings_source_success">Source imported and enabled</string>
+</resources>

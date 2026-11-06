@@ -1,0 +1,24 @@
+<resources>
+    <string name="settings_title">設定</string>
+    <string name="settings_basic">基本設定</string>
+    <string name="settings_playback">播放設定</string>
+    <string name="settings_sources">自訂音源</string>
+    <string name="settings_about">關於與版本</string>
+    <string name="settings_selected">已啟用</string>
+    <string name="settings_apply_hint">主題、語言和介面配置的變更將在關閉設定後套用。</string>
+    <string name="settings_source_hint">匯入相容 LX 的音源指令碼，用於線上歌曲播放和下載。</string>
+    <string name="settings_source_online">線上匯入音源</string>
+    <string name="settings_source_url">音源連結</string>
+    <string name="settings_source_url_hint">貼上 HTTP 或 HTTPS 指令碼直連，檔案大小不超過 2 MB。請使用你信任的音源。</string>
+    <string name="settings_source_installed">已匯入的音源</string>
+    <string name="settings_source_no_sources">尚未匯入音源。可使用上方連結線上匯入，也可選擇本機指令碼。</string>
+    <string name="settings_source_invalid_url">請輸入有效的 HTTP 或 HTTPS 音源連結</string>
+    <string name="settings_source_http_error">下載失敗（HTTP %1$d）</string>
+    <string name="settings_source_too_large">音源檔案超過 2 MB</string>
+    <string name="settings_source_empty_response">連結傳回了空內容，請檢查音源位址</string>
+    <string name="settings_source_html_response">連結傳回了網頁，請使用音源指令碼的直連</string>
+    <string name="settings_source_downloading">正在下載音源…</string>
+    <string name="settings_source_validating">正在驗證音源…</string>
+    <string name="settings_source_importing">正在匯入…</string>
+    <string name="settings_source_success">音源已匯入並啟用</string>
+</resources>

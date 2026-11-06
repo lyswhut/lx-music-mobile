@@ -16,7 +16,7 @@ class LocalizationTest {
         val base = InstrumentationRegistry.getInstrumentation().targetContext
         fun context(language: String) = base.createConfigurationContext(Configuration(base.resources.configuration).apply { setLocale(Locale.forLanguageTag(language)) })
         val simplified = context("zh-CN"); val english = context("en"); val traditional = context("zh-TW")
-        val fields = R.string::class.java.declaredFields.filter { field -> listOf("ui_", "theme_", "playback_", "metadata_", "update_", "song_").any(field.name::startsWith) }
+        val fields = R.string::class.java.declaredFields.filter { field -> listOf("ui_", "theme_", "playback_", "metadata_", "update_", "song_", "settings_").any(field.name::startsWith) }
         assertTrue(fields.size >= 500)
         val arguments = Regex("%(\\d+)\\\$([sd])")
         fields.forEach { field ->

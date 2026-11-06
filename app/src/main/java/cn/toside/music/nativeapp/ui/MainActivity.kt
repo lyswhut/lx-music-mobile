@@ -43,7 +43,6 @@ import cn.toside.music.nativeapp.sync.SyncService
 import cn.toside.music.nativeapp.utils.DiagnosticLog
 import cn.toside.music.nativeapp.utils.ExternalLinks
 import cn.toside.music.nativeapp.utils.LxLink
-import cn.toside.music.nativeapp.utils.NativeHttp
 import cn.toside.music.nativeapp.utils.PermissionPolicy
 import cn.toside.music.nativeapp.utils.SongShare
 import cn.toside.music.nativeapp.utils.readBounded
@@ -125,6 +124,8 @@ class MainActivity : Activity() {
     private var lyricDelayMs = 0
     private var lyricAppearance = LyricAppearance(21, LyricAlignment.LEFT)
     private var playbackSettingsDialog: AlertDialog? = null
+    private var settingsDialog: SettingsDialog? = null
+    private var pendingSettingsState: Bundle? = null
     private var sourceUpdateJob: Job? = null
     private var sourceUpdateDialog: AlertDialog? = null
     private var pendingSourceExportId: String? = null
@@ -237,6 +238,8 @@ class MainActivity : Activity() {
             waitingForServiceDownload?.let { song -> waitingForServiceDownload = null; downloadSong(song) }
             if (intent.getBooleanExtra("open-player", false)) { intent.removeExtra("open-player"); showPlayerDetails() }
             handleIncomingIntent()
+            pendingSettingsState?.let { saved -> pendingSettingsState = null; openSettings(state = saved) }
+            settingsDialog?.takeIf { it.isShowing }?.refreshSources()
         }
         override fun onServiceDisconnected(name: ComponentName?) { service = null; stateJob?.cancel(); lyricJob?.cancel(); artworkJob?.cancel(); sourceUpdateJob?.cancel() }
     }
@@ -251,6 +254,7 @@ class MainActivity : Activity() {
         val activeTheme = NativeThemes(this).active()
         setTheme(if (activeTheme.dark) R.style.NativeDark else R.style.NativeLight)
         super.onCreate(savedInstanceState)
+        pendingSettingsState = savedInstanceState?.getBundle("settings-state")
         palette = UiPalette(this, activeTheme)
         uiLayout = AdaptiveLayout(resources.configuration.screenWidthDp, resources.configuration.screenHeightDp)
         playlists = Playlists(applicationContext)
@@ -324,7 +328,7 @@ class MainActivity : Activity() {
             else if (song != null) toast(getString(R.string.ui_cbe111f9db69))
         }
     }
-    override fun onDestroy() { pactDialog?.dismiss(); playerDialog?.dismiss(); playbackSettingsDialog?.dismiss(); syncSettingsDialog?.dismiss(); syncConflictDialog?.dismiss(); scope.cancel(); super.onDestroy() }
+    override fun onDestroy() { settingsDialog?.dismiss(); pactDialog?.dismiss(); playerDialog?.dismiss(); playbackSettingsDialog?.dismiss(); syncSettingsDialog?.dismiss(); syncConflictDialog?.dismiss(); scope.cancel(); super.onDestroy() }
     override fun onSaveInstanceState(outState: Bundle) {
         val page = pageSnapshot()
         outState.putInt("home-mode", when { page.boards -> 2; page.onlineLists -> 3; page.online -> 1; else -> 0 })
@@ -344,6 +348,7 @@ class MainActivity : Activity() {
         outState.putBoolean("waitingForAudioSettings", waitingForAudioSettings)
         outState.putBoolean("waitingForDownloadSettings", waitingForDownloadSettings)
         pendingSourceExportId?.let { outState.putString("source-export-id", it) }
+        settingsDialog?.takeIf { it.isShowing }?.let { outState.putBundle("settings-state", it.saveState()) }
         super.onSaveInstanceState(outState)
     }
     @Deprecated("Retained page data contains no Activity, Context or Views")
@@ -435,6 +440,7 @@ class MainActivity : Activity() {
             try {
                 val script = withContext(Dispatchers.IO) { contentResolver.openInputStream(uri)?.use { it.readBounded(2 * 1024 * 1024).toString(Charsets.UTF_8) } ?: error(getString(R.string.ui_5903b3b5a9ca)) }
                 (service ?: error(getString(R.string.ui_7ca47a28e695))).importSource(script); toast(getString(R.string.ui_18710cc58894))
+                settingsDialog?.refreshSources()
             } catch (e: CancellationException) { throw e }
             catch (e: Exception) { toast(getString(R.string.ui_0874f11320ab, java.lang.String.valueOf(e.localizedMessage))) }
         }
@@ -738,8 +744,8 @@ class MainActivity : Activity() {
         entry(59696, R.string.ui_a9531e47b75d) { openLocalPage(true) }
         entry(59666, R.string.ui_c2dd14825672) { showPlaylists() }
         entry(59687, R.string.ui_727036c7fc2a) { showSyncSettings() }
-        entry(59655, R.string.ui_18a9d61deeb3) { showGeneralSettings(this@MainActivity, scope, service) { service?.refreshPreferences(); filterSongs(); service?.state?.value?.let(::renderPlayer) } }
-        entry(59659, R.string.ui_788db1cfec2a) { showThemeSettings(this@MainActivity) }
+        entry(59655, R.string.settings_title) { showSettings() }
+        entry(59659, R.string.ui_788db1cfec2a) { openSettings("theme") }
         addView(ScrollView(this@MainActivity).apply { isVerticalScrollBarEnabled = false; addView(items) }, LinearLayout.LayoutParams(-1, 0, 1f))
         addView(lx.icon(59680, getString(R.string.ui_e35a36e26d52), 19f) { showNavigation() }, LinearLayout.LayoutParams(-1, dp(48)))
     }
@@ -764,7 +770,7 @@ class MainActivity : Activity() {
         addView(View(this@MainActivity), LinearLayout.LayoutParams(dp(48), 1))
     }
     private fun showNavigation() {
-        val labels = mutableListOf(getString(R.string.ui_a9531e47b75d), getString(R.string.ui_c2dd14825672), getString(R.string.ui_87a2113eb66f), getString(R.string.ui_1ee95aa94712), getString(R.string.ui_259597bf6ca7), getString(R.string.ui_3158c8d56b7b), getString(R.string.ui_a5cd0a9169e8), getString(R.string.ui_3facd3e00be5), getString(R.string.ui_599818eb56df), getString(R.string.ui_727036c7fc2a), getString(R.string.ui_2a3ec620e12c), getString(R.string.ui_8c38525734c0), getString(R.string.ui_486b54a7b0af), getString(R.string.ui_6e763b71e69c), getString(R.string.ui_f01b6815d826), getString(R.string.ui_cad84b75d661), getString(R.string.ui_426744e26e7e), getString(R.string.ui_ac7aa03a458f), getString(R.string.ui_18a9d61deeb3), getString(R.string.ui_788db1cfec2a), getString(R.string.ui_4fd38bc4f6d4), getString(R.string.ui_bb1d19b85634))
+        val labels = mutableListOf(getString(R.string.ui_a9531e47b75d), getString(R.string.ui_c2dd14825672), getString(R.string.ui_87a2113eb66f), getString(R.string.ui_1ee95aa94712), getString(R.string.ui_259597bf6ca7), getString(R.string.ui_3158c8d56b7b), getString(R.string.ui_a5cd0a9169e8), getString(R.string.ui_3facd3e00be5), getString(R.string.ui_599818eb56df), getString(R.string.ui_727036c7fc2a), getString(R.string.ui_2a3ec620e12c), getString(R.string.ui_8c38525734c0), getString(R.string.ui_486b54a7b0af), getString(R.string.ui_6e763b71e69c), getString(R.string.ui_f01b6815d826), getString(R.string.ui_cad84b75d661), getString(R.string.ui_426744e26e7e), getString(R.string.ui_ac7aa03a458f), getString(R.string.settings_title), getString(R.string.ui_788db1cfec2a), getString(R.string.ui_4fd38bc4f6d4), getString(R.string.ui_bb1d19b85634))
         if (preferences.showBack) labels.add(getString(R.string.ui_f75a93326a3c))
         if (preferences.showExit) labels.add(getString(R.string.ui_b0d269c8707c))
         val navigation = AlertDialog.Builder(this).setTitle("LX Music").setItems(labels.toTypedArray()) { _, which ->
@@ -800,8 +806,8 @@ class MainActivity : Activity() {
             else if (which == 12) showDesktopLyricSettings(this) { service?.refreshLyricPreferences() }
             else if (which == 13) showSources() else if (which == 14) showPlaybackQueue()
             else if (which == 15) showSearchTools() else if (which == 16) showHistory() else if (which == 17) showPlaylistLink()
-            else if (which == 18) showGeneralSettings(this, scope, service) { service?.refreshPreferences(); filterSongs(); service?.state?.value?.let(::renderPlayer) }
-            else if (which == 19) showThemeSettings(this)
+            else if (which == 18) showSettings()
+            else if (which == 19) openSettings("theme")
             else if (which == 20) showAbout(this, scope)
             else if (which == 21) showDiagnostics(this, scope) {
                 @Suppress("DEPRECATION")
@@ -989,39 +995,21 @@ class MainActivity : Activity() {
                 }
             }).show().also { dialog -> dialog.setOnDismissListener { playbackSettingsDialog = null } }
     }
-    private fun showSources() {
-        val player = service ?: return
-        scope.launch {
-            try {
-                val catalog = player.sourceCatalog()
-                val labels = listOf(getString(R.string.ui_3158c8d56b7b), getString(R.string.ui_350260df62b8), getString(R.string.ui_98e96c39ccf6)) + catalog.entries.map {
-                    "${if (it.id == catalog.selected) "✓ " else ""}${it.name} ${it.version}"
-                }
-                AlertDialog.Builder(this@MainActivity).setTitle(getString(R.string.ui_6e763b71e69c)).setItems(labels.toTypedArray()) { _, index ->
-                    if (index == 0) {
-                        @Suppress("DEPRECATION")
-                        startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT).apply { addCategory(Intent.CATEGORY_OPENABLE); type = "*/*" }, REQUEST_SOURCE)
-                    } else if (index == 1) {
-                        val input = EditText(this@MainActivity).apply { hint = getString(R.string.ui_8052c1f1c0ab); inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI; setSingleLine(true) }
-                        AlertDialog.Builder(this@MainActivity).setTitle(getString(R.string.ui_350260df62b8)).setView(input).setNegativeButton(getString(R.string.ui_2cd0f3be8738), null)
-                            .setPositiveButton(getString(R.string.ui_576d81bb0631)) { _, _ -> scope.launch {
-                                try {
-                                    val url = Uri.parse(input.text.toString().trim())
-                                    require(url.scheme in setOf("https", "http") && !url.host.isNullOrBlank()) { getString(R.string.ui_6a7c1a0a3a3e) }
-                                    val script = NativeHttp.text(url.toString(), maxBytes = 2 * 1024 * 1024)
-                                    player.importSource(script); toast(getString(R.string.ui_18710cc58894))
-                                } catch (e: CancellationException) { throw e }
-                                catch (e: Exception) { toast(getString(R.string.ui_03f6f90cdb7a, java.lang.String.valueOf(e.localizedMessage))) }
-                            } }.show()
-                    } else if (index == 2) scope.launch {
-                        try { player.selectSource(null); toast(getString(R.string.ui_7f1c18aeb640)) }
-                        catch (e: CancellationException) { throw e }
-                        catch (e: Exception) { toast(getString(R.string.ui_903f7809008b, java.lang.String.valueOf(e.localizedMessage))) }
-                    } else showSourceActions(catalog.entries[index - 3])
-                }.setNegativeButton(getString(R.string.ui_3fd47edce45b), null).show()
-            } catch (e: CancellationException) { throw e }
-            catch (e: Exception) { toast(getString(R.string.ui_b0f9363c052f, java.lang.String.valueOf(e.localizedMessage))) }
-        }
+    private fun showSettings() = openSettings()
+    private fun showSources() = openSettings("sources")
+    private fun openSettings(category: String? = null, state: Bundle? = null) {
+        if (settingsDialog?.isShowing == true) return
+        val saved = state ?: category?.let { Bundle().apply { putString("category", it) } }
+        settingsDialog = SettingsDialog(this, scope, { service }, SettingsActions(
+            importLocal = {
+                @Suppress("DEPRECATION")
+                startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT).apply { addCategory(Intent.CATEGORY_OPENABLE); type = "*/*" }, REQUEST_SOURCE)
+            },
+            sourceActions = { entry, changed -> showSourceActions(entry, changed) },
+            playback = ::showPlaybackSettings, quality = ::showPlaybackQuality,
+            desktopLyrics = { showDesktopLyricSettings(this) { service?.refreshLyricPreferences() } },
+            sync = ::showSyncSettings, about = { showAbout(this, scope) }
+        ), uiLayout, saved) { service?.refreshPreferences(); filterSongs(); service?.state?.value?.let(::renderPlayer) }.also { it.show() }
     }
     private fun showPlaybackQueue() {
         val player = service ?: return
@@ -1053,12 +1041,12 @@ class MainActivity : Activity() {
         }
         dialog.show(); list.setSelection(snapshot.index)
     }
-    private fun showSourceActions(entry: UserSourceEntry) {
+    private fun showSourceActions(entry: UserSourceEntry, changed: () -> Unit = {}) {
         val actions = arrayOf(getString(R.string.ui_f4f0ead1116b), getString(R.string.ui_0e6252224f58), getString(R.string.ui_0fd5cd79a1b5), getString(R.string.ui_ba9a8defba4e, java.lang.String.valueOf(if (entry.allowUpdateAlert) getString(R.string.ui_3fd47edce45b) else getString(R.string.ui_8da97ddda990))), getString(R.string.ui_2f9daa828907))
         AlertDialog.Builder(this).setTitle(entry.name).setItems(actions) { _, index ->
             when (index) {
                 0 -> scope.launch {
-                    try { service?.selectSource(entry.id); toast(getString(R.string.ui_032d025aff70)) }
+                    try { service?.selectSource(entry.id); changed(); toast(getString(R.string.ui_032d025aff70)) }
                     catch (e: CancellationException) { throw e }
                     catch (e: Exception) { toast(getString(R.string.ui_ced3fddd61e0, java.lang.String.valueOf(e.localizedMessage))) }
                 }
@@ -1080,13 +1068,13 @@ class MainActivity : Activity() {
                     }, REQUEST_SOURCE_EXPORT)
                 }
                 3 -> scope.launch {
-                    try { service?.allowSourceUpdates(entry.id, !entry.allowUpdateAlert); toast(getString(R.string.ui_5c73d0fff5e2)) }
+                    try { service?.allowSourceUpdates(entry.id, !entry.allowUpdateAlert); changed(); toast(getString(R.string.ui_5c73d0fff5e2)) }
                     catch (e: CancellationException) { throw e }
                     catch (e: Exception) { toast(getString(R.string.ui_749d84b5fa76, java.lang.String.valueOf(e.localizedMessage))) }
                 }
                 4 -> AlertDialog.Builder(this).setMessage(getString(R.string.ui_852174674832, java.lang.String.valueOf(entry.name))).setNegativeButton(getString(R.string.ui_2cd0f3be8738), null)
                     .setPositiveButton(getString(R.string.ui_2f9daa828907)) { _, _ -> scope.launch {
-                        try { service?.removeSource(entry.id); toast(getString(R.string.ui_a1bfd178ab34)) }
+                        try { service?.removeSource(entry.id); changed(); toast(getString(R.string.ui_a1bfd178ab34)) }
                         catch (e: CancellationException) { throw e }
                         catch (e: Exception) { toast(getString(R.string.ui_57deb333c04b, java.lang.String.valueOf(e.localizedMessage))) }
                     } }.show()

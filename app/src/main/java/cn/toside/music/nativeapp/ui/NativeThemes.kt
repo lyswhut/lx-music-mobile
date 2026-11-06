@@ -4,8 +4,6 @@ import cn.toside.music.nativeapp.R
 import cn.toside.music.nativeapp.data.AppPreferences
 
 import android.animation.ValueAnimator
-import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
@@ -20,9 +18,6 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.LinearLayout
-import android.widget.ScrollView
 import android.widget.TextView
 import org.json.JSONArray
 
@@ -103,25 +98,4 @@ internal class UiPalette(private val context: Context, val theme: NativeTheme) {
         override fun setColorFilter(filter: ColorFilter?) { paint.colorFilter = filter }
         @Deprecated("Deprecated in Android") override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
     }
-}
-internal fun showThemeSettings(activity: Activity) {
-    val settings = AppPreferences(activity); val themes = NativeThemes(activity).all()
-    val content = LinearLayout(activity).apply { orientation = LinearLayout.VERTICAL; setPadding(24, 12, 24, 12) }
-    fun toggle(text: String, key: String) { content.addView(CheckBox(activity).apply {
-        this.text = text; contentDescription = text; isChecked = settings.bool(key)
-        setOnCheckedChangeListener { _, value -> settings.set(key, value) }
-    }) }
-    toggle(activity.getString(R.string.ui_c7970c3d538e), "common.isAutoTheme"); toggle(activity.getString(R.string.ui_76a0950acd56), "theme.hideBgDark")
-    toggle(activity.getString(R.string.ui_7c0f1e4ec56f), "theme.dynamicBg"); toggle(activity.getString(R.string.ui_490573c22811), "theme.fontShadow")
-    content.addView(TextView(activity).apply { text = activity.getString(R.string.ui_8874d3825cf1) })
-    var dialog: AlertDialog? = null
-    themes.forEach { theme -> content.addView(android.widget.Button(activity).apply {
-        text = NativeThemes(activity).name(theme); setTextColor(theme.primary)
-        setOnClickListener {
-            settings.set("theme.id", theme.id); settings.set(if (theme.dark) "theme.darkId" else "theme.lightId", theme.id)
-            dialog?.dismiss(); activity.recreate()
-        }
-    }) }
-    dialog = AlertDialog.Builder(activity).setTitle(activity.getString(R.string.ui_788db1cfec2a)).setView(ScrollView(activity).apply { addView(content) })
-        .setPositiveButton(activity.getString(R.string.ui_63c73c4730f4)) { _, _ -> activity.recreate() }.setNegativeButton(activity.getString(R.string.ui_2cd0f3be8738), null).show()
 }

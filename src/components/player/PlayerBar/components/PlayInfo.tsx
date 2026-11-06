@@ -13,10 +13,10 @@ import { scaleSizeH, scaleSizeW, scaleSizeWR } from '@/utils/pixelRatio'
 import { useBufferProgress } from '@/plugins/player'
 import { useSettingValue } from '@/store/setting/hook'
 
-const FONT_SIZE = 13
-const PADDING_TOP_RAW = 1.8
+const FONT_SIZE = 11
+const PADDING_TOP_RAW = 1.2
 const PADDING_TOP = Math.round(scaleSizeWR(PADDING_TOP_RAW))
-const MARGIN_TOP = Math.round(scaleSizeH(2))
+const MARGIN_TOP = Math.round(scaleSizeH(1))
 const PADDING_TOP_PROGRESS = PADDING_TOP + MARGIN_TOP
 
 const PlayTimeCurrent = ({ timeStr }: { timeStr: string }) => {

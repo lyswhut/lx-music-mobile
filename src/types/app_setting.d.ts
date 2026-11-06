@@ -232,6 +232,11 @@ declare global {
       'playDetail.isShowLyricProgressSetting': boolean
 
       /**
+       * 播放详情页-背景模式
+       */
+      'playDetail.bgMode': 'cover' | 'gradient' | 'none'
+
+      /**
        * 是否启用桌面歌词
        */
       'desktopLyric.enable': boolean

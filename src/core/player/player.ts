@@ -174,7 +174,7 @@ const handleRestorePlay = async(restorePlayInfo: LX.Player.SavedPlayInfo) => {
     ) return
     setMusicInfo({ pic: url })
     global.app_event.picUpdated()
-  })
+  }).catch(() => {})
 
   void getLyricInfo({ musicInfo }).then((lyricInfo) => {
     if (musicInfo.id != playMusicInfo.musicInfo?.id) return
@@ -206,7 +206,7 @@ const debouncePlay = debounceBackgroundTimer((musicInfo: LX.Player.PlayMusic) =>
       playerState.loadErrorPicUrl == url) return
     setMusicInfo({ pic: url })
     global.app_event.picUpdated()
-  })
+  }).catch(() => {})
 
   void getLyricInfo({ musicInfo }).then((lyricInfo) => {
     if (musicInfo.id != playerState.playMusicInfo.musicInfo?.id) return

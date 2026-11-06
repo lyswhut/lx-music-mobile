@@ -51,7 +51,7 @@ export default forwardRef<HotSearchType, ListProps>((props, ref) => {
       void getList(source).then((list) => {
         if (isUnmountedRef.current) return
         setList(list)
-      })
+      }).catch(() => {})
     },
   }), [])
 

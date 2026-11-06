@@ -118,6 +118,7 @@ export default forwardRef<MusicListType, MusicListProps>(({ componentId }, ref) 
     onRefresh={handleRefresh}
     onLoadMore={handleLoadMore}
     ListHeaderComponent={header}
+    showPic
     // progressViewOffset={}
    />
 })

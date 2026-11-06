@@ -170,6 +170,22 @@ export class AppEvent extends Event {
     this.emit('searchTypeChanged', type)
   }
 
+  /**
+   * 歌单排序类型改变事件
+   * @param id
+   */
+  songlistSortChanged(id: string) {
+    this.emit('songlistSortChanged', id)
+  }
+
+  /**
+   * 歌单音源改变事件
+   * @param source
+   */
+  songlistSourceChanged(source: SonglistSource) {
+    this.emit('songlistSourceChanged', source)
+  }
+
   jumpListPosition() {
     if (commonState.navActiveId == 'nav_love') {
       this.emit('jumpListPosition')

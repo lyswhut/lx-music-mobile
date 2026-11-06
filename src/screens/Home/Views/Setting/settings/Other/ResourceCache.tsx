@@ -59,11 +59,13 @@ export default memo(() => {
   return (
     <>
       <SubTitle title={t('setting__other_resource_cache')}>
-        <View style={styles.cacheSize}>
-          <Text>{cacheSize == null ? t('setting_other_cache_getting') : t('setting_other_cache_size') + cacheSize}</Text>
-        </View>
-        <View style={styles.clearBtn}>
-          <Button disabled={cleaning} onPress={handleCleanCache}>{t('setting_other_cache_clear_btn')}</Button>
+        <View style={styles.row}>
+          <View style={styles.item}>
+            <Text>{cacheSize == null ? t('setting_other_cache_getting') : t('setting_other_cache_size') + cacheSize}</Text>
+          </View>
+          <View style={styles.btn}>
+            <Button disabled={cleaning} onPress={handleCleanCache}>{t('setting_other_cache_clear_btn')}</Button>
+          </View>
         </View>
       </SubTitle>
     </>
@@ -71,10 +73,15 @@ export default memo(() => {
 })
 
 const styles = StyleSheet.create({
-  cacheSize: {
-    marginBottom: 5,
-  },
-  clearBtn: {
+  row: {
     flexDirection: 'row',
+    alignItems: 'center',
+  },
+  item: {
+    flex: 1,
+  },
+  btn: {
+    flex: 0,
+    paddingLeft: 5,
   },
 })

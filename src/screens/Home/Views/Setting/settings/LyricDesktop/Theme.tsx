@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   item: {
-    marginRight: 15,
+    marginRight: 10,
     marginTop: 5,
     alignItems: 'center',
     width: 26,

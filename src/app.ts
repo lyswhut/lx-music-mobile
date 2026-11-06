@@ -2,6 +2,7 @@ import '@/utils/errorHandle'
 import { init as initLog } from '@/utils/log'
 import { bootLog, getBootLog } from '@/utils/bootLog'
 import '@/config/globalData'
+import registerScreens from '@/navigation/registerScreens'
 import { getFontSize } from '@/utils/data'
 import { exitApp } from './utils/nativeModules/utils'
 import { windowSizeTools } from './utils/windowSizeTools'
@@ -9,6 +10,8 @@ import { listenLaunchEvent } from './navigation/regLaunchedEvent'
 import { tipDialog } from './utils/tools'
 
 console.log('starting app...')
+// 必须在 JS 加载阶段同步注册页面，避免 JS 重载后原生导航根视图先于注册渲染导致 “xxx has not been registered”
+registerScreens()
 listenLaunchEvent()
 
 void Promise.all([getFontSize(), windowSizeTools.init()]).then(async([fontSize]) => {

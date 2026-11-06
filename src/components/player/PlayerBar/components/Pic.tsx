@@ -9,7 +9,7 @@ import Image from '@/components/common/Image'
 import { useCallback } from 'react'
 import { setLoadErrorPicUrl, setMusicInfo } from '@/core/player/playInfo'
 
-const PIC_HEIGHT = scaleSizeH(46)
+const PIC_HEIGHT = scaleSizeH(38)
 
 const styles = StyleSheet.create({
   image: {

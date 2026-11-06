@@ -7,6 +7,7 @@ import { scaleSizeW } from '@/utils/pixelRatio'
 import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 import { useTheme } from '@/store/theme/hook'
 import Image from '@/components/common/Image'
+import { Icon } from '@/components/common/Icon'
 
 const gap = scaleSizeW(15)
 export default memo(({ item, index, width, showSource, onPress }: {
@@ -29,6 +30,12 @@ export default memo(({ item, index, width, showSource, onPress }: {
               <TouchableOpacity activeOpacity={0.5} onPress={handlePress}>
                 <Image url={item.img} nativeID={`${NAV_SHEAR_NATIVE_IDS.songlistDetail_pic}_from_${item.id}`} style={{ width: itemWidth, height: itemWidth, borderRadius: 4 }} />
                 { showSource ? <Text style={styles.sourceLabel} size={9} color="#fff" >{item.source}</Text> : null }
+                { item.play_count ? (
+                  <View style={styles.playCountLabel}>
+                    <Icon name="play" size={9} color="#fff" />
+                    <Text size={9} color="#fff">{item.play_count}</Text>
+                  </View>
+                ) : null }
               </TouchableOpacity>
             </View>
             <TouchableOpacity activeOpacity={0.5} onPress={handlePress}>
@@ -75,6 +82,19 @@ const styles = createStyle({
     right: 0,
     borderBottomLeftRadius: 3,
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  playCountLabel: {
+    position: 'absolute',
+    right: 4,
+    bottom: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    paddingLeft: 6,
+    paddingRight: 7,
+    paddingVertical: 2,
+    borderRadius: 9,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   listItemTitle: {
     fontSize: 12,

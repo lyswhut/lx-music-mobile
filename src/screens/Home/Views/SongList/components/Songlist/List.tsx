@@ -1,5 +1,5 @@
 import { useRef, useState, useMemo, forwardRef, useImperativeHandle } from 'react'
-import { FlatList, View, RefreshControl, type FlatListProps } from 'react-native'
+import { FlatList, View, RefreshControl, type FlatListProps, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native'
 
 import ListItem from './ListItem'
 // import { navigations } from '@/navigation'
@@ -10,6 +10,7 @@ import { useI18n } from '@/lang'
 import { scaleSizeW } from '@/utils/pixelRatio'
 import { createStyle } from '@/utils/tools'
 import Text from '@/components/common/Text'
+import BackToTop from '@/components/BackToTop'
 
 type FlatListType = FlatListProps<ListInfoItem>
 
@@ -34,6 +35,8 @@ export default forwardRef<ListType, ListProps>(({ onRefresh, onLoadMore, onOpenD
   const [currentList, setList] = useState<ListInfoItem[]>([])
   const [showSource, setShowSource] = useState(false)
   const [status, setStatus] = useState<Status>('idle')
+  const [showBackToTop, setShowBackToTop] = useState(false)
+  const showBackToTopRef = useRef(false)
   const { onLayout, width } = useLayout()
   const theme = useTheme()
   // console.log('render songlist')
@@ -52,6 +55,16 @@ export default forwardRef<ListType, ListProps>(({ onRefresh, onLoadMore, onOpenD
   const handleLoadMore = () => {
     if (status != 'idle') return
     onLoadMore()
+  }
+
+  const handleScroll = ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const show = nativeEvent.contentOffset.y > 600
+    if (show === showBackToTopRef.current) return
+    showBackToTopRef.current = show
+    setShowBackToTop(show)
+  }
+  const handleScrollToTop = () => {
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: true })
   }
 
   const renderItem: FlatListType['renderItem'] = ({ item, index }) => (
@@ -170,9 +183,13 @@ export default forwardRef<ListType, ListProps>(({ onRefresh, onLoadMore, onOpenD
                 onEndReached={handleLoadMore}
                 refreshControl={refreshControl}
                 ListFooterComponent={footerComponent}
+                onScroll={handleScroll}
+                scrollEventThrottle={160}
+                showsVerticalScrollIndicator={false}
               />
             )
       }
+      {showBackToTop ? <BackToTop onPress={handleScrollToTop} /> : null}
     </View>
   )
 })

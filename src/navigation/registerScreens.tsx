@@ -39,7 +39,11 @@ function WrappedComponent(Component: any) {
   }
 }
 
+let registered = false
+
 export default () => {
+  if (registered) return
+  registered = true
   Navigation.registerComponent(HOME_SCREEN, () => WrappedComponent(Home))
   Navigation.registerComponent(PLAY_DETAIL_SCREEN, () => WrappedComponent(PlayDetail))
   Navigation.registerComponent(SONGLIST_DETAIL_SCREEN, () => WrappedComponent(SonglistDetail))

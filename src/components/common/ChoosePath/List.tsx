@@ -71,15 +71,16 @@ interface ReadOptions {
   title: string
   dirOnly: boolean
   filter?: string[]
+  multiSelect: boolean
 }
 const initReadOptions = {}
 export interface ListProps {
-  onConfirm: (path: string) => void
+  onConfirm: (path: string | string[]) => void
   onHide?: () => void
 }
 
 export interface ListType {
-  show: (title: string, dir?: string, dirOnly?: boolean, filter?: string[]) => void
+  show: (title: string, dir?: string, dirOnly?: boolean, filter?: string[], multiSelect?: boolean) => void
   hide: () => void
 }
 
@@ -89,6 +90,7 @@ export default forwardRef<ListType, ListProps>(({
 }: ListProps, ref) => {
   const [path, setPath] = useState('')
   const [list, setList] = useState<PathItem[]>([])
+  const [selectedPaths, setSelectedPaths] = useState<Set<string>>(new Set())
   const isUnmountedRef = useRef(true)
   const readOptions = useRef<ReadOptions>(initReadOptions as ReadOptions)
   const [isReading, setIsReading] = useState(false)
@@ -96,12 +98,14 @@ export default forwardRef<ListType, ListProps>(({
   const theme = useTheme()
 
   useImperativeHandle(ref, () => ({
-    show(title, dir = '', dirOnly = false, filter) {
+    show(title, dir = '', dirOnly = false, filter, multiSelect = false) {
       readOptions.current = {
         title,
         dirOnly,
         filter,
+        multiSelect,
       }
+      setSelectedPaths(new Set())
       modalRef.current?.setVisible(true)
       // void getSelectedManagedFolder().then(uri => {
       //   if (!uri) return
@@ -146,14 +150,25 @@ export default forwardRef<ListType, ListProps>(({
     // console.log('onSetPath')
     if (pathInfo.isDir) {
       void readDir(pathInfo.path, readOptions.current.dirOnly, readOptions.current.filter)
+    } else if (readOptions.current.multiSelect) {
+      // 多选模式：点击文件切换选中状态
+      setSelectedPaths(prev => {
+        const next = new Set(prev)
+        if (next.has(pathInfo.path)) next.delete(pathInfo.path)
+        else next.add(pathInfo.path)
+        return next
+      })
     } else {
       onConfirm(pathInfo.path)
       // setPath(pathInfo.path)
     }
   }
   const handleConfirm = () => {
-    if (!path) return
-    onConfirm(path)
+    if (readOptions.current.multiSelect) {
+      if (selectedPaths.size) onConfirm([...selectedPaths])
+    } else if (path) {
+      onConfirm(path)
+    }
   }
 
   const toParentDir = () => {
@@ -180,8 +195,8 @@ export default forwardRef<ListType, ListProps>(({
           onOpenDir={async(path) => readDir(path, readOptions.current.dirOnly, readOptions.current.filter, false, true)}
           title={readOptions.current.title}
           path={path} />
-        <Main list={list} toParentDir={toParentDir} onSetPath={onSetPath} loading={isReading} />
-        <Footer onConfirm={handleConfirm} onHide={handleHide} dirOnly={readOptions.current.dirOnly} />
+        <Main list={list} toParentDir={toParentDir} onSetPath={onSetPath} loading={isReading} selectedPaths={selectedPaths} />
+        <Footer onConfirm={handleConfirm} onHide={handleHide} dirOnly={readOptions.current.dirOnly} selectedCount={selectedPaths.size} />
       </View>
     </Modal>
   )
@@ -193,4 +208,3 @@ const styles = createStyle({
     flex: 1,
   },
 })
-

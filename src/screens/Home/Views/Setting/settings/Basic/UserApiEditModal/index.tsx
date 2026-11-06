@@ -120,10 +120,10 @@ export default forwardRef<UserApiEditModalType, {}>((props, ref) => {
               </View>
             </View>
             <View style={styles.btns}>
-              <Button style={{ ...styles.btn, backgroundColor: theme['c-button-background'] }} onPress={handleCancel}>
+              <ImportBtn btnStyle={{ ...styles.btn, backgroundColor: theme['c-button-background'] }} />
+              <Button style={{ ...styles.btnClose, backgroundColor: theme['c-button-background'] }} onPress={handleCancel}>
                 <Text size={14} color={theme['c-button-font']}>{t('close')}</Text>
               </Button>
-              <ImportBtn btnStyle={{ ...styles.btn, backgroundColor: theme['c-button-background'] }} />
             </View>
           </Dialog>
         ) : null
@@ -170,6 +170,13 @@ const styles = createStyle({
     alignItems: 'center',
     borderRadius: 4,
     marginRight: 15,
+  },
+  btnClose: {
+    padding: 10,
+    alignItems: 'center',
+    borderRadius: 4,
+    marginRight: 15,
+    width: 96,
   },
 })
 

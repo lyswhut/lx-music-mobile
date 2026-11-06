@@ -23,7 +23,6 @@ export default memo(() => {
     // setVersionInfo({ showModal: true })
     showModal()
   }
-
   useEffect(() => {
     if (versionInfo.isLatest) {
       setTitle(t('version_tip_latest'))

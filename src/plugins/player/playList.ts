@@ -140,9 +140,13 @@ export const updateMetaData = async(musicInfo: LX.Player.MusicInfo, isPlay: bool
 
 export const initTrackInfo = async(musicInfo: LX.Player.PlayMusic, mInfo: LX.Player.MusicInfo) => {
   const tracks = buildTracks(musicInfo)
-  await TrackPlayer.add(tracks).then(() => list.push(...tracks))
+  // 并发切歌时原生队列可能正在被清理，add/skip 失败不应产生未处理的 Promise 拒绝
+  await TrackPlayer.add(tracks).then(() => list.push(...tracks)).catch((err: any) => {
+    console.log('initTrackInfo add error:', err?.message ?? err)
+  })
   const queue = await TrackPlayer.getQueue() as LX.Player.Track[]
-  await TrackPlayer.skip(queue.findIndex(t => t.id == tracks[0].id))
+  const index = queue.findIndex(t => t.id == tracks[0].id)
+  if (index >= 0) await TrackPlayer.skip(index).catch(() => {})
   delayUpdateMusicInfo(mInfo)
 }
 
@@ -155,7 +159,10 @@ const handlePlayMusic = async(musicInfo: LX.Player.PlayMusic, url: string, time:
   const currentTrackIndex = await TrackPlayer.getCurrentTrack()
   await TrackPlayer.add(tracks).then(() => list.push(...tracks))
   const queue = await TrackPlayer.getQueue() as LX.Player.Track[]
-  await TrackPlayer.skip(queue.findIndex(t => t.id == track.id))
+  // 并发切歌时队列可能已被新的播放任务清理，找不到目标轨道时交由新任务接管
+  const skipIndex = queue.findIndex(t => t.id == track.id)
+  if (skipIndex < 0) return
+  await TrackPlayer.skip(skipIndex)
 
   if (currentTrackIndex == null) {
     if (!isTempTrack(track.id as string)) {
@@ -180,7 +187,7 @@ const handlePlayMusic = async(musicInfo: LX.Player.PlayMusic, url: string, time:
   }
 
   if (queue.length > 2) {
-    void TrackPlayer.remove(Array(queue.length - 2).fill(null).map((_, i) => i)).then(() => list.splice(0, list.length - 2))
+    void TrackPlayer.remove(Array(queue.length - 2).fill(null).map((_, i) => i)).then(() => list.splice(0, list.length - 2)).catch(() => {})
   }
 }
 let playPromise = Promise.resolve()
@@ -189,7 +196,10 @@ export const playMusic = (musicInfo: LX.Player.PlayMusic, url: string, time: num
   const id = actionId = Math.random()
   void playPromise.finally(() => {
     if (id != actionId) return
-    playPromise = handlePlayMusic(musicInfo, url, time)
+    // 捕获播放过程中的竞态异常（队列并发变更等），避免未处理的 Promise 拒绝
+    playPromise = handlePlayMusic(musicInfo, url, time).catch((err: any) => {
+      console.log('handlePlayMusic error:', err?.message ?? err)
+    })
   })
 }
 

@@ -1,10 +1,10 @@
 import { playList } from '@/core/player/player'
 import { useMemo, useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react'
-import { FlatList, type NativeScrollEvent, type NativeSyntheticEvent, type FlatListProps } from 'react-native'
+import { FlatList, type NativeScrollEvent, type NativeSyntheticEvent, type FlatListProps, View } from 'react-native'
 
 import listState from '@/store/list/state'
 import playerState from '@/store/player/state'
-import { getListPosition, getListPrevSelectId, saveListPosition } from '@/utils/data'
+import { getListPosition, saveListPosition } from '@/utils/data'
 // import { useMusicList } from '@/store/list/hook'
 import { getListMusics, setActiveList } from '@/core/list'
 import ListItem, { ITEM_HEIGHT } from './ListItem'
@@ -14,6 +14,8 @@ import type { Position } from './ListMenu'
 import type { SelectMode } from './MultipleModeBar'
 import { useActiveListId } from '@/store/list/hook'
 import { useSettingValue } from '@/store/setting/hook'
+import { LIST_IDS } from '@/config/constant'
+import BackToTop from '@/components/BackToTop'
 
 type FlatListType = FlatListProps<LX.Music.MusicInfo>
 
@@ -56,6 +58,8 @@ const List = forwardRef<ListType, ListProps>(({ onShowMenu, onMuiltSelectMode, o
   const selectedListRef = useRef<LX.List.ListMusics>([])
   const currentListIdRef = useRef('')
   const waitJumpListPositionRef = useRef(false)
+  const [showBackToTop, setShowBackToTop] = useState(false)
+  const showBackToTopRef = useRef(false)
   const rowInfo = useRef(getRowInfo())
   const isShowAlbumName = useSettingValue('list.isShowAlbumName')
   const isShowInterval = useSettingValue('list.isShowInterval')
@@ -163,8 +167,8 @@ const List = forwardRef<ListType, ListProps>(({ onShowMenu, onMuiltSelectMode, o
       if (playerState.playMusicInfo.listId) {
         waitJumpListPositionRef.current = true
         updateList(playerState.playMusicInfo.listId)
-      } else void getListPrevSelectId().then(updateList)
-    } else void getListPrevSelectId().then(updateList)
+      } else updateList(LIST_IDS.DEFAULT)
+    } else updateList(LIST_IDS.DEFAULT)
 
     global.state_event.on('mylistToggled', updateList)
     global.app_event.on('myListMusicUpdate', handleChange)
@@ -241,11 +245,20 @@ const List = forwardRef<ListType, ListProps>(({ onShowMenu, onMuiltSelectMode, o
   }
 
   const handleScroll = ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const show = nativeEvent.contentOffset.y > 600
+    if (show !== showBackToTopRef.current) {
+      showBackToTopRef.current = show
+      setShowBackToTop(show)
+    }
     if (listFirstScrollRef.current) {
       listFirstScrollRef.current = false
       return
     }
     void saveListPosition(listState.activeListId, nativeEvent.contentOffset.y)
+  }
+
+  const handleScrollToTop = () => {
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: true })
   }
 
 
@@ -269,23 +282,28 @@ const List = forwardRef<ListType, ListProps>(({ onShowMenu, onMuiltSelectMode, o
   }
 
   return (
-    <FlatList
-      ref={flatListRef}
-      onScroll={handleScroll}
-      style={styles.list}
-      data={currentList}
-      maxToRenderPerBatch={4}
-      numColumns={rowInfo.current.rowNum}
-      horizontal={false}
-      // updateCellsBatchingPeriod={80}
-      windowSize={8}
-      removeClippedSubviews={true}
-      initialNumToRender={12}
-      renderItem={renderItem}
-      keyExtractor={getkey}
-      extraData={activeIndex}
-      getItemLayout={getItemLayout}
-    />
+    <View style={styles.container}>
+      <FlatList
+        ref={flatListRef}
+        onScroll={handleScroll}
+        scrollEventThrottle={160}
+        style={styles.list}
+        data={currentList}
+        maxToRenderPerBatch={4}
+        numColumns={rowInfo.current.rowNum}
+        horizontal={false}
+        // updateCellsBatchingPeriod={80}
+        windowSize={8}
+        removeClippedSubviews={true}
+        initialNumToRender={12}
+        renderItem={renderItem}
+        keyExtractor={getkey}
+        extraData={activeIndex}
+        getItemLayout={getItemLayout}
+        showsVerticalScrollIndicator={false}
+      />
+      {showBackToTop ? <BackToTop onPress={handleScrollToTop} /> : null}
+    </View>
   )
 })
 

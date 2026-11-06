@@ -91,6 +91,7 @@ export default forwardRef<MusicListType, {}>((props, ref) => {
     onLoadMore={handleLoadMore}
     checkHomePagerIdle
     rowType='medium'
+    showPic
    />
 })
 

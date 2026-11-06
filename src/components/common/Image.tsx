@@ -21,13 +21,13 @@ export const defaultHeaders = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36',
 }
 
-const EmptyPic = memo(({ style, nativeID }: { style: ImageProps['style'], nativeID: ImageProps['nativeID'] }) => {
+const EmptyPic = memo(({ style }: { style: ImageProps['style'] }) => {
   const theme = useTheme()
   const { onLayout, width } = useLayout()
   const size = width * 0.36
 
   return (
-    <View style={StyleSheet.compose({ ...styles.emptyPic, backgroundColor: theme['c-primary-light-900-alpha-200'], gap: size * 0.1 }, style)} onLayout={onLayout} nativeID={nativeID}>
+    <View style={StyleSheet.compose({ ...styles.emptyPic, backgroundColor: theme['c-primary-light-900-alpha-200'], gap: size * 0.1 }, style)} onLayout={onLayout}>
       <Text size={size} color={theme['c-primary-light-400-alpha-200']}>L</Text>
       <Text size={size} color={theme['c-primary-light-400-alpha-200']} style={styles.text}>X</Text>
     </View>
@@ -49,23 +49,27 @@ const Image = memo(({ url, cache, resizeMode = 'cover', style, onError, nativeID
       ? 'file://' + url
       : url
   const showDefault = useMemo(() => !uri || isError, [isError, uri])
+  // 外层容器承载 nativeID 且视图类型保持稳定：
+  // 占位图/图片之间切换时只替换内层内容，避免共享元素转场动画期间视图被销毁导致转场悬挂或崩溃
   return (
-    showDefault ? <EmptyPic style={style} nativeID={nativeID} />
-      : (
-          <FastImage
-            style={style}
-            source={{
-              uri: uri!,
-              headers: defaultHeaders,
-              cache: cache === false ? 'reload' : 'force-cache',
-              // priority: FastImage.priority.normal,
-              // cache: cache === false ? 'web' : 'immutable',
-            }}
-            onError={handleError}
-            resizeMode={resizeMode}
-            nativeID={nativeID}
-          />
-        )
+    <View style={StyleSheet.compose(style, styles.sharedContainer)} nativeID={nativeID}>
+      {
+        showDefault
+          ? <EmptyPic style={styles.fill} />
+          : (
+              <FastImage
+                style={styles.fill}
+                source={{
+                  uri: uri!,
+                  headers: defaultHeaders,
+                  cache: cache === false ? 'reload' : 'force-cache',
+                }}
+                onError={handleError}
+                resizeMode={resizeMode}
+              />
+            )
+      }
+    </View>
   )
 }, (prevProps, nextProps) => {
   return prevProps.url == nextProps.url &&
@@ -90,5 +94,16 @@ const styles = createStyle({
   },
   text: {
     paddingLeft: 2,
+  },
+  // 共享元素外层容器：裁剪内容以支持圆角，并保证容器自身视图类型稳定
+  sharedContainer: {
+    overflow: 'hidden',
+  },
+  fill: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
   },
 })

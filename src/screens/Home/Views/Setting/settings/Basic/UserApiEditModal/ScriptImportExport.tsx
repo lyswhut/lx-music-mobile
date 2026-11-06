@@ -16,7 +16,7 @@ const initSelectInfo = {}
 // export interface ScriptImportExportProps {
 //   // onRename: (listInfo: LX.List.UserListInfo) => void
 //   // onImport: (index: number) => void
-//   // onExport: (listInfo: LX.List.MyListInfo) => void
+//   // onExport: (listInfo: LX.List.MyListInfo, index: number) => void
 //   // onSync: (listInfo: LX.List.UserListInfo) => void
 //   // onRemove: (listInfo: LX.List.MyListInfo) => void
 // }
@@ -40,6 +40,7 @@ export default forwardRef<ScriptImportExportType, {}>((props, ref) => {
         choosePathRef.current?.show({
           title: global.i18n.t('user_api_import_desc'),
           dirOnly: false,
+          multiSelect: true,
           filter: USER_API_SOURCE_FILE_EXT_RXP,
         })
       } else {
@@ -48,6 +49,7 @@ export default forwardRef<ScriptImportExportType, {}>((props, ref) => {
           choosePathRef.current?.show({
             title: global.i18n.t('user_api_import_desc'),
             dirOnly: false,
+            multiSelect: true,
             filter: USER_API_SOURCE_FILE_EXT_RXP,
           })
         })
@@ -79,7 +81,7 @@ export default forwardRef<ScriptImportExportType, {}>((props, ref) => {
   }))
 
 
-  const onConfirmPath = (path: string) => {
+  const onConfirmPath = (path: string | string[]) => {
     switch (selectInfoRef.current.action) {
       case 'import':
         handleImportLocalFile(path)
@@ -92,7 +94,10 @@ export default forwardRef<ScriptImportExportType, {}>((props, ref) => {
 
   return (
     visible
-      ? <ChoosePath ref={choosePathRef} onConfirm={onConfirmPath} />
+      ? <ChoosePath
+          ref={choosePathRef}
+          onConfirm={onConfirmPath}
+          onConfirmMultiple={onConfirmPath} />
       : null
   )
 })

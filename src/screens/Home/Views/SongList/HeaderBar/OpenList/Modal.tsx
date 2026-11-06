@@ -1,13 +1,14 @@
-import { useRef, useImperativeHandle, forwardRef, useState } from 'react'
+import { useRef, useImperativeHandle, forwardRef, useState, useMemo } from 'react'
 import ConfirmAlert, { type ConfirmAlertType } from '@/components/common/ConfirmAlert'
 import Text from '@/components/common/Text'
-import { View } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
 import Input, { type InputType } from '@/components/common/Input'
 import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'
-// import SourceSelector, { type SourceSelectorProps, type SourceSelectorType } from '../SourceSelector'
 import { type Source } from '@/store/songlist/state'
+import songlistState from '@/store/songlist/state'
+import { useSettingValue } from '@/store/setting/hook'
 
 interface IdInputType {
   setText: (text: string) => void
@@ -43,44 +44,83 @@ const IdInput = forwardRef<IdInputType, {}>((props, ref) => {
   )
 })
 
+const SourceTabBar = ({ sources, activeSource, onSourceChange }: { sources: Source[], activeSource: Source, onSourceChange: (source: Source) => void }) => {
+  const theme = useTheme()
+  const sourceNameType = useSettingValue('common.sourceNameType')
+  const t = useI18n()
+
+  const sourceList = useMemo(() => {
+    return sources.map(s => ({ label: t(`source_${sourceNameType}_${s}`), id: s }))
+  }, [sources, sourceNameType, t])
+
+  return (
+    <View style={styles.sourceBar}>
+      {sourceList.map((item, index) => (
+        <TouchableOpacity
+          key={item.id}
+          style={[styles.sourceButton, index < sourceList.length - 1 ? styles.sourceButtonGap : null]}
+          onPress={() => onSourceChange(item.id)}
+        >
+          <Text
+            size={13}
+            style={{
+              ...styles.sourceButtonText,
+              borderBottomColor: activeSource === item.id ? theme['c-primary-background-active'] : 'transparent',
+              fontWeight: activeSource === item.id ? 'bold' : 'normal',
+            }}
+            color={activeSource === item.id ? theme['c-primary-font-active'] : theme['c-font']}
+          >
+            {item.label}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  )
+}
+
 
 export interface ModalProps {
   onOpenId: (id: string) => void
-  // onSourceChange: SourceSelectorProps['onSourceChange']
+  onSourceChange?: (source: Source) => void
 }
 export interface ModalType {
   show: (source: Source) => void
 }
 
-export default forwardRef<ModalType, ModalProps>(({ onOpenId }, ref) => {
+export default forwardRef<ModalType, ModalProps>(({ onOpenId, onSourceChange }, ref) => {
   const alertRef = useRef<ConfirmAlertType>(null)
-  // const sourceSelectorRef = useRef<SourceSelectorType>(null)
   const inputRef = useRef<IdInputType>(null)
   const [visible, setVisible] = useState(false)
+  const [source, setSource] = useState<Source>('kw')
   const theme = useTheme()
   const t = useI18n()
 
-  const handleShow = (source: Source) => {
+  const handleShow = (initSource: Source) => {
+    setSource(initSource)
     alertRef.current?.setVisible(true)
     requestAnimationFrame(() => {
       inputRef.current?.setText('')
-      // sourceSelectorRef.current?.setSource(source)
       setTimeout(() => {
         inputRef.current?.focus()
       }, 300)
     })
   }
   useImperativeHandle(ref, () => ({
-    show(source) {
-      if (visible) handleShow(source)
+    show(initSource) {
+      if (visible) handleShow(initSource)
       else {
         setVisible(true)
         requestAnimationFrame(() => {
-          handleShow(source)
+          handleShow(initSource)
         })
       }
     },
   }))
+
+  const handleSourceChange = (newSource: Source) => {
+    setSource(newSource)
+    onSourceChange?.(newSource)
+  }
 
   const handleConfirm = () => {
     let id = inputRef.current?.getText() ?? ''
@@ -97,11 +137,13 @@ export default forwardRef<ModalType, ModalProps>(({ onOpenId }, ref) => {
           onConfirm={handleConfirm}
         >
           <View style={styles.content}>
+            <SourceTabBar sources={songlistState.sources} activeSource={source} onSourceChange={handleSourceChange} />
             <View style={styles.col}>
-              {/* <SourceSelector style={{ ...styles.selector, backgroundColor: theme['c-primary-input-background'] }} ref={sourceSelectorRef} onSourceChange={onSourceChange} /> */}
               <IdInput ref={inputRef} />
             </View>
-            <Text style={styles.inputTipText} size={13} color={theme['c-600']}>{t('songlist_open_input_tip')}</Text>
+            <View style={{ ...styles.inputTipCard, backgroundColor: 'rgba(76, 175, 80, 0.1)' }}>
+              <Text size={13} color={theme['c-600']}>{t('songlist_open_input_tip')}</Text>
+            </View>
           </View>
         </ConfirmAlert>
       : null
@@ -115,29 +157,46 @@ const styles = createStyle({
     flexShrink: 1,
     flexDirection: 'column',
   },
+  sourceBar: {
+    height: 32,
+    marginBottom: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  sourceButton: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 2,
+    paddingRight: 2,
+  },
+  sourceButtonGap: {
+    marginRight: 8,
+  },
+  sourceButtonText: {
+    textAlign: 'center',
+    paddingLeft: 0,
+    paddingRight: 0,
+    paddingTop: 3,
+    paddingBottom: 3,
+    borderBottomWidth: 2,
+  },
   col: {
     flexDirection: 'row',
     height: 38,
   },
-  // selector: {
-  //   borderTopLeftRadius: 4,
-  //   borderBottomLeftRadius: 4,
-  // },
   input: {
     flexGrow: 1,
     flexShrink: 1,
     minWidth: 290,
-    // borderRadius: 4,
-    // borderTopRightRadius: 4,
-    // borderBottomRightRadius: 4,
-    // paddingTop: 2,
-    // paddingBottom: 2,
     height: '100%',
   },
-  inputTipText: {
+  inputTipCard: {
     marginTop: 15,
-    // lineHeight: 18,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 12,
+    paddingRight: 12,
+    borderRadius: 8,
   },
 })
-
-

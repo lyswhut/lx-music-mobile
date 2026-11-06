@@ -66,21 +66,22 @@ const LrcLine = memo(({ line, lineNum, activeLine, onLayout }: LineProps) => {
   const theme = useTheme()
   const lrcFontSize = useSettingValue('playDetail.vertical.style.lrcFontSize')
   const textAlign = useSettingValue('playDetail.style.align')
+  const playedColor = useSettingValue('desktopLyric.style.lyricPlayedColor')
   const size = lrcFontSize / 10
   const lineHeight = setSpText(size) * 1.3
 
   const colors = useMemo(() => {
     const active = activeLine == lineNum
     return active ? [
-      theme['c-primary'],
-      theme['c-primary-alpha-200'],
+      playedColor,
+      playedColor,
       1,
     ] as const : [
       theme['c-350'],
       theme['c-300'],
       0.6,
     ] as const
-  }, [activeLine, lineNum, theme])
+  }, [activeLine, lineNum, theme, playedColor])
 
   const handleLayout = ({ nativeEvent }: LayoutChangeEvent) => {
     onLayout(lineNum, nativeEvent.layout.height, nativeEvent.layout.width)
@@ -339,7 +340,7 @@ const styles = createStyle({
     // backgroundColor: 'rgba(0,0,0,0.1)',
   },
   space: {
-    paddingTop: '100%',
+    paddingTop: '50%',
   },
   line: {
     paddingTop: 10,

@@ -119,7 +119,7 @@ export function useBufferProgress() {
     let isUnmounted = false
     let preBuffered = 0
     let duration = 0
-    let interval: NodeJS.Timer | null = null
+    let interval: ReturnType<typeof setInterval> | null = null
 
     const clearItv = () => {
       if (!interval) return

@@ -29,6 +29,9 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 
 import java.io.File;
+import java.net.Inet4Address;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -210,14 +213,40 @@ public class UtilsModule extends ReactContextBaseJavaModule {
         try {
           WifiInfo info = wifi.getConnectionInfo();
           int ipAddress = info.getIpAddress();
-          @SuppressLint("DefaultLocale") String stringip = String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
-            (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
-          promise.resolve(stringip);
+          if (ipAddress != 0) {
+            @SuppressLint("DefaultLocale") String stringip = String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
+              (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
+            promise.resolve(stringip);
+          } else {
+            // WiFi 未连接时（如模拟器使用移动网络），遍历网络接口获取 IPv4 地址
+            String fallbackIp = getIPv4FromNetworkInterface();
+            promise.resolve(fallbackIp != null ? fallbackIp : "0.0.0.0");
+          }
         }catch (Exception e) {
           promise.resolve(null);
         }
       }
     }).start();
+  }
+
+  private String getIPv4FromNetworkInterface() {
+    try {
+      Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+      while (interfaces.hasMoreElements()) {
+        NetworkInterface iface = interfaces.nextElement();
+        if (!iface.isUp() || iface.isLoopback()) continue;
+        Enumeration<java.net.InetAddress> addresses = iface.getInetAddresses();
+        while (addresses.hasMoreElements()) {
+          java.net.InetAddress addr = addresses.nextElement();
+          if (addr instanceof Inet4Address && !addr.isLoopbackAddress()) {
+            return addr.getHostAddress();
+          }
+        }
+      }
+    } catch (Exception e) {
+      // ignore
+    }
+    return null;
   }
 
   // https://stackoverflow.com/a/26117646

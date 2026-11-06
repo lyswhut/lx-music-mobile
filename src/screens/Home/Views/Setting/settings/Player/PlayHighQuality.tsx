@@ -21,7 +21,7 @@ const Item = ({ id, name }: {
 }) => {
   const isActive = useActive(id)
   // const [toggleCheckBox, setToggleCheckBox] = useState(false)
-  return <CheckBox marginRight={8} check={isActive} label={name} onChange={() => { updateSetting({ 'player.playQuality': id }) }} need />
+  return <CheckBox marginRight={4} check={isActive} label={name} onChange={() => { updateSetting({ 'player.playQuality': id }) }} need />
 }
 
 export default memo(() => {
@@ -44,7 +44,6 @@ export default memo(() => {
 const styles = StyleSheet.create({
   list: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
   },
 })
 
@@ -69,4 +68,3 @@ const styles = StyleSheet.create({
 //     marginTop: 5,
 //   },
 // })
-

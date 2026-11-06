@@ -8,7 +8,7 @@ type Hook = (time: number, isPlayedStop: boolean) => void
 
 const timeoutTools = {
   bgTimeout: null as number | null,
-  timeout: null as NodeJS.Timer | null,
+  timeout: null as ReturnType<typeof setInterval> | null,
   startTime: 0,
   time: -1,
   timeHooks: [] as Hook[],

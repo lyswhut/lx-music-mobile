@@ -1,8 +1,10 @@
 import { memo } from 'react'
 
 import Section from '../../components/Section'
+import SubTitle from '../../components/SubTitle'
 import IsSavePlayTime from './IsSavePlayTime'
 import PlayHighQuality from './PlayHighQuality'
+import BgMode from './BgMode'
 import IsHandleAudioFocus from './IsHandleAudioFocus'
 import IsEnableAudioOffload from './IsEnableAudioOffload'
 import IsAutoCleanPlayedList from './IsAutoCleanPlayedList'
@@ -21,18 +23,22 @@ export default memo(() => {
 
   return (
     <Section title={t('setting_player')}>
-      <IsSavePlayTime />
-      <IsAutoCleanPlayedList />
-      <IsHandleAudioFocus />
-      <IsEnableAudioOffload />
-      <IsShowBluetoothLyric />
-      <IsShowBluetoothFullLyric />
-      <IsShowNotificationImage />
-      <IsShowLyricTranslation />
-      <IsShowLyricRoma />
-      <IsS2T />
+      <SubTitle title={t('setting_player')}>
+        <IsSavePlayTime />
+        <IsAutoCleanPlayedList />
+        <IsHandleAudioFocus />
+        <IsEnableAudioOffload />
+        <IsShowBluetoothLyric />
+        <IsShowBluetoothFullLyric />
+        <IsShowNotificationImage />
+        <IsShowLyricTranslation />
+        <IsShowLyricRoma />
+        <IsS2T />
+      </SubTitle>
       <MaxCache />
       <PlayHighQuality />
+      <BgMode />
     </Section>
   )
 })
+

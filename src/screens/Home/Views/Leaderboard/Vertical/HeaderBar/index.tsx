@@ -1,59 +1,52 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react'
 import { View } from 'react-native'
 
-// import { useGetter, useDispatch } from '@/store'
-// import Tag from './Tag'
-// import OpenList from './OpenList'
 import { createStyle } from '@/utils/tools'
-// import { BorderWidths } from '@/theme'
-import SourceSelector, {
-  type SourceSelectorType,
-} from './SourceSelector'
+import SourceTabs, {
+  type SourceTabsType,
+} from './SourceTabs'
 import { useTheme } from '@/store/theme/hook'
-// import { BorderWidths } from '@/theme'
-import ActiveListName, { type ActiveListNameType } from './ActiveListName'
 import { BorderWidths } from '@/theme'
+import { type Source, type BoardItem } from '@/store/leaderboard/state'
 
 export interface HeaderBarProps {
   onShowBound: () => void
-  onSourceChange: (source: LX.OnlineSource) => void
+  onSourceChange: (source: Source) => void
+  onBoardChange: (board: BoardItem) => void
 }
 
 export interface HeaderBarType {
-  setBound: (source: LX.OnlineSource, id: string, name: string) => void
+  setBound: (source: Source, id: string, name: string) => void
+  setBoards: (boards: BoardItem[], activeBoardId: string) => void
 }
 
 
-export default forwardRef<HeaderBarType, HeaderBarProps>(({ onShowBound, onSourceChange }, ref) => {
-  const activeListNameRef = useRef<ActiveListNameType>(null)
-  const sourceSelectorRef = useRef<SourceSelectorType>(null)
+export default forwardRef<HeaderBarType, HeaderBarProps>(({ onShowBound, onSourceChange, onBoardChange }, ref) => {
+  const sourceTabsRef = useRef<SourceTabsType>(null)
   const theme = useTheme()
 
   useImperativeHandle(ref, () => ({
     setBound(source, id, name) {
-      sourceSelectorRef.current?.setSource(source)
-      activeListNameRef.current?.setBound(id, name)
+      sourceTabsRef.current?.setSource(source)
+    },
+    setBoards(boards, activeBoardId) {
+      sourceTabsRef.current?.setBoards(boards, activeBoardId)
     },
   }), [])
 
 
   return (
     <View style={{ ...styles.currentList, borderBottomColor: theme['c-border-background'] }}>
-      <SourceSelector ref={sourceSelectorRef} onSourceChange={onSourceChange} />
-      <ActiveListName ref={activeListNameRef} onShowBound={onShowBound} />
+      <SourceTabs ref={sourceTabsRef} onSourceChange={onSourceChange} onBoardChange={onBoardChange} />
     </View>
   )
 })
 
 const styles = createStyle({
   currentList: {
-    flexDirection: 'row',
-    height: 38,
+    flexDirection: 'column',
+    height: 64,
     zIndex: 2,
-    // paddingRight: 10,
     borderBottomWidth: BorderWidths.normal,
-  },
-  selector: {
-    width: 86,
   },
 })

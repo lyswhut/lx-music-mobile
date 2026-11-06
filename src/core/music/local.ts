@@ -16,51 +16,66 @@ import { getLocalFilePath } from '@/utils/music'
 import { readLyric, readPic } from '@/utils/localMediaMetadata'
 import { stat } from '@/utils/fs'
 
+// 去除歌名中的括号内容，如 "（Cover 宋冬野）"、"(Live)"，提升在线匹配命中率
+const cleanMusicName = (name: string) => name.replace(/\s*[(（【[][^)）\]】]*[)）\]】]/g, '').trim()
+// 从 "Cover xxx" 中提取原唱作为歌手候选
+const getCoverSinger = (name: string) => /[(（【[]\s*cover[::\s]*([^)）\]】]+?)\s*[)）\]】]/i.exec(name)?.[1]?.trim() ?? ''
+
 const getOtherSourceByLocal = async<T>(musicInfo: LX.Music.MusicInfoLocal, handler: (infos: LX.Music.MusicInfoOnline[]) => Promise<T>) => {
-  let result: LX.Music.MusicInfoOnline[] = []
-  result = await getOtherSource(musicInfo)
-  if (result.length) try { return await handler(result) } catch {}
-  if (musicInfo.name.includes('-')) {
-    const [name, singer] = musicInfo.name.split('-').map(val => val.trim())
-    result = await getOtherSource({
-      ...musicInfo,
-      name,
-      singer,
-    }, true)
-    if (result.length) try { return await handler(result) } catch {}
-    result = await getOtherSource({
-      ...musicInfo,
-      name: singer,
-      singer: name,
-    }, true)
-    if (result.length) try { return await handler(result) } catch {}
+  // 生成候选的 歌名/歌手 组合，逐个尝试在线匹配
+  const candidates: Array<{ name: string, singer: string }> = []
+  const addedKeys = new Set<string>()
+  const addCandidate = (name: string, singer: string) => {
+    name = name.trim()
+    singer = singer.trim()
+    if (!name) return
+    const key = `${name}__${singer}`
+    if (addedKeys.has(key)) return
+    addedKeys.add(key)
+    candidates.push({ name, singer })
   }
+  const addNameVariants = (name: string, singer: string) => {
+    addCandidate(name, singer)
+    if (name.includes('-')) {
+      // 处理 "歌名 - 歌手" 格式
+      const [n, s] = name.split('-').map(val => val.trim())
+      addCandidate(n, s)
+      addCandidate(s, n)
+      const cn = cleanMusicName(n)
+      if (cn != n) {
+        addCandidate(cn, s)
+        addCandidate(cn, '')
+      }
+    }
+    const cleaned = cleanMusicName(name)
+    if (cleaned != name) {
+      addCandidate(cleaned, singer)
+      const coverSinger = getCoverSinger(name)
+      if (coverSinger && coverSinger != singer) addCandidate(cleaned, coverSinger)
+      addCandidate(cleaned, '')
+    }
+  }
+
+  addNameVariants(musicInfo.name, musicInfo.singer)
+
   let fileName = (await stat(musicInfo.meta.filePath).catch(() => ({ name: null }))).name ?? musicInfo.meta.filePath.split(/\/|\\/).at(-1)
   if (fileName) {
     fileName = fileName.substring(0, fileName.lastIndexOf('.'))
     if (fileName != musicInfo.name) {
       if (fileName.includes('-')) {
-        const [name, singer] = fileName.split('-').map(val => val.trim())
-        result = await getOtherSource({
-          ...musicInfo,
-          name,
-          singer,
-        }, true)
-        if (result.length) try { return await handler(result) } catch {}
-        result = await getOtherSource({
-          ...musicInfo,
-          name: singer,
-          singer: name,
-        }, true)
+        addNameVariants(fileName, '')
       } else {
-        result = await getOtherSource({
-          ...musicInfo,
-          name: fileName,
-          singer: '',
-        }, true)
+        addCandidate(fileName, '')
       }
-      if (result.length) try { return await handler(result) } catch {}
     }
+  }
+
+  for (const { name, singer } of candidates) {
+    const result = await getOtherSource({ ...musicInfo, name, singer }, true).catch(() => [] as LX.Music.MusicInfoOnline[])
+    if (!result.length) continue
+    try {
+      return await handler(result)
+    } catch {}
   }
 
   throw new Error('source not found')

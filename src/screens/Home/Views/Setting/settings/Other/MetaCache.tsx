@@ -56,15 +56,22 @@ export default memo(() => {
   return (
     <>
       <SubTitle title={t('setting__other_meta_cache')}>
-        <View style={styles.cacheSize}>
-          <Text>{cacheInfo.otherSourceKeys == null ? t('setting_other_cache_getting') : `${t('setting__other_other_source_label')}${cacheInfo.otherSourceKeys.length}`}</Text>
-          {/* <Text>{cacheInfo.musicUrlKeys == null ? t('setting_other_cache_getting') : `${t('setting__other_music_url_label')}${cacheInfo.musicUrlKeys.length}`}</Text> */}
-          <Text>{cacheInfo.lyricKeys == null ? t('setting_other_cache_getting') : `${t('setting__other_lyric_raw_label')}${cacheInfo.lyricKeys.length}`}</Text>
+        <View style={styles.row}>
+          <View style={styles.item}>
+            <Text>{cacheInfo.otherSourceKeys == null ? t('setting_other_cache_getting') : `${t('setting__other_other_source_label')}${cacheInfo.otherSourceKeys.length}`}</Text>
+          </View>
+          <View style={styles.item}>
+            <Text>{cacheInfo.lyricKeys == null ? t('setting_other_cache_getting') : `${t('setting__other_lyric_raw_label')}${cacheInfo.lyricKeys.length}`}</Text>
+          </View>
         </View>
-        <View style={styles.clearBtn}>
-          <Button disabled={otherSourceCleaning} onPress={handleCleanOtherSourceCache}>{t('setting__other_other_source_clear_btn')}</Button>
-          {/* <Button disabled={cleaning} onPress={handleCleanMusicUrlCache}>{t('setting__other_music_url_clear_btn')}</Button> */}
-          <Button disabled={lyricCleaning} onPress={handleCleanLyricKeysCache}>{t('setting__other_lyric_raw_clear_btn')}</Button>
+        <View style={styles.btnRow}>
+          <View style={styles.btnItem}>
+            <Button disabled={otherSourceCleaning} onPress={handleCleanOtherSourceCache}>{t('setting__other_other_source_clear_btn')}</Button>
+          </View>
+          <View style={styles.btnItem}>
+            {/* <Button disabled={cleaning} onPress={handleCleanMusicUrlCache}>{t('setting__other_music_url_clear_btn')}</Button> */}
+            <Button disabled={lyricCleaning} onPress={handleCleanLyricKeysCache}>{t('setting__other_lyric_raw_clear_btn')}</Button>
+          </View>
         </View>
       </SubTitle>
     </>
@@ -72,12 +79,18 @@ export default memo(() => {
 })
 
 const styles = StyleSheet.create({
-  cacheSize: {
-    marginBottom: 5,
-  },
-  clearBtn: {
-    gap: 5,
+  row: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+  },
+  item: {
+    flex: 1,
+  },
+  btnRow: {
+    flexDirection: 'row',
+    marginTop: 5,
+  },
+  btnItem: {
+    flex: 0,
+    marginRight: 10,
   },
 })

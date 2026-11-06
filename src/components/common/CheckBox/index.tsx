@@ -96,7 +96,7 @@ const styles = createStyle({
   content: {
     flexGrow: 0,
     flexShrink: 1,
-    marginRight: 15,
+    marginRight: 4,
     alignItems: 'center',
     flexDirection: 'row',
     // backgroundColor: 'rgba(0,0,0,0.2)',
@@ -111,7 +111,7 @@ const styles = createStyle({
     // marginRight: 15,
     // alignItems: 'center',
     // backgroundColor: 'rgba(0,0,0,0.2)',
-    paddingRight: 3,
+    paddingRight: 2,
   },
   name: {
     marginTop: 2,
@@ -122,4 +122,3 @@ const styles = createStyle({
     paddingVertical: 3,
   },
 })
-

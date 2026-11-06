@@ -94,5 +94,6 @@ const styles = StyleSheet.create({
   list: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    maxWidth: '80%',
   },
 })

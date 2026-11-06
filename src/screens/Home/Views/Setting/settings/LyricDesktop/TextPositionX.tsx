@@ -31,7 +31,11 @@ const Item = ({ id, name, change }: {
 }) => {
   const isActive = useActive(id)
   // const [toggleCheckBox, setToggleCheckBox] = useState(false)
-  return <CheckBox marginBottom={3} check={isActive} label={name} onChange={() => { change(id) }} need />
+  return (
+    <View style={styles.item}>
+      <CheckBox marginBottom={3} check={isActive} label={name} onChange={() => { change(id) }} need />
+    </View>
+  )
 }
 
 export default memo(() => {
@@ -62,6 +66,8 @@ const styles = createStyle({
     flexGrow: 0,
     flexShrink: 1,
     flexDirection: 'row',
-    flexWrap: 'wrap',
+  },
+  item: {
+    flex: 1,
   },
 })

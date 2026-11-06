@@ -17,12 +17,14 @@ export interface ReadOptions {
   title: string
   isPersist?: boolean
   dirOnly?: boolean
+  multiSelect?: boolean
   filter?: string[]
 }
 const initReadOptions = {}
 
 interface ChoosePathProps {
   onConfirm: (path: string) => void
+  onConfirmMultiple?: (paths: string[]) => void
 }
 
 export interface ChoosePathType {
@@ -31,6 +33,7 @@ export interface ChoosePathType {
 
 export default forwardRef<ChoosePathType, ChoosePathProps>(({
   onConfirm = () => {},
+  onConfirmMultiple,
 }: ChoosePathProps, ref) => {
   const t = useI18n()
   const listRef = useRef<ListType>(null)
@@ -43,7 +46,7 @@ export default forwardRef<ChoosePathType, ChoosePathProps>(({
     return checkStoragePermissions().then(isGranted => {
       readOptions.current = options
       if (isGranted) {
-        listRef.current?.show(options.title, '', options.dirOnly, options.filter)
+        listRef.current?.show(options.title, '', options.dirOnly, options.filter, options.multiSelect)
       } else {
         confirmAlertRef.current?.setVisible(true)
       }
@@ -52,7 +55,9 @@ export default forwardRef<ChoosePathType, ChoosePathProps>(({
 
   useImperativeHandle(ref, () => ({
     show(options) {
-      if (!settingState.setting['common.useSystemFileSelector'] || options.dirOnly) {
+      // 多选模式必须使用内置选择器（系统文件选择器不支持批量选择）
+      const forceBuiltin = options.dirOnly === true || options.multiSelect === true
+      if (!settingState.setting['common.useSystemFileSelector'] || forceBuiltin) {
         // if (options.isPersist) {
         void handleOpenExternalStorage(options)
         // } else {
@@ -102,15 +107,19 @@ export default forwardRef<ChoosePathType, ChoosePathProps>(({
       // console.log(result)
       setDeny(result == null)
       if (result) {
-        listRef.current?.show(readOptions.current.title, '', readOptions.current.dirOnly, readOptions.current.filter)
+        listRef.current?.show(readOptions.current.title, '', readOptions.current.dirOnly, readOptions.current.filter, readOptions.current.multiSelect)
       } else {
         toast(t('storage_permission_tip_disagree'), 'long')
       }
     })
   }
-  const onPathConfirm = (path: string) => {
+  const onPathConfirm = (path: string | string[]) => {
     listRef.current?.hide()
-    onConfirm(path)
+    if (Array.isArray(path)) {
+      onConfirmMultiple?.(path)
+    } else {
+      onConfirm(path)
+    }
   }
 
   return (

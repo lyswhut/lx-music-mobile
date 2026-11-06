@@ -33,7 +33,7 @@ export default ({ componentId }: { componentId: string }) => {
     return {
       width: imgWidth,
       height: imgWidth,
-      borderRadius: 2,
+      borderRadius: 8,
     }
   }, [statusBarHeight, winHeight, winWidth])
 
@@ -57,6 +57,6 @@ const styles = createStyle({
   content: {
     // elevation: 3,
     backgroundColor: 'rgba(0,0,0,0)',
-    borderRadius: 4,
+    borderRadius: 8,
   },
 })

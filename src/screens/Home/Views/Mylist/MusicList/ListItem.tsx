@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import { LIST_ITEM_HEIGHT } from '@/config/constant'
 // import { BorderWidths } from '@/theme'
@@ -9,8 +9,53 @@ import { useAssertApiSupport } from '@/store/common/hook'
 import { scaleSizeH } from '@/utils/pixelRatio'
 import Text from '@/components/common/Text'
 import Badge from '@/components/common/Badge'
+import Image, { type ImageProps } from '@/components/common/Image'
+import { getLocalMusicPic } from '@/utils/localMediaMetadata'
+import { getPicUrl as getLocalPicUrlOnline } from '@/core/music/local'
+import listState from '@/store/list/state'
 
 export const ITEM_HEIGHT = scaleSizeH(LIST_ITEM_HEIGHT)
+
+// 按文件路径去重，避免列表滚动时对同一首歌重复发起在线匹配
+const onlinePicTasks = new Map<string, Promise<string>>()
+const getOnlinePic = async(musicInfo: LX.Music.MusicInfoLocal): Promise<string> => {
+  const key = musicInfo.meta.filePath
+  let task = onlinePicTasks.get(key)
+  if (!task) {
+    task = getLocalPicUrlOnline({
+      musicInfo,
+      listId: listState.activeListId,
+      isRefresh: false,
+      skipFilePic: true,
+    }).catch(() => '')
+    onlinePicTasks.set(key, task)
+  }
+  return task
+}
+
+const LocalMusicPic = memo(({ musicInfo, style }: { musicInfo: LX.Music.MusicInfoLocal, style: ImageProps['style'] }) => {
+  const [url, setUrl] = useState(musicInfo.meta.picUrl)
+  useEffect(() => {
+    if (musicInfo.meta.picUrl) {
+      setUrl(musicInfo.meta.picUrl)
+      return
+    }
+    let isUnmounted = false
+    void getLocalMusicPic(musicInfo.meta.filePath).then(pic => {
+      if (isUnmounted) return
+      if (pic) {
+        setUrl(pic)
+        return
+      }
+      // 无内嵌封面时，按歌名在线匹配封面
+      void getOnlinePic(musicInfo).then(onlinePic => {
+        if (!isUnmounted && onlinePic) setUrl(onlinePic)
+      })
+    })
+    return () => { isUnmounted = true }
+  }, [musicInfo.meta.filePath, musicInfo.meta.picUrl])
+  return <Image url={url} style={style} />
+})
 
 
 export default memo(({ item, index, activeIndex, onPress, onShowMenu, onLongPress, selectedList, rowInfo, isShowAlbumName, isShowInterval }: {
@@ -50,6 +95,11 @@ export default memo(({ item, index, activeIndex, onPress, onShowMenu, onLongPres
           active
             ? <Icon style={styles.sn} name="play-outline" size={13} color={theme['c-primary-font']} />
             : <Text style={styles.sn} size={13} color={theme['c-300']}>{index + 1}</Text>
+        }
+        {
+          item.source == 'local'
+            ? <LocalMusicPic musicInfo={item} style={styles.pic} />
+            : <Image url={item.meta.picUrl} style={styles.pic} />
         }
         <View style={styles.itemInfo}>
           {/* <View style={styles.listItemTitle}> */}
@@ -111,6 +161,12 @@ const styles = createStyle({
     // backgroundColor: 'rgba(0,0,0,0.2)',
     paddingLeft: 3,
     paddingRight: 3,
+  },
+  pic: {
+    width: scaleSizeH(36),
+    height: scaleSizeH(36),
+    marginRight: 8,
+    borderRadius: 2,
   },
   itemInfo: {
     flexGrow: 1,

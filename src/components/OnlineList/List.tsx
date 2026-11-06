@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react'
-import { FlatList, type FlatListProps, RefreshControl, View } from 'react-native'
+import { FlatList, type FlatListProps, type NativeScrollEvent, type NativeSyntheticEvent, RefreshControl, View } from 'react-native'
 
 // import { useMusicList } from '@/store/list/hook'
 import ListItem, { ITEM_HEIGHT } from './ListItem'
@@ -13,6 +13,7 @@ import { useI18n } from '@/lang'
 import Text from '@/components/common/Text'
 import { handlePlay } from './listAction'
 import { useSettingValue } from '@/store/setting/hook'
+import BackToTop from '@/components/BackToTop'
 
 type FlatListType = FlatListProps<LX.Music.MusicInfoOnline>
 
@@ -31,6 +32,7 @@ export interface ListProps {
   ListHeaderComponent?: FlatListType['ListEmptyComponent']
   checkHomePagerIdle: boolean
   rowType?: RowInfoType
+  showPic?: boolean
 }
 export interface ListType {
   setList: (list: LX.Music.MusicInfoOnline[], isAppend: boolean, showSource: boolean) => void
@@ -55,6 +57,7 @@ const List = forwardRef<ListType, ListProps>(({
   ListHeaderComponent,
   checkHomePagerIdle,
   rowType,
+  showPic,
 }, ref) => {
   // const t = useI18n()
   const theme = useTheme()
@@ -68,6 +71,8 @@ const List = forwardRef<ListType, ListProps>(({
   const selectedListRef = useRef<LX.Music.MusicInfoOnline[]>([])
   const [visibleMultiSelect, setVisibleMultiSelect] = useState(false)
   const [status, setStatus] = useState<Status>('idle')
+  const [showBackToTop, setShowBackToTop] = useState(false)
+  const showBackToTopRef = useRef(false)
   const rowInfo = useRef(getRowInfo(rowType))
   const isShowAlbumName = useSettingValue('list.isShowAlbumName')
   const isShowInterval = useSettingValue('list.isShowInterval')
@@ -179,12 +184,23 @@ const List = forwardRef<ListType, ListProps>(({
     onLoadMore()
   }
 
+  const handleScroll = ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const show = nativeEvent.contentOffset.y > 600
+    if (show === showBackToTopRef.current) return
+    showBackToTopRef.current = show
+    setShowBackToTop(show)
+  }
+  const handleScrollToTop = () => {
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: true })
+  }
+
 
   const renderItem: FlatListType['renderItem'] = ({ item, index }) => (
     <ListItem
       item={item}
       index={index}
       showSource={showSource}
+      showPic={showPic}
       onPress={handlePress}
       onLongPress={handleLongPress}
       onShowMenu={onShowMenu}
@@ -230,29 +246,35 @@ const List = forwardRef<ListType, ListProps>(({
   }, [onLoadMore, status, visibleMultiSelect])
 
   return (
-    <FlatList
-      ref={flatListRef}
-      style={styles.list}
-      data={currentList}
-      numColumns={rowInfo.current.rowNum}
-      horizontal={false}
-      maxToRenderPerBatch={4}
-      // updateCellsBatchingPeriod={80}
-      windowSize={8}
-      removeClippedSubviews={true}
-      initialNumToRender={12}
-      renderItem={renderItem}
-      keyExtractor={getkey}
-      getItemLayout={getItemLayout}
-      // onRefresh={onRefresh}
-      // refreshing={refreshing}
-      onEndReachedThreshold={0.5}
-      onEndReached={handleLoadMore}
-      progressViewOffset={progressViewOffset}
-      ListHeaderComponent={ListHeaderComponent}
-      refreshControl={refreshControl}
-      ListFooterComponent={footerComponent}
-    />
+    <View style={styles.container}>
+      <FlatList
+        ref={flatListRef}
+        style={styles.list}
+        data={currentList}
+        numColumns={rowInfo.current.rowNum}
+        horizontal={false}
+        maxToRenderPerBatch={4}
+        // updateCellsBatchingPeriod={80}
+        windowSize={8}
+        removeClippedSubviews={true}
+        initialNumToRender={12}
+        renderItem={renderItem}
+        keyExtractor={getkey}
+        getItemLayout={getItemLayout}
+        // onRefresh={onRefresh}
+        // refreshing={refreshing}
+        onEndReachedThreshold={0.5}
+        onEndReached={handleLoadMore}
+        progressViewOffset={progressViewOffset}
+        ListHeaderComponent={ListHeaderComponent}
+        refreshControl={refreshControl}
+        ListFooterComponent={footerComponent}
+        onScroll={handleScroll}
+        scrollEventThrottle={160}
+        showsVerticalScrollIndicator={false}
+      />
+      {showBackToTop ? <BackToTop onPress={handleScrollToTop} /> : null}
+    </View>
   )
 })
 

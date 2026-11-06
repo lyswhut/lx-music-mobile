@@ -8,11 +8,12 @@ import ListItem, { type PathItem } from './ListItem'
 import LoadingMask, { type LoadingMaskType } from '@/components/common/LoadingMask'
 
 
-export default ({ list, loading, onSetPath, toParentDir }: {
+export default ({ list, loading, onSetPath, toParentDir, selectedPaths }: {
   list: PathItem[]
   loading: boolean
   onSetPath: (item: PathItem) => void
   toParentDir: () => void
+  selectedPaths: Set<string>
 }) => {
   const t = useI18n()
   const theme = useTheme()
@@ -41,11 +42,12 @@ export default ({ list, loading, onSetPath, toParentDir }: {
       style={styles.list}
       data={list}
       numColumns={rowInfo.current.rowNum}
-      renderItem={({ item }) => <ListItem item={item} rowInfo={rowInfo.current} onPress={onSetPath} />}
+      renderItem={({ item }) => <ListItem item={item} rowInfo={rowInfo.current} onPress={onSetPath} selected={selectedPaths.has(item.path)} />}
       keyExtractor={item => item.path + '/' + item.name}
       removeClippedSubviews={true}
+      extraData={selectedPaths}
     />
-  ), [list, onSetPath])
+  ), [list, onSetPath, selectedPaths])
 
   // const dirList = useMemo(() => [parentDir, ...list], [list, parentDir])
 
@@ -70,4 +72,3 @@ const styles = createStyle({
     flexShrink: 1,
   },
 })
-

@@ -3,6 +3,7 @@ import { View, TouchableOpacity } from 'react-native'
 // import Button from '@/components/common/Button'
 import Text from '@/components/common/Text'
 import Badge, { type BadgeType } from '@/components/common/Badge'
+import Image from '@/components/common/Image'
 import { Icon } from '@/components/common/Icon'
 import { useI18n } from '@/lang'
 import { useTheme } from '@/store/theme/hook'
@@ -29,10 +30,11 @@ const useQualityTag = (musicInfo: LX.Music.MusicInfoOnline) => {
   return info
 }
 
-export default memo(({ item, index, showSource, onPress, onLongPress, onShowMenu, selectedList, rowInfo, isShowAlbumName, isShowInterval }: {
+export default memo(({ item, index, showSource, showPic, onPress, onLongPress, onShowMenu, selectedList, rowInfo, isShowAlbumName, isShowInterval }: {
   item: LX.Music.MusicInfoOnline
   index: number
   showSource?: boolean
+  showPic?: boolean
   onPress: (item: LX.Music.MusicInfoOnline, index: number) => void
   onLongPress: (item: LX.Music.MusicInfoOnline, index: number) => void
   onShowMenu: (item: LX.Music.MusicInfoOnline, index: number, position: { x: number, y: number, w: number, h: number }) => void
@@ -62,6 +64,7 @@ export default memo(({ item, index, showSource, onPress, onLongPress, onShowMenu
     <View style={{ ...styles.listItem, width: rowInfo.rowWidth, height: ITEM_HEIGHT, backgroundColor: isSelected ? theme['c-primary-background-hover'] : 'rgba(0,0,0,0)' }}>
       <TouchableOpacity style={styles.listItemLeft} onPress={() => { onPress(item, index) }} onLongPress={() => { onLongPress(item, index) }}>
         <Text style={styles.sn} size={13} color={theme['c-300']}>{index + 1}</Text>
+        { showPic ? <Image url={item.meta.picUrl} style={styles.pic} /> : null }
         <View style={styles.itemInfo}>
           <Text numberOfLines={1}>{item.name}</Text>
           <View style={styles.listItemSingle}>
@@ -114,6 +117,12 @@ const styles = createStyle({
     // backgroundColor: 'rgba(0,0,0,0.2)',
     paddingLeft: 3,
     paddingRight: 3,
+  },
+  pic: {
+    width: scaleSizeH(36),
+    height: scaleSizeH(36),
+    marginRight: 8,
+    borderRadius: 2,
   },
   itemInfo: {
     flexGrow: 1,

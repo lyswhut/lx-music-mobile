@@ -5,22 +5,24 @@ import Text from '@/components/common/Text'
 import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'
 
-export default memo(({ onConfirm, onHide, dirOnly }: {
+export default memo(({ onConfirm, onHide, dirOnly, selectedCount = 0 }: {
   onConfirm: () => void
   onHide: () => void
   dirOnly: boolean
+  selectedCount?: number
 }) => {
   const t = useI18n()
   const theme = useTheme()
+  const showConfirm = dirOnly || selectedCount > 0
 
   return (
     <View style={{ ...styles.footer, backgroundColor: theme['c-content-background'] }}>
-      <Button style={{ ...styles.footerBtn, width: dirOnly ? '50%' : '100%' }} onPress={onHide}>
+      <Button style={{ ...styles.footerBtn, width: showConfirm ? '50%' : '100%' }} onPress={onHide}>
         <Text color={theme['c-button-font']}>{t('cancel')}</Text>
       </Button>
-      {dirOnly
+      {showConfirm
         ? <Button style={styles.footerBtn} onPress={onConfirm}>
-            <Text color={theme['c-button-font']}>{t('confirm')}</Text>
+            <Text color={theme['c-button-font']}>{selectedCount > 0 ? `${t('confirm')}(${selectedCount})` : t('confirm')}</Text>
           </Button>
         : null
       }

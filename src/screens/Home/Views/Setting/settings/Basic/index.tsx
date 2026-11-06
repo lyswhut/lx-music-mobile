@@ -2,6 +2,7 @@ import { memo } from 'react'
 
 import Theme from '../Theme'
 import Section from '../../components/Section'
+import SubTitle from '../../components/SubTitle'
 import Source from './Source'
 import SourceName from './SourceName'
 import Language from './Language'
@@ -25,15 +26,17 @@ export default memo(() => {
 
   return (
     <Section title={t('setting_basic')}>
-      <IsStartupAutoPlay />
-      <IsStartupPushPlayDetailScreen />
-      <IsShowBackBtn />
-      <IsShowExitBtn />
-      <IsAutoHidePlayBar />
-      <IsHomePageScroll />
-      <IsAllowProgressBarSeek />
-      <IsUseSystemFileSelector />
-      <IsAlwaysKeepStatusbarHeight />
+      <SubTitle title={t('setting_basic')}>
+        <IsStartupAutoPlay />
+        <IsStartupPushPlayDetailScreen />
+        <IsShowBackBtn />
+        <IsShowExitBtn />
+        <IsAutoHidePlayBar />
+        <IsHomePageScroll />
+        <IsAllowProgressBarSeek />
+        <IsUseSystemFileSelector />
+        <IsAlwaysKeepStatusbarHeight />
+      </SubTitle>
       <Theme />
       <DrawerLayoutPosition />
       <Language />

@@ -1,5 +1,5 @@
 import { forwardRef, memo, useEffect, useImperativeHandle, useState } from 'react'
-import { View } from 'react-native'
+import { View, Animated as RNAnimated } from 'react-native'
 import { BorderWidths } from '@/theme'
 import ButtonBar from './ActionBar'
 import { useNavigationComponentDidAppear } from '@/navigation'
@@ -7,6 +7,7 @@ import { NAV_SHEAR_NATIVE_IDS } from '@/config/constant'
 import { scaleSizeW } from '@/utils/pixelRatio'
 import { useTheme } from '@/store/theme/hook'
 import Text, { AnimatedText } from '@/components/common/Text'
+import { Icon } from '@/components/common/Icon'
 import { createStyle } from '@/utils/tools'
 import Image from '@/components/common/Image'
 import { useListInfo } from './state'
@@ -19,13 +20,16 @@ const CountText = memo(({ count }: { count: string }) => {
   const [animFade] = useAnimateOnecNumber(0, 1, 250, false)
   const [animTranslateY] = useAnimateOnecNumber(10, 0, 250, false)
   return (
-    <AnimatedText style={{
+    <RNAnimated.View style={{
       ...styles.playCount,
       opacity: animFade,
       transform: [
         { translateY: animTranslateY },
       ],
-    }} numberOfLines={ 1 }>{count}</AnimatedText>
+    }}>
+      <Icon name="play" size={9} color="#fff" />
+      <AnimatedText size={9} color="#fff" numberOfLines={ 1 }>{count}</AnimatedText>
+    </RNAnimated.View>
   )
 }, (prevProps, nextProps) => {
   return true
@@ -135,15 +139,15 @@ const styles = createStyle({
   },
   playCount: {
     position: 'absolute',
-    bottom: 0,
-    left: 0,
-    width: '100%',
-    fontSize: 12,
-    paddingLeft: 3,
-    paddingRight: 3,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    color: '#fff',
-    borderBottomLeftRadius: 4,
-    borderBottomRightRadius: 4,
+    right: 3,
+    bottom: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    paddingLeft: 5,
+    paddingRight: 6,
+    paddingVertical: 1,
+    borderRadius: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
 })

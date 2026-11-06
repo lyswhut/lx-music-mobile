@@ -1,6 +1,7 @@
 import { memo } from 'react'
 
 // import Section from '../../components/Section'
+import SubTitle from '../../components/SubTitle'
 import Theme from './Theme'
 import IsAutoTheme from './IsAutoTheme'
 import IsHideBgDark from './IsHideBgDark'
@@ -12,10 +13,12 @@ export default memo(() => {
   return (
     <>
       <Theme />
-      <IsAutoTheme />
-      <IsHideBgDark />
-      <IsDynamicBg />
-      <IsFontShadow />
+      <SubTitle title="主题">
+        <IsAutoTheme />
+        <IsHideBgDark />
+        <IsDynamicBg />
+        <IsFontShadow />
+      </SubTitle>
     </>
   )
 })

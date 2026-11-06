@@ -4,8 +4,8 @@ import { createStyle } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import { scaleSizeW } from '@/utils/pixelRatio'
 
-export const BTN_WIDTH = scaleSizeW(36)
-export const BTN_ICON_SIZE = 24
+export const BTN_WIDTH = scaleSizeW(44)
+export const BTN_ICON_SIZE = 28
 
 export default ({ icon, color, onPress, onLongPress }: {
   icon: string
@@ -23,7 +23,7 @@ export default ({ icon, color, onPress, onLongPress }: {
 
 const styles = createStyle({
   cotrolBtn: {
-    marginLeft: 5,
+    marginTop: 8,
     justifyContent: 'center',
     alignItems: 'center',
 

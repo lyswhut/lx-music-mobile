@@ -31,9 +31,9 @@ declare global {
         /**
           * 当前播放歌曲的列表 id
           */
-        listId: string
+        listId: string | null
         /**
-          * 是否属于 “稍后播放”
+          * 是否属于 "稍后播放"
           */
         isTempPlay: boolean
       }>

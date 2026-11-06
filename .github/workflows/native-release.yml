@@ -61,9 +61,10 @@ jobs:
       - name: Verify and build signed native release
         run: |
           bash ./gradlew --no-daemon :app:testDebugUnitTest :app:lintRelease :app:assembleRelease -PnativeVersionName="$NATIVE_VERSION" -PnativeVersionCode="$NATIVE_CODE"
-          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose app/build/outputs/apk/release/app-release.apk
+          apk="app/build/outputs/apk/release/lx-music-native-v${NATIVE_VERSION}.apk"
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose "$apk"
           mkdir -p release-artifacts
-          cp app/build/outputs/apk/release/app-release.apk "release-artifacts/lx-music-native-$NATIVE_VERSION-universal.apk"
+          cp "$apk" release-artifacts/
           cd release-artifacts
           sha256sum *.apk > SHA256SUMS.txt
       - name: Save build reports

@@ -1,3 +1,4 @@
+import com.android.build.api.variant.impl.VariantOutputImpl
 import java.util.Properties
 
 plugins {
@@ -44,8 +45,8 @@ android {
         applicationId = "cn.toside.music.nativeapp"
         minSdk = 28
         targetSdk = 36
-        versionCode = providers.gradleProperty("nativeVersionCode").orElse("1").get().toInt().also { require(it > 0) }
-        versionName = providers.gradleProperty("nativeVersionName").orElse("0.1.0").get().also { require(it.matches(Regex("\\d+\\.\\d+\\.\\d+"))) }
+        versionCode = providers.gradleProperty("nativeVersionCode").get().toInt().also { require(it > 0) }
+        versionName = providers.gradleProperty("nativeVersionName").get().also { require(it.matches(Regex("\\d+\\.\\d+\\.\\d+"))) }
         testInstrumentationRunner = "cn.toside.music.nativeapp.NativeTestRunner"
     }
     signingConfigs.create("nativeRelease") {
@@ -62,6 +63,17 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = "17" }
+}
+
+androidComponents {
+    onVariants(selector().withBuildType("release")) { variant ->
+        variant.outputs.forEach { output ->
+            // AGP 8.13 exposes APK filenames on its output implementation.
+            (output as VariantOutputImpl).outputFileName.set(
+                output.versionName.map { "lx-music-native-v$it.apk" }
+            )
+        }
+    }
 }
 
 tasks.matching { it.name == "preReleaseBuild" || it.name == "validateSigningRelease" }.configureEach {

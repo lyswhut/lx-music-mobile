@@ -44,6 +44,9 @@ export default (setting: any): Partial<LX.AppSetting> => {
     setting['sync.enable'] = setting.sync?.enable
     setting['theme.id'] = setting.themeId
   }
+  if (setting.version == '2.0') {
+    if (setting['player.isEnableAudioOffload']) setting['player.isEnableAudioOffload'] = false
+  }
 
   return setting
 }

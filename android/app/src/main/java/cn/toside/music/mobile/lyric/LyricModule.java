@@ -16,6 +16,7 @@ import com.facebook.react.bridge.ReadableMap;
 public class LyricModule extends ReactContextBaseJavaModule {
   private final ReactApplicationContext reactContext;
   Lyric lyric;
+  SuperLyricPublisher superLyricPublisher;
   // final Map<String, Object> constants = new HashMap<>();
 
   boolean isShowTranslation = false;
@@ -27,6 +28,9 @@ public class LyricModule extends ReactContextBaseJavaModule {
   LyricModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      superLyricPublisher = new SuperLyricPublisher();
+    }
 
     // constants.put("THEME_GREEN", "#07c556");
     // constants.put("THEME_YELLOW", "#fffa12");
@@ -202,6 +206,33 @@ public class LyricModule extends ReactContextBaseJavaModule {
       Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + reactContext.getApplicationContext().getPackageName()));
       reactContext.startActivityForResult(intent, 1, null);
     }
+    promise.resolve(null);
+  }
+
+  @ReactMethod
+  public void isSuperLyricAvailable(Promise promise) {
+    promise.resolve(superLyricPublisher != null && superLyricPublisher.isAvailable());
+  }
+
+  @ReactMethod
+  public void setSuperLyricEnabled(boolean enabled, Promise promise) {
+    if (superLyricPublisher == null) {
+      promise.resolve(false);
+      return;
+    }
+    superLyricPublisher.setEnabled(enabled);
+    promise.resolve(superLyricPublisher.isAvailable());
+  }
+
+  @ReactMethod
+  public void setSuperLyric(String lyric, String translation, String romaLyric, ReadableMap info, Promise promise) {
+    if (superLyricPublisher != null) superLyricPublisher.publish(lyric, translation, romaLyric, info);
+    promise.resolve(null);
+  }
+
+  @ReactMethod
+  public void clearSuperLyric(Promise promise) {
+    if (superLyricPublisher != null) superLyricPublisher.clear();
     promise.resolve(null);
   }
 

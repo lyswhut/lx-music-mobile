@@ -362,6 +362,8 @@
   "setting_play_show_bluetooth_lyric": "Show lyrics from bluetooth",
   "setting_play_show_notification_image": "Show album cover in notification bar",
   "setting_play_show_roma": "Show romanized lyrics if available",
+  "setting_play_show_super_lyric": "Enable SuperLyricApi",
+  "setting_play_show_super_lyric_unavailable": "SuperLyric service not found. Make sure SuperLyric is installed and enabled.",
   "setting_play_show_translation": "Show translated lyrics if available",
   "setting_player": "Playback",
   "setting_player_save_play_time": "Remember playback progress",

@@ -362,6 +362,8 @@
   "setting_play_show_bluetooth_lyric": "显示蓝牙歌词",
   "setting_play_show_notification_image": "在通知栏显示歌曲专辑封面图片",
   "setting_play_show_roma": "显示歌词罗马音（如果可用）",
+  "setting_play_show_super_lyric": "启用 SuperLyricApi",
+  "setting_play_show_super_lyric_unavailable": "未检测到 SuperLyric 服务，请确认已安装并启用 SuperLyric 模块",
   "setting_play_show_translation": "显示歌词翻译（如果可用）",
   "setting_player": "播放设置",
   "setting_player_save_play_time": "记住播放进度",

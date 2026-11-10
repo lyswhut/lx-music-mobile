@@ -24,3 +24,6 @@
   **[] $VALUES;
   public *;
 }
+
+# SuperLyricApi 通过隐藏的 android.os.ServiceManager 查找 Binder 服务
+-dontwarn android.os.ServiceManager

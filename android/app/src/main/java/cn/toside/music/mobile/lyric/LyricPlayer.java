@@ -205,7 +205,10 @@ public class LyricPlayer {
               seconds = timeArr[0];
               if (timeArr.length > 1) {
                 String msStr = timeArr[1];
-                if (!isMsTime) msStr = padEnd(msStr, 3, '0');
+                if (!isMsTime) {
+                  if (msStr.length() == 1) msStr = "0" + msStr;
+                  msStr = msStr + "0";
+                }
                 milliseconds = msStr;
               }
             }

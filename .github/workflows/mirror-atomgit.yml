@@ -1,0 +1,39 @@
+name: Mirror to AtomGit
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["**"]
+  delete:
+  workflow_dispatch:
+  schedule:
+    - cron: "43 19 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mirror-atomgit
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    if: github.repository == 'wingsluo1123/lx-music-harmony'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Mirror branches and tags
+        env:
+          ATOMGIT_TOKEN: ${{ secrets.ATOMGIT_TOKEN }}
+          GIT_TERMINAL_PROMPT: "0"
+        run: |
+          test -n "$ATOMGIT_TOKEN" || { echo "ATOMGIT_TOKEN secret is missing"; exit 1; }
+          git clone --bare "https://github.com/${GITHUB_REPOSITORY}.git" "$RUNNER_TEMP/atomgit-mirror.git"
+          auth_header="$(printf '%s' "wingsluo:${ATOMGIT_TOKEN}" | base64 -w0)"
+          echo "::add-mask::$auth_header"
+          export GIT_CONFIG_COUNT=1
+          export GIT_CONFIG_KEY_0=http.https://atomgit.com/.extraheader
+          export GIT_CONFIG_VALUE_0="Authorization: Basic $auth_header"
+          git -C "$RUNNER_TEMP/atomgit-mirror.git" push --force --prune \
+            https://atomgit.com/wingsluo/lx-music-harmony.git \
+            'refs/heads/*:refs/heads/*' 'refs/tags/*:refs/tags/*'

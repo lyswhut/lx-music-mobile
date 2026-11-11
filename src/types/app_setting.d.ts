@@ -182,6 +182,23 @@ declare global {
       'player.isShowLyricRoma': boolean
 
       /**
+       * 是否使用逐字歌词播放（有逐字歌词数据时生效，无数据时自动使用逐行歌词）
+       */
+      'player.isShowWordLyric': boolean
+      /**
+       * 逐字歌词亮部（已唱部分）颜色：'theme' 为跟随主题色，其余为色板 id
+       */
+      'player.wordLyricColor': string
+      /**
+       * 逐字歌词亮部亮度百分比（100 为原色，大于 100 提亮）
+       */
+      'player.wordLyricBrightness': number
+      /**
+       * 逐字歌词未唱部分对比度百分比（0=与亮部同色，100=中性灰）
+       */
+      'player.wordLyricContrast': number
+
+      /**
        * 是否在通知栏显示歌曲图片
        */
       'player.isShowNotificationImage': boolean

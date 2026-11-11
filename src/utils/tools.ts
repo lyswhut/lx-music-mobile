@@ -577,3 +577,13 @@ export const remoteLyricTip = async() => {
     void saveData(storageDataPrefix.remoteLyricTip, true)
   })
 }
+
+/**
+ * 计算文本在指定对齐方式下相对于容器的横向偏移（px）
+ * 用于歌词对齐切换时的平滑位移动画
+ */
+export const getAlignOffsetX = (align: 'left' | 'center' | 'right', containerWidth: number, textWidth: number): number => {
+  if (align == 'left' || textWidth <= 0 || containerWidth <= 0) return 0
+  if (align == 'right') return containerWidth - textWidth
+  return (containerWidth - textWidth) / 2
+}

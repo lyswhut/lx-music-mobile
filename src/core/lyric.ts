@@ -1,6 +1,7 @@
 import {
   play as lrcPlay,
   setLyric as lrcSetLyric,
+  setWordLyric as lrcSetWordLyric,
   pause as lrcPause,
   setPlaybackRate as lrcSetPlaybackRate,
   toggleTranslation as lrcToggleTranslation,
@@ -32,8 +33,9 @@ export const init = async() => {
  * @param lyric lyric str
  * @param translation lyric translation
  */
-const handleSetLyric = async(lyric: string, translation = '', romalrc = '') => {
+const handleSetLyric = async(lyric: string, translation = '', romalrc = '', lxlyric = '') => {
   lrcSetLyric(lyric, translation, romalrc)
+  lrcSetWordLyric(lxlyric, translation, romalrc)
   await setDesktopLyric(lyric, translation, romalrc)
   if (settingState.setting['player.isShowBluetoothFullLyric']) {
     void updateNowPlayingTitles({
@@ -78,7 +80,7 @@ export const setPlaybackRate = async(playbackRate: number) => {
       void getPosition().then((position) => {
         handlePlay(position * 1000)
       })
-    })
+    }, 0)
   }
 }
 
@@ -102,6 +104,28 @@ export const toggleRoma = async(isShowLyricRoma: boolean) => {
   if (playerState.isPlay) play()
 }
 
+/**
+ * 切换逐字/逐行歌词显示
+ * 有逐字歌词数据（lxlyric）时生效，无数据时自动使用逐行歌词
+ */
+export const toggleWordLyric = async(isShowWordLyric: boolean) => {
+  if (isShowWordLyric && playerState.musicInfo.lxlrc) {
+    await handleSetLyric(
+      playerState.musicInfo.lrc ?? '',
+      playerState.musicInfo.tlrc ?? '',
+      playerState.musicInfo.rlrc ?? '',
+      playerState.musicInfo.lxlrc,
+    )
+  } else {
+    await handleSetLyric(
+      playerState.musicInfo.lrc ?? '',
+      playerState.musicInfo.tlrc ?? '',
+      playerState.musicInfo.rlrc ?? '',
+    )
+  }
+  if (playerState.isPlay) play()
+}
+
 export const play = () => {
   void getPosition().then((position) => {
     handlePlay(position * 1000)
@@ -114,9 +138,11 @@ export const setLyric = async() => {
   if (playerState.musicInfo.lrc) {
     let tlrc = ''
     let rlrc = ''
+    let lxlrc = ''
     if (playerState.musicInfo.tlrc) tlrc = playerState.musicInfo.tlrc
     if (playerState.musicInfo.rlrc) rlrc = playerState.musicInfo.rlrc
-    await handleSetLyric(playerState.musicInfo.lrc, tlrc, rlrc)
+    if (playerState.musicInfo.lxlrc) lxlrc = playerState.musicInfo.lxlrc
+    await handleSetLyric(playerState.musicInfo.lrc, tlrc, rlrc, lxlrc)
   }
 
   if (playerState.isPlay) play()

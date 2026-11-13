@@ -2,7 +2,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useCallback, useEffect, useMemo, useRef, useState, type PropsWithChildren } from 'react'
 import { useColorScheme } from 'react-native'
 
-import { cacheNewUiScheme, getPersistedInitialMode, isThemeMode, NEW_UI_THEME_STORAGE_KEY } from './launchScheme'
+import {
+  cacheNewUiScheme,
+  getPersistedInitialMode,
+  isThemeMode,
+  NEW_UI_THEME_STORAGE_KEY,
+  resolveScheme,
+  setPersistedInitialMode,
+} from './launchScheme'
 import { ThemeContext } from './context'
 import { PALETTES } from './tokens'
 import type { Theme, ThemeContextValue, ThemeMode, ThemeScheme } from './types'
@@ -41,6 +48,12 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
   const setMode = useCallback((next: ThemeMode) => {
     userChangedRef.current = true
     setModeState(next)
+    // 同步更新模块级快照：push 转场的 componentBackgroundColor 读 getCachedNewUiScheme()，
+    // 以及新屏幕 ThemeProvider 的 useState 初始值读 getPersistedInitialMode()——
+    // 两者都要在运行中切主题后立即跟上，否则 push 新屏会先渲染旧主题再异步切过来。
+    const nextScheme = resolveScheme(next)
+    cacheNewUiScheme(nextScheme)
+    setPersistedInitialMode(next)
     void AsyncStorage.setItem(NEW_UI_THEME_STORAGE_KEY, next).catch(() => {
       // 持久化失败不影响本次切换（下次启动回到上一次成功的值）
     })

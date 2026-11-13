@@ -61,6 +61,8 @@ export const readPersistedNewUiScheme = async (): Promise<ThemeScheme> => {
     persistedInitialMode = mode
     return resolveScheme(mode)
   } catch {
+    // 读失败显式落出厂缺省档，保持与 try 分支一致（persistedInitialMode / cachedScheme 同步对齐）
+    persistedInitialMode = DEFAULT_MODE
     return DEFAULT_SCHEME
   }
 }

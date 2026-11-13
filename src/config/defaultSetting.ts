@@ -1,5 +1,5 @@
 const defaultSetting: LX.AppSetting = {
-  version: '2.0',
+  version: '2.1',
   'common.isAutoTheme': false,
   'common.langId': null,
   'common.apiSource': '',
@@ -27,7 +27,7 @@ const defaultSetting: LX.AppSetting = {
   'player.timeoutExitPlayed': true,
   'player.isAutoCleanPlayedList': false,
   'player.isHandleAudioFocus': true,
-  'player.isEnableAudioOffload': true,
+  'player.isEnableAudioOffload': false,
   'player.isShowLyricTranslation': false,
   'player.isShowLyricRoma': false,
   'player.isShowNotificationImage': true,

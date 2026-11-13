@@ -16,7 +16,6 @@ void Promise.all([getFontSize(), windowSizeTools.init()]).then(async([fontSize])
   bootLog('Font size setting loaded.')
 
   let isInited = false
-  let handlePushedHomeScreen: () => void | Promise<void>
 
   const tryGetBootLog = () => {
     try {
@@ -26,12 +25,14 @@ void Promise.all([getFontSize(), windowSizeTools.init()]).then(async([fontSize])
     }
   }
 
+  // 注：旧启动尾 handlePushedHomeScreen（谨防被骗弹窗 / 用户协议旧弹窗 / 更新弹窗）
+  // 已从新 UI 启动接线层断开，见 @/newui/boot 的说明。init() 返回值不再调用。
   const handleInit = async() => {
     if (isInited) return
     void initLog()
     const { default: init } = await import('@/core/init')
     try {
-      handlePushedHomeScreen = await init()
+      await init()
     } catch (err: any) {
       void tipDialog({
         title: '初始化失败 (Init Failed)',
@@ -45,15 +46,18 @@ void Promise.all([getFontSize(), windowSizeTools.init()]).then(async([fontSize])
     }
     isInited ||= true
   }
-  const { init: initNavigation, navigations } = await import('@/navigation')
+  const { init: initNavigation } = await import('@/navigation')
 
   initNavigation(async() => {
     await handleInit()
     if (!isInited) return
     // import('@/utils/nativeModules/cryptoTest')
 
-    await navigations.pushHomeScreen().then(() => {
-      void handlePushedHomeScreen()
+    const { setNewUiRoot } = await import('@/newui/navigation')
+    await setNewUiRoot().then(async() => {
+      // 新 UI 启动尾：只做静默任务，不再触发任何旧弹窗（谨防被骗 / 协议 / 更新检查）
+      const { runNewUiBoot } = await import('@/newui/boot')
+      void runNewUiBoot()
     }).catch((err: any) => {
       void tipDialog({
         title: 'Error',

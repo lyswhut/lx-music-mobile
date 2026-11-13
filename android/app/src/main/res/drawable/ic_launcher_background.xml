@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- EchoIsle adaptive-icon 背景层：与图标同色系的深蓝→青绿纵向渐变（2026-10 品牌图标落地） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="270"
+        android:startColor="#08154B"
+        android:endColor="#127280" />
+</shape>

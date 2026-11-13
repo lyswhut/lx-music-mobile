@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#FFFFFF</color>
+    <!-- EchoIsle 启动图标底色（adaptive-icon @color 回退用，取图标顶部深蓝色） -->
+    <color name="ic_launcher_background">#08154B</color>
 </resources>

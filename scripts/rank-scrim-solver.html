@@ -1,0 +1,99 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>scrim solver</title>
+<style>body{font:12px ui-monospace,monospace;white-space:pre;margin:0;padding:8px;background:#111;color:#cfa}</style>
+<script>
+/* 求解「榜名 + 平台行统一白墨」所需遮罩深度（2026-10-22 起两行字在卡片**左上角**）：
+ * 168×168 画一张封面 → 按候选梯度压黑 → 取两条文字带（.rk-copy top 12 / 名 y12..54 两行、
+ * .rk-sub y57..70，x13..155）
+ * → 逐像素算白字（名＝纯白、副行＝76% 白）合成后的实际颜色与该像素的 WCAG 对比度，取最坏值；
+ * 再反解「整条带压多少黑才让最坏像素也过 4.5:1」。
+ * 量的是**出包这批**（src/newui/components/RankCover/covers/*.webp，母图 PNG 压出来的 q85）：
+ * 有损编码会改像素，遮罩必须对真正打进 APK 的文件作证，不能拿母图交差。 */
+const DIR = 'file:///mnt/data/owner/lx-music-mobile/src/newui/components/RankCover/covers/';
+const JOB = JSON.parse(decodeURIComponent(location.hash.slice(1)));
+const SIZE = 168;
+const X0 = 13, X1 = 155;
+const NAME = { y0: 12, y1: 54, alpha: 1 };
+const SUB = { y0: 57, y1: 70, alpha: (JOB && JOB.subAlpha) || 0.76 };
+const NEED = 4.5;
+const chan = (v) => { const c = v / 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
+const lum = (r, g, b) => 0.2126 * chan(r) + 0.7152 * chan(g) + 0.0722 * chan(b);
+const cr = (a, b) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+
+const KEYS = JOB.keys, CANDIDATES = JOB.cands;
+const out = [];
+const cv = document.createElement('canvas'); cv.width = cv.height = SIZE;
+const ctx = cv.getContext('2d', { willReadFrequently: true });
+
+const paint = (stops) => {
+  const g = ctx.createLinearGradient(0, 0, 0, SIZE); /* 两行字在左上角：0=卡片顶边，向下到 68% 处淡出 */
+  for (const [p, a] of stops) g.addColorStop(p, `rgba(0,0,0,${a})`);
+  ctx.fillStyle = g; ctx.fillRect(0, 0, SIZE, SIZE);
+};
+const bandData = (band) =>
+  ctx.getImageData(X0, band.y0, X1 - X0, band.y1 - band.y0).data;
+
+/* 当前画布状态下，带内最坏像素的白字对比度 */
+const measure = (band) => {
+  const d = bandData(band);
+  let worst = 99;
+  for (let i = 0; i < d.length; i += 4) {
+    const bg = [d[i], d[i + 1], d[i + 2]];
+    const glyph = bg.map((c) => band.alpha * 255 + (1 - band.alpha) * c);
+    const c = cr(lum(...glyph), lum(...bg));
+    if (c < worst) worst = c;
+  }
+  return +worst.toFixed(2);
+};
+/* 反解：整条带 uniformly 压 a 黑（黑底合成 = sRGB 通道 ×(1-a)），最坏像素过线所需的最小 a */
+const required = (band) => {
+  const d = bandData(band);
+  let need = 0;
+  for (let i = 0; i < d.length; i += 4) {
+    const bg = [d[i], d[i + 1], d[i + 2]];
+    let a = 0;
+    for (; a <= 0.95; a += 0.01) {
+      const dark = bg.map((c) => c * (1 - a));
+      const glyph = dark.map((c) => band.alpha * 255 + (1 - band.alpha) * c);
+      if (cr(lum(...glyph), lum(...dark)) >= NEED) break;
+    }
+    need = Math.max(need, Math.min(a, 0.96));
+  }
+  return +need.toFixed(2);
+};
+
+const one = (key) => new Promise((res) => {
+  const img = new Image();
+  img.onload = () => {
+    const draw = () => { ctx.clearRect(0, 0, SIZE, SIZE); ctx.drawImage(img, 0, 0, SIZE, SIZE); };
+    const row = { key };
+    draw();
+    row.bare = [measure(NAME), measure(SUB)];
+    row.need = [required(NAME), required(SUB)];
+    row.cand = CANDIDATES.map((stops) => { draw(); paint(stops); return [measure(NAME), measure(SUB)]; });
+    out.push(row);
+    res();
+  };
+  img.onerror = () => { out.push({ key, error: 1 }); res(); };
+  img.src = DIR + key + '.webp';
+});
+
+(async () => {
+  for (const k of KEYS) await one(k);
+  const ok = out.filter((r) => !r.error);
+  const lines = CANDIDATES.map((c, i) => {
+    const worstAll = Math.min(...ok.map((r) => Math.min(...r.cand[i])));
+    const bad = ok.filter((r) => Math.min(...r.cand[i]) < NEED).map((r) => `${r.key}:${Math.min(...r.cand[i])}`);
+    return `cand${i} ${JSON.stringify(c)} pass=${ok.length - bad.length}/${ok.length} 全场最低=${worstAll.toFixed(2)} 未过: ${bad.join(' ') || '无'}`;
+  });
+  const needMax = ok.map((r) => ({ key: r.key, need: Math.max(...r.need) })).sort((a, b) => b.need - a.need);
+  const dist = {};
+  needMax.forEach((n) => { const k = Math.ceil(n.need * 20) / 20; dist[k] = (dist[k] || 0) + 1; });
+  document.body.textContent = 'JSON:' + [
+    ...lines,
+    'needTop12: ' + needMax.slice(0, 12).map((n) => `${n.key}=${n.need}`).join(' '),
+    'needDist(按 0.05 归档): ' + JSON.stringify(dist),
+  ].join('\n');
+})();
+</script>

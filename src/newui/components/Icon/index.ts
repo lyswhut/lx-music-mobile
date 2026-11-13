@@ -1,0 +1,5 @@
+export { Icon, type IconName } from './Icon'
+export type { IconProps } from './Icon'
+export { ICON_DATA } from './icons'
+export { EXTRA_ICON_DATA, type ExtraIconName } from './iconsExtra'
+export type { IconDef, IconNode } from './types'

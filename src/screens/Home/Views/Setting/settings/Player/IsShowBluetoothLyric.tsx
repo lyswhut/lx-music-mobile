@@ -11,6 +11,7 @@ import { showRemoteLyric } from '@/core/desktopLyric'
 import { setLastLyric } from '@/core/player/playInfo'
 import { updateNowPlayingTitles } from '@/plugins/player/utils'
 import playerState from '@/store/player/state'
+import settingState from '@/store/setting/state'
 
 export default memo(() => {
   const t = useI18n()
@@ -20,8 +21,9 @@ export default memo(() => {
       await remoteLyricTip()
     }
     updateSetting({ 'player.isShowBluetoothLyric': isShowBluetoothLyric })
-    void showRemoteLyric(isShowBluetoothLyric)
-    if (!isShowBluetoothLyric) {
+    // 逐句事件源是两行共用的，车机歌词开着时不能跟着蓝牙一起停
+    void showRemoteLyric(isShowBluetoothLyric || settingState.setting['player.isShowCarWithLyric'])
+    if (!isShowBluetoothLyric && !settingState.setting['player.isShowCarWithLyric']) {
       setLastLyric()
       void updateNowPlayingTitles({
         title: playerState.musicInfo.name,

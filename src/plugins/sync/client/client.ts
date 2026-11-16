@@ -8,7 +8,6 @@ import { aesEncrypt } from '../utils'
 import { setSyncStatus } from '@/core/sync'
 import { dateFormat } from '@/utils/common'
 import { createMsg2call } from 'message2call'
-import { toast } from '@/utils/tools'
 import { SYNC_CLOSE_CODE, SYNC_CODE } from '../constants'
 
 let status: LX.Sync.Status = {
@@ -159,7 +158,6 @@ export const connect = (urlInfo: LX.Sync.UrlInfo, keyInfo: LX.Sync.KeyInfo) => {
     funcsObj: {
       ...callObj,
       finished() {
-        toast('Sync connected')
         client!.isReady = true
         sendSyncStatus({
           status: true,

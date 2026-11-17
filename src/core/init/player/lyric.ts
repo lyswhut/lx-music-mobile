@@ -4,9 +4,20 @@ import { onDesktopLyricPositionChange, showDesktopLyric, onLyricLinePlay, showRe
 import playerState from '@/store/player/state'
 import { updateNowPlayingTitles } from '@/plugins/player/utils'
 import { setLastLyric } from '@/core/player/playInfo'
+import settingState from '@/store/setting/state'
 
 const updateRemoteLyric = async(lrc?: string) => {
   setLastLyric(lrc)
+  if (settingState.setting['player.isShowCarWithLyric']) {
+    // 车机端按专用字段显示歌词，所以歌名保持原样
+    void updateNowPlayingTitles({
+      title: playerState.musicInfo.name,
+      artist: playerState.musicInfo.singer ?? '',
+      album: playerState.musicInfo.album ?? '',
+      lyricLine: lrc ?? '',
+    })
+    return
+  }
   if (lrc == null) {
     void updateNowPlayingTitles({
       title: playerState.musicInfo.name,
@@ -38,6 +49,11 @@ export default async(setting: LX.AppSetting) => {
   if (setting['player.isShowBluetoothLyric']) {
     showRemoteLyric(true).catch(() => {
       updateSetting({ 'player.isShowBluetoothLyric': false })
+    })
+  }
+  if (setting['player.isShowCarWithLyric']) {
+    showRemoteLyric(true).catch(() => {
+      updateSetting({ 'player.isShowCarWithLyric': false })
     })
   }
   onDesktopLyricPositionChange(position => {

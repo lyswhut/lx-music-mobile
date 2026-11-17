@@ -10,6 +10,8 @@ declare global {
        * 是否跟随系统切换亮暗主题
        */
       'common.isAutoTheme': boolean
+      'common.followCarWithTheme': boolean
+      'common.followSunTheme': boolean
 
       /**
        * 语言id
@@ -200,6 +202,11 @@ declare global {
        * 是否启用蓝牙完整歌词
        */
       'player.isShowBluetoothFullLyric': boolean
+
+      /**
+       * 是否启用 CarWith / Jovi InCar 车机歌词
+       */
+      'player.isShowCarWithLyric': boolean
 
       /**
        * 播放详情页-是否缩放当前播放的歌词行

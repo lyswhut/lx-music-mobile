@@ -3,6 +3,7 @@ import { getUserTheme, saveUserTheme } from '@/utils/data'
 import themes from '@/theme/themes/themes'
 import settingState from '@/store/setting/state'
 import themeState from '@/store/theme/state'
+import { sunState } from '@/utils/sunState'
 import { isUrl } from '@/utils'
 import { privateStorageDirectoryPath } from '@/utils/fs'
 import { type ImageSourcePropType } from 'react-native'
@@ -117,8 +118,13 @@ export const getTheme = async() => {
   //     : settingState.setting['theme.lightId']
   //   // : 'china_ink'
   //   : settingState.setting['theme.id']
-  let themeId = settingState.setting['common.isAutoTheme'] && shouldUseDarkColors
-    ? 'black'
+  // 「该不该变深色」有三个来源，彼此是「或」：手机系统深色、连着 CarWith 且车机自己在用深色、
+  // 连着 CarWith 且按所在城市的日出日落该进夜间（后两者在 sunState 里已经合成一个值）；
+  // 任一报出深色就变深色，都不报深色就保持主题列表里选的那个
+  const dark = (settingState.setting['common.isAutoTheme'] && shouldUseDarkColors) ||
+    (sunState.enabled && sunState.night)
+  let themeId = dark
+    ? settingState.setting['theme.darkId']
     : settingState.setting['theme.id']
   // themeId = 'naruto'
   // themeId = 'pink'

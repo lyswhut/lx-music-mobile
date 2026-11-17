@@ -1,6 +1,7 @@
 import { initSetting, showPactModal } from '@/core/common'
 import registerPlaybackService from '@/plugins/player/service'
 import initTheme from './theme'
+import initSunTheme from './sunTheme'
 import initI18n from './i18n'
 import initUserApi from './userApi'
 import initPlayer from './player'
@@ -41,6 +42,7 @@ export default async() => {
   // console.log(setting)
 
   await initTheme(setting)
+  initSunTheme()
   bootLog('Theme inited.')
   await initI18n(setting)
   bootLog('I18n inited.')

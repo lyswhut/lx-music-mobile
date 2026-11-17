@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:  # 手动构建，网页Actions页面出现Run workflow按钮
 
 jobs:
   Android:
@@ -130,7 +131,7 @@ jobs:
   #         github_token: ${{ secrets.GITHUB_TOKEN }}
   #         github_repo: ${{ github.repository }}
   #         version: ${{ env.PACKAGE_VERSION }}
-  #         git_commit_sha: ${{ env.COMMIT_SHA }}
+  #         git_commit_sha: ${{ github.sha }}
   #         git_tag_prefix: "v"
 
   #     - name: Generate file MD5

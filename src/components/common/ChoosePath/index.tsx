@@ -63,6 +63,10 @@ export default forwardRef<ChoosePathType, ChoosePathProps>(({
         // }
       } else {
         void selectFile({
+          // Android MimeTypeMap 没有 .lxmc 映射。只传 extTypes 时，
+          // 小米/HyperOS 等系统选择器会按 MIME 把备份文件过滤掉（json 仍可见）。
+          // 传入 */* 显示全部文件，仍由下面的 JS 按扩展名校验。
+          mimeTypes: ['*/*'],
           extTypes: options.filter,
           toPath: TEMP_FILE_PATH,
         }).then((file) => {

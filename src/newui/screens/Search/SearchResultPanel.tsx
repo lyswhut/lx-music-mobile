@@ -2,6 +2,8 @@ import { memo, useMemo } from 'react'
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
+import { FixedWindowList } from '@/newui/components/FixedWindowList/FixedWindowList'
+
 import type { ListInfoItem } from '@/store/songlist/state'
 import { LIST_LOAD_LIMIT } from '@/core/songlist'
 
@@ -176,7 +178,7 @@ export const SearchResultPanel = memo(({
   // 切 tab 时销毁旧列表、挂载新列表，不再有原地改列数。
   if (tab === 'song') {
     return (
-      <FlatList<SearchResultSong>
+      <FixedWindowList<SearchResultSong>
         key="newui.search.songList"
         data={songs}
         keyExtractor={item => item.key}
@@ -184,13 +186,10 @@ export const SearchResultPanel = memo(({
         contentContainerStyle={[styles.scrollContent, { paddingBottom: contentPaddingBottom }, boxStyle]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
-        // —— 虚拟化精细化参数（同根因：RN 默认 initialNumToRender=10，首批 mount 不够铺满屏）——
-        initialNumToRender={LIST_LOAD_LIMIT}
-        maxToRenderPerBatch={14}
-        windowSize={7}
-        // 不加 removeClippedSubviews：回收单元格里的 SVG 封面在 Android 上有整格变白的老毛病，
-        // 虚拟化本身已把挂载行数砍到屏内十条上下，不需要再叠一层原生裁剪
-        renderItem={({ item, index }) => (
+        // 行高与 SongRow regular 档一致（paddingY×2 + artSize 46 + 上下 1px 透明描边 = 62），行距 listGap 2
+        rowHeight={SONG_ROW.paddingY * 2 + SONG_ROW.artSize + 2}
+        rowGap={SONG_ROW.listGap}
+        renderItem={(item, index) => (
           <SongRow
             rank={index + 1}
             artSeed={item.display.artSeed}
@@ -206,7 +205,6 @@ export const SearchResultPanel = memo(({
             active={item.active}
             playing={item.playing}
             dimmed={!item.playable}
-            style={styles.songRowGap}
             onPress={() => { onSongPress(index) }}
             onMore={onSongMore == null ? undefined : () => { onSongMore(index) }}
           />
@@ -246,12 +244,12 @@ export const SearchResultPanel = memo(({
       showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled"
       columnWrapperStyle={plColumnStyle}
-      // —— 虚拟化精细化参数（同根因：RN 默认 initialNumToRender=10 行 = 20 张卡，可能不够铺满屏）——
-      // initialNumToRender 按「行」计，numColumns=2 时 LIST_LOAD_LIMIT=30 item 刚好 15 行，
-      // 首批 mount 15 行 = 30 张卡，语义与单曲列表对齐（平台一批最大条数）
-      initialNumToRender={Math.max(Math.floor(LIST_LOAD_LIMIT / gridColumns), 8)}
-      maxToRenderPerBatch={14}
-      windowSize={7}
+      // PlCard 高度随屏宽动态变，无法 getItemLayout
+      // initialNumToRender 按行计：两列网格首批约 12 行 = 24 张卡，足够铺满屏
+      initialNumToRender={Math.max(Math.ceil(LIST_LOAD_LIMIT / gridColumns), 12)}
+      maxToRenderPerBatch={4}
+      windowSize={8}
+      removeClippedSubviews={true}
       renderItem={({ item }) => (
         <View style={plItemStyle}>
           <PlCard
@@ -395,10 +393,6 @@ const styles = StyleSheet.create({
   /** .sc-body padding:0 16（横向内距由原外层 ScrollView 迁入内容容器） */
   scrollContent: {
     paddingHorizontal: SEARCH.bodyPaddingX,
-  },
-  /** .song-list gap:2 → FlatList 行间距（同 SONG_ROW.listGap） */
-  songRowGap: {
-    marginBottom: SONG_ROW.listGap,
   },
   /** .pl-grid 的列间（columnWrapperStyle）与行间按宽屏档在渲染期给（plColumnStyle / plItemStyle），
    *  竖屏档逐值回 CARD_GRID 的 12 / 14 基线 */

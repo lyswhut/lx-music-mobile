@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Animated, BackHandler, FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Animated, BackHandler, Pressable, StyleSheet, Text, View } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 
-import { LIST_LOAD_LIMIT } from '@/core/songlist'
-
 import { Art } from '@/newui/components/Art'
+import {
+  FixedWindowList,
+  type FixedWindowListHandle,
+} from '@/newui/components/FixedWindowList/FixedWindowList'
 import { HScroll } from '@/newui/components/HScroll'
 import { Icon } from '@/newui/components/Icon'
 import { MinibarHost } from '@/newui/components/Minibar'
@@ -100,7 +102,7 @@ export const RadioHomeScreen = ({ componentId }: RadioHomeScreenProps) => {
   const { subs: subEntries, count: subCount, remove: unsub } = usePodSubs()
   const progress = usePodProgress()
 
-  const listRef = useRef<FlatList<PodShowRow>>(null)
+  const listRef = useRef<FixedWindowListHandle>(null)
 
   const goBack = useCallback(() => {
     void Navigation.pop(componentId)
@@ -170,7 +172,7 @@ export const RadioHomeScreen = ({ componentId }: RadioHomeScreenProps) => {
     endReachedDistance: POD_CHART_PAGING.endReachedDistance,
   })
 
-  const renderItem = useCallback(({ item, index }: { item: PodShowRow, index: number }) => (
+  const renderItem = useCallback((item: PodShowRow, index: number) => (
     <PodcastRow
       name={item.name}
       by={item.by}
@@ -312,17 +314,15 @@ export const RadioHomeScreen = ({ componentId }: RadioHomeScreenProps) => {
       </View>
 
       {/* ▸ 滚动段：榜列自己就是这一屏唯一的轴（home.css L366），.pod-list 的 margin-top:2 落在容器外沿 */}
-      <FlatList
+      <FixedWindowList
         ref={listRef}
         style={styles.list}
         data={chartRows}
+        // 榜行固定高 POD.rowHeight(74)，无行距
+        rowHeight={POD.rowHeight}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ListFooterComponent={listFooter}
-        // LIST_LOAD_LIMIT=30：覆盖榜列固定 50 条中首批可挂载量；maxToRenderPerBatch/windowSize 同 SonglistDetailScreen
-        initialNumToRender={LIST_LOAD_LIMIT}
-        maxToRenderPerBatch={14}
-        windowSize={9}
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={MOTION.scrollThrottle}
         contentContainerStyle={listContentStyle}

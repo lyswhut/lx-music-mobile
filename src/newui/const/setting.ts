@@ -59,8 +59,6 @@ export const NEW_UI_SETTING_LABELS = {
   /* —— 关于（原型 app.js L1389-1392 只有一行 setInfo：品牌名 + 出处副行 + 右侧版本号；
         出处写在明面上——取数、音源与播放内核全部来自 lx-music-mobile，版本号沿用其 package.json） —— */
   groupAbout: '关于',
-  /** 副名 SoundIsle：全 App 只在品牌名旁露出这一处，别处不堆 */
-  aboutBrandSub: 'SoundIsle',
   /** .st-l em 副行：原型原句，如实标注上游出处 */
   aboutOrigin: '内核由 lx-music-mobile 原作者与社区维护',
 } as const

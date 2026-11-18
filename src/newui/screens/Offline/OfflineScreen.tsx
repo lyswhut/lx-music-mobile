@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useMemo } from 'react'
-import { BackHandler, FlatList, StyleSheet, Text, View } from 'react-native'
+import { BackHandler, StyleSheet, Text, View } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 
 import { EmptyTip } from '@/newui/components/EmptyTip'
+import { FixedWindowList } from '@/newui/components/FixedWindowList/FixedWindowList'
 import { GhostButton } from '@/newui/components/GhostButton'
 import { MinibarHost } from '@/newui/components/Minibar'
 import { PlTop } from '@/newui/components/PlTop'
 import { SongRow } from '@/newui/components/SongRow'
 import { NEW_UI_OFFLINE, QUALITY_LABEL } from '@/newui/const'
-import { LIST_LOAD_LIMIT } from '@/core/songlist'
 import {
   useMyPlaylists,
   useNewUiSystemBar,
@@ -20,8 +20,12 @@ import {
 } from '@/newui/hooks'
 // 直连 entry 而非 '@/newui/navigation' 桶口：避免 navigation/index → register → screens → 本文件的循环引用
 import { pushNewUiPlayer } from '@/newui/navigation/entry'
-import { OFFLINE, PL_LAYER, useTheme } from '@/newui/theme'
+import { OFFLINE, PL_LAYER, SONG_ROW, useTheme } from '@/newui/theme'
 import { playQueue, toSongDisplay } from '@/newui/utils'
+
+/** OfflineScreen 歌曲行行高：SongRow regular 档内容高（paddingY×2 + artSize 46 + 上下 1px 透明描边 = 62） */
+const OFFLINE_ROW_HEIGHT = SONG_ROW.paddingY * 2 + SONG_ROW.artSize + 2
+const OFFLINE_ROW_GAP = SONG_ROW.listGap
 
 export interface OfflineScreenProps {
   componentId: string
@@ -85,7 +89,7 @@ export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
     })
   }, [componentId, queue])
 
-  const renderItem = useCallback(({ item, index }: { item: OfflineRow, index: number }) => {
+  const renderItem = useCallback((item: OfflineRow, index: number) => {
     const active = nowPlaying.id === item.song.id
     return (
       <SongRow
@@ -122,7 +126,6 @@ export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
     paddingTop: OFFLINE.listPaddingTop,
     paddingHorizontal: layerPaddingX ?? OFFLINE.listPaddingX,
     paddingBottom: OFFLINE.listPaddingBottom + bottom,
-    gap: OFFLINE.listGap,
   }), [bottom, layerPaddingX])
 
   // 空态只在数完之后出现：还在数的时候先报「正在数…」，不先说「还没有存下的歌」
@@ -177,20 +180,16 @@ export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
       </View>
 
       {/* ▸ 滚动段：.off-list 自己就是这一屏唯一的轴，行距 2px 落在容器上 */}
-      <FlatList
+      <FixedWindowList
         style={styles.list}
         data={rows}
+        rowHeight={OFFLINE_ROW_HEIGHT}
+        rowGap={OFFLINE_ROW_GAP}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ListEmptyComponent={listEmpty}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={listContentStyle}
-        // —— 虚拟化精细化参数（2026-11-05，同根因：RN 默认 initialNumToRender=10，10 行 × 46px = 460px 铺不满屏）——
-        // 已缓存屏不分页、整单一次性到位，LIST_LOAD_LIMIT=30 首批 mount 30 行 × 46px = 1380px 足够覆盖任何设备一屏；
-        // maxToRenderPerBatch=14 / windowSize=7 与 SonglistDetailScreen 判例同档，滚动补渲染速度与窗口余量平衡
-        initialNumToRender={LIST_LOAD_LIMIT}
-        maxToRenderPerBatch={14}
-        windowSize={7}
       />
       {/* 常驻迷你播放条：本层默认磁吸圆点（原型 miniPageSnapped：不在首页就是圆点）。
           挂在轴之后、屏幕根层最后——圆点浮在列表内容之上 */}

@@ -162,7 +162,7 @@ export const SettingPage = memo(({ onOpenClearCacheConfirm, onRegisterClearCache
       <SettingsGroup label={L.groupAbout}>
         <SettingsRow
           icon="heart"
-          title={`${NEW_UI_APP_NAME} · ${L.aboutBrandSub}`}
+          title={NEW_UI_APP_NAME}
           hint={L.aboutOrigin}
           value={NEW_UI_APP_VERSION}
         />

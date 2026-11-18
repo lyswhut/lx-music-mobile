@@ -1,18 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   BackHandler,
-  FlatList,
   Pressable,
   StyleSheet,
   View,
-  type LayoutChangeEvent,
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
 } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 
+import { FixedWindowList } from '@/newui/components/FixedWindowList/FixedWindowList'
+
 import { LIST_IDS } from '@/config/constant'
-import { clearListDetail, getListDetail, LIST_LOAD_LIMIT, setListDetail, setListDetailInfo } from '@/core/songlist'
+import { clearListDetail, getListDetail, setListDetail, setListDetailInfo } from '@/core/songlist'
 // rank 形态数据分支：core/leaderboard 是另一套取数 API（leaderboard.getList，id={source}__{bangId}），
 // 分页 store 也独立（store/leaderboard），别名单引避免与 songlist 同名函数交叉污染
 import {
@@ -388,49 +386,11 @@ export const SonglistDetailScreen = ({
     loadNext()
   }, [loadNext, status])
 
-  // —— 触底补强（2026-10-15 同事清单：「有时滑到底没有自动触发获取更多，需要下滑再上滑」）——
-  // 读 RN 0.73 VirtualizedList 源码核实的两个吞掉窗口：
-  // ① onEndReached 只在滚动事件/布局事件里评估，快速甩动到底时末位 cell 还没补齐渲染
-  //   （cellsAroundViewport.last 未到末位、pendingScrollUpdateCount>0 直接跳过），
-  //   补齐渲染后不再有滚动事件，这一页就停住，直到用户下一次滚动；
-  // ② 同一 contentLength 只发一次（按长度去重），失败/空页内容没长时，
-  //   用户手指停在底部要「滚出触发线再滚回来」才重新发。
-  // 修法：自己记滚动度量，在「内容尺寸变化」（含补齐渲染 / 状态行增减）与「滚动停下」
-  // 两个时机按同一条 0.4×视口触发线补判一次。补判只在 status==='idle'（新一页刚到位、
-  // 用户仍贴底）时自动续取——失败态不自动撞网（保持原「点重试」入口），连发由 pageBusyRef 挡。
-  const PLD_END_REACHED_THRESHOLD = 0.4
-  const scrollMetricsRef = useRef({ offset: 0, visible: 0, content: 0 })
-
-  const maybeContinuePaging = useCallback(() => {
-    if (status !== 'idle') return
-    const { offset, visible, content } = scrollMetricsRef.current
-    if (visible <= 0 || content <= 0) return
-    const maxOffset = Math.max(0, content - visible)
-    const remaining = content - visible - Math.min(offset, maxOffset)
-    if (remaining > PLD_END_REACHED_THRESHOLD * visible) return
-    handleEndReached()
-  }, [handleEndReached, status])
-
-  const handleListContentSizeChange = useCallback((_width: number, height: number) => {
-    scrollMetricsRef.current.content = height
-    maybeContinuePaging()
-  }, [maybeContinuePaging])
-
-  const handleListLayout = useCallback((e: LayoutChangeEvent) => {
-    scrollMetricsRef.current.visible = e.nativeEvent.layout.height
-    maybeContinuePaging()
-  }, [maybeContinuePaging])
-
-  /** 滚动停手（拖拽结束 / 惯性结束）：拿最新三段度量补一次触底判定 */
-  const handleScrollSettle = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const { contentOffset, contentSize, layoutMeasurement } = e.nativeEvent
-    scrollMetricsRef.current = {
-      offset: contentOffset.y,
-      visible: layoutMeasurement.height,
-      content: contentSize.height,
-    }
-    maybeContinuePaging()
-  }, [maybeContinuePaging])
+  // 歌曲行行高 = paddingY×2(14) + 封面 46 + 根节点上下各 1px 透明描边(2，占位防跳动) = 62；
+  // 行间距 listGap 2。FixedWindowList 按这两个值解析算位（第 i 行顶边 = i×(行高+行距)），
+  // 改 SongRow 的 padding/封面/描边时这里必须同步，否则滚动位置会漂。
+  const PLD_ROW_HEIGHT = SONG_ROW.paddingY * 2 + SONG_ROW.artSize + 2
+  const PLD_ROW_GAP = SONG_ROW.listGap
 
   /** 统一返回（QA D-16 落位不稳）：先向存活的主屏投递来源 Tab、再 pop 本层——
    * 与搜索层 handleGotoSetting 同一条 utils/tabJump 通道，不新造路由。
@@ -672,7 +632,7 @@ export const SonglistDetailScreen = ({
   }, [goBack, listId])
 
   // 行渲染对两种来源同一套（SongRow / toSongDisplay 都吃 MusicInfo 联合类型，本地文件天然支持）
-  const renderItem = useCallback(({ item, index }: { item: LX.Music.MusicInfo; index: number }) => {
+  const renderItem = useCallback((item: LX.Music.MusicInfo, index: number) => {
     const playableSong = assertApiSupport(item.source)
     const active = nowPlaying.id === item.id
     return (
@@ -687,9 +647,6 @@ export const SonglistDetailScreen = ({
         onPress={() => { handleSongPress(index) }}
         // 原型 pl-layer 歌曲行右侧 ⋯（songRow L307-312，此列表未传 noMenu）
         onMore={() => setMoreMusic(item)}
-        // 行距样式取模块级静态对象（2026-10-15 性能轮）：原先每行每次渲染都现造一个
-        // `{ marginTop }` 字面量，SongRow 的 memo 因样式引用变化而失效，等于整列白重渲染
-        style={index > 0 ? styles.rowGap : undefined}
       />
     )
   }, [assertApiSupport, handleSongPress, nowPlaying.id, nowPlaying.playing])
@@ -819,28 +776,17 @@ export const SonglistDetailScreen = ({
         alpha={PL_LAYER.bgAlpha}
         heightRatio={PL_LAYER.bgHeightRatio}
       />
-      <FlatList
-        // 原型 .pl-layer > * { z-index: 1 }：与 CoverWash 的 z-index:0 成对，
-        // 头部那一排按钮（返回 / 收藏）不再被底纹层挡下点击
+      <FixedWindowList
         style={styles.list}
         data={tracks}
+        rowHeight={PLD_ROW_HEIGHT}
+        rowGap={PLD_ROW_GAP}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ListHeaderComponent={listHeader}
         ListFooterComponent={listFooter}
         onEndReached={handleEndReached}
-        // 触发线与补判口径同一颗常量（见 maybeContinuePaging），2026-10-15 触底补强
-        onEndReachedThreshold={PLD_END_REACHED_THRESHOLD}
-        onContentSizeChange={handleListContentSizeChange}
-        onLayout={handleListLayout}
-        onScrollEndDrag={handleScrollSettle}
-        onMomentumScrollEnd={handleScrollSettle}
-        // LIST_LOAD_LIMIT（core/songlist / core/leaderboard 同为 30）= 平台单 / 榜单单一批的最大条数。
-        // 与 minibar 触发重渲染后虚拟化窗口才"展开"那一类视觉错觉（2026-10-29 互逆复现路径）对症。
-        // local 形态整单在手、条数也不会比平台一批大，同一值通用。
-        initialNumToRender={LIST_LOAD_LIMIT}
-        maxToRenderPerBatch={14}
-        windowSize={9}
+        onEndReachedThreshold={0.4}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={listContentStyle}
       />
@@ -892,9 +838,5 @@ const styles = StyleSheet.create({
    */
   list: {
     zIndex: Z_LAYER.layerContent,
-  },
-  /** .song-list gap:2 的行距（模块级静态，供 renderItem 复用同一引用） */
-  rowGap: {
-    marginTop: SONG_ROW.listGap,
   },
 })

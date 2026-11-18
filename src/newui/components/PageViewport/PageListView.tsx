@@ -1,7 +1,6 @@
 import type { ReactElement } from 'react'
 import { FlatList, StyleSheet, type ListRenderItem, type StyleProp, type ViewStyle } from 'react-native'
 
-import { LIST_LOAD_LIMIT } from '@/core/songlist'
 import { LAYOUT, TAB_BAR } from '@/newui/theme'
 // 直连具体 hook（不走 @/newui/hooks 桶口），与兄弟件 PageViewport 同一做法
 import { useWideLayout } from '@/newui/hooks/useWideLayout'
@@ -100,9 +99,13 @@ export function PageListView<T>({
       ]}
       showsVerticalScrollIndicator={false}
       scrollEventThrottle={16}
-      initialNumToRender={LIST_LOAD_LIMIT}
-      maxToRenderPerBatch={14}
-      windowSize={7}
+      // 歌单卡网格行高动态（宽度随屏宽变），无法 getItemLayout；
+      // VirtualizedList guard 根因已 patch，第一帧 contentLength=0 不会卡死。
+      // initialNumToRender 按视口约 12 行；maxToRenderPerBatch=4 / windowSize=8 对齐旧 UI OnlineList。
+      initialNumToRender={12}
+      maxToRenderPerBatch={4}
+      windowSize={8}
+      removeClippedSubviews={true}
       updateCellsBatchingPeriod={50}
       {...scrollHandlers}
     />

@@ -116,6 +116,8 @@ export default {
         albumMid: item.album?.mid ?? '',
         strMediaMid: item.file.media_mid,
         songmid: item.mid,
+        // 新增（2026-10-15，纯增量字段，不改任何既有字段/行为）：首位歌手 mid，供新 UI 拼官方歌手头像图
+        singerMid: item.singer?.length ? item.singer[0].mid ?? '' : '',
         img: (albumId === '' || albumId === '空')
           ? item.singer?.length ? `https://y.gtimg.cn/music/photo_new/T001R500x500M000${item.singer[0].mid}.jpg` : ''
           : `https://y.gtimg.cn/music/photo_new/T002R500x500M000${albumId}.jpg`,

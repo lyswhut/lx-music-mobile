@@ -1,0 +1,17 @@
+{
+  "_note": "对账白名单：flags 段键 = `件|A|CSS属性` 或 `件|B|CSS属性=数值`，值 = 抑制理由。命中即从输出里消失，但抑制数量在结论行可见。只收「跨端口径不可能逐字」的项；真缺口一律不进来。noInstance 段 = 无实例豁免（粒度 = 单条选择器，理由必须写明原型何处作证；闸门每次运行回查 index.html 的 class/id 属性与 app.js/data.js 正文，一旦原型冒出实例即当场作废并退出码 2）。",
+  "flags": {
+    "mine/stat-row|A|text-align": "RN 无块级 text-align 继承：.stat 的居中由容器 alignItems:center 实现（子 Text 收缩宽即视觉居中），跨端口径近似",
+    "search/sc-top|B|font-weight=650": "650 非 RN 字重档位（iOS UIFontWeight 只认整百，'650' 会掉回 regular），原生化就近取 semibold 600（SearchTop cancelText）",
+    "search/sc-tabs|B|font-weight=750": "750 非 RN 字重档位，原生化就近取 extraBold 800（SearchResultPanel tabLabel，注释已写明 750）",
+    "search/sc-result|B|font-weight=750": "750 非 RN 字重档位，原生化就近取 extraBold 800（SearchResultPanel emptyTitle，注释已写明 750）"
+  },
+  "noInstance": {
+    "radio/episode": {
+      "selectors": [
+        ".wip-tag"
+      ],
+      "reason": "原型自证「样式本体留着、屏上已无实例」：index.html L684「<code>.wip-tag</code> 那枚角标本体留着（样式还在，屏上已经一枚实例都没有——单集屏面包屑上那枚『界面示意』本轮也撤了）」、L768「<code>.wip-tag</code> 的样式本体从退役的 U33 挪到 U84，但屏上已无任何实例——单集屏那枚『界面示意』本轮撤掉，随之删掉 <code>.epl-wip</code> 那条覆盖规则」；件头 parts/radio/episode.css L2 同调（「样式本体 .wip-tag 仍随本件登记，留着备用，屏上已无实例」）。RN 侧凭空造一枚屏上不存在的角标＝自创视觉，所以本条 A/B 都不该对它负责；单集屏只钉屏本体 screens/Radio/EpisodeScreen.tsx，不许拿共通件的数值池凑数。"
+    }
+  }
+}

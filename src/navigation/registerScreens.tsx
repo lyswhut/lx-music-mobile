@@ -24,6 +24,7 @@ import {
 import VersionModal from './components/VersionModal'
 import PactModal from './components/PactModal'
 import SyncModeModal from './components/SyncModeModal'
+import { registerNewUiScreens } from '@/newui/navigation'
 
 function WrappedComponent(Component: any) {
   return function inject(props: Record<string, any>) {
@@ -48,6 +49,9 @@ export default () => {
   Navigation.registerComponent(PACT_MODAL, () => WrappedComponent(PactModal))
   Navigation.registerComponent(SYNC_MODE_MODAL, () => WrappedComponent(SyncModeModal))
   // Navigation.registerComponent(SETTING_SCREEN, () => WrappedComponent(Setting))
+
+  // 新 UI（EchoIsle，落地自 new_design 原型）独立注册，与旧界面并存；启用入口见 @/newui/navigation 的 setNewUiRoot
+  registerNewUiScreens()
 
   console.info('All screens have been registered...')
 }

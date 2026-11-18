@@ -1,9 +1,12 @@
 import { type InitParams, onScriptAction, sendAction, type ResponseParams, type UpdateInfoParams, type RequestParams } from '@/utils/nativeModules/userApi'
 import { log, setUserApiList, setUserApiStatus } from '@/core/userApi'
+import { setApiSource } from '@/core/apiSource'
+import { DEFAULT_USER_API_NAME, DEFAULT_USER_API_URL } from '@/config/constant'
 import settingState from '@/store/setting/state'
 import BackgroundTimer from 'react-native-background-timer'
 import { fetchData } from './request'
-import { getUserApiList } from '@/utils/data'
+import { addUserApi, getUserApiList } from '@/utils/data'
+import { httpFetch } from '@/utils/request'
 import { confirmDialog, openUrl, tipDialog } from '@/utils/tools'
 
 
@@ -252,5 +255,28 @@ export default async(setting: LX.AppSetting) => {
     }
   })
 
+  /**
+   * 默认集成音源：本机没有该脚本时自动拉取安装；当前未选音源（或所选已失效）时激活它。
+   * 非阻塞执行，网络失败只记日志，不影响既有启动链路。
+   */
+  const ensureDefaultUserApi = async() => {
+    try {
+      let list = await getUserApiList()
+      let target = list.find(api => api.name === DEFAULT_USER_API_NAME)
+      if (!target) {
+        const script = await httpFetch(DEFAULT_USER_API_URL).promise.then(resp => resp.body) as string
+        if (typeof script !== 'string' || !script) return
+        target = await addUserApi(script)
+        list = await getUserApiList()
+        setUserApiList(list)
+      }
+      const activeId = settingState.setting['common.apiSource']
+      if (!activeId || !list.some(api => api.id === activeId)) setApiSource(target.id)
+    } catch (err) {
+      log.warn(`default user api init failed: ${(err as Error).message}`)
+    }
+  }
+
   setUserApiList(await getUserApiList())
+  void ensureDefaultUserApi()
 }

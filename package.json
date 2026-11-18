@@ -10,6 +10,7 @@
     "sc": "react-native start --reset-cache",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "test:player": "node --test tests/player-random.test.cjs",
     "rd": "react-devtools",
     "menu": "adb shell input keyevent 82",
     "bundle-android": "react-native bundle --platform android --dev true --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",

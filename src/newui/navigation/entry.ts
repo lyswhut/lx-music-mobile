@@ -215,7 +215,12 @@ const pushPlLayer = (
         options: {
           ...newUiScreenOptions(getCachedNewUiScheme()),
           animations: {
+            // Android 上 elementTransitions 只有同屏带 sharedElementTransitions 时才走转场分支，
+            // 这里单独给会被忽略、落回 RNN 默认的「上滑 + 整层淡入」。默认动画本身没问题，
+            // 但它会和新屏首帧的 React 挂载撞在同一段时间里：等首帧真正画出来再起动画，
+            // 转场就不会在半路被挂载工作卡住（见 SonglistDetail 挂载期延后重内容的配套）。
             push: {
+              waitForRender: true,
               elementTransitions: [
                 {
                   id: contentId,

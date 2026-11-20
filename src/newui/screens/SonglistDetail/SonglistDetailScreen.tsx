@@ -110,6 +110,9 @@ export interface SonglistDetailScreenProps {
 /** 层内分页状态（沿用旧详情页 OnlineList 的四档语义） */
 type LoadStatus = 'loading' | 'idle' | 'end' | 'error'
 
+/** 转场期占位曲目：等本层 appear 之后再换成真数据（见 opened 那段注释） */
+const NO_TRACKS: LX.Music.MusicInfo[] = []
+
 /** 头部展示信息：passProps 先行、平台返回后补齐（合并口径与旧 Header.setInfo 一致） */
 interface DetailHeaderInfo {
   name: string
@@ -166,6 +169,29 @@ export const SonglistDetailScreen = ({
   const { top, bottom } = useSafeArea()
   const { wide, layerPaddingX } = useWideLayout()
   useNewUiSystemBar(componentId)
+
+  /**
+   * 转场期只铺头部（2026-11-20 打开卡顿）。
+   * 上滑转场是原生 300ms 动画，而这一屏首帧就会把「头部 + 首屏约 19 行歌曲 + 毛玻璃迷你条」
+   * 一起挂到原生视图树：每行还有 Art（无图时是 SVG 纹理）与逐曲补图请求，挂载量与转场
+   * 抢同一段 UI 线程，肉眼看到的就是滑到一半顿一下。先只上头部，等 RNN 在转场结束时发
+   * componentDidAppear 再放行曲目与迷你条——转场整段只剩头部一层轻内容。
+   * 兜底计时：转场被系统关闭 / 事件没到（比如动画被禁用）时，也不能让列表一直空着。
+   */
+  const [opened, setOpened] = useState(false)
+  useEffect(() => {
+    let alive = true
+    const reveal = () => { if (alive) setOpened(true) }
+    const subscription = Navigation.events().registerComponentListener({
+      componentDidAppear: reveal,
+    }, componentId)
+    const fallback = setTimeout(reveal, 1200)
+    return () => {
+      alive = false
+      clearTimeout(fallback)
+      subscription.remove()
+    }
+  }, [componentId])
 
   const assertApiSupport = useApiSupport()
   const nowPlaying = useNowPlaying()
@@ -381,10 +407,13 @@ export const SonglistDetailScreen = ({
   }, [isLocal, loadLocalList, loadPage])
 
   const handleEndReached = useCallback(() => {
+    // 转场期列表是空的，内容比视口矮，FixedWindowList 会立刻判成触底；
+    // 这时放行会提前把第 2 页也取回来，等真数据铺上时白白多挂一页
+    if (!opened) return
     if (pageBusyRef.current) return
     if (status === 'loading' || status === 'end') return
     loadNext()
-  }, [loadNext, status])
+  }, [loadNext, opened, status])
 
   // 歌曲行行高 = paddingY×2(14) + 封面 46 + 根节点上下各 1px 透明描边(2，占位防跳动) = 62；
   // 行间距 listGap 2。FixedWindowList 按这两个值解析算位（第 i 行顶边 = i×(行高+行距)），
@@ -728,12 +757,15 @@ export const SonglistDetailScreen = ({
   // 短单子也如实收尾，不留「对着空白猜还在不在加载」的列表尾）。这一档现在有两个来源：
   // 取回末页时成功回调直接写 end；本屏判到「没有下一页」时 loadNext 也显式补一次 end（2026-10-28 第 3 条）。
   // error（已载过首批）：裸文字可点的重试行（brand + 700），点一下接着取同一页。
+  // 转场期曲目被扣着不渲染，页脚一律按「正在载入」显示：
+  // 否则本地歌单（缓存秒回、status 已是 end）会在空列表下先闪一句「没有更多了」
+  const listStatus = opened ? status : 'loading'
   const listFooter = (
     <View>
-      {status === 'loading' && (
+      {listStatus === 'loading' && (
         <PagingStatus disabled loading text={NEW_UI_PLD_STATUS.loading} />
       )}
-      {status === 'end' &&
+      {listStatus === 'end' &&
         (tracks.length
           ? (
             <>
@@ -748,7 +780,7 @@ export const SonglistDetailScreen = ({
           // 内置「我喜欢」说清去哪收；自建单被搬空，引导去「⋯」里加歌；
           // 收藏 / 平台单 / 榜单是平台侧给的就空，如实请换一份
           : <EmptyTip variant="layer" text={NEW_UI_PLD_EMPTY_BY_OWNER[owner]} />)}
-      {status === 'error' &&
+      {listStatus === 'error' &&
         (tracks.length
           ? (
             // 下一页失败：不靠滚动触底反复撞墙（触底也可能撞上来），给点按重试
@@ -778,7 +810,7 @@ export const SonglistDetailScreen = ({
       />
       <FixedWindowList
         style={styles.list}
-        data={tracks}
+        data={opened ? tracks : NO_TRACKS}
         rowHeight={PLD_ROW_HEIGHT}
         rowGap={PLD_ROW_GAP}
         renderItem={renderItem}
@@ -792,7 +824,8 @@ export const SonglistDetailScreen = ({
       />
       {/* 常驻迷你播放条：本层默认磁吸圆点（原型 miniPageSnapped：不在首页就是圆点）。
           排在单曲面板与提示胶囊之前——圆点压在推入层内容之上，弹层（sheet 80）与胶囊（90）仍盖过它 */}
-      <MinibarHost componentId={componentId} bottomInset={bottom} defaultSnapped />
+      {/* 迷你条要挂 BlurView（挂载即做一次模糊采样），同样挪到转场结束后再上 */}
+      {opened ? <MinibarHost componentId={componentId} bottomInset={bottom} defaultSnapped /> : null}
       {/* 单曲操作面板（原型 #moreSheet）：与主屏同一组件，本屏行内 ⋯ 的目标曲在这里。
           自建 / 本地形态（isHostLocalList）额外把宿主单报给它，面板据此插「从「该单」移出」一行
           （件 U76 需求 2）；平台歌单 / 榜单 / 内置「我喜欢」不传，那一行就不出现 */}

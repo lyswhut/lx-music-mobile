@@ -48,15 +48,15 @@ export const NewUiToastHost = ({ bottomInset = 0 }: NewUiToastHostProps) => {
       toValue: 1,
       duration: TOAST.animDuration,
       easing: EASE,
-      // opacity + translateY 共用这条 JS 驱动的 progress（与 Sheet 骨架同口径，不混用 native driver）
-      useNativeDriver: false,
+      // opacity + translateY 都是 native 可驱动属性，走原生驱动避免 JS 帧抖动
+      useNativeDriver: true,
     }).start()
     hideTimerRef.current = setTimeout(() => {
       Animated.timing(progress, {
         toValue: 0,
         duration: TOAST.animDuration,
         easing: EASE,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }).start(({ finished }) => {
         // 退场播完且期间没有新提示覆盖时才清内容（finished=false = 被新的进场打断，不清）
         if (finished) setMessage(null)

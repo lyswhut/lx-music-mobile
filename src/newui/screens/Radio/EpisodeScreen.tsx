@@ -21,7 +21,7 @@ import {
   NEW_UI_POD_EP_TXT,
   newUiPodRateLabel,
 } from '@/newui/const/radioDetail'
-import { useNewUiSystemBar, useSafeArea, useWideLayout } from '@/newui/hooks'
+import { useLayerAppeared, useNewUiSystemBar, useSafeArea, useWideLayout } from '@/newui/hooks'
 import {
   type PodEpisodeSource,
   getPodPlayerSnapshot,
@@ -124,6 +124,8 @@ export const EpisodeScreen = ({
   const { top, bottom } = useSafeArea()
   const { wide, layerPaddingX } = useWideLayout()
   useNewUiSystemBar(componentId)
+  // 毛玻璃迷你条等入场后再挂，避免首帧模糊采样与推入转场抢帧（同 SonglistDetail）
+  const appeared = useLayerAppeared(componentId)
 
   const progress = usePodProgress()
   const player = usePodPlayer()
@@ -454,7 +456,7 @@ export const EpisodeScreen = ({
           `epLive() && epLayer.show` → `.is-away`）：这一屏本身就是这一集的播放器，
           再浮一颗条就多出第二个「正在播放」。判据就是本屏的 `ownsQueue`（同一集、且队列归它），
           所以换成歌在放时这条照旧在（它画的是那首歌，不是这一集）。 */}
-      <MinibarHost componentId={componentId} bottomInset={bottom} defaultSnapped away={ownsQueue} />
+      {appeared ? <MinibarHost componentId={componentId} bottomInset={bottom} defaultSnapped away={ownsQueue} /> : null}
       {/*
         提示胶囊的承接位（共通件，主屏 / 播放页 / 详情层 / 搜索层各挂一台的同一口径）。
         本屏必须有这一台：投递方在本屏之下——`podcast/podPlayer.ts` 那道「定时停止播放开着就不起播」的闸

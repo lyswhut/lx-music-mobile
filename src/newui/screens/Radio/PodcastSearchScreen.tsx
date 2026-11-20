@@ -36,7 +36,7 @@ import {
   newUiPodSearchEmptyTitle,
   newUiPodSearchHint,
 } from '@/newui/const/radioSearch'
-import { useNewUiSystemBar, useSafeArea, useWideLayout } from '@/newui/hooks'
+import { useLayerAppeared, useNewUiSystemBar, useSafeArea, useWideLayout } from '@/newui/hooks'
 // 直连 entry 而非 '@/newui/navigation' 桶口：避免 navigation/index → register → screens → 本文件的循环引用
 import { pushNewUiPodcastDetail } from '@/newui/navigation/entry'
 import { CONTROL, FONT_SIZE, FONT_WEIGHT, MOTION, SEARCH, useTheme } from '@/newui/theme'
@@ -85,6 +85,8 @@ export const PodcastSearchScreen = ({ componentId }: PodcastSearchScreenProps) =
   // 件内已接 `wide?.statusReserve`，见 SearchTop.tsx:64），所以 `wide` 不在这里读
   const { layerPaddingX } = useWideLayout()
   useNewUiSystemBar(componentId)
+  // 毛玻璃迷你条等入场后再挂，避免首帧模糊采样与推入转场抢帧（同 SonglistDetail）
+  const appeared = useLayerAppeared(componentId)
 
   const {
     keyword,
@@ -345,7 +347,7 @@ export const PodcastSearchScreen = ({ componentId }: PodcastSearchScreenProps) =
       </Animated.ScrollView>
       {/* 常驻迷你播放条：本层默认磁吸圆点（原型 miniPageSnapped：不在首页就是圆点）。
           挂在滚动轴之后、屏幕根层最后——圆点浮在内容之上，弹层与提示胶囊仍压在它上面 */}
-      <MinibarHost componentId={componentId} bottomInset={bottom} defaultSnapped />
+      {appeared ? <MinibarHost componentId={componentId} bottomInset={bottom} defaultSnapped /> : null}
     </View>
   )
 }

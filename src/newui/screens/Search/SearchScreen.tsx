@@ -21,6 +21,7 @@ import {
 } from '@/newui/const'
 import {
   useApiSupport,
+  useLayerAppeared,
   useNewUiSystemBar,
   useNowPlaying,
   useSafeArea,
@@ -65,6 +66,8 @@ export const SearchScreen = ({ componentId }: SearchScreenProps) => {
   // 切 tab 时盒子不跳；竖屏档 boxStyle 是 undefined = 不写任何宽样式（零变化）
   const { boxStyle } = useWideLayout()
   useNewUiSystemBar(componentId)
+  // 毛玻璃迷你条等入场后再挂，避免首帧模糊采样与推入转场抢帧（同 SonglistDetail）
+  const appeared = useLayerAppeared(componentId)
 
   const assertApiSupport = useApiSupport()
   const nowPlaying = useNowPlaying()
@@ -331,7 +334,7 @@ export const SearchScreen = ({ componentId }: SearchScreenProps) => {
       )}
       {/* 常驻迷你播放条：本层默认磁吸圆点（原型 miniPageSnapped：不在首页就是圆点）。
           排在单曲面板与提示胶囊之前——圆点浮在搜索结果之上，弹层与胶囊仍盖过它 */}
-      <MinibarHost componentId={componentId} bottomInset={bottom} defaultSnapped />
+      {appeared ? <MinibarHost componentId={componentId} bottomInset={bottom} defaultSnapped /> : null}
       {/* 单曲操作面板（原型 #moreSheet）：本屏搜索结果行的 ⋯ 目标曲在这里 */}
       <MoreSheet
         visible={moreMusic != null}

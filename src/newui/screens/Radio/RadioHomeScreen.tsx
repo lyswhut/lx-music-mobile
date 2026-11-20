@@ -35,7 +35,7 @@ import {
   type PodShowRow,
   type PodSubEntry,
 } from '@/newui/podcast'
-import { useNewUiSystemBar, usePressFx, useSafeArea, useWideLayout } from '@/newui/hooks'
+import { useLayerAppeared, useNewUiSystemBar, usePressFx, useSafeArea, useWideLayout } from '@/newui/hooks'
 // 直连 entry 而非 '@/newui/navigation' 桶口：避免 navigation/index → register → screens → 本文件的循环引用
 import { pushNewUiPodcastDetail, pushNewUiPodcastSearch } from '@/newui/navigation/entry'
 import {
@@ -91,6 +91,8 @@ export const RadioHomeScreen = ({ componentId }: RadioHomeScreenProps) => {
   const { top, bottom } = useSafeArea()
   const { wide, layerPaddingX } = useWideLayout()
   useNewUiSystemBar(componentId)
+  // 毛玻璃迷你条等入场后再挂，避免首帧模糊采样与推入转场抢帧（同 SonglistDetail）
+  const appeared = useLayerAppeared(componentId)
 
   // 每次进这一屏都固定在默认区（原型 POD_REGION_DEFAULT，index.html L760），不记上次区
   const [country, setCountry] = useState(NEW_UI_POD_REGION_DEFAULT)
@@ -333,7 +335,7 @@ export const RadioHomeScreen = ({ componentId }: RadioHomeScreenProps) => {
 
       {/* 常驻迷你播放条：本层默认磁吸圆点（原型 miniPageSnapped：不在首页就是圆点）。
           排在地区抽屉与提示胶囊之前——圆点浮在榜列内容之上，抽屉面板仍盖过它 */}
-      <MinibarHost componentId={componentId} bottomInset={bottom} defaultSnapped />
+      {appeared ? <MinibarHost componentId={componentId} bottomInset={bottom} defaultSnapped /> : null}
       {/* U85 地区抽屉：屏内 absolute-fill 覆盖层，不走 RNN Modal / 新路由（Sheet.tsx 头注口径） */}
       <PodRegionSheet
         visible={regionSheetVisible}

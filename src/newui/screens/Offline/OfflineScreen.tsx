@@ -10,6 +10,7 @@ import { PlTop } from '@/newui/components/PlTop'
 import { SongRow } from '@/newui/components/SongRow'
 import { NEW_UI_OFFLINE, QUALITY_LABEL } from '@/newui/const'
 import {
+  useLayerAppeared,
   useMyPlaylists,
   useNewUiSystemBar,
   useNowPlaying,
@@ -54,6 +55,8 @@ export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
   const { top, bottom } = useSafeArea()
   const { wide, layerPaddingX } = useWideLayout()
   useNewUiSystemBar(componentId)
+  // 毛玻璃迷你条等入场后再挂，避免首帧模糊采样与推入转场抢帧（同 SonglistDetail）
+  const appeared = useLayerAppeared(componentId)
 
   const myLists = useMyPlaylists()
   const offline = useOfflineCache(myLists)
@@ -193,7 +196,7 @@ export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
       />
       {/* 常驻迷你播放条：本层默认磁吸圆点（原型 miniPageSnapped：不在首页就是圆点）。
           挂在轴之后、屏幕根层最后——圆点浮在列表内容之上 */}
-      <MinibarHost componentId={componentId} bottomInset={bottom} defaultSnapped />
+      {appeared ? <MinibarHost componentId={componentId} bottomInset={bottom} defaultSnapped /> : null}
     </View>
   )
 }

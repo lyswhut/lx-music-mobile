@@ -134,6 +134,12 @@ export function Sheet<T = unknown>({
   const { height: windowHeight } = useWindowDimensions()
   // 退场动画播完前保持挂载（对齐原型 visibility 延迟 .42s）
   const [mounted, setMounted] = useState(visible)
+  /**
+   * 遮罩是**整屏面积**的模糊，挂载即要做一次全屏截图 + RenderScript 模糊。
+   * 浮层打开时它正好和入场位移撞在同一帧，容易把 400ms 位移拖出掉帧；延到入场动画
+   * 播完再挂——染色层（.55 黑）从头就在，模糊晚到 400ms 在深色遮罩上几乎看不出来。
+   */
+  const [blurReady, setBlurReady] = useState(false)
   const progress = useMemo(() => new Animated.Value(visible ? 1 : 0), []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -142,13 +148,25 @@ export function Sheet<T = unknown>({
       toValue: visible ? 1 : 0,
       duration: visible ? SHEET.bodyDuration : SHEET.exitDuration,
       easing: EASE,
-      useNativeDriver: false, // 与遮罩 opacity、体贴 maxHeight 共用一条 JS 驱动 progress，不混用 native driver
+      // 位移与遮罩 opacity 都是 native 可驱动的属性（maxHeight 是静态样式，不参与动画），
+      // 走原生驱动后开关浮层不再依赖 JS 帧，列表内容挂载也不会把位移拖慢
+      useNativeDriver: true,
     })
     animation.start(({ finished }) => {
       if (!visible && finished) setMounted(false)
     })
     return () => animation.stop()
   }, [visible, progress])
+
+  // 遮罩模糊延后到入场结束；退场期间保持（此时撤模糊会看到背景瞬间变清），播完再复位
+  useEffect(() => {
+    if (!visible) {
+      const timer = setTimeout(() => setBlurReady(false), SHEET.exitDuration)
+      return () => clearTimeout(timer)
+    }
+    const timer = setTimeout(() => setBlurReady(true), SHEET.bodyDuration)
+    return () => clearTimeout(timer)
+  }, [visible])
 
   // Android 物理返回键：浮层开着时先收浮层（原型 data-close 的等价路径）
   useEffect(() => {
@@ -269,7 +287,7 @@ export function Sheet<T = unknown>({
           一并糊进模糊像、等效加深两层），故 BlurView 在前（下）、染色层在后（上）；
           原生模块未注册时只渲染染色层 = 与改造前「纯半透明黑」逐像素一致，天然降级。 */}
       <Animated.View style={[styles.mask, { opacity: progress }]}>
-        {blurNativeRegistered && (
+        {blurNativeRegistered && blurReady && (
           <BlurView
             style={StyleSheet.absoluteFill}
             blurAmount={SHEET.maskBlur}

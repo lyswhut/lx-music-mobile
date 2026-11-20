@@ -18,7 +18,7 @@ import {
   NEW_UI_POD_DETAIL_TXT,
   NEW_UI_POD_RESUME_MIN_LEFT_SEC,
 } from '@/newui/const/radioDetail'
-import { useNewUiSystemBar, useSafeArea, useWideLayout } from '@/newui/hooks'
+import { useLayerAppeared, useNewUiSystemBar, useSafeArea, useWideLayout } from '@/newui/hooks'
 // 直连 entry 而非 '@/newui/navigation' 桶口：避免 navigation/index → register → screens → 本文件的循环引用
 import { pushNewUiEpisode } from '@/newui/navigation/entry'
 import {
@@ -80,6 +80,8 @@ export const PodcastDetailScreen = ({ componentId, show }: PodcastDetailScreenPr
   const { top, bottom } = useSafeArea()
   const { wide, layerPaddingX } = useWideLayout()
   useNewUiSystemBar(componentId)
+  // 毛玻璃迷你条等入场后再挂，避免首帧模糊采样与推入转场抢帧（同 SonglistDetail）
+  const appeared = useLayerAppeared(componentId)
 
   const showId = show.id
   const detail = usePodcastDetail(showId)
@@ -356,7 +358,7 @@ export const PodcastDetailScreen = ({ componentId, show }: PodcastDetailScreenPr
       />
       {/* 常驻迷你播放条：本层默认磁吸圆点（原型 miniPageSnapped：不在首页就是圆点）。
           挂在轴之后、屏幕根层最后——圆点浮在单集列表之上 */}
-      <MinibarHost componentId={componentId} bottomInset={bottom} defaultSnapped />
+      {appeared ? <MinibarHost componentId={componentId} bottomInset={bottom} defaultSnapped /> : null}
     </View>
   )
 }

@@ -71,6 +71,7 @@ import {
 } from '@/newui/const'
 import {
   useApiSupport,
+  useLayerAppeared,
   useMyPlaylists,
   useNewUiSystemBar,
   useNowPlaying,
@@ -171,27 +172,10 @@ export const SonglistDetailScreen = ({
   useNewUiSystemBar(componentId)
 
   /**
-   * 转场期只铺头部（2026-11-20 打开卡顿）。
-   * 上滑转场是原生 300ms 动画，而这一屏首帧就会把「头部 + 首屏约 19 行歌曲 + 毛玻璃迷你条」
-   * 一起挂到原生视图树：每行还有 Art（无图时是 SVG 纹理）与逐曲补图请求，挂载量与转场
-   * 抢同一段 UI 线程，肉眼看到的就是滑到一半顿一下。先只上头部，等 RNN 在转场结束时发
-   * componentDidAppear 再放行曲目与迷你条——转场整段只剩头部一层轻内容。
-   * 兜底计时：转场被系统关闭 / 事件没到（比如动画被禁用）时，也不能让列表一直空着。
+   * 转场期只铺头部（2026-11-20 打开卡顿）：首帧把「头部 + 首屏约 19 行歌曲 + 毛玻璃
+   * 迷你条」一起挂上原生视图树，会和入场转场抢 UI 线程帧。等本层 appear 后再放行。
    */
-  const [opened, setOpened] = useState(false)
-  useEffect(() => {
-    let alive = true
-    const reveal = () => { if (alive) setOpened(true) }
-    const subscription = Navigation.events().registerComponentListener({
-      componentDidAppear: reveal,
-    }, componentId)
-    const fallback = setTimeout(reveal, 1200)
-    return () => {
-      alive = false
-      clearTimeout(fallback)
-      subscription.remove()
-    }
-  }, [componentId])
+  const opened = useLayerAppeared(componentId)
 
   const assertApiSupport = useApiSupport()
   const nowPlaying = useNowPlaying()

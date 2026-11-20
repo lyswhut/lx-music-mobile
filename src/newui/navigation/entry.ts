@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native'
+import { Dimensions, Platform } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 
 import type { ListInfoItem } from '@/store/songlist/state'
@@ -117,28 +117,59 @@ export const pushNewUiPlayer = (componentId: string) => {
         options: {
           ...newUiScreenOptions(getCachedNewUiScheme()),
           animations: {
-            push: {
-              elementTransitions: [
-                {
-                  id: 'newui.player.content',
-                  translationY: {
-                    from: height,
-                    duration: PLAYER.enterDuration,
+            // Android 上 elementTransitions 只有同屏带 sharedElementTransitions 时才走元素
+            // 转场分支，单独给会被忽略、落回 RNN 默认的「整层上滑 + 淡入」。这里在 Android
+            // 显式写成整层纯平移：方向与当前观感一致（自下而上），但去掉整层 alpha 合成。
+            // waitForRender：等新屏首帧画出来再起动画，避免播放页重内容挂载和转场抢帧。
+            push: Platform.OS === 'android'
+              ? {
+                  waitForRender: true,
+                  content: {
+                    enter: {
+                      translationY: {
+                        from: height,
+                        duration: PLAYER.enterDuration,
+                        // 原型 .player-layer 走 --ease（ease-out）；不写这条时 RNN 会落成线性
+                        interpolation: { type: 'decelerate' },
+                      },
+                    },
                   },
+                }
+              : {
+                  waitForRender: true,
+                  elementTransitions: [
+                    {
+                      id: 'newui.player.content',
+                      translationY: {
+                        from: height,
+                        duration: PLAYER.enterDuration,
+                      },
+                    },
+                  ],
                 },
-              ],
-            },
-            pop: {
-              elementTransitions: [
-                {
-                  id: 'newui.player.content',
-                  translationY: {
-                    to: height,
-                    duration: PLAYER.enterDuration,
+            pop: Platform.OS === 'android'
+              ? {
+                  content: {
+                    exit: {
+                      translationY: {
+                        to: height,
+                        duration: PLAYER.enterDuration,
+                        interpolation: { type: 'decelerate' },
+                      },
+                    },
                   },
+                }
+              : {
+                  elementTransitions: [
+                    {
+                      id: 'newui.player.content',
+                      translationY: {
+                        to: height,
+                        duration: PLAYER.enterDuration,
+                      },
+                    },
+                  ],
                 },
-              ],
-            },
           },
         },
       },
@@ -154,35 +185,64 @@ export const pushNewUiPlayer = (componentId: string) => {
  */
 export const pushNewUiSearch = (componentId: string) => {
   return guardedPush(NEW_UI_SEARCH_SCREEN, async() => {
-    const { width } = Dimensions.get('window')
+    const { width, height } = Dimensions.get('window')
     return Navigation.push(componentId, {
       component: {
         name: NEW_UI_SEARCH_SCREEN,
         options: {
           ...newUiScreenOptions(getCachedNewUiScheme()),
           animations: {
-            push: {
-              elementTransitions: [
-                {
-                  id: 'newui.search.content',
-                  translationX: {
-                    from: width,
-                    duration: SEARCH.enterDuration,
+            // Android 同播放页：elementTransitions 不与 sharedElementTransitions 同用时会被
+            // 忽略，实际一直走 RNN 默认的整层上滑。这里落成纯平移并去掉 alpha；
+            // 方向保持当前观感（自下而上），避免性能改动顺带改变导航动效。
+            push: Platform.OS === 'android'
+              ? {
+                  waitForRender: true,
+                  content: {
+                    enter: {
+                      translationY: {
+                        from: height,
+                        duration: SEARCH.enterDuration,
+                        interpolation: { type: 'decelerate' },
+                      },
+                    },
                   },
+                }
+              : {
+                  waitForRender: true,
+                  elementTransitions: [
+                    {
+                      id: 'newui.search.content',
+                      translationX: {
+                        from: width,
+                        duration: SEARCH.enterDuration,
+                      },
+                    },
+                  ],
                 },
-              ],
-            },
-            pop: {
-              elementTransitions: [
-                {
-                  id: 'newui.search.content',
-                  translationX: {
-                    to: width,
-                    duration: SEARCH.enterDuration,
+            pop: Platform.OS === 'android'
+              ? {
+                  content: {
+                    exit: {
+                      translationY: {
+                        to: height,
+                        duration: SEARCH.enterDuration,
+                        interpolation: { type: 'decelerate' },
+                      },
+                    },
                   },
+                }
+              : {
+                  elementTransitions: [
+                    {
+                      id: 'newui.search.content',
+                      translationX: {
+                        to: width,
+                        duration: SEARCH.enterDuration,
+                      },
+                    },
+                  ],
                 },
-              ],
-            },
           },
         },
       },
@@ -207,7 +267,7 @@ const pushPlLayer = (
   lockId?: string,
 ) => {
   return guardedPush(name, async() => {
-    const { width } = Dimensions.get('window')
+    const { width, height } = Dimensions.get('window')
     return Navigation.push(componentId, {
       component: {
         name,
@@ -216,32 +276,57 @@ const pushPlLayer = (
           ...newUiScreenOptions(getCachedNewUiScheme()),
           animations: {
             // Android 上 elementTransitions 只有同屏带 sharedElementTransitions 时才走转场分支，
-            // 这里单独给会被忽略、落回 RNN 默认的「上滑 + 整层淡入」。默认动画本身没问题，
-            // 但它会和新屏首帧的 React 挂载撞在同一段时间里：等首帧真正画出来再起动画，
-            // 转场就不会在半路被挂载工作卡住（见 SonglistDetail 挂载期延后重内容的配套）。
-            push: {
-              waitForRender: true,
-              elementTransitions: [
-                {
-                  id: contentId,
-                  translationX: {
-                    from: width,
-                    duration: PL_LAYER.enterDuration,
+            // 单独给会被忽略、落回 RNN 默认的「上滑 + 整层淡入」。这里在 Android 显式写成整层
+            // 纯平移（去掉 alpha），方向保持当前观感；waitForRender 让新屏首帧先画完再起动画，
+            // 避免挂载与转场抢帧（屏内的重内容延后见 useLayerAppeared）。
+            push: Platform.OS === 'android'
+              ? {
+                  waitForRender: true,
+                  content: {
+                    enter: {
+                      translationY: {
+                        from: height,
+                        duration: PL_LAYER.enterDuration,
+                        interpolation: { type: 'decelerate' },
+                      },
+                    },
                   },
+                }
+              : {
+                  waitForRender: true,
+                  elementTransitions: [
+                    {
+                      id: contentId,
+                      translationX: {
+                        from: width,
+                        duration: PL_LAYER.enterDuration,
+                      },
+                    },
+                  ],
                 },
-              ],
-            },
-            pop: {
-              elementTransitions: [
-                {
-                  id: contentId,
-                  translationX: {
-                    to: width,
-                    duration: PL_LAYER.enterDuration,
+            pop: Platform.OS === 'android'
+              ? {
+                  content: {
+                    exit: {
+                      translationY: {
+                        to: height,
+                        duration: PL_LAYER.enterDuration,
+                        interpolation: { type: 'decelerate' },
+                      },
+                    },
                   },
+                }
+              : {
+                  elementTransitions: [
+                    {
+                      id: contentId,
+                      translationX: {
+                        to: width,
+                        duration: PL_LAYER.enterDuration,
+                      },
+                    },
+                  ],
                 },
-              ],
-            },
           },
         },
       },

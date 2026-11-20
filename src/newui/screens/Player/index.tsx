@@ -47,6 +47,7 @@ import {
   useApiSourceName,
   useDesktopLyricToggle,
   useFavoriteToggle,
+  useLayerAppeared,
   useNewUiSystemBar,
   usePlayQueue,
   useSafeArea,
@@ -89,6 +90,9 @@ export const PlayerScreen = ({ componentId }: PlayerScreenProps) => {
   const theme = useTheme()
   const { top, bottom } = useSafeArea()
   useNewUiSystemBar(componentId)
+  // 唱盘自转是 JS 驱动的 60fps 动画（还要逐帧回读给唱针用），
+  // 入场转场期间先不起，等本层 appear 后再转，避免和转场抢帧。
+  const appeared = useLayerAppeared(componentId)
 
   // —— 真实数据（只读复用）——
   const musicInfo = usePlayerMusicInfo()
@@ -240,7 +244,7 @@ export const PlayerScreen = ({ componentId }: PlayerScreenProps) => {
               </Text>
             )
           ) : musicInfo.id ? (
-            <DiscArt playing={playing} artSeed={artSeed} artUri={musicInfo.pic ?? undefined} />
+            <DiscArt playing={playing && appeared} artSeed={artSeed} artUri={musicInfo.pic ?? undefined} />
           ) : (
             <Text style={[styles.emptyLyric, { color: theme.colors.text3 }]}>
               {NEW_UI_PLAYER_NO_SONG}

@@ -44,6 +44,4 @@ export const registerNewUiScreens = () => {
   Navigation.registerComponent(NEW_UI_OFFLINE_SCREEN, () => withNewUiProviders(OfflineScreen))
   // 欢迎屏底色/文字跟随主题，需包 ThemeProvider（与其余屏同一套 wrapper）
   Navigation.registerComponent(NEW_UI_WELCOME_SCREEN, () => withNewUiProviders(WelcomeScreen))
-
-  console.info('New UI screens have been registered...')
 }

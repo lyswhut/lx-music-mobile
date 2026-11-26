@@ -1,7 +1,8 @@
 import { useCallback, useMemo, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-import { setApiSource } from '@/core/apiSource'
+import { USER_API_SCRIPT_MAX_SIZE } from '@/config/constant'
+import { refreshApiSource, setApiSource } from '@/core/apiSource'
 import { updateSetting } from '@/core/common'
 import { pause } from '@/core/player/player'
 import { removeUserApi } from '@/core/userApi'
@@ -72,9 +73,9 @@ const readCovered = (): Partial<Record<LX.OnlineSource, LX.Quality[]>> => {
 }
 
 /**
- * 音源设置浮层：已安装音源列表（切源 = setApiSource）/ 内容平台选择 / 音质 / 导入（URL 或本机文件）。
- * 平台覆盖与档位读 global.lx.qualityList；音质列整档表，不支持的档降显但可点说明，
- * 实际降档交给播放核心 getPlayQuality，切源不替用户改音质 / 内容平台。
+ * 音源设置浮层：已安装音源列表（切源 / 刷新 / 移除）/ 内容平台 / 音质 / 导入。
+ * 平台覆盖与档位读 global.lx.qualityList；不支持的档降显但可点说明，
+ * 降档交给播放核心，切源不替用户改音质 / 内容平台。
  */
 
 /** 一行已安装音源在屏上要说的三样（标签 / 档位 / 说明），派生一次即供排序与渲染共用 */
@@ -116,7 +117,7 @@ export const SourceSheet = ({ visible, onClose, bottomInset }: SourceSheetProps)
   // 订阅 apiSourceUpdated：启动加载完成 / 用户切源 → 覆盖表与档位整层重算
   const tick = useApiSourceTick()
 
-  const covered = useMemo(() => readCovered(), [tick]) // eslint-disable-line react-hooks/exhaustive-deps
+  const covered = useMemo(() => readCovered(), [tick, apiStatus]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // 当前音源真实支持的档位 = 覆盖平台档位并集，按 QUALITY_ORDER 从低到高
   const supportedQualities = useMemo(() => {
@@ -205,6 +206,22 @@ export const SourceSheet = ({ visible, onClose, bottomInset }: SourceSheetProps)
     setApiSource(item.id)
     void announceSwitch(item.name, item.version)
   }, [announceSwitch, apiSource])
+
+  /* ---- 行尾刷新：只给带缓存链接的音源；一次只让一份在飞 ---- */
+  const [refreshingId, setRefreshingId] = useState<string | null>(null)
+
+  const handleRefresh = useCallback(async(item: LX.UserApi.UserApiInfo) => {
+    if (refreshingId != null || apiStatus.message === 'initing') return
+    setRefreshingId(item.id)
+    try {
+      const info = await refreshApiSource(item.id)
+      showNewUiToast(NEW_UI_SHEET_SOURCE.refreshed(info.name))
+    } catch (err: any) {
+      showNewUiToast(NEW_UI_SHEET_SOURCE.refreshErr(String(err?.message ?? err)))
+    } finally {
+      setRefreshingId(null)
+    }
+  }, [apiStatus.message, refreshingId])
 
   /* ---- 行尾移除 ---- */
   // 待移除的那一份：非 null 即拉开 ConfirmSheet
@@ -303,12 +320,12 @@ export const SourceSheet = ({ visible, onClose, bottomInset }: SourceSheetProps)
     try {
       const script = await httpFetch(url).promise.then(resp => resp.body) as string
       // 体积上限 9MB，防抓到整页 HTML
-      if (script.length > 9_000_000) {
+      if (script.length > USER_API_SCRIPT_MAX_SIZE) {
         setImportErr(NEW_UI_SHEET_SOURCE.importErrTooLarge)
         return
       }
       // 成败 toast 由 handleImportScript 内部包办；列表经 list_changed 自动刷新
-      await handleImportScript(script)
+      await handleImportScript(script, url)
       setImportUrl('')
       setFoldOverride(false)
     } catch (err: any) {
@@ -392,6 +409,10 @@ export const SourceSheet = ({ visible, onClose, bottomInset }: SourceSheetProps)
               stateTone={theme.colors[SOURCE_STATE_TONE[stateKey]]}
               active={isActive}
               onPress={() => handlePickScript(item)}
+              // 刷新钮只给链接导入的音源；本机导入没有链接，保持原样
+              onRefresh={item.importUrl ? () => { void handleRefresh(item) } : undefined}
+              refreshAriaLabel={NEW_UI_SHEET_SOURCE.refreshAria(item.name)}
+              refreshing={refreshingId === item.id}
               // 移除钮只在这份音源列表出现，平台 / 音质两组不传
               onRemove={() => setRemoveTarget(item)}
               removeAriaLabel={NEW_UI_SHEET_SOURCE.removeAria(item.name)}

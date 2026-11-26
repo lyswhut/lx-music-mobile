@@ -56,6 +56,14 @@ export interface OptionRowProps {
   onRemove?: () => void
   /** 移除钮的无障碍名（文案由容器给） */
   removeAriaLabel?: string
+  /**
+   * 行尾刷新钮：按下只触发它自己；仅在有缓存导入链接时由容器传入。
+   */
+  onRefresh?: () => void
+  /** 刷新钮的无障碍名（文案由容器给） */
+  refreshAriaLabel?: string
+  /** 刷新进行中：禁用按钮并降透明度，避免重复点 */
+  refreshing?: boolean
   onPress?: () => void
   style?: StyleProp<ViewStyle>
 }
@@ -98,6 +106,9 @@ export const OptionRow = memo(
     warn = false,
     onRemove,
     removeAriaLabel,
+    onRefresh,
+    refreshAriaLabel,
+    refreshing = false,
     onPress,
     style,
   }: OptionRowProps) => {
@@ -107,6 +118,7 @@ export const OptionRow = memo(
     const pressFx = usePressFx({ scale: OPTION_ROW.pressScale })
     // 移除钮按压缩放；字色转 dangerInk 仍走 pressed 分支，不做颜色补间
   const delFx = usePressFx({ scale: OR_DEL.pressScale })
+    const refreshFx = usePressFx({ scale: OR_DEL.pressScale })
     return (
       <AnimatedPressable
         accessibilityRole="button"
@@ -178,6 +190,29 @@ export const OptionRow = memo(
             <View style={[styles.stateDot, { backgroundColor: tone }]} />
             <Text style={[styles.stateText, { color: tone }]}>{stateLabel}</Text>
           </View>
+        ) : null}
+        {onRefresh ? (
+          /* 刷新钮常态 text-3；进行中禁用，避免同一份重复抓取 */
+          <AnimatedPressable
+            accessibilityRole="button"
+            accessibilityLabel={refreshAriaLabel}
+            disabled={refreshing}
+            onPress={e => { e.stopPropagation(); onRefresh() }}
+            onPressIn={refreshFx.onPressIn}
+            onPressOut={refreshFx.onPressOut}
+            hitSlop={OR_DEL.hitSlop}
+            style={[
+              styles.del,
+              {
+                backgroundColor: theme.colors.fill2,
+                borderColor: theme.colors.hairline,
+                opacity: refreshing ? OPTION_ROW.offAlpha : 1,
+              },
+              refreshFx.animatedStyle,
+            ]}
+          >
+            <Icon name="refresh" size={OR_DEL.iconSize} color={theme.colors.text3} />
+          </AnimatedPressable>
         ) : null}
         {onRemove ? (
           /* 移除钮常态 text-3，按下才转 dangerInk，不做常驻红钮 */

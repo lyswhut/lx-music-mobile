@@ -1,7 +1,9 @@
+import { USER_API_SCRIPT_MAX_SIZE } from '@/config/constant'
 import { action, state } from '@/store/userApi'
-import { addUserApi, getUserApiScript, removeUserApi as removeUserApiFromStore, setUserApiAllowShowUpdateAlert as setUserApiAllowShowUpdateAlertFromStore } from '@/utils/data'
+import { addUserApi, getUserApiScript, removeUserApi as removeUserApiFromStore, setUserApiAllowShowUpdateAlert as setUserApiAllowShowUpdateAlertFromStore, updateUserApiScript } from '@/utils/data'
 import { destroy, loadScript } from '@/utils/nativeModules/userApi'
 import { log as writeLog } from '@/utils/log'
+import { httpFetch } from '@/utils/request'
 
 
 export const setUserApi = async(apiId: string) => {
@@ -27,9 +29,20 @@ export const setUserApiList: typeof action['setUserApiList'] = (list) => {
   action.setUserApiList(list)
 }
 
-export const importUserApi = async(script: string) => {
-  const info = await addUserApi(script)
+export const importUserApi = async(script: string, url?: string) => {
+  const info = await addUserApi(script, url)
   action.addUserApi(info)
+}
+
+/** 按导入时缓存的链接重抓脚本并覆盖本地，不切源；是否重载交给 apiSource 层 */
+export const refreshUserApi = async(id: string): Promise<LX.UserApi.UserApiInfo> => {
+  const target = state.list.find(api => api.id === id)
+  if (!target?.importUrl) throw new Error('No cached import URL')
+  const script = await httpFetch(target.importUrl).promise.then(resp => resp.body) as string
+  if (script.length > USER_API_SCRIPT_MAX_SIZE) throw new Error('Script too large')
+  const updated = await updateUserApiScript(id, script)
+  action.setUserApiList(state.list.map(api => api.id === id ? updated : api))
+  return updated
 }
 
 export const removeUserApi = async(ids: string[]) => {

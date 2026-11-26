@@ -6,6 +6,7 @@ import Input, { type InputType } from '@/components/common/Input'
 import { createStyle, toast } from '@/utils/tools'
 import { useTheme } from '@/store/theme/hook'
 import { useI18n } from '@/lang'
+import { USER_API_SCRIPT_MAX_SIZE } from '@/config/constant'
 import { httpFetch } from '@/utils/request'
 import { handleImportScript } from './action'
 
@@ -96,11 +97,11 @@ export default forwardRef<ScriptImportOnlineType, {}>((props, ref) => {
     } finally {
       setBtn({ disabled: false, text: t('user_api_btn_import_online_input_confirm') })
     }
-    if (script.length > 9_000_000) {
+    if (script.length > USER_API_SCRIPT_MAX_SIZE) {
       toast(t('user_api_import_failed_tip', { message: 'Too large script' }), 'long')
       return
     }
-    void handleImportScript(script)
+    void handleImportScript(script, url)
 
     alertRef.current?.setVisible(false)
   }

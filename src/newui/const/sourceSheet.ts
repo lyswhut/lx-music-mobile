@@ -66,7 +66,7 @@ export const formatQualityList = (qualities: readonly LX.Quality[]): string =>
 
 export const NEW_UI_SHEET_SOURCE = {
   title: '音源设置',
-  sub: '音源只负责一件事：把歌曲变成能播的声音。\n搜索、歌单、榜单、歌词这些内容，都来自各个平台。',
+  sub: '音源负责播放，平台负责搜索、歌单等内容。',
   groupScripts: '已安装音源',
   groupPlatforms: '音乐平台',
   groupQuality: '音质',
@@ -95,20 +95,20 @@ export const NEW_UI_SHEET_SOURCE = {
   switchedUnplayable: ' · 当前这首不可播，已暂停',
   /** 音源只有单档时的提示 */
   qualitySingleNote: (name: string, q: LX.Quality): string =>
-    `${name} 在各平台只有 ${QUALITY_LABEL[q]} ${q}，没有更高档位可选`,
+    `${name} 仅支持 ${QUALITY_LABEL[q]} ${q}。`,
   /** 档位 chip 标签一律是「音质名 + 档位」，不支持档只降显不改字 */
   qualityChip: (q: LX.Quality): string => `${QUALITY_LABEL[q]} ${q}`,
   /** 点不支持档位时的说明：会强行降到 fallback 档 */
   qualityPickUnsupported: (name: string, q: LX.Quality, fallback: LX.Quality): string =>
     `「${name}」没有${QUALITY_LABEL[q]}这一档 · 强行选择也会自动降到${QUALITY_LABEL[fallback]}`,
   /** 有置灰档位时常驻的一行解释 */
-  qualityDimNote: '置灰的档位是当前音源没有的 · 点击不会选中，播放时自动降到该档标注的音质。',
+  qualityDimNote: '置灰档位当前音源不支持，播放时会自动降档。',
   /** 已存选择落在不支持档位时的说明（切音源后常见，如实回显降到哪档） */
   qualitySavedDowngradeNote: (q: LX.Quality, fallback: LX.Quality): string =>
-    `你之前选的${QUALITY_LABEL[q]}这档现在的音源没有，听歌时会自动按${QUALITY_LABEL[fallback]}播，不用重选`,
+    `你选的${QUALITY_LABEL[q]}暂不可用，播放时按${QUALITY_LABEL[fallback]}播。`,
   /** 未接源 / 脚本没声明档位时的说明 */
   qualityEmptyHint: '选好或导入音源后，这里会列出它真正支持的档位。',
-  scriptsEmptyHint: '一个音源都没有 · 用下面的两种方式导入一份',
+  scriptsEmptyHint: '还没有音源 · 在下方导入',
   /* ---- 已安装音源列表折叠 ---- */
   /** 折叠开关上的字：展开全部 / 收起列表 */
   foldExpandAll: (n: number): string => `展开全部 ${n} 个`,
@@ -116,15 +116,20 @@ export const NEW_UI_SHEET_SOURCE = {
   /** 列表尾行：还有 N 个未显示 */
   foldMore: (hidden: number, ready: number): string =>
     `还有 ${hidden} 个音源没显示 · 点这里看全${ready > 0 ? `（其中 ${ready} 个已就绪）` : ''}`,
+  /* ---- 行尾刷新 ---- */
+  /** 刷新钮无障碍名（不上屏） */
+  refreshAria: (name: string): string => `刷新音源 ${name}`,
+  refreshed: (name: string): string => `已刷新「${name}」`,
+  refreshErr: (message: string): string => `刷新失败：${message}`,
   /* ---- 行尾移除 ---- */
   /** 移除钮无障碍名（不上屏） */
   removeAria: (name: string): string => `移除音源 ${name}`,
   /** 移除二次确认标题 */
   removeTitle: (name: string): string => `要移除「${name}」吗`,
   /** 移除确认正文：说清这份音源从设备上消失、已听歌曲不受影响 */
-  removeBody: '移除后这台设备上就没有这份音源了 · 已经听过的歌曲不受影响，之后要再用得重新导入一次。',
+  removeBody: '移除后这台设备将不再有这份音源，已听过的歌曲不受影响。',
   /** 删的是当前生效那份时补的半句 */
-  removeBodyActive: '它正是现在生效的那一份，移除后会自动接着用列表里第一份已就绪的音源。',
+  removeBodyActive: '这是当前生效的音源，移除后会自动切到其他音源。',
   removeOk: '移除音源',
   removed: (name: string): string => `已移除「${name}」`,
   /** 删的是生效那份、已落到下一位时追加 */
@@ -135,9 +140,9 @@ export const NEW_UI_SHEET_SOURCE = {
   /** 读取进行中的按钮文案 */
   importFileBusy: '正在读取…',
   /** 进行中回显 */
-  importHint: '正在读刚进来的那一份 · 读通了就会出现在上面列表的顶上。',
+  importHint: '正在读取…',
   /** 常驻说明：两条导入方式的差别与就绪时机 */
-  importHintTwoPaths: '在线导入要设备联网把脚本取回来，本机导入直接读设备上已有的文件 · 两种都要等它初始化完才标「已就绪」。',
+  importHintTwoPaths: '在线导入需联网，本机导入直接读文件 · 都要等初始化完成才标「已就绪」。',
   /** 份数超上限的报错 */
   importErrMax: (max: number): string => `这台设备上最多同时留 ${max} 份音源 · 先移除一些再导入`,
   importErrBadFile: '这份文件读不出音源 · 请选一个音源文件',

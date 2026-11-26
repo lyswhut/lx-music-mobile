@@ -3,12 +3,9 @@ export { useApiSourceTick } from './useApiSourceTick'
 export { useApiSupport } from './useApiSupport'
 export { useAvatarPick, type NewUiAvatarPick } from './useAvatarPick'
 export { useContentPlatform } from './useContentPlatform'
-export { useDailyRecommend, type DailyRecommend } from './useDailyRecommend'
 export { useDesktopLyricToggle, type DesktopLyricToggle } from './useDesktopLyricToggle'
 export { useFavoriteToggle } from './useFavoriteToggle'
 export { useGridItemWidth } from './useGridItemWidth'
-export { useHomeBanners } from './useHomeBanners'
-export { useHomeRanks, type HomeRanksState } from './useHomeRanks'
 export { useLayerAppeared } from './useLayerAppeared'
 export { useLoveSongs } from './useLoveSongs'
 export { useMyPlaylists, hasPlatformHome, type MyPlaylistItem } from './useMyPlaylists'
@@ -38,6 +35,11 @@ export {
   selectPlaylistTag,
   type PlaylistTagSelection,
 } from './playlistTagSelection'
+export {
+  usePlaylistTagRecents,
+  rememberPlaylistTag,
+  PLAYLIST_TAG_RECENTS_LIMIT,
+} from './playlistTagRecents'
 export { usePlaylistChipItems } from './playlistChipItems'
 export { usePlaylistPool, type PlaylistPoolState } from './usePlaylistPool'
 export { usePlayedList } from './usePlayedList'
@@ -56,7 +58,6 @@ export {
   type RankBoardGroup,
   type RankBoardsState,
 } from './useRankBoards'
-export { useRecommendPlaylists, type RecommendPlaylistsState } from './useRecommendPlaylists'
 export { useRecentPlays, useRecentPlayRecorder } from './useRecentPlays'
 export { useSafeArea, type NewUiSafeArea } from './useSafeArea'
 export {
@@ -66,5 +67,4 @@ export {
   type SmoothProgress,
   type SmoothProgressOptions,
 } from './useSmoothProgress'
-export { useSingerPics, type SingerPicsState } from './useSingerPics'
 export { useWideLayout, type WideLayout } from './useWideLayout'

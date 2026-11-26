@@ -1,7 +1,4 @@
-/**
- * 本文件由 scripts/gen-newui-icons.mjs 从 new_design/index.html 的 SVG sprite 自动生成，请勿手改。
- * 共 38 个图标；重新生成：node scripts/gen-newui-icons.mjs
- */
+/** 本文件由 scripts/gen-newui-icons.mjs 自动生成，请勿手改；重新生成：node scripts/gen-newui-icons.mjs */
 import type { IconDef } from './types'
 
 export type IconName = "search" | "play" | "pause" | "prev" | "next" | "more" | "chevron" | "close" | "home" | "list" | "chart" | "user" | "heart" | "wave" | "signal" | "battery" | "timer" | "timerOn" | "sun" | "repeat" | "repeat1" | "repeatOff" | "stopAfter" | "shuffle" | "moon" | "comment" | "float" | "floatOn" | "heartFill" | "heartSolid" | "plus" | "gear" | "clock" | "link" | "edit" | "phone" | "phoneSolid" | "trash"

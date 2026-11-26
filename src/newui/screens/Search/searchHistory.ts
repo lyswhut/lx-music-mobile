@@ -1,28 +1,6 @@
 /**
- * 搜歌屏的「搜过的词」数据适配层（原型 `searchHistory` / `rememberQuery`，
- * app.js L3548-3571）。
- *
- * **为什么不用 `core/search/search` 的 `addHistoryWord`**：
- * 那一支的**第一行**就是 `if (!settingState.setting['search.isShowHistorySearch'] || !word) return`
- * （core/search/search.ts:25），而该项默认值是 `false`（config/defaultSetting.ts:62），
- * 旧 UI 里靠设置屏那枚「显示搜索历史」开关打开（screens/Home/Views/Search/BlankView，
- * Setting/settings/Search/IsShowHistorySearch.tsx）。新 UI 设置屏**没有这枚开关**，
- * 于是走旧入口的结果是：写词被静默吞掉 → 历史永不累积 → 空输入态的历史区永远是空的。
- *
- * **本轮判断：新 UI 去掉对 `search.isShowHistorySearch` 的依赖**（历史在新 UI 恒开）。
- * 尊重它的唯一后果是「新 UI 没有开关、默认关 ⇒ 这一区永久空」，与原型 `renderSearchIdle`
- * 的行为直接冲突，不可取。旧 UI 那枚开关的语义原样保留：它仍然管着旧 UI 的写与显示。
- *
- * 口径（逐条对原型）：
- * - 读取 = 本机存的那份（`@/utils/data` 的 `@search_history_list`，与旧 UI 同一格存储，
- *   所以老用户之前真的存过的词照旧看得见），去重、只留前 8 条（原型 `slice(0, 8)` L3548）。
- * - 记词 = 提到最前、同词去重、截到 8 条（原型 `unshift` + `splice` + `Math.min(length, 8)` L3565-3568），
- *   立刻写回本机（原型 `lsSave({ searchHistory })` L3570）。
- * - 清空 = 整区清并写回空数组（原型 L3590-3591「清空也写回本机，下次进来不该又冒出来」）。
- *
- * 只用 `@/utils/data` 的公开读写口，**不读不写 `src/store/`、不改 `src/core/`**：
- * 新 UI 自己读写同一份模块级缓存，屏内看到的一定是最新值，不会出现
- * 「写了却没读到」的两份缓存打架。
+ * 搜歌屏「搜过的词」数据适配层：读写 @/utils/data 的 `@search_history_list`（与旧 UI 同格存储）。
+ * 不走 core/search 的 addHistoryWord——它受 `search.isShowHistorySearch` 开关约束（默认关），新 UI 无此开关。
  */
 import { NEW_UI_SEARCH_HISTORY_LIMIT } from '@/newui/const'
 import { getSearchHistory, saveSearchHistory } from '@/utils/data'
@@ -41,11 +19,7 @@ const normalize = (list: readonly string[]): string[] => {
   return out
 }
 
-/**
- * 本次会话里最后一次读到 / 写入的列表。`null` = 还没读过（冷启动后的第一次进本屏）。
- * 用处只有一个：本屏是「push 即挂载」，用它可以拿同步初值渲染首帧——
- * 否则异步读落地前会先闪一下空态那行「还没有搜过的词」，对真存过词的设备是错话。
- */
+/** 本次会话最后读到 / 写入的列表；null = 冷启动还没读过，用于同步渲染首帧，避免先闪空态。 */
 let cached: string[] | null = null
 
 /** 同步取本次会话的已知值（null = 还没读过，屏上历史区首帧先不渲染） */
@@ -69,7 +43,7 @@ export const rememberSearchWord = async(word: string): Promise<string[]> => {
   return next
 }
 
-/** 清空整区（写回空数组，重启不回魂），返回空列表 */
+/** 清空整区并写回空数组（重启不回魂），返回空列表 */
 export const clearSearchHistory = async(): Promise<string[]> => {
   await saveSearchHistory([])
   cached = []

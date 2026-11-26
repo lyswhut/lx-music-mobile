@@ -2,44 +2,37 @@ import { forwardRef } from 'react'
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 
 import { FONT_SIZE, FONT_WEIGHT, SEARCH, useTheme } from '@/newui/theme'
-// 直连具体 hook（不走 @/newui/hooks 桶口），与 PageViewport / TabBar 同一做法
+// 直连具体 hook（不走 @/newui/hooks 桶口）
 import { useWideLayout } from '@/newui/hooks/useWideLayout'
 import { withAlpha } from '@/newui/utils'
 
 import { Icon } from '../Icon'
 
 export interface SearchTopProps {
-  /** 输入框当前文本（受控，容器持 state） */
+  /** 输入框当前文本（受控） */
   value: string
-  /** 聚焦态（.sc-box:focus-within：底加深 + 主色亮环；容器持 state） */
+  /** 聚焦态：底加深 + 主色亮环 */
   focused: boolean
-  /** 状态栏实测高度（.sc-top padding-top 54 里超出的那截由本件补 SEARCH.statusBarReserve） */
+  /** 状态栏实测高度 */
   topInset: number
-  /** 输入提示（.sc-input placeholder，容器传 const NEW_UI_SEARCH_INPUT_PLACEHOLDER） */
+  /** 输入提示 */
   placeholder: string
-  /** 「取消」文案（.sc-cancel） */
+  /** 「取消」文案 */
   cancelLabel: string
-  /** 清除钮无障碍文案（.sc-x 只有图形，需口头说明用途） */
+  /** 清除钮无障碍文案 */
   clearLabel: string
   onChangeText: (value: string) => void
   onFocus: () => void
   onBlur: () => void
-  /** 回车提交（.sc-input 的键盘搜索键） */
+  /** 回车提交（键盘搜索键） */
   onSubmit: () => void
   onClear: () => void
   onCancel: () => void
 }
 
 /**
- * 搜索层头排（对应原型 `.sc-top` / `.sc-box` / `.sc-cancel`，index.html L363-L370 /
- * styles.css L778-790，parts/search/sc-top.{html,css}，U62）：放大镜 + 输入框（有字才现身
- * 18px 清除圆点）+「取消」；聚焦时 .sc-box 换 fill3 底 + 1.5px 半透明主色亮环
- *（.sc-box:focus-within）。固定文案「搜歌名、歌手、歌单」「取消」在件内，RN 侧由容器从
- * const/search.ts 传入。
- * 结构自 screens/Search/SearchScreen 内联抽出（2026-10-15 拆件转正轮）：样式逐值照搬原内联
- * 定义，层级与间距归属不变，渲染零变化；无障碍标签与占位同句（原实现即同一常量两用）。
- * 纯展示组件：文本 / 聚焦态与全部回调由容器传入；ref 转发到 TextInput（容器清空后要回焦，
- * 与 OpInputRow 同款做法）。
+ * 搜索层头排：放大镜 + 输入框（有字才现身清除圆点）+「取消」；聚焦时换深底 + 半透明主色亮环。
+ * 纯展示组件：文本、聚焦态与回调由容器传入；ref 转发到 TextInput（清空后要回焦）。
  */
 export const SearchTop = forwardRef<TextInput, SearchTopProps>(({
   value,
@@ -56,9 +49,7 @@ export const SearchTop = forwardRef<TextInput, SearchTopProps>(({
   onCancel,
 }, ref) => {
   const theme = useTheme()
-  // 本排的上内衬按档走：原型 `.wide .sc-top{padding-top:36px}`（styles.css:1342）= 状态栏 32 + 4，
-  // RN 用实测状态栏 + wide.statusReserve（4）；compact 回 SEARCH.statusBarReserve 的 2（原型 54 = 52 + 2）。
-  // 其余三位（左右 14 / 底 12）原型这一档没写覆盖，两档同值。
+  // 顶排上内衬按档走：宽屏档状态栏 + 4，竖屏回 SEARCH.statusBarReserve；左右与底两档同值
   const { wide } = useWideLayout()
   return (
     <View style={[styles.top, { paddingTop: topInset + (wide?.statusReserve ?? SEARCH.statusBarReserve) }]}>
@@ -93,7 +84,7 @@ export const SearchTop = forwardRef<TextInput, SearchTopProps>(({
           selectionColor={theme.colors.brand}
           accessibilityLabel={placeholder}
         />
-        {/* .sc-x：有输入才出现的清除圆点 */}
+        {/* 有输入才出现的清除圆点 */}
         {value.length > 0 && (
           <Pressable
             onPress={onClear}
@@ -123,7 +114,6 @@ export const SearchTop = forwardRef<TextInput, SearchTopProps>(({
 SearchTop.displayName = 'NewUISearchTop'
 
 const styles = StyleSheet.create({
-  /** .sc-top padding:54(状态栏)+14/12 gap:10（顶部内距由实测状态栏接管） */
   top: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -131,7 +121,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: SEARCH.paddingX,
     paddingBottom: SEARCH.paddingBottom,
   },
-  /** .sc-box 40 高 / 13 圆角 / 内距 11 / gap 9 / 1px line 描边 */
   box: {
     flex: 1,
     minWidth: 0,
@@ -143,7 +132,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: SEARCH.boxPaddingX,
     borderWidth: 1,
   },
-  /** .sc-input：14.5 / text（字号令牌 FONT_SIZE.title） */
   input: {
     flex: 1,
     minWidth: 0,
@@ -151,7 +139,6 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.title,
     fontWeight: FONT_WEIGHT.medium,
   },
-  /** .sc-x 18×18 全圆 / 图标 10 */
   clear: {
     width: SEARCH.clearSize,
     height: SEARCH.clearSize,
@@ -160,7 +147,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexShrink: 0,
   },
-  /** .sc-cancel 13.5 / padding:6px 2px */
   cancel: {
     paddingVertical: SEARCH.cancelPaddingY,
     paddingHorizontal: 2,

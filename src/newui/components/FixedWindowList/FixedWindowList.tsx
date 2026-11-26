@@ -52,22 +52,9 @@ export interface FixedWindowListProps<T> {
 }
 
 /**
- * 自管窗口的定高列表。
- *
- * 为什么不用 FlatList/VirtualizedList：
- * RN 的 VirtualizedList 把「可见窗口」建立在 `_scrollMetrics.contentLength` 上，而这个值
- * 只来自原生 ScrollView 的 onContentSizeChange。页面首帧 layout 早于内容尺寸回来时
- * `contentLength === 0`，`_adjustCellsAroundViewport` 会提前 return，窗口被锁死在
- * initialNumToRender（**getItemLayout 也救不了**：它只影响 offset 估算，不改 contentLength）。
- * 之后靠拉浮层 / 展开 mini player 触发一次全局重排才把原生 contentSize 重新算出来，窗口才解冻
- * ——这就是「展开 minibar 才恢复正常」的来历。
- *
- * 这里改成完全确定性的窗口：
- *   - 行高由调用方给定，第 i 行的顶边 = i × (rowHeight + rowGap)，内容总高可解析算出；
- *   - 未挂载的行用两个定高占位 View 顶住，原生 ScrollView 的 contentSize 与滚动范围
- *     不依赖「cell 渲染完再量」，第一帧就是准确值；
- *   - 可视区间 = f(滚动偏移, 视口高)，纯 JS 计算，没有任何「等尺寸回来」的中间态，
- *     因此不存在卡死在首批 N 行的可能。
+ * 自管窗口的定高列表：行高由调用方给定，未挂载行用定高占位顶住，
+ * contentSize 与滚动范围第一帧即准确。不用 FlatList/VirtualizedList：后者在
+ * contentLength 为 0 时会锁死窗口（getItemLayout 也救不了），要等一次全局重排才解冻。
  */
 function FixedWindowListInner<T>(
   {
@@ -146,9 +133,8 @@ function FixedWindowListInner<T>(
     syncWindow()
   }, [syncWindow])
 
-  // 数据长度变化（新一页落定 / 整单替换）时复位触底闩锁：
-  // 追加后若用户仍处在触发线内（页短、或追加后没把内容顶出 0.4 视口），
-  // 下一次 contentSize 变化要能继续续取，否则会停在「已触发」状态不再加载
+  // 数据长度变化（新一页落定 / 整单替换）时复位触底闩锁，
+  // 否则追加后若仍在触发线内，会停在「已触发」状态不再加载
   useEffect(() => {
     endFiredRef.current = false
   }, [count])
@@ -174,7 +160,7 @@ function FixedWindowListInner<T>(
     onScrollRef.current?.(e)
   }, [checkEndReached, syncWindow])
 
-  /** 拖拽/惯性停手：再判一次窗口与触底（快速甩到底时滚动事件的最后一帧可能早于内容补齐） */
+  /** 拖拽/惯性停手：再判一次窗口与触底（甩到底时最后一帧滚动事件可能早于内容补齐） */
   const handleScrollSettle = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset, layoutMeasurement, contentSize } = e.nativeEvent
     scrollYRef.current = contentOffset.y
@@ -184,7 +170,7 @@ function FixedWindowListInner<T>(
 
   const handleContentSizeChange = useCallback((w: number, h: number) => {
     contentHRef.current = h
-    // 内容变长（追加新一页 / 头部换态）后重新判一次触底；数据变长也会把 fired 复位
+    // 内容变长后重新判一次触底
     checkEndReached(scrollYRef.current, viewport, h)
     onContentSizeChangeRef.current?.(w, h)
   }, [checkEndReached, viewport])

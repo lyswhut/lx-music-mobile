@@ -41,7 +41,7 @@ export const NEW_UI_PLAYER_PREV_RESTART_SEC = 3
 /** 「来自 XX 音源」整句（原型 .ps-from：'来自 ' + script().name，app.js L1719）。
  * QA 2026-10-14 D-02（播放器报告 D-3）：未导入音源时 apiName 为空串，
  * 原型 mock 恒有值、真实环境会渲染成「来自  音源」双空格破句——
- * 空名改说「还没有选好音源」，与首页轮播同一口径（useHomeBanners） */
+ * 空名改说「还没有选好音源」 */
 export const newUiPlayerApiSourceText = (apiName: string): string =>
   apiName.length > 0 ? `来自 ${apiName} 音源` : '还没有选好音源'
 
@@ -89,15 +89,6 @@ export const NEW_UI_PLAYER_LRC_PERMISSION_ASK = {
   body: `歌词浮窗需要在系统权限设置中授予 ${NEW_UI_APP_NAME} 显示悬浮窗口的权限才能使用 · 是否去相关界面授予该权限`,
   okLabel: '去开启',
   cancelLabel: '我就不',
-} as const
-
-/** 「LRC 浮窗」App 内气泡的开关反馈（U61 轮落地；原型 app.js toggleFloat L1900-1905）。
- *  阶段 3 换线记录：播放页工具行浮窗钮（#btnFloat）已改回系统级悬浮窗（core/desktopLyric），
- *  App 内那条线（hooks/useLrcFloat + screens/Main/LrcFloatDock）整体拆除；本组文案与下面的
- *  关闭钮 aria 只服务于原型视觉留存件 components/LrcFloat（暂无宿主，等原型口径回来再用）。 */
-export const NEW_UI_PLAYER_LRC_FLOAT_TOAST = {
-  on: 'LRC 浮窗已开启 · 可拖动，进入播放页时自动隐藏',
-  off: 'LRC 浮窗已关闭',
 } as const
 
 /** 气泡关闭钮 aria（原型 parts/player/lrc-float.html L13 `aria-label="关闭浮窗"`，逐字） */

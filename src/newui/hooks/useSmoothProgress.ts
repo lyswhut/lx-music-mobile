@@ -1,26 +1,16 @@
 /**
- * 进度条的「每秒一步 → 300ms 线性补间」（U57 `.seek` / U05 `.mini-progress` 共用）。
+ * 进度条的「每秒一步 → 300ms 线性补间」：目标值与显示值分离，共用一条 Animated.Value，
+ * 填充与旋钮天然同步；目标值每拍只变一次，重定向同一条 timing，不重建动画。
  *
- * 原型两处都是 CSS transition：`.mini-progress i{transition:width .3s linear}`（styles.css L671）
- * 与 `.seek i{...transition:width .3s linear}` / `.seek em{transition:left .3s linear}`（L769-L770）。
- * RN 没有 transition，每秒把宽度直写一次就是硬跳，所以这里把「目标值」与「显示值」分开：
- * 一个 0..1 的 `Animated.Value` 供填充与旋钮共用 —— 两者因此天然同步，也不会各自补间出偏差；
- * 目标值每拍只变一次，重定向同一条 timing，**不重建动画对象**。
- *
- * **什么时候不做补间**（原型 `.seek.drag i,.seek.drag em{transition:none}` L772 是同一口径）：
- * - 目标值没变或变小（换曲回零、拖回退、播放器位置被纠正）——回跳不能演成一段动画；
- * - 单拍跨度超过 `PROGRESS_SNAP_DELTA`（换曲、点进度、拖完提交）——那是跳转，不是推进。
- * 拖拽期间显示值由调用方接管（`enabled: false`），外部 1Hz 值只记账、不落屏。
- *
- * 走 JS driver：动的是 width / left 这类布局属性，native driver 不支持；1Hz 的 300ms 补间
- * 每拍最多十几帧，代价远小于让整条进度每秒回跳一次。
+ * 不做补间的场合：目标值没变或变小（回跳不能演成动画）、单拍跨度超过 PROGRESS_SNAP_DELTA
+ * （那是跳转）。走 JS driver：动的是 width / left 这类布局属性。
  */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Animated, Easing } from 'react-native'
 
 import { MOTION } from '@/newui/theme'
 
-/** 原型两处都是 .3s，与 MOTION.slow 同值；缓动是 linear（不是 --ease），照原样 */
+/** 与 MOTION.slow 同值；缓动是 linear */
 export const PROGRESS_SMOOTH_MS = MOTION.slow
 /** 一拍之内算「正常推进」的跨度上限；超过它就是跳转，立即落位不补间 */
 export const PROGRESS_SNAP_DELTA = 0.02
@@ -56,7 +46,7 @@ export const useSmoothProgress = (
     const next = clamp01(ratio)
     const prev = targetRef.current
     targetRef.current = next
-    // 拖拽中：屏幕上是手指位置，外部值只记账（松手那一拍由调用点的 setImmediate 落位）
+    // 拖拽中：外部值只记账，松手由调用点 setImmediate 落位
     if (!enabledRef.current) return
     if (next <= prev || next - prev > PROGRESS_SNAP_DELTA) {
       value.stopAnimation()
@@ -78,7 +68,7 @@ export const useSmoothProgress = (
     value.setValue(clamped)
   }, [value])
 
-  // 离场时收掉在跑的补间：timing 每帧仍往视图写值，宿主已经拆了就是白写
+  // 离场时收掉在跑的补间，避免对已拆的宿主白写值
   useEffect(() => () => { value.stopAnimation() }, [value])
 
   return { value, setImmediate }

@@ -10,7 +10,7 @@ import {
 
 import { MOTION, RADIUS, SHADOW, SWITCH, useTheme } from '@/newui/theme'
 
-/** 原型 --ease: cubic-bezier(.22,.61,.36,1)；开关过渡时长见 MOTION.toggle */
+/** 开关过渡缓动（时长见 MOTION.toggle） */
 const EASE = Easing.bezier(MOTION.easing[0], MOTION.easing[1], MOTION.easing[2], MOTION.easing[3])
 
 export interface SwitchProps {
@@ -22,8 +22,8 @@ export interface SwitchProps {
 }
 
 /**
- * 开关（对应原型 .toggle / .toggle.on）。设定页各开关行、播放页浮层开关行共用。
- * on 态底色用叠层透明度而非 Animated 颜色插值，规避平台差异，位移与透明度可走原生驱动。
+ * 开关（设定页各开关行、播放页浮层开关行共用）。
+ * on 态底色用叠层透明度而非颜色插值，规避平台差异，位移与透明度可走原生驱动。
  */
 export const Switch = memo(({ value, onValueChange, disabled, style }: SwitchProps) => {
   const theme = useTheme()
@@ -82,12 +82,11 @@ const styles = StyleSheet.create({
     height: SWITCH.height,
     borderRadius: SWITCH.radius,
   },
-  /** .toggle.on 轨道底色（brand 实色，靠透明度从 off 底过渡） */
+  /** on 态轨道底色，靠透明度从 off 底过渡 */
   onLayer: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: SWITCH.radius,
   },
-  /** .toggle i：21px 白色旋钮，内边 3px，行程 19px */
   knob: {
     position: 'absolute',
     top: SWITCH.inset,

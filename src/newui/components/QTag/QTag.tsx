@@ -11,10 +11,8 @@ export interface QTagProps {
 }
 
 /**
- * 迷你标签（对应原型 .q-tag）：音质 / 状态 / 排序等处的 10.5px 小胶囊。
+ * 迷你标签：音质 / 状态 / 排序等处的 10.5px 小胶囊。
  * 灰底灰字的信息补充件，不用于强调；宽度随内容，不参与拉伸。
- * 原型 token 口径（styles.css L190-194）：底 var(--fill-2) + 描边 inset 1px var(--hairline)，
- * 字色 var(--text-2)——是控件叠色件，不是压在图上的玻璃贴片（那是 .wip-tag），随主题反相。
  */
 export const QTag = memo(({ label, style, textStyle }: QTagProps) => {
   const theme = useTheme()

@@ -67,7 +67,7 @@ export const toNewMusicInfo = (oldMusicInfo: any): LX.Music.MusicInfo => {
         meta.albumMid = oldMusicInfo.albumMid
         meta.id = oldMusicInfo.songId
         // 新增（2026-10-15，纯增量透传，不改任何既有字段）：歌手归一化时歌手 id 原本被丢弃，
-        // 这里把 tx SDK 新增的 singerMid 带进 meta，唯一消费方是新 UI 歌手头像取图（src/newui/utils/singerPic.ts）
+        // 这里把 tx SDK 新增的 singerMid 带进 meta（增量透传，不改既有字段）
         if (oldMusicInfo.singerMid) meta.singerMid = oldMusicInfo.singerMid
         break
       case 'mg':

@@ -5,12 +5,10 @@ import { Navigation } from 'react-native-navigation'
 import { EmptyTip } from '@/newui/components/EmptyTip'
 import { FixedWindowList } from '@/newui/components/FixedWindowList/FixedWindowList'
 import { GhostButton } from '@/newui/components/GhostButton'
-import { MinibarHost } from '@/newui/components/Minibar'
 import { PlTop } from '@/newui/components/PlTop'
 import { SongRow } from '@/newui/components/SongRow'
 import { NEW_UI_OFFLINE, QUALITY_LABEL } from '@/newui/const'
 import {
-  useLayerAppeared,
   useMyPlaylists,
   useNewUiSystemBar,
   useNowPlaying,
@@ -33,30 +31,15 @@ export interface OfflineScreenProps {
 }
 
 /**
- * 「已缓存」（离线收听）屏 —— U86，件 `parts/mine/offline.{html,css}`；
- * 装配逻辑 app.js L1351-1451（OFF_EMPTY / OFF_LEDE / offlineKnownSongs / cachedQuality /
- * offlineRows / offlineQueue / offRow / offlinePlayAll / renderOffline）。
- *
- * **滚动结构（照 #radioLayer 判例）**：`#offlineLayer{padding:0;overflow:hidden}` → 固定段
- * `.pl-head{padding:58px 16px 0}`（顶排 .pl-top + 口径段 .off-meta + 操作行 .pl-actions）
- * → 滚动段**就是 `.off-list` 自己**（`flex:1;padding:10px 16px 34px;gap:2px`）。
- * RN 落法：屏根 `View{flex:1}` → 钉住段 `View{flex:none}` → `FlatList{flex:1}`。
- * 这一屏**不分页**：清单是有限集，一次铺完，没有 .pl-status / 没有触底续取 / 没有页脚。
- *
- * 清单不是接口给的：候选池 = 本机已知道的歌（收藏 ∪ 最近播放 ∪ 各份歌单），逐首过
- * 「musicUrl 映射键存在 + isCached 验字节」两关——全部在 hooks/useOfflineCache 里完成，
- * 本屏只渲染那份结果、把整列交给播放器（纯 UI 层，不写存储、不改列表）。
- * 行是 .song-row 原子族的自造变体：**没有序号**（存储键枚举的顺序说不清，不编排序）、
- * **不挂「⋯」**（这一屏只有"听"一个意图）、**不标灰**（存下即现在能播）；
- * 行内 q-tag 换了语义——读「存在哪一档」，不是「这次会按哪档播」。
+ * 「已缓存」（离线收听）屏：顶排 + 口径段 + 操作行钉住，清单本身是唯一的滚动轴。
+ * 这一屏不分页，一次铺完；清单由 hooks/useOfflineCache 算出（收藏 ∪ 最近播放 ∪ 各份歌单中已缓存者），
+ * 本屏只渲染、把整列交给播放器。行内 q-tag 读「存在哪一档」，不是「这次按哪档播」。
  */
 export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
   const theme = useTheme()
   const { top, bottom } = useSafeArea()
   const { wide, layerPaddingX } = useWideLayout()
   useNewUiSystemBar(componentId)
-  // 毛玻璃迷你条等入场后再挂，避免首帧模糊采样与推入转场抢帧（同 SonglistDetail）
-  const appeared = useLayerAppeared(componentId)
 
   const myLists = useMyPlaylists()
   const offline = useOfflineCache(myLists)
@@ -68,8 +51,7 @@ export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
     void Navigation.pop(componentId)
   }, [componentId])
 
-  // 硬件返回键与头部那颗同一条出口（原型「一次只收最上面那一层」，index.html L748）；
-  // 写法照 SonglistDetailScreen / RadioHomeScreen 的右推层判例。
+  // 硬件返回键与头部返回同一条出口（一次只收最上面那一层）
   useEffect(() => {
     const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
       goBack()
@@ -78,14 +60,14 @@ export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
     return () => { subscription.remove() }
   }, [goBack])
 
-  /** 交给播放器的那一列：存在本机即现在能播，整列都给（原型 offlineQueue，app.js L1385） */
+  /** 交给播放器的那一列：存在本机即能播，整列都给 */
   const queue = useMemo(() => rows.map(row => row.song), [rows])
 
   const handleRowPress = useCallback((index: number) => {
     void playQueue('offline', queue, index)
   }, [queue])
 
-  // 「播放全部」= 整列交给播放器并打开播放页（原型 offlinePlayAll L1420：play + openLayer(player())）
+  // 「播放全部」= 整列交给播放器并打开播放页
   const handlePlayAll = useCallback(() => {
     void playQueue('offline', queue, 0).then((ok) => {
       if (ok) pushNewUiPlayer(componentId)
@@ -97,7 +79,7 @@ export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
     return (
       <SongRow
         {...toSongDisplay(item.song, true)}
-        // 同一枚 q-tag，这一屏读「存在哪一档」（原型 offRow L1392）
+        // 同一枚 q-tag，这一屏读「存在哪一档」
         qualityLabel={QUALITY_LABEL[item.quality]}
         musicInfo={item.song}
         active={active}
@@ -110,21 +92,15 @@ export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
   const keyExtractor = useCallback((item: OfflineRow) => item.song.id, [])
 
   /**
-   * 钉住段的内衬：`.pl-head{padding:58px 16px 0}`，58 含模拟状态栏 → 真机 = 实测状态栏 + 6。
-   * 宽屏档换成 `.wide .pl-head{padding:36px max(16px,calc((100% - 620px)/2)) 0}`（styles.css:1337）：
-   * 顶内衬回正到这一档 32 状态栏之上的 4，左右吃那根 620 居中轴算出来的内衬；
-   * compact 两侧都回竖屏基线（写法照 RadioHomeScreen 同一判据入口），逐值零变化。
+   * 钉住段的内衬：paddingTop = 状态栏 + 预留；
+   * 宽屏档左右吃 620 居中轴算出的内衬。
    */
   const headStyle = useMemo(() => ({
     paddingTop: top + (wide?.statusReserve ?? PL_LAYER.paddingTopReserve),
     paddingHorizontal: layerPaddingX ?? PL_LAYER.paddingX,
   }), [top, wide, layerPaddingX])
 
-  /**
-   * 滚动段自己的内衬（`#offlineLayer>.off-list{padding:10px 16px 34px}`），底部补真机安全区。
-   * 左右同一根轴：`.wide #offlineLayer>.off-list{padding-left/right:max(16px,calc((100% - 620px)/2))}`
-   * （styles.css:1338），竖向两位（10 / 34）这一档原型不动，继续吃基线。
-   */
+  /** 滚动段内衬：左右同 620 居中轴，底部补安全区 */
   const listContentStyle = useMemo(() => ({
     paddingTop: OFFLINE.listPaddingTop,
     paddingHorizontal: layerPaddingX ?? OFFLINE.listPaddingX,
@@ -139,7 +115,7 @@ export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
 
   return (
     <View nativeID="newui.offline.content" style={[styles.root, { backgroundColor: theme.colors.bg }]}>
-      {/* ▸ 钉住段（.pl-head）：顶排 + 口径段 + 操作行，三段都不滚 */}
+      {/* 钉住段：顶排 + 口径段 + 操作行，都不滚 */}
       <View style={[styles.pinned, headStyle]}>
         <PlTop
           crumbText={NEW_UI_OFFLINE.crumb}
@@ -148,11 +124,11 @@ export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
           right={{ kind: 'none' }}
         />
 
-        {/* .off-meta{margin:18px 0 0;gap:5px}：计数 + 口径句（口径句恒在） */}
+        {/* 计数 + 口径句（口径句恒在） */}
         <View style={styles.meta}>
           {scanning
             ? (
-              /* 真机在数本机存储键，过程句按口径句同一档字排，留在同一格里不跳版 */
+              /* 还在数的时候用与口径句同档的字，留在同一格不跳版 */
               <Text style={[styles.lede, { color: theme.colors.text2 }]}>
                 {NEW_UI_OFFLINE.scanning}
               </Text>
@@ -169,7 +145,7 @@ export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
           </Text>
         </View>
 
-        {/* .pl-actions margin:18px 0 16px：空的时候没有按钮可点，整行撤掉（与「清空记录」随空态隐藏同一判据） */}
+        {/* 操作行：空态时整行撤掉 */}
         {!scanning && rows.length > 0 && (
           <View style={styles.actions}>
             <GhostButton
@@ -182,7 +158,7 @@ export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
         )}
       </View>
 
-      {/* ▸ 滚动段：.off-list 自己就是这一屏唯一的轴，行距 2px 落在容器上 */}
+      {/* 滚动段：本屏唯一的轴，行距落在容器上 */}
       <FixedWindowList
         style={styles.list}
         data={rows}
@@ -194,9 +170,6 @@ export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={listContentStyle}
       />
-      {/* 常驻迷你播放条：本层默认磁吸圆点（原型 miniPageSnapped：不在首页就是圆点）。
-          挂在轴之后、屏幕根层最后——圆点浮在列表内容之上 */}
-      {appeared ? <MinibarHost componentId={componentId} bottomInset={bottom} defaultSnapped /> : null}
     </View>
   )
 }
@@ -204,40 +177,40 @@ export const OfflineScreen = ({ componentId }: OfflineScreenProps) => {
 OfflineScreen.displayName = 'NewUiOfflineScreen'
 
 const styles = StyleSheet.create({
-  /** #offlineLayer{padding:0;overflow:hidden} → RN 屏根就是「不滚的壳」 */
+  /** 屏根：不滚的壳 */
   root: {
     flex: 1,
     padding: 0,
     overflow: 'hidden',
   },
-  /** .pl-head{flex:none}（内衬由 headStyle 在渲染期给，安全区随设备变） */
+  /** 钉住段：不参与滚动（内衬由 headStyle 在渲染期给） */
   pinned: {
     flexGrow: 0,
     flexShrink: 0,
   },
-  /** .off-meta{margin:18px 0 0;gap:5px} */
+  /** 计数 + 口径段 */
   meta: {
     marginTop: OFFLINE.metaMarginTop,
     gap: OFFLINE.metaGap,
   },
-  /** .off-n{font-size:15px;font-weight:900;letter-spacing:.2px;tabular-nums} */
+  /** 曲目数 */
   count: {
     fontSize: OFFLINE.countSize,
     fontWeight: OFFLINE.countWeight,
     letterSpacing: OFFLINE.countLetterSpacing,
     fontVariant: ['tabular-nums'],
   },
-  /** .off-lede{font-size:11.5px;line-height:1.6;color:var(--text-2)} */
+  /** 口径句 */
   lede: {
     fontSize: OFFLINE.ledeSize,
     lineHeight: OFFLINE.ledeSize * OFFLINE.ledeLineHeightRatio,
   },
-  /** .pl-actions{margin:18px 0 16px}（这颗钮独占一行，不套 PlActions：这一屏只有「播放全部」一个动作） */
+  /** 操作行（这一屏只有「播放全部」一个动作） */
   actions: {
     marginTop: PL_LAYER.actionsMarginTop,
     marginBottom: PL_LAYER.actionsMarginBottom,
   },
-  /** #offlineLayer>.off-list{flex:1} = 本屏唯一的轴 */
+  /** 本屏唯一的滚动轴 */
   list: {
     flex: 1,
   },

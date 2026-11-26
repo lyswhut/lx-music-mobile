@@ -1,18 +1,10 @@
 /**
  * 排行榜页常量（对应原型 #page-rank）。
- * 屏内文案优先照抄原型原句；分页数值（每批 8 张、距底 160px）第 7b 轮起走 theme 的 RANK_PAGING。
+ * 屏内文案优先照抄原型原句；分页数值（现每批 12 张、距底 160px）走 theme 的 RANK_PAGING。
  * 2026-10-22 起负责「榜名→真实封面」的 rankCoverKey（判据表本体是生成物 rankCoverWords.ts）。
  * 同日起原型那套「榜名→型 / 榜名→色 + 六枚单色符号」的通用底板随 default 兜底封面一起退役。
  */
 import { RANK_COVER_WORDS } from './rankCoverWords'
-
-/** 各区块文案（.page-title / .foot-note / .empty-tip） */
-export const NEW_UI_RANK_TITLES = {
-  page: '排行榜',
-} as const
-
-/** 页尾说明（原型 .foot-note 原句） */
-export const NEW_UI_RANK_FOOT_NOTE = '榜单由各平台整理 · 点进去看完整排名'
 
 /** 空态 / 加载态文案（原型 .empty-tip 口径：说人话，不带开发术语） */
 export const NEW_UI_RANK_EMPTY = {

@@ -17,27 +17,23 @@ export type PcButtonKind = 'ghost' | 'main' | 'tool' | 'fav'
 
 export interface PcButtonProps {
   /**
-   * 变体（对应原型 .pc 的四类）：
-   * ghost = 上/下曲（透明圆钮 + 27px 亮图标）；
-   * main  = 播/停（64px 渐变底 + 深色图标 + 主色光晕）；
-   * tool  = 收藏以外带标签的竖排钮（图标 + 小字，选中 brand 色）；
-   * fav   = 收藏心钮（40px / 24 图标，已收藏 brand 色）。
+   * 变体：ghost = 上/下曲（透明圆钮 + 亮图标）；main = 播/停（渐变底 + 深色图标 + 光晕）；
+   * tool = 图标 + 小字竖排钮；fav = 收藏心钮。
    */
   kind: PcButtonKind
   name: IconName
   /** tool 变体的下标签（其余变体忽略） */
   label?: string
-  /** 选中态（tool 变体：.pc.tool.on 主色；fav：已收藏） */
+  /** 选中态（tool 转主色；fav 显示实心） */
   active?: boolean
   onPress?: () => void
-  /** 无障碍标签（原型 aria-label：上一曲 / 下一曲 / 播放暂停 / 定时…） */
+  /** 无障碍标签 */
   accessibilityLabel?: string
   style?: StyleProp<ViewStyle>
 }
 
 /**
- * 播放页主控制行按钮（对应原型 .pc，styles.css L570-579）。
- * 纯展示组件：按压缩放用 Pressable pressed 态表达（原型 :active scale(.93)）。
+ * 播放页主控制行按钮。纯展示组件，按压缩放用 Pressable pressed 态表达。
  */
 export const PcButton = memo(
   ({ kind, name, label, active, onPress, accessibilityLabel, style }: PcButtonProps) => {
@@ -157,19 +153,16 @@ const styles = StyleSheet.create({
     gap: PLAYER.pcToolGap,
   },
   /**
-   * .pc.tool .ic align-self:end（styles.css L575-576：grid 两行 1fr/auto，
-   * 图标行吃掉余量且图标贴行底，图标中心落在盒内 ~24px 处）：
-   * RN 里用 marginTop:'auto' 把余量吸到图标上方，图标+标签整体沉底、
-   * 图标与 ghost/main 的图标中心线水平对齐（marginBottom:'auto' 方向相反，
-   * 会把图标顶到盒顶导致五钮错位）。
+   * 图标 + 标签整体沉底，使图标中心与 ghost / main 对齐；
+   * 若改 marginBottom:'auto' 会把图标顶到盒顶，五钮错位。
    */
   toolIcon: {
     marginTop: 'auto',
   },
-  /** .pc.tool em：9.5px / 700 / letter-spacing .3。
-   *  原型那句 `line-height:1` **不直译**（与 Chip.tsx 同一颗雷，见其注释）：等值于字号的 `lineHeight`
-   *  在 Android 上把 CJK 字形削半，而 `base` 还带固定高 + `overflow:'hidden'`，削完再被盒边裁一次。
-   *  竖排居中的活由 `base` 的 `alignItems/justifyContent:'center'` 与 `toolIcon` 的 `marginTop:'auto'` 承担。 */
+  /**
+   * 标签字号小、字重粗。不写等值于字号的 lineHeight：Android 上会把 CJK 字形削半，
+   * 且 base 带固定高 + overflow hidden，削完还会被盒边再裁一次。
+   */
   toolLabel: {
     fontSize: PLAYER.pcToolLabelSize,
     fontWeight: FONT_WEIGHT.bold,

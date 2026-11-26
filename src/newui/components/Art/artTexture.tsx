@@ -5,14 +5,14 @@ import Svg, { Circle, Path, Polygon, Rect } from 'react-native-svg'
 import { ART_INK, ART_PALETTES } from '@/newui/theme'
 import { hashString } from '@/newui/utils'
 
-/** 封面三色组（c1 渐变起 / c2 渐变止 / c3 纹理点缀），提取自 data.js 的 PALETTES */
+/** 封面三色组（c1 渐变起 / c2 渐变止 / c3 纹理点缀） */
 export type ArtTriple = readonly [string, string, string]
 
-/** 种子 → 色板：原型 palette(seed) = PALETTES[hash(seed) % 8] */
+/** 种子 → 色板：按 hash 取色板 */
 export const pickArtPalette = (seed: string): ArtTriple =>
   ART_PALETTES[hashString(seed) % ART_PALETTES.length]
 
-/* ============ 程序化纹理（对应原型 app.js 的 svgArt，4 变体按 hash%4 取） ============ */
+/* ============ 程序化纹理：4 变体按 hash%4 取 ============ */
 
 /** 变体 1 的波形行序号（y = 26 + i * 14） */
 const WAVE_ROWS = [0, 1, 2, 3, 4]
@@ -30,9 +30,8 @@ interface ArtTextureProps {
 }
 
 /**
- * 封面程序化纹理：铺在渐变底之上、照片之下的装饰层。
- * 坐标 / 透明度 / 线宽逐项对应原型 svgArt()，保证 seed 相同则图案相同。
- * 其中的白色装饰为「图像语义」固定色（ART_INK.fg，对应原型字面量 #fff），不走色板。
+ * 封面程序化纹理：铺在渐变底之上的装饰层，seed 相同则图案相同。
+ * 白色装饰为「图像语义」固定色（ART_INK.fg），不走色板。
  */
 export const ArtTexture = memo(({ seed, palette }: ArtTextureProps) => {
   const [c1, , c3] = palette

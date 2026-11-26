@@ -8,22 +8,19 @@ import { ICON_DATA } from './icons'
 import { EXTRA_ICON_DATA, type ExtraIconName } from './iconsExtra'
 import type { IconDef, IconNode } from './types'
 
-/**
- * 可用图标名 = 原型 sprite 生成名（icons.ts，脚本产物）+ 新 UI 自补名（iconsExtra.ts）。
- * 生成文件不许手改，所以并集在这里做，消费方（各组件的 `name` prop）只认这一个 IconName。
- */
+/** 可用图标名 = 脚本生成名（icons.ts）+ 手写补充名（iconsExtra.ts） */
 export type IconName = keyof typeof ICON_DATA | ExtraIconName
 
-/** 两张表合并后的查表入口（模块级一次成型，渲染期不再拼对象） */
+/** 模块级合并查表，渲染期不再拼对象 */
 const ALL_ICON_DATA: Record<IconName, IconDef> = { ...ICON_DATA, ...EXTRA_ICON_DATA }
 
-/** 原型 .ic 的默认尺寸 22px */
+/** 默认尺寸 */
 const DEFAULT_SIZE = 22
 
 export interface IconProps {
-  /** 图标名（原型 SVG sprite 的 i-xxx，kebab 已转 camelCase；sprite 没有的自补名见 iconsExtra.ts） */
+  /** 图标名（kebab 已转 camelCase；补充字形见 iconsExtra.ts） */
   name: IconName
-  /** 像素尺寸，默认 22（.ic） */
+  /** 像素尺寸，默认 22 */
   size?: number
   /** 颜色；缺省取主题主文字色。数据中的 currentColor 会替换为该值 */
   color?: string
@@ -116,15 +113,12 @@ const renderNode = (node: IconNode, color: string, key: number): ReactNode => {
         </SvgText>
       )
   }
-  // 兜底：新增图标元素类型时返回 null，避免渲染崩溃
+  // 兜底：未知节点类型返回 null，避免渲染崩溃
   return null
 }
 
-/**
- * 图标组件：字形数据来自 new_design/index.html 的 SVG sprite（icons.ts 由脚本生成、勿手改），
- * sprite 里没有的走 iconsExtra.ts；两张表在模块级合成 ALL_ICON_DATA，渲染期一次查表。
- * 用法：<Icon name="play" size={22} color={theme.colors.text2} />
- */
+/** 图标组件：字形合并 icons.ts（脚本生成）与 iconsExtra.ts，渲染期一次查表 */
+
 export const Icon = memo(({ name, size = DEFAULT_SIZE, color, style }: IconProps) => {
   const theme = useTheme()
   const resolvedColor = color ?? theme.colors.text

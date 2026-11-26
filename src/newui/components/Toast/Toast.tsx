@@ -7,26 +7,21 @@ import { subscribeNewUiToast, type NewUiToastDuration } from '@/newui/utils/newU
 import { BlurredContainer } from '../Glass'
 
 export interface NewUiToastHostProps {
-  /** 底部安全区（与 TOAST.bottomGap——原型净高——相加成实际底边距） */
+  /** 底部安全区（与 TOAST.bottomGap 相加成实际底边距） */
   bottomInset?: number
 }
 
-/** 原型 --ease: cubic-bezier(.22,.61,.36,1)（与 Sheet 骨架同一条曲线） */
+/** 与 Sheet 骨架共用同一条缓动曲线 */
 const EASE = Easing.bezier(MOTION.easing[0], MOTION.easing[1], MOTION.easing[2], MOTION.easing[3])
 
 /**
- * 提示胶囊的屏幕根层挂载件（QA 2026-10-14 D-09 观感：系统白框 toast → 原型深色贴片胶囊）。
- * 视觉逐段对照 styles.css L795-803：--glass 底 + blur(18px)（走共通件 BlurredContainer，
- * 规格 GLASS.toast）、--glass-ink 字、1px --line-strong 描边、圆角 14、padding 10/16、
- * 字号 12.5/600、max-width 78%、底边距净高 168 + 安全区；进出场 opacity + 14px 下潜位移
- * .32s（原型 .show 态的等价），停留 2000ms（长句档 3500ms，见 theme/TOAST）。
- * 交互对照 app.js L102-107：连发覆盖——新提示直接换文案并重新计时（clearTimeout 同语义）。
- * 层叠：原型 .toast z-index:90 压在浮层(80)之上（全站最高 JS 层），所以本件必须挂在
- * 所在屏幕根 View 的**最后一个子视图**（各屏接线处已保证），pointer-events:none 不吃任何点击。
- * 本件是「订阅型展示容器」：只订阅 utils/newUiToast 投递总线并渲染，不读任何业务状态；
- * 各 newui 屏幕（主屏 / 播放页 / 详情层 / 搜索层）根层各挂一台，投递交由 showNewUiToast()。
- * 已知近似：Android 侧 BlurView 对父层圆角裁切支持有限，降级路径（无模糊注册）不受影响；
- * 设备验收若直角穿帮，单点传 BlurredContainer enabled=false 即可退回贴片染色。
+ * 提示胶囊的屏幕根层挂载件：--glass 底 + blur(18px)（走 BlurredContainer，规格 GLASS.toast）、
+ * glass 墨色字、1px 描边、圆角 14、padding 10/16、字号 12.5/600、max-width 78%；
+ * 进出场 opacity + 下潜位移 .32s，停留 2000ms（长句档 3500ms）。
+ * 连发覆盖：新提示直接换文案并重新计时。
+ * 层叠压在浮层(80)之上，必须挂在所在屏幕根 View 的最后一个子视图，pointerEvents="none" 不吃点击。
+ * 订阅型展示容器：只订阅 utils/newUiToast 投递总线，各 newui 屏幕根层各挂一台。
+ * Android 侧 BlurView 对父层圆角裁切支持有限，降级路径不受影响；直角穿帮时可传 enabled=false 退回贴片染色。
  */
 export const NewUiToastHost = ({ bottomInset = 0 }: NewUiToastHostProps) => {
   const theme = useTheme()
@@ -99,17 +94,16 @@ export const NewUiToastHost = ({ bottomInset = 0 }: NewUiToastHostProps) => {
 NewUiToastHost.displayName = 'NewUIToastHost'
 
 const styles = StyleSheet.create({
-  /** .toast position:absolute left:50% + translateX(-50%) 的等价：整行铺宽 + 水平居中 */
+  /** 整行铺宽 + 水平居中（等价 left:50% + translateX(-50%)） */
   layer: {
     position: 'absolute',
     left: 0,
     right: 0,
     alignItems: 'center',
-    // 原型 z-index:90（高于 .sheet 80）：必须在屏幕根层最后挂载，见组件头注
+    // 压在 .sheet 之上：必须在屏幕根层最后挂载
     zIndex: Z_LAYER.toast,
   },
-  /** padding / radius / 1px 描边 / max-width 78% / box-shadow 逐项对照 styles.css L796-801；
-   *  描边基色 lineStrong 随主题（组件侧传入） */
+  /** padding / radius / 1px 描边 / max-width 78% / box-shadow；描边基色 lineStrong 随主题 */
   capsule: {
     maxWidth: `${TOAST.maxWidthRatio * 100}%`,
     borderRadius: TOAST.radius,
@@ -123,7 +117,6 @@ const styles = StyleSheet.create({
     shadowRadius: TOAST.shadowRadius,
     elevation: TOAST.elevation,
   },
-  /** font-size:12.5px;font-weight:600;text-align:center（L798） */
   text: {
     fontSize: FONT_SIZE.smallLg,
     fontWeight: TOAST.fontWeight,

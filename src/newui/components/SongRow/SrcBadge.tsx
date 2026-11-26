@@ -13,8 +13,7 @@ export interface SrcBadgeProps {
 }
 
 /**
- * 来源平台角标（对应原型 .src-badge）：
- * tint 色文字 + 16% tint 底 + 34% tint 描边（color-mix 的预计算等价）。
+ * 来源平台角标：tint 色文字 + 16% tint 底 + 34% tint 描边。
  * 目前仅歌曲行使用；如他处再出现同一视觉，再提升为公共组件。
  */
 export const SrcBadge = memo(({ label, tint, style }: SrcBadgeProps) => (

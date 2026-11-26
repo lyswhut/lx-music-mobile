@@ -14,50 +14,47 @@ import { BUTTON, CONTROL, MOTION, RADIUS, useTheme } from '@/newui/theme'
 
 import { Icon, type IconName } from '../Icon'
 
-/** `.icon-btn:active{transform:scale(.9)}`（styles.css L135），过渡 `.2s` 即 `MOTION.fast` */
+/** 按压缩放 .9，过渡 .2s */
 const ICON_BTN_PRESS_SCALE = 0.9
 
 /** 按压反馈要动 `Pressable` 本体：套一层 `Animated.View` 会改掉 flex 布局，见 usePressFx 头注 */
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
 export interface IconButtonProps {
-  /** 图标名（对应原型 .icon-btn 内的 .ic） */
+  /** 图标名 */
   name: IconName
   onPress?: () => void
-  /** 边长，默认 34（.icon-btn）；.pl-actions 规格传 BUTTON.iconSizeLg */
+  /** 边长，默认 34；.pl-actions 规格传 BUTTON.iconSizeLg */
   size?: number
   /** 图标尺寸，默认 18；42 规格传 BUTTON.iconIconLg */
   iconSize?: number
   /** 圆角，默认全圆；方形变体（.pl-actions）传 RADIUS.control */
   radius?: number
-  /** 选中态（.icon-btn.on / .pl-actions .icon-btn.on）：brand 图标 + brandWash 底 */
+  /** 选中态：brand 图标 + brandWash 底 */
   active?: boolean
-  /** 加强底（.pl-top / .player-top .icon-btn 的 rgba(255,255,255,.08)） */
+  /** 加强底（.pl-top / .player-top 的 rgba(255,255,255,.08)） */
   strong?: boolean
   /**
-   * 破坏性动作（删除等，2026-10-13 本地歌单删除入口）：图标改用 err 色
-   * （与 .op-err 报错行同一颗色），和收藏 / 常规钮一眼分开；底色档位不变，仍按 strong / active 走。
+   * 破坏性动作（删除等）：图标改用 err 色，与收藏 / 常规钮一眼分开；
+   * 底色档位不变，仍按 strong / active 走。
    */
   danger?: boolean
   /**
-   * 状态圆点（.pulse-dot）：只有「warn」一档（琥珀告警）。
-   * 原型 app.js renderNav L2451-2459 + styles.css L138-144 的口径：
-   * 这颗点只表示「有事没办完」，没有常驻绿灯——配好了调用方根本不传这个 prop，整颗不渲染。
+   * 状态圆点，仅「warn」一档（琥珀告警）：表示「有事没办完」。
+   * 不传则整颗不渲染。
    */
   dot?: 'warn'
-  /** 图标变换（原型用 .ic transform 表达朝向，如返回 rotate(180deg)、收起 rotate(90deg)） */
+  /** 图标变换（表达朝向，如返回 rotate(180deg)、收起 rotate(90deg)） */
   iconStyle?: StyleProp<ViewStyle>
-  /** 无障碍标签（图标钮只有图标，需口头说明用途） */
+  /** 无障碍标签 */
   accessibilityLabel?: string
   style?: StyleProp<ViewStyle>
 }
 
 /**
- * .pulse-dot 呼吸扩散环（原型 styles.css L139-146 @keyframes pulse，周期 MOTION.pulse=2200ms）：
- * CSS 用 box-shadow spread 0→7px、alpha .5→0（0%→70%，后 30% 全隐）；RN 无动画 box-shadow，
- * 等价改为一枚同心圆环从点位置放大到终径（dotSize + 2×spread）同时淡出，70% 后停住隐没段。
- * 仓库无 reanimated，沿用 DiscArt / .eq 的既有做法：RN Animated 链式循环，
- * opacity + transform 全程 useNativeDriver。只在 warn 点渲染期间挂载（配好即整颗撤，不留空转循环）。
+ * .pulse-dot 呼吸扩散环：CSS 用 box-shadow spread 扩散，
+ * RN 无动画 box-shadow，改为同心圆环放大同时淡出，全程 useNativeDriver。
+ * 只在 warn 点渲染期间挂载，不留空转循环。
  */
 const DotPulse = memo(({ color }: { color: string }) => {
   const phase = useRef(new Animated.Value(0)).current
@@ -107,8 +104,8 @@ const DotPulse = memo(({ color }: { color: string }) => {
 DotPulse.displayName = 'NewUIIconButtonDotPulse'
 
 /**
- * 图标按钮（对应原型 .icon-btn）。顶栏音源入口、歌单详情返回 / 收藏、播放页收起等处复用。
- * 纯展示组件：选中态与状态点由容器传入，不发请求、不读 store。
+ * 图标按钮：顶栏音源入口、歌单详情返回 / 收藏、播放页收起等处复用。
+ * 纯展示组件：选中态与状态点由容器传入。
  */
 export const IconButton = memo(
   ({
@@ -126,15 +123,14 @@ export const IconButton = memo(
     style,
   }: IconButtonProps) => {
     const theme = useTheme()
-    // .icon-btn:active 缩到 .9 并把这段过渡补成 200ms（原型 `.icon-btn{transition:.2s var(--ease)}`）
+    // 按压缩到 .9，过渡 200ms
     const pressFx = usePressFx({ scale: ICON_BTN_PRESS_SCALE })
     /**
-     * 触区补到 44：原型只有视觉边（34 / 42），手指按不满。外扩量按缺口一半算
-     * （34 → 每边 5、42 → 每边 1），**只加热区**，width/height/圆角与相邻排布一个像素不动。
-     * 顶栏那排 gap 是 10、`.pl-actions` 是 8，都比最大外扩 5 宽，不会与邻钮抢点击。
+     * 触区补到 44：原型视觉边只有 34 / 42，手指按不满。
+     * **只加热区**，宽高 / 圆角 / 相邻排布一个像素不动。
      */
     const hitSlop = Math.max(0, Math.ceil((CONTROL.hitTarget - size) / 2))
-    // 底色三档：选中 brandWash > 加强 fill3（.pl-top / .player-top）> 默认 fill2（原型 .icon-btn）
+    // 底色三档：brandWash > fill3（加强）> fill2（默认）
     const backgroundColor = active
       ? theme.colors.brandWash
       : strong
@@ -169,7 +165,7 @@ export const IconButton = memo(
         />
         {dot === 'warn' && (
           <>
-            {/* 呼吸环垫在实心点之下：先挂环、再挂点，点始终压在环心（原型 box-shadow 在点外围） */}
+            {/* 呼吸环垫在实心点之下：先挂环再挂点 */}
             <DotPulse color={theme.colors.brand3} />
             <View pointerEvents="none" style={[styles.dot, { backgroundColor: theme.colors.brand3 }]} />
           </>
@@ -188,7 +184,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 1,
   },
-  /** .pulse-dot：7px 圆点，右上偏移 4px（@keyframes pulse 呼吸扩散见 DotPulse） */
+  /** 状态圆点：右上偏移 */
   dot: {
     position: 'absolute',
     top: BUTTON.dotOffset,
@@ -197,7 +193,7 @@ const styles = StyleSheet.create({
     height: BUTTON.dotSize,
     borderRadius: BUTTON.dotSize / 2,
   },
-  /** 呼吸环：与点同心，尺寸/半径/偏移由 DotPulse 按 BUTTON.dotRing* 计算 */
+  /** 呼吸环：与点同心，尺寸由 DotPulse 计算 */
   dotRing: {
     position: 'absolute',
   },

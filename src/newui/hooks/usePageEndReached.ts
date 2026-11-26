@@ -1,11 +1,8 @@
 import { useEffect, useRef } from 'react'
 
 /**
- * 「滚动容器触底」跨层信号（第 7b 轮排行榜分批续取引入）。
- * 背景：页面滚动容器 PageViewport 挂在主屏（MainScreen）上、五个 Tab 页共用一个实例，
- * 页面组件拿不到 ScrollView 的滚动事件。主屏把 onEndReached 广播到这里，
- * 需要触底的页面（当前只有排行榜）就地注册处理函数——页面与主屏互不import彼此的业务。
- * 同一时刻只有一个页面挂载（主屏按 tabKey 重挂载），监听者天然最多一个；
+ * 「滚动容器触底」跨层信号：滚动容器挂在主屏上，页面拿不到滚动事件，
+ * 主屏把 onEndReached 广播到此，需要的页面就地注册处理函数。
  * 广播用快照遍历，防处理函数里同步退订时迭代坏 Set。
  */
 type EndReachedHandler = () => void

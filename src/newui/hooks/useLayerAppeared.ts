@@ -5,13 +5,8 @@ import { Navigation } from 'react-native-navigation'
 const FALLBACK_MS = 1200
 
 /**
- * 推入层是否已经完成入场。
- *
- * RNN 在 push 转场结束时才发 componentDidAppear。层内首帧如果就把重内容（歌曲行、
- * 毛玻璃迷你条、唱盘自转…）挂上原生视图树，会和这段转场抢同一段 UI 线程，表现为
- * 滑到一半顿一下。用这个 hook 把重内容放到入场之后，转场期间只留头部一层轻结构。
- *
- * 兜底：转场被系统关闭 / 事件没送到时，FALLBACK_MS 后照常放行，不能让内容一直不出。
+ * 推入层是否已完成入场：层内首帧挂重内容会与 push 转场抢 UI 线程，故放到入场之后。
+ * 兜底：转场事件丢失时 FALLBACK_MS 后照常放行。
  */
 export const useLayerAppeared = (componentId: string): boolean => {
   const [appeared, setAppeared] = useState(false)

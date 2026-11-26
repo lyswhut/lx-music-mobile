@@ -1,9 +1,6 @@
-/**
- * 图标数据结构：由 new_design/index.html 的 SVG sprite 转换而来。
- * 生成文件见 icons.ts（scripts/gen-newui-icons.mjs 自动生成，勿手改）。
- */
+/** 图标数据结构（icons.ts 由脚本生成，勿手改） */
 
-/** 单个 SVG 节点（仅覆盖原型 sprite 用到的元素类型） */
+/** 单个 SVG 节点（仅覆盖实际用到的元素类型） */
 export interface IconNode {
   type: 'path' | 'circle' | 'rect' | 'g' | 'text'
   /** 已 camelCase 化的元素属性；纯数值已转 number */

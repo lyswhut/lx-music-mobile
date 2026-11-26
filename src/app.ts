@@ -53,8 +53,10 @@ void Promise.all([getFontSize(), windowSizeTools.init()]).then(async([fontSize])
     if (!isInited) return
     // import('@/utils/nativeModules/cryptoTest')
 
-    const { setNewUiRoot } = await import('@/newui/navigation')
+    const { setNewUiRoot, showNewUiWelcome } = await import('@/newui/navigation')
     await setNewUiRoot().then(async() => {
+      // 冷启动欢迎屏：纯白文字层淡出到首页；失败忽略，不阻塞启动尾的静默任务
+      void showNewUiWelcome().catch(() => {})
       // 新 UI 启动尾：只做静默任务，不再触发任何旧弹窗（谨防被骗 / 协议 / 更新检查）
       const { runNewUiBoot } = await import('@/newui/boot')
       void runNewUiBoot()

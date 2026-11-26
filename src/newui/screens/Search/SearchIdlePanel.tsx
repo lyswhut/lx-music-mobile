@@ -13,22 +13,21 @@ import { FONT_SIZE, FONT_WEIGHT, SEARCH, useTheme } from '@/newui/theme'
 
 export interface SearchIdlePanelProps {
   /**
-   * 搜索历史（新→旧，已是本机最新值；条数上限由容器侧 searchHistory 适配层截到 8）。
-   * `null` = 还没从本机读完（冷启动首帧）：历史区整块先不渲染，别先闪一下空态那行人话。
+   * 搜索历史（新→旧，已是本机最新值，最多 8 条）。
+   * `null` = 还没从本机读完（冷启动首帧）：历史区整块先不渲染，避免先闪一下空态。
    */
   history: string[] | null
   /** 大家都在搜（真实热搜，容器截断到 NEW_UI_SEARCH_HOT_LIMIT） */
   hotWords: string[]
-  /** 点词即搜（原型 pickQuery） */
+  /** 点词即搜 */
   onPick: (word: string) => void
-  /** 清空历史（原型 .sc-clear） */
+  /** 清空历史 */
   onClearHistory: () => void
 }
 
 /**
- * 搜索空输入态（原型 renderSearchIdle，app.js L3583-3609）：
- * 历史词 + 热搜词两组胶囊 + 尾注；一条历史都没有时历史区换成一行 `.empty-tip`
- * （L3595-3599「这一区不塌成空白，也不摆『暂无数据』那种话」）。纯展示，数据与动作全部由容器传入。
+ * 搜索空输入态：历史词 + 热搜词两组胶囊 + 尾注；
+ * 一条历史都没有时历史区换成一行 EmptyTip。纯展示，数据与动作全部由容器传入。
  */
 export const SearchIdlePanel = memo(({
   history,
@@ -45,7 +44,7 @@ export const SearchIdlePanel = memo(({
         : history.length > 0
           ? (
             <>
-              {/* .sc-label：左标题右「清空」 */}
+              {/* 左标题右「清空」 */}
               <View style={styles.label}>
                 <Text style={[styles.labelText, { color: theme.colors.text2 }]}>
                   {NEW_UI_SEARCH_LABELS.history}
@@ -70,8 +69,7 @@ export const SearchIdlePanel = memo(({
             </>
           )
           : (
-            /* 一条都没有：不塌成空白，一行人话（原型 .empty-tip；搜索层壳带 .pl-layer，
-               所以走 layer 档的内边距 34px 0，见 index.html L386 与 styles.css L645） */
+            /* 一条都没有：不塌成空白，一行人话（layer 档内边距） */
             <EmptyTip variant="layer" text={NEW_UI_SEARCH_HISTORY_EMPTY} />
           )}
 
@@ -91,7 +89,7 @@ export const SearchIdlePanel = memo(({
           <Text style={[styles.hotEmpty, { color: theme.colors.text3 }]}>{NEW_UI_SEARCH_HOT_EMPTY}</Text>
         )}
 
-      {/* .sc-hint */}
+      {/* 尾注 */}
       <Text style={[styles.hint, { color: theme.colors.text3 }]}>{NEW_UI_SEARCH_IDLE_HINT}</Text>
     </View>
   )
@@ -100,7 +98,7 @@ export const SearchIdlePanel = memo(({
 SearchIdlePanel.displayName = 'NewUISearchIdlePanel'
 
 const styles = StyleSheet.create({
-  /** .sc-label margin:18px 0 10px / 12.5 / 600，b 走 text-2 700 */
+  /** 标题行：左标题右「清空」 */
   label: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -112,7 +110,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.smallLg,
     fontWeight: FONT_WEIGHT.bold,
   },
-  /** .sc-clear：11.5 / text-3 / gap 1（图标 13） */
+  /** 「清空」按钮：小字 + 图标 */
   clear: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -124,11 +122,11 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.6,
   },
-  /** 热搜还没回来 / 全平台都空时的说明行（原型 mock 恒有词，真实数据需要如实空态） */
+  /** 热搜还没回来 / 全平台都空时的说明行 */
   hotEmpty: {
     fontSize: FONT_SIZE.captionLg,
   },
-  /** .sc-hint：11 / mt 16 / 行高 1.7 ≈ 19 */
+  /** 尾注 */
   hint: {
     marginTop: SEARCH.hintMarginTop,
     fontSize: FONT_SIZE.caption,

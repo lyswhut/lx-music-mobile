@@ -1,14 +1,10 @@
 /* eslint-disable */
 /**
- * 本文件由 scripts/gen-newui-rank-covers.mjs 从 new_design/rank-covers/*.png 生成，请勿手改。
- * ./covers/<key>.webp 是母图（无损 PNG，只留在原型那侧）按 q85 压出来的出包件；母图 49 张合计 17.03 MB，
- * 原样进包会把 APK 从 13.9 MB 顶到 32 MB，所以打进去的是 WebP。改画质请改生成脚本 WEBP_QUALITY 再重跑。
- * 卡上那两行白字直接压图，只靠紧贴字边的小投影兜可读性（ChartArt），**不叠压顶遮罩**——
- * 2026-10-22 那档遮罩按用户口径撤了；要再挂得先重跑 scripts/rank-scrim-solver.html 对出包这批重证。
- * 由 Metro 打进 APK（装了就能看，不连 dev server）。require 的路径必须写成字面量，动态拼路径 Metro 收不到。
+ * 本文件由 scripts/gen-newui-rank-covers.mjs 生成，请勿手改。
+ * WebP 由母图（无损 PNG）压出，require 路径必须写字面量，否则 Metro 收不到。
  */
 
-/** 封面 key → 静态资源（key = new_design/rank-covers/ 的文件名；判据见 const/rankCoverWords.ts，命不中时外层铺 default 那张） */
+/** 封面 key → 静态资源；命不中时外层铺 default 那张 */
 export const RANK_COVER_ASSETS: Readonly<Record<string, number>> = {
   "acg": require('./covers/acg.webp'),
   "ancient_style": require('./covers/ancient_style.webp'),

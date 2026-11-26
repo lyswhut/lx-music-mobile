@@ -18,25 +18,21 @@ export interface PlaylistHeroProps {
   /** 封面图（passProp img 优先，回落平台返回的 info.img） */
   artUri?: string
   name: string
-  /** 简介（原型 ph-sub：desc || author，空则不渲染） */
+  /** 简介（desc || author，空则不渲染） */
   sub: string
-  /** .ph-meta 左胶囊（rank 形态 = 平台名；pl/mine 形态 = 「n/m 首可播」） */
+  /** 左胶囊：rank 形态 = 平台名；pl/mine 形态 = 总曲目数 */
   metaTag: string
-  /** 胶囊后的文字段（原型：rank 形态「N 首」、plays「N播放」），以 1×9 竖线分隔 */
+  /** 胶囊后的文字段（如「N 首」「N 播放」），以竖线分隔 */
   metaParts: string[]
   /**
-   * rank 形态专属：true 时头图方块换成 ChartArt（该榜那张真插画，判据命不中铺 default 兜底），
-   * 与榜单页 RankCard 共用同一颗 rankCoverKey，点进详情认的还是同一张脸（原型 app.js 的 chartArt(plNow)）。
-   * 缺省（false）走 Art 封面。
+   * rank 形态：true 时头图换 ChartArt（该榜那张真插画），与榜单页 RankCard 共用 rankCoverKey；
+   * 缺省走 Art 封面。
    */
   isChart?: boolean
 }
 
 /**
- * 歌单详情头部（对应原型 .pl-hero，styles.css 的 .pl-hero 一族）：
- * 124 大封面 + 底部对齐的名字 / 简介 / 元信息行。
- * 头图方块两种脸（原型 app.js 的 chartArt(plNow) 分支）：rank 形态 = ChartArt（该榜那张插画，不带文字，
- * 与榜单页卡片同一条查表）；其余形态 = Art（真实封面图优先，无图走种子程序化底）。
+ * 歌单详情头部：124 大封面 + 名字 / 简介顶对齐、平台 / 播放数底对齐。
  * 纯展示组件：可播统计与文案拼接都由容器算好后传入。
  */
 export const PlaylistHero = memo(({ artSeed, artUri, name, sub, metaTag, metaParts, isChart }: PlaylistHeroProps) => {
@@ -44,10 +40,8 @@ export const PlaylistHero = memo(({ artSeed, artUri, name, sub, metaTag, metaPar
   return (
     <View style={styles.root}>
       {isChart
-        // 榜单形态头图 = 该榜的视觉资产（原型 chartArt(plNow)）：
-        // 只有插画、不含文字——原型 chartArt() 生成的方块里没有 .rk-name/.rk-sub 两层
-        // （那两个是 rankCard() 才加的），榜名文字在正文侧 h3，故 showText=false，避免出现两遍榜名。
-        // 尺寸/圆角与原型 .pl-hero .art 对齐：124×124（PL_LAYER.heroArtSize）、radius 20（RADIUS.art）。
+        // 榜单头图 = 该榜插画，不含文字（榜名在正文侧），避免出现两遍榜名；
+        // 尺寸 / 圆角与头部封面一致
         ? (
           <ChartArt
             width={PL_LAYER.heroArtSize}
@@ -69,14 +63,16 @@ export const PlaylistHero = memo(({ artSeed, artUri, name, sub, metaTag, metaPar
           />
         )}
       <View style={styles.body}>
-        <Text numberOfLines={2} style={[styles.name, { color: theme.colors.text }]}>
-          {name}
-        </Text>
-        {sub.length > 0 && (
-          <Text numberOfLines={2} style={[styles.sub, { color: theme.colors.text2 }]}>
-            {sub}
+        <View style={styles.head}>
+          <Text numberOfLines={2} style={[styles.name, { color: theme.colors.text }]}>
+            {name}
           </Text>
-        )}
+          {sub.length > 0 && (
+            <Text numberOfLines={2} style={[styles.sub, { color: theme.colors.text2 }]}>
+              {sub}
+            </Text>
+          )}
+        </View>
         <View style={styles.meta}>
           <QTag label={metaTag} />
           {metaParts.map(part => (
@@ -94,7 +90,6 @@ export const PlaylistHero = memo(({ artSeed, artUri, name, sub, metaTag, metaPar
 PlaylistHero.displayName = 'NewUIPlaylistHero'
 
 const styles = StyleSheet.create({
-  /** .pl-hero display:flex gap:14 margin:22px 0 2px min-height:124 */
   root: {
     flexDirection: 'row',
     alignItems: 'stretch',
@@ -103,29 +98,31 @@ const styles = StyleSheet.create({
     marginBottom: PL_LAYER.heroMarginBottom,
     minHeight: PL_LAYER.heroMinHeight,
   },
-  /** .pl-hero .art 外投影（CSS 负 spread 无法表达，取 SHADOW.card 近似） */
+  /** 外投影（CSS 负 spread 无法表达，取 SHADOW.card 近似） */
   art: {
     ...SHADOW.card,
   },
-  /** .ph-body：flex:1 内容底部对齐 gap:6 */
+  /** 名字 / 简介贴顶，平台 / 热度贴底 */
   body: {
     flex: 1,
     minWidth: 0,
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     gap: PL_LAYER.heroBodyGap,
   },
-  /** h3 18/900 line-height 1.35 */
+  /** 名字与简介之间的紧凑节奏 */
+  head: {
+    gap: PL_LAYER.heroBodyGap,
+  },
   name: {
     fontSize: FONT_SIZE.heading,
     fontWeight: FONT_WEIGHT.black,
     lineHeight: Math.round(FONT_SIZE.heading * PL_LAYER.heroTitleLineHeightRatio),
   },
-  /** .ph-sub 11.5/1.5 */
   sub: {
     fontSize: FONT_SIZE.captionLg,
     lineHeight: Math.round(FONT_SIZE.captionLg * PL_LAYER.heroSubLineHeightRatio),
   },
-  /** .ph-meta flex-wrap gap:6（10.5 号三级字）；与上方文案的节奏由 .ph-body 的 gap:6 承担 */
+  /** 平台 / 播放数行，可换行 */
   meta: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -135,7 +132,7 @@ const styles = StyleSheet.create({
   metaText: {
     fontSize: FONT_SIZE.tiny,
   },
-  /** .sep 1×9 竖线 */
+  /** 竖线分隔符 */
   sep: {
     width: PL_LAYER.metaSepWidth,
     height: PL_LAYER.metaSepHeight,

@@ -14,27 +14,25 @@ import {
 import { Icon } from '../Icon'
 
 export interface SectionProps {
-  /** 区块标题（.section-title 19px）；原型部分区块无页头（如首页「每日推荐」），此时不传 */
+  /** 区块标题；部分区块无页头（如「每日推荐」），此时不传 */
   title?: string
-  /** 小标题形态（.section-sub 16px），用于「我的歌单」这类二级区块 */
+  /** 小标题形态，用于「我的歌单」这类二级区块 */
   sub?: boolean
   /** 右侧动作文案（「全部歌单」「清空记录」）；不传则不渲染 */
   more?: string
   onMorePress?: () => void
   /**
-   * 右侧自定义件（原型 `.section-head` 里非「更多」的右件，如歌单池的 `.pl-count`）；
-   * 传了就顶替 more 的位置，两者互斥由容器保证。
+   * 右侧自定义件（如歌单池的计数）；传了就顶替 more 的位置，两者互斥由容器保证。
    */
   right?: ReactNode
-  /** 区块内容（卡片行 / 列表等） */
+  /** 区块内容 */
   children?: ReactNode
   style?: StyleProp<ViewStyle>
 }
 
 /**
- * 区块骶架（对应原型 .section / .section-head）：可选标题 + 可选右侧「更多」+ 内容。
- * 页面区块一律走它，26px 区块间距与 12px 头部间距由 token 统一；
- * 两者都没传时只保留区块间距（原型 `.section > .daily-card` 那种无页头情式）。
+ * 区块骨架：可选标题 + 可选右侧「更多」+ 内容。
+ * 区块间距与头部间距由 token 统一；标题与右件都没传时只保留区块间距。
  */
 export const Section = memo(
   ({ title, sub = false, more, onMorePress, right, children, style }: SectionProps) => {
@@ -88,11 +86,10 @@ export const Section = memo(
 Section.displayName = 'NewUISection'
 
 const styles = StyleSheet.create({
-  /** .section margin-top:26px */
   root: {
     marginTop: LAYOUT.sectionGap,
   },
-  /** .section-head：CSS 为 baseline 对齐，RN 以 center 近似（图文混排视觉差异极小） */
+  /** CSS 为 baseline 对齐，RN 以 center 近似 */
   head: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -100,21 +97,18 @@ const styles = StyleSheet.create({
     gap: SPACING.md,
     marginBottom: SPACING.md,
   },
-  /** .section-title 19px / 800 */
   title: {
     flexShrink: 1,
     fontSize: FONT_SIZE.headingLg,
     fontWeight: FONT_WEIGHT.extraBold,
     letterSpacing: LETTER_SPACING.tight,
   },
-  /** .section-sub 16px / 800 */
   subTitle: {
     flexShrink: 1,
     fontSize: FONT_SIZE.headingSm,
     fontWeight: FONT_WEIGHT.extraBold,
     letterSpacing: LETTER_SPACING.tight,
   },
-  /** .section-more：12.5px 文字 + 13px 箭头（gap 1px） */
   more: {
     flexShrink: 0,
     flexDirection: 'row',

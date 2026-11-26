@@ -7,7 +7,7 @@ import { withAlpha } from '@/newui/utils'
 import { Art } from '../Art'
 
 export interface DiscArtProps {
-  /** 正在出声才转；暂停停在当前角度继续（原型 .spin-paused 是冻结在同一角度） */
+  /** 正在出声才转；暂停冻结在当前角度 */
   playing: boolean
   /** 封面种子（同歌曲行口径：'album:' + 专辑名） */
   artSeed: string
@@ -16,17 +16,15 @@ export interface DiscArtProps {
 }
 
 /**
- * 播放页唱片（对应原型 .disc，styles.css L524-532）：
- * 206px 全圆封面 + 8px 内圈刻纹 + 中心孔 + 外圈高光，播放时 22s 匀速自转。
- * 近似点：原型是 CSS infinite animation；RN 无 reanimated 依赖，这里用链式
- * Animated.timing（JS 驱动）模拟——暂停记住角度、恢复接着转，一圈接一圈无缝续播。
+ * 播放页唱片：全圆封面 + 内圈刻纹 + 中心孔 + 外圈高光，播放时匀速自转。
+ * 用链式 Animated.timing（JS 驱动）模拟 CSS 无限旋转：暂停记住角度、恢复接着转。
  */
 export const DiscArt = memo(({ playing, artSeed, artUri }: DiscArtProps) => {
   const spin = useRef(new Animated.Value(0)).current
   const playingRef = useRef(playing)
   const animRef = useRef<Animated.CompositeAnimation | null>(null)
-  // 动画值的本地数值镜像：useNativeDriver:false 下 addListener（公开 API）每帧回调，
-  // 用它替代 Animated.Value 未暴露类型的内部方法 __getValue
+  // 本地数值镜像：useNativeDriver:false 下用 addListener 逐帧回调，
+  // 替代 Animated.Value 未暴露的 __getValue
   const spinValueRef = useRef(0)
 
   useEffect(() => {
@@ -80,7 +78,7 @@ export const DiscArt = memo(({ playing, artSeed, artUri }: DiscArtProps) => {
     <View style={[styles.shell, { width: size, height: size }, SHADOW.card]}>
       <Animated.View style={[StyleSheet.absoluteFill, { transform: [{ rotate }] }]}>
         <Art width={size} height={size} radius={RADIUS.full} seed={artSeed} imageUri={artUri} />
-        {/* .disc::after 中心孔（inset 38% → 直径 24%，居中） */}
+        {/* 中心孔（直径约 24%，居中） */}
         <View
           style={[
             styles.hole,
@@ -95,7 +93,7 @@ export const DiscArt = memo(({ playing, artSeed, artUri }: DiscArtProps) => {
           ]}
         />
       </Animated.View>
-      {/* 内圈刻纹（inset 0 0 0 8px rgba(0,0,0,.35)）与外圈 1px 高光：压在盘面上，不占布局 */}
+      {/* 内圈刻纹与外圈 1px 高光：压在盘面上，不占布局 */}
       <View
         pointerEvents="none"
         style={[
@@ -132,7 +130,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   ring: {
-    // absoluteFillObject 自带 position:'absolute'，不再单独重复声明
     ...StyleSheet.absoluteFillObject,
     borderRadius: DISC_RADIUS,
   },

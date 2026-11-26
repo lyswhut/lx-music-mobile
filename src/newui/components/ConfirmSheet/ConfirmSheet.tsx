@@ -13,28 +13,24 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 export interface ConfirmSheetProps {
   /** 显隐（透传 Sheet：false 时播完退场动画后自动卸载） */
   visible: boolean
-  /** .sheet-title；不传回落原型 askConfirm 默认句「要执行这一步吗」（app.js L1454，okLabel 默认「确定」同行） */
+  /** 标题；不传回落默认句 */
   title?: string
-  /** .sheet-sub 正文（原型 body：一句说明删什么、能不能恢复） */
+  /** 正文：一句说明删什么、能否恢复 */
   body: string
-  /** 右键文案（原型 #cfOk，默认「确定」） */
+  /** 确认键文案，默认「确定」 */
   okLabel?: string
-  /** 左键文案（原型取消位，默认「取消」） */
+  /** 取消键文案，默认「取消」 */
   cancelLabel?: string
-  /** 按右键（原型 #cfOk.onclick：先关层再跑 onOk，这里同序） */
+  /** 确认：先关层再执行 */
   onConfirm: () => void
-  /** 关闭（点遮罩 / Android 返回键 / 左键都走它，原型 data-close 等价路径） */
+  /** 关闭（遮罩 / Android 返回键 / 左键共用） */
   onClose: () => void
   /** 底部安全区（透传 Sheet） */
   bottomInset?: number
 }
 
 /**
- * 二次确认浮层（QA 2026-10-14 D-09：原型 #confirmSheet 是 Sheet 家族的一员，
- * RN 此前走原生 `Alert.alert` 系统弹窗——载体降级）。
- * 结构逐字对照原型 index.html L498-509：sheet-handle + .sheet-title(#cfTitle) +
- * .sheet-sub(#cfBody) + .cf-actions 两枚 .cf-btn（styles.css L501-505）；
- * 骨架整体复用共通件 Sheet（遮罩/体贴动画/返回键先收层都归它），本组件只落动作行。
+ * 二次确认浮层：骨架复用 Sheet（遮罩 / 体贴动画 / 返回键先收层），本组件只落两枚动作键。
  * 纯展示组件：文案、显隐、确认动作全部由容器接线。
  */
 export const ConfirmSheet = ({
@@ -48,7 +44,7 @@ export const ConfirmSheet = ({
   bottomInset,
 }: ConfirmSheetProps) => {
   const theme = useTheme()
-  // `.cf-btn:active{transform:scale(.98)}`（styles.css L648），`.cf-btn{transition:.2s var(--ease)}`（L646）
+  // 按压缩放 .98，过渡 .2s
   const cancelFx = usePressFx({ scale: CONFIRM_SHEET.pressScale })
   const okFx = usePressFx({ scale: CONFIRM_SHEET.pressScale })
 
@@ -60,9 +56,9 @@ export const ConfirmSheet = ({
       onClose={onClose}
       bottomInset={bottomInset}
     >
-      {/* .cf-actions：两枚等宽键，间距 10（styles.css L501） */}
+      {/* 两枚等宽键 */}
       <View style={styles.actions}>
-        {/* .cf-btn（左键）：fill-2 底 + 1px line 描边（原型 inset 描边转真实 border，高度不变） */}
+        {/* 左键：fill2 底 + 1px 描边 */}
         <AnimatedPressable
           onPress={onClose}
           accessibilityRole="button"
@@ -80,10 +76,10 @@ export const ConfirmSheet = ({
         >
           <Text style={[styles.btnText, { color: theme.colors.text2 }]}>{cancelLabel}</Text>
         </AnimatedPressable>
-        {/* .cf-btn.go（右键）：--grad 渐变底 + 白字（原型 box-shadow:none，L505） */}
+        {/* 右键：品牌渐变底 + 白字 */}
         <AnimatedPressable
           onPress={() => {
-            // 原型 cfOk.onclick：先 closeLayer 再 onOk——确认动作触发后立即收层
+            // 先收层再执行确认
             onClose()
             onConfirm()
           }}
@@ -121,7 +117,7 @@ const styles = StyleSheet.create({
     borderRadius: CONFIRM_SHEET.btnRadius,
     alignItems: 'center',
     justifyContent: 'center',
-    // 左键描边占位（右键走渐变无描边）；overflow 让内嵌渐变跟随圆角
+    // 描边占位（右键走渐变无描边）；overflow 让内嵌渐变跟随圆角
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: 'transparent',

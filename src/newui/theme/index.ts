@@ -1,5 +1,5 @@
 export { ThemeProvider } from './ThemeProvider'
-/* 导航侧主题共通件（QA D-10）：冷启动持久化读取 + push 转场的内存快照 */
+/* 导航侧主题共通件：冷启动持久化读取 + push 转场内存快照 */
 export {
   cacheNewUiScheme,
   getCachedNewUiScheme,
@@ -7,14 +7,12 @@ export {
 } from './launchScheme'
 export { newUiStatusBarStyle } from './systemBar'
 export { useTheme, useThemeMode } from './useTheme'
-/* 等宽字族（原型 ui-monospace 的平台近似，唯一出处：fontFamily.ts） */
+/* 等宽字族（跨平台近似，唯一出处：fontFamily.ts） */
 export { MONO_FONT_FAMILY } from './fontFamily'
 export {
-  ARTIST_CARD,
   ART_INK,
   ART_PALETTES,
   AVATAR_ROW,
-  BANNER,
   BRAND_AVATAR,
   BUTTON,
   CARD_GRID,
@@ -25,12 +23,10 @@ export {
   CONFIRM_SHEET,
   CONTROL,
   COVER_WASH,
-  DAILY_CARD,
   EMPTY_TIP,
   FAV_DUO,
   FOLD_MORE,
   FOLD_TOGGLE,
-  FOOT_NOTE,
   FONT_SIZE,
   FONT_WEIGHT,
   GLASS,
@@ -60,15 +56,10 @@ export {
   PL_POOL_PAGING,
   PLATFORM_TINTS,
   PLAYER,
-  // 电台（播客）取数层的界面档位（行高 / 订阅卡 / 榜列分批），值在 tokens.ts
-  POD,
-  POD_CHART_PAGING,
-  QUICK_ROW,
   RADIUS,
   RANK_CARD,
   RANK_GROUP,
   RANK_PAGING,
-  RECENT_CARD,
   RUNNING_DOTS,
   SEARCH,
   SETTINGS,
@@ -80,14 +71,11 @@ export {
   TAB_BAR,
   TOAST,
   TOP_BAR,
-  // 轻量宽屏档（判据 600/840 与限宽 620 逐值来自原型：app.js:3485 WIDE_TIERS / WIDE_MAX_W、
-  // styles.css:1316 .wide .page；结构度量见 WIDE_STRUCTURAL，值与出处都在 tokens.ts）
+  // 轻量宽屏档（判据 600/840、限宽 620，结构度量见 WIDE_STRUCTURAL）
   WIDE,
   WIDE_STRUCTURAL,
   Z_LAYER,
-  bannerItemWidth,
   gridItemWidth,
-  quickItemWidth,
   topbarHeight,
   wideColumnsOf,
   wideContentMaxWidthOf,

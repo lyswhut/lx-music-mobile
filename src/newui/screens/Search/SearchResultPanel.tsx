@@ -46,12 +46,12 @@ export type NewUiSearchTab = 'song' | 'pl'
 export interface SearchResultSong {
   id: string
   /**
-   * 列表唯一 key：'all' 合并搜索是多平台结果拼接，同一 id 跨平台完全可能撞车，
-   * 必须由容器补上 `${source}-${id}`（歌单侧 211 行同款口径），展示层不现查数据。
+   * 列表唯一 key：'all' 合并搜索是多平台结果拼接，同一 id 跨平台会撞车，
+   * 由容器补 `${source}-${id}`，展示层不现查数据。
    */
   key: string
   display: SongDisplay
-  /** 曲目本体：行内封面缺失时由 SongRow 共通行为补查（2026-10-12 走查现象 1） */
+  /** 曲目本体：行内封面缺失时由 SongRow 共通行为补查 */
   music: LX.Music.MusicInfoOnline
   playable: boolean
   active: boolean
@@ -68,7 +68,7 @@ export interface SearchResultPanelProps {
   pls: ListInfoItem[]
   onTabChange: (tab: NewUiSearchTab) => void
   onSongPress: (index: number) => void
-  /** 歌曲行 ⋯（原型搜索结果行有钮，app.js L1466；容器弹单曲操作面板，9e）；不传则不渲染按钮 */
+  /** 歌曲行 ⋯；不传则不渲染按钮 */
   onSongMore?: (index: number) => void
   onPlPress: (item: ListInfoItem) => void
   onPlayAll: () => void
@@ -76,15 +76,14 @@ export interface SearchResultPanelProps {
   onGotoSetting: () => void
   /**
    * 列表内容底部留白（屏底内边距 + 安全区，容器算好传入）。
-   * 结果列表自带滚动容器（虚拟化 FlatList），不再借外层 ScrollView 的 contentContainer。
+   * 列表自带 FlatList，不再借外层 ScrollView 的 contentContainer。
    */
   contentPaddingBottom: number
 }
 
 /**
- * 搜索结果内容区（原型 renderSearch 的 box 部分，app.js L1434-1477）：
- * 单曲行（带排名 / 可播态）或歌单卡网格 + 尾注；两类皆空、单类为空两种空态照抄。
- * 纯展示：数据与判定全部由容器传入。原型 tabs 另列在 SearchTabs（常驻于滚动区上方）。
+ * 搜索结果内容区：单曲行或歌单卡网格 + 尾注，含两类皆空、单类为空两种空态。
+ * 纯展示：数据与判定全部由容器传入。
  */
 export const SearchResultPanel = memo(({
   query,
@@ -103,13 +102,13 @@ export const SearchResultPanel = memo(({
 }: SearchResultPanelProps) => {
   const theme = useTheme()
   const cardWidth = useGridItemWidth()
-  // 轻量宽屏档：pl 网格的列数与卡宽同源（同一档），内容盒限宽也铺在这一屏的滚动容器上，
-  // 栅格间隙按档覆盖（medium 16×14 / expanded 16×12，原型 styles.css:1318-1319；竖屏回 CARD_GRID 的 14×12）
+  // 宽屏档：pl 网格的列数与卡宽同档，内容盒限宽也铺在这一屏的滚动容器上，
+  // 栅格间隙按档覆盖，竖屏回 CARD_GRID 的基线
   const { columns: gridColumns, boxStyle, rowGap: gridRowGap, columnGap: gridColumnGap } = useWideLayout()
   const plColumnStyle = useMemo(() => ({ gap: gridColumnGap ?? CARD_GRID.columnGap }), [gridColumnGap])
   const plItemStyle = useMemo(() => ({ marginBottom: gridRowGap ?? CARD_GRID.rowGap }), [gridRowGap])
 
-  // —— 加载态：原型是本地 mock 瞬间出结果，真实搜索必须给如实的等待 ——
+  // —— 加载态：真实搜索异步，给如实的等待提示 ——
   if (loading) {
     return (
       <View style={styles.state}>
@@ -120,8 +119,7 @@ export const SearchResultPanel = memo(({
     )
   }
 
-  // —— 两类皆空：词里带「音源 / 平台」时补一枚「到设定页查看音源」胶囊（原型 app.js scEmpty L2329-2333；
-  // 点击接线见 SearchScreen handleGotoSetting + utils/tabJump，10b 轮补真） ——
+  // —— 两类皆空：词里带「音源 / 平台」时补一枚「到设定页查看音源」胶囊 ——
   if (!songs.length && !pls.length) {
     return (
       <View style={[styles.state, styles.empty]}>
@@ -165,17 +163,12 @@ export const SearchResultPanel = memo(({
     )
   }
 
-  // 真机走查（2026-10-12）：'all' 合并搜索单次可回 30 首/平台 × 多平台 ≈ 上百行，
-  // 每行含程序化封面 SVG + 图标 SVG + 双层渐变——原先整摞塞在外层 ScrollView 里
-  // 一次性挂载，切 tab 即整列销毁重建，Android 上明显卡顿。
-  // 两个 tab 各自改为 FlatList 虚拟化：只挂载屏内约十行，切 tab 的重建成本同比例降下来。
+  // 两个 tab 各自用 FlatList 虚拟化：'all' 合并搜索可达上百行，
+  // 一次性挂载时切 tab 整列销毁重建，Android 上明显卡顿。
   //
-  // 崩溃修复（2026-10-13）：两分支在同一树位置各自 return 一个 FlatList，React 会复用同一
-  // 实例原地换 props —— RN 0.73 FlatList.componentDidUpdate（node_modules .../FlatList.js:456）
-  // 有 invariant「Changing numColumns on the fly is not supported」，numColumns 1↔2 原地变化
-  // 必抛（pl→song 方向还叠着 _checkProps 的「columnWrapperStyle not supported for single
-  // column lists」）。RN 官方给的解法就是换 key 强制重挂：下方两个分支各带稳定 key，
-  // 切 tab 时销毁旧列表、挂载新列表，不再有原地改列数。
+  // 两分支在同一树位置各自 return 一个 FlatList，React 会复用同一实例原地换 props，
+  // 而 RN 0.73 的 FlatList 对 numColumns 1↔N 原地变化会抛 invariant，
+  // 故各带稳定 key 强制重挂，避免「Changing numColumns on the fly」崩溃。
   if (tab === 'song') {
     return (
       <FixedWindowList<SearchResultSong>
@@ -186,12 +179,11 @@ export const SearchResultPanel = memo(({
         contentContainerStyle={[styles.scrollContent, { paddingBottom: contentPaddingBottom }, boxStyle]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
-        // 行高与 SongRow regular 档一致（paddingY×2 + artSize 46 + 上下 1px 透明描边 = 62），行距 listGap 2
+        // 行高与 SongRow regular 档一致（paddingY×2 + artSize + 上下 1px 透明描边），行距 listGap
         rowHeight={SONG_ROW.paddingY * 2 + SONG_ROW.artSize + 2}
         rowGap={SONG_ROW.listGap}
         renderItem={(item, index) => (
           <SongRow
-            rank={index + 1}
             artSeed={item.display.artSeed}
             artUri={item.display.artUri}
             musicInfo={item.music}
@@ -211,7 +203,7 @@ export const SearchResultPanel = memo(({
         )}
         ListFooterComponent={
           <>
-            {/* 真实结果几十条起，补一枚「播放全部」（与首页同款口径）；原型 mock 只有几条所以没画 */}
+            {/* 真实结果几十条起，补一枚「播放全部」（与首页同款口径） */}
             {playableCount > 0 && (
               <GhostButton
                 icon="play"
@@ -231,10 +223,8 @@ export const SearchResultPanel = memo(({
 
   return (
     <FlatList<ListInfoItem>
-      // key 带列数：宽屏档改 numColumns 时（转屏 / 平板窗口 resize）RN 0.73 的 FlatList
-      // 同样吃「Changing numColumns on the fly is not supported」这条 invariant，
-      // 靠换 key 强制重挂（与上面 song/pl 两分支换 key 是同一道防线，见 L165-171 注释）；
-      // 竖屏档列数恒为 2，这个 key 也就是恒等于同一个常量——重挂时机与改造前一致（仍只在切 tab 时换）
+      // key 带列数：宽屏档转屏 / 平板 resize 改 numColumns 时同样会触发 RN 0.73 的
+      // 「Changing numColumns on the fly」invariant，靠换 key 强制重挂
       key={`newui.search.plGrid-${gridColumns}`}
       data={pls}
       keyExtractor={item => `${item.source}-${item.id}`}
@@ -244,8 +234,8 @@ export const SearchResultPanel = memo(({
       showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled"
       columnWrapperStyle={plColumnStyle}
-      // PlCard 高度随屏宽动态变，无法 getItemLayout
-      // initialNumToRender 按行计：两列网格首批约 12 行 = 24 张卡，足够铺满屏
+      // PlCard 高度随屏宽动态变，无法 getItemLayout；
+      // initialNumToRender 按行计，至少 12 行，足够铺满屏
       initialNumToRender={Math.max(Math.ceil(LIST_LOAD_LIMIT / gridColumns), 12)}
       maxToRenderPerBatch={4}
       windowSize={8}
@@ -260,7 +250,7 @@ export const SearchResultPanel = memo(({
             meta={[item.play_count, item.total ? `${item.total} 首` : null]
               .filter(Boolean)
               .join(' · ')}
-            tint={/* QA 2026-10-14 D-14：歌单卡 meta 行平台色点补齐（原型 .src-dot，app.js L341-343），与首页/歌单页/我的页同口径 */
+            tint={/* 平台色点，与首页 / 歌单页 / 我的页同口径 */
               PLATFORM_TINTS[item.source as PlatformTintKey]}
             onPress={() => { onPlPress(item) }}
           />
@@ -278,9 +268,8 @@ export const SearchResultPanel = memo(({
 SearchResultPanel.displayName = 'NewUISearchResultPanel'
 
 /**
- * 结果分类标签条（原型 .sc-tabs，styles.css L724-730）：
- * 14.5/750 文字 + 11px 计数；选中态亮字 + 底部 17×3 渐变小横条。
- * 原型是 sticky 在滚动区顶，RN 里常驻于 ScrollView 上方（效果一致，见 SearchScreen）。
+ * 结果分类标签条：文字 + 计数，选中态亮字 + 底部渐变小横条。
+ * 常驻于滚动区上方。
  */
 export const SearchTabs = memo(({
   tab,
@@ -314,7 +303,7 @@ export const SearchTabs = memo(({
               <Text style={[styles.tabLabel, { color: on ? theme.colors.text : theme.colors.text3 }]}>
                 {label}
               </Text>
-              {/* .sc-tabs em 计数：11 / 600 / 左距 5 / 行内 opacity .65 */}
+              {/* 计数 */}
               <Text
                 style={[
                   styles.tabCount,
@@ -324,7 +313,7 @@ export const SearchTabs = memo(({
                 {count}
               </Text>
             </View>
-            {/* ::after 17×3 渐变横条：absolute 底部居中（CSS bottom:-5 → 压在 tabs 下 padding 区） */}
+            {/* 底部渐变横条：absolute 居中，压在 tabs 下 padding 区 */}
             {on && (
               <LinearGradient
                 colors={[theme.colors.brand, theme.colors.brand2]}
@@ -343,7 +332,6 @@ export const SearchTabs = memo(({
 SearchTabs.displayName = 'NewUISearchTabs'
 
 const styles = StyleSheet.create({
-  /** .sc-tabs gap:22 / padding:6px 16px 9px */
   tabs: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -352,14 +340,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: SEARCH.tabsPaddingX,
     paddingBottom: SEARCH.tabsPaddingBottom,
   },
-  /** .sc-tabs button position:relative */
+  /** 相对定位，给底部指示条作锚 */
   tab: {
     position: 'relative',
   },
   tabPressed: {
     opacity: 0.7,
   },
-  /** 14.5 / 750；与计数同一行基线对齐（CSS 里 em 是行内） */
+  /** 文字与计数同行、基线对齐 */
   tabTextRow: {
     flexDirection: 'row',
     alignItems: 'baseline',
@@ -374,7 +362,7 @@ const styles = StyleSheet.create({
     marginLeft: SEARCH.tabCountMarginLeft,
     opacity: SEARCH.tabCountOpacity,
   },
-  /** ::after left:50% bottom:-5 translateX(-50%) 17×3 r2 */
+  /** 底部渐变指示条 */
   tabIndicator: {
     position: 'absolute',
     bottom: -SEARCH.tabIndicatorPad,
@@ -390,19 +378,17 @@ const styles = StyleSheet.create({
   scroll: {
     flex: 1,
   },
-  /** .sc-body padding:0 16（横向内距由原外层 ScrollView 迁入内容容器） */
+  /** 横向内距（由外层 ScrollView 迁入内容容器） */
   scrollContent: {
     paddingHorizontal: SEARCH.bodyPaddingX,
   },
-  /** .pl-grid 的列间（columnWrapperStyle）与行间按宽屏档在渲染期给（plColumnStyle / plItemStyle），
-   *  竖屏档逐值回 CARD_GRID 的 12 / 14 基线 */
-  /** .sc-hint：11 / mt 16 / 行高 1.7 ≈ 19 */
+  /** 尾注（pl 网格行间距由渲染期 plColumnStyle / plItemStyle 给出） */
   hint: {
     marginTop: SEARCH.hintMarginTop,
     fontSize: FONT_SIZE.caption,
     lineHeight: 19,
   },
-  /** 加载/空态视图：原借外层滚动容器横向内距，现自带（.sc-empty padding:46px 0 / 居中） */
+  /** 加载/空态视图：自带横向内距 */
   state: {
     paddingHorizontal: SEARCH.bodyPaddingX,
   },
@@ -410,7 +396,7 @@ const styles = StyleSheet.create({
     paddingVertical: SEARCH.emptyPaddingY,
     alignItems: 'center',
   },
-  /** .sc-empty b：14 / 750 / text-2 / mb 4 */
+  /** 空态标题 */
   emptyTitle: {
     fontSize: FONT_SIZE.rank,
     fontWeight: FONT_WEIGHT.extraBold,

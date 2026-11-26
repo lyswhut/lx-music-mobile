@@ -1,4 +1,3 @@
-export { HomePage } from './HomePage'
 export { MinePage } from './MinePage'
 export { PlaylistPage } from './PlaylistPage'
 export { RankPage } from './RankPage'

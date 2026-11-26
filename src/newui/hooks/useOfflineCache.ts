@@ -11,7 +11,7 @@ import { useLoveSongs } from './useLoveSongs'
 import { useRecentPlays } from './useRecentPlays'
 import type { MyPlaylistItem } from './useMyPlaylists'
 
-/** 屏上的一行：哪首歌、存在哪一档（.q-tag 读「存在哪一档」，件 parts/mine/offline.html U86） */
+/** 屏上的一行：哪首歌、存在哪一档 */
 export interface OfflineRow {
   song: LX.Music.MusicInfoOnline
   quality: LX.Quality
@@ -19,7 +19,7 @@ export interface OfflineRow {
 
 export interface OfflineCacheState {
   rows: OfflineRow[]
-  /** 本机缓存总占用（MB，取整；原型 LOCAL_CACHE_MB 的口径 = 整包缓存量，不是逐行加和） */
+  /** 本机缓存总占用（MB，取整；整包缓存量，非逐行加和） */
   totalMb: number
   /** 正在数这台机器上的歌 */
   scanning: boolean
@@ -30,14 +30,11 @@ interface OfflineScan {
   totalMb: number
 }
 
-/**
- * 档位序（PLAY_QUALITY_CHOICES 高 → 低）：同一首存过几档取最高那档（原型 cachedQuality，app.js L1373）。
- * 表外的名义档（192k/ape/wav）核心不写地址，故不参与判定。
- */
+/** 档位序（PLAY_QUALITY_CHOICES 高 → 低）：同一首存过几档取最高那档；表外名义档不参与判定 */
 const qualityOrder = (quality: string): number =>
   (PLAY_QUALITY_CHOICES as readonly string[]).indexOf(quality)
 
-/** 本机缓存总量（字节）：封面歌词等应用缓存 + 播放器缓存，两者任一失败都只按 0 算 */
+/** 本机缓存总量（字节）：应用缓存 + 播放器缓存，任一失败按 0 算 */
 const readTotalBytes = async(): Promise<number> => {
   const [appBytes, playerBytes] = await Promise.all([
     getAppCacheSize().catch(() => 0),
@@ -46,16 +43,13 @@ const readTotalBytes = async(): Promise<number> => {
   return (Number.isFinite(appBytes) ? appBytes : 0) + (Number.isFinite(playerBytes) ? playerBytes : 0)
 }
 
-/** 字节 → MB（原型 LOCAL_CACHE_MB）：非零至少报 1，别把存过的东西显示成 0 MB */
+/** 字节 → MB：非零至少报 1，别把存过的东西显示成 0 MB */
 const toMb = (bytes: number): number =>
   bytes > 0 ? Math.max(1, Math.round(bytes / 1024 / 1024)) : 0
 
 /**
- * 数一遍「这台机器上已经存下的歌」。
- * 清单不是接口给的（件头注）：候选池 = 本机已知道的歌（收藏 ∪ 最近播放 ∪ 各份歌单的曲目），
- * 逐首过真实侧两关——`src/utils/data.ts:351` 的 musicUrl 本机映射键（键 = id_音质）
- * 与 `src/plugins/player/utils.ts:184` 的 isCached(url) 验字节；两关都过才上屏。
- * 只读既有存储与缓存查询，不写任何键、不动播放与列表。
+ * 数一遍「这台机器上已经存下的歌」：候选池 = 收藏 ∪ 最近播放 ∪ 各份歌单曲目，
+ * 逐首过两关（musicUrl 本机映射键存在 + isCached 验字节），都过才上屏。纯只读。
  */
 const scanOfflineCache = async(known: LX.Music.MusicInfoOnline[]): Promise<OfflineScan> => {
   // 一首本机已知道的歌都没有：不必去翻存储键，如实回空
@@ -114,7 +108,7 @@ const scanOfflineCache = async(known: LX.Music.MusicInfoOnline[]): Promise<Offli
         if (await isCached(url)) return { song, quality }
       }
     } catch (err) {
-      // 单首验字节失败 = 这首没存下（不打断整轮）
+      // 单首失败 = 这首没存下，不打断整轮
       console.warn('newui offline: isCached failed', err)
     }
     return null
@@ -129,7 +123,7 @@ const scanOfflineCache = async(known: LX.Music.MusicInfoOnline[]): Promise<Offli
     }
   }
 
-  // 排序口径照原型 offlineRows（app.js L1374）：先按档位高 → 低，同档按 id 字典序
+  // 排序：先按档位高 → 低，同档按 id 字典序
   rows.sort((a, b) =>
     qualityOrder(a.quality) - qualityOrder(b.quality) || a.song.id.localeCompare(b.song.id))
 
@@ -142,10 +136,7 @@ interface ScanCacheEntry {
   result: OfflineScan
 }
 
-/**
- * 模块级短时缓存：我的页与「已缓存」屏前后脚挂载时共用同一轮扫描（原型清单是一次算完的），
- * 免得进屏又把几百次原生缓存查询重排一遍。签名变了或过了 TTL 才重扫。
- */
+/** 模块级短时缓存：相邻挂载共用同一轮扫描，避免重跑几百次原生缓存查询；签名变了或过 TTL 才重扫 */
 let cachedScan: ScanCacheEntry | null = null
 let inflightScan: { signature: string; promise: Promise<OfflineScan> } | null = null
 
@@ -174,7 +165,7 @@ const readOfflineCache = (signature: string, known: LX.Music.MusicInfoOnline[]):
   return promise
 }
 
-/** 本机已知道的歌（原型 offlineKnownSongs，app.js L1357）：收藏 → 最近播放 → 各份歌单，按 id 去重 */
+/** 本机已知道的歌：收藏 → 最近播放 → 各份歌单，按 id 去重 */
 const collectKnown = (
   loveSongs: LX.Music.MusicInfo[],
   recentPlays: LX.Music.MusicInfoOnline[],
@@ -195,13 +186,8 @@ const collectKnown = (
 }
 
 /**
- * 「已缓存」清单（U86，件 `parts/mine/offline.{html,css}`；原型 offlineKnownSongs / cachedQuality /
- * offlineRows，app.js L1351-1451）。
- *
- * 候选池只来自本机已知道的歌，逐首过「映射键存在 + 字节真在」两关；没有任何可枚举的缓存清单接口。
- * 我的页那张卡（数量 + 占用）与「已缓存」屏共用本 hook 的同一份结果：两边同一时刻算出来的是同一件事，
- * `lists` 的计数还没落值时先报 scanning，不先报一个 0。
- * 纯只读：只读既有存储键、播放器缓存查询与本机列表；不写存储、不改列表、不碰播放。
+ * 「已缓存」清单：候选池只来自本机已知道的歌，逐首过「映射键存在 + 字节真在」两关。
+ * 我的页卡片与「已缓存」屏共用同一份结果；lists 计数未落值时先报 scanning，不先报 0。纯只读。
  */
 export const useOfflineCache = (lists: MyPlaylistItem[]): OfflineCacheState => {
   const loveSongs = useLoveSongs()
@@ -238,7 +224,7 @@ export const useOfflineCache = (lists: MyPlaylistItem[]): OfflineCacheState => {
       return
     }
 
-    // 换了候选池：先清空上屏的内容，扫描中如实报 scanning（不留上一批的旧行）
+    // 换了候选池：先清空上屏内容，扫描中如实报 scanning
     setState({ rows: [], totalMb: 0, scanning: true })
     void readOfflineCache(signature, knownRef.current)
       .then((result) => {
@@ -246,7 +232,7 @@ export const useOfflineCache = (lists: MyPlaylistItem[]): OfflineCacheState => {
         setState({ rows: result.rows, totalMb: result.totalMb, scanning: false })
       })
       .catch((err: unknown) => {
-        // 整轮读存储失败：如实当「一首都没数出来」，不把屏卡在扫描中
+        // 整轮失败：当「一首都没数出来」，不把屏卡在扫描中
         console.warn('newui offline: scan failed', err)
         if (!alive) return
         setState({ rows: [], totalMb: 0, scanning: false })

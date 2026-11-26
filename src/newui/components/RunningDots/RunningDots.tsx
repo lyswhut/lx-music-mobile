@@ -12,12 +12,8 @@ export interface RunningDotsProps {
 const WINDOW = 1 / 3
 
 /**
- * 分页「正在获取」动画标识（2026-10-15 同事清单：静态转圈存在感弱，要动画方式）。
- * 三颗品牌渐变色的点按接力顺序依次「起跳-落地」——奔跑感的简笔等价物，
- * 接在 PagingStatus 文案前，请求在途的整个窗口里循环跳动。
- * 实现：一条共享 Animated.Value 0→1 线性循环（useNativeDriver，不占 JS 线程、
- * 不与列表滚动抢帧），每颗点在自己的 1/3 窗口里做 translateY / opacity 插值，
- * 窗口外钳位在静息值。纯核心 Animated，零新依赖。
+ * 分页「正在获取」动画：三颗品牌色点按相位接力跳动，接在 PagingStatus 文案前循环。
+ * 共享一条原生驱动 Animated 循环，不占 JS 线程、不与列表滚动抢帧。
  */
 const Dot = memo(({ progress, index }: { progress: Animated.Value; index: number }) => {
   const start = index * WINDOW
@@ -78,7 +74,7 @@ export const RunningDots = memo(({ style }: RunningDotsProps) => {
 RunningDots.displayName = 'NewUIRunningDots'
 
 const styles = StyleSheet.create({
-  /** 高度给足「起跳峰值 + 点径」，位移不会裁进相邻行；宽度 = 3×dot + 2×gap 由 gap 撑出 */
+  /** 高度给足「起跳峰值 + 点径」，位移不裁进相邻行 */
   root: {
     flexDirection: 'row',
     alignItems: 'center',

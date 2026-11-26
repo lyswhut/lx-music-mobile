@@ -11,9 +11,9 @@ import {
 
 export interface StatItem {
   key: string
-  /** 统计数值（.stat b，等宽数字） */
+  /** 统计数值 */
   value: number
-  /** 标签（.stat span） */
+  /** 标签 */
   label: string
 }
 
@@ -22,8 +22,7 @@ export interface StatRowProps {
 }
 
 /**
- * 统计三格（对应原型 .stat-row / .stat，styles.css L367-371）：等分横排，每格「数字 + 标签」。
- * 纯展示组件；数字口径由容器决定（喜欢 / 歌单 / 最近播放）。
+ * 统计三格：等分横排，每格「数字 + 标签」。纯展示组件；数字口径由容器决定。
  */
 export const StatRow = memo(({ items }: StatRowProps) => {
   const theme = useTheme()
@@ -45,14 +44,13 @@ export const StatRow = memo(({ items }: StatRowProps) => {
 StatRow.displayName = 'NewUIStatRow'
 
 const styles = StyleSheet.create({
-  /** .stat-row：row / gap 8 / margin-top 18；宽屏限宽 620（原型 .pad 档，手机窄于此值无感） */
+  /** 宽屏限宽 620（手机窄于此值无感） */
   root: {
     flexDirection: 'row',
     gap: MINE.statGap,
     marginTop: MINE.statMarginTop,
     maxWidth: MINE.statMaxWidth,
   },
-  /** .stat：flex 1、内边距 11/4、圆角 16、细描边（底色 .05 归到色板 chip） */
   cell: {
     flex: 1,
     alignItems: 'center',
@@ -61,13 +59,11 @@ const styles = StyleSheet.create({
     borderRadius: MINE.statRadius,
     borderWidth: 1,
   },
-  /** .stat b：17px / 900 / 等宽数字 */
   value: {
     fontSize: FONT_SIZE.statValue,
     fontWeight: FONT_WEIGHT.black,
     fontVariant: ['tabular-nums'],
   },
-  /** .stat span：10.5px / text-3 / margin-top 3 / letter-spacing .4 */
   label: {
     marginTop: MINE.statLabelMarginTop,
     fontSize: FONT_SIZE.tiny,

@@ -80,6 +80,8 @@ const styles = StyleSheet.create({
   meta: {
     flexShrink: 1,
     fontSize: FONT_SIZE.caption,
+    /** 显式行高：让卡片总高可精确计算，供定高虚拟化窗口使用 */
+    lineHeight: FONT_SIZE.caption * PL_CARD.titleLineHeightRatio,
   },
   dot: {
     width: PL_CARD.dotSize,

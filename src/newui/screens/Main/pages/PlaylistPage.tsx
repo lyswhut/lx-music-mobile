@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { StyleSheet, View, type ListRenderItem } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 import type { ListInfoItem } from '@/store/songlist/state'
 
@@ -35,7 +35,9 @@ import {
 } from '@/newui/hooks'
 import {
   CARD_GRID,
+  FONT_SIZE,
   LAYOUT,
+  PL_CARD,
   PLATFORM_TINTS,
   RANK_PAGING,
   type PlatformTintKey,
@@ -74,9 +76,15 @@ export const PlaylistPage = ({
   const { columns: gridColumns, rowGap: gridRowGap, columnGap: gridColumnGap, boxStyle, topBarHeight } = useWideLayout()
   // 行样式缓存成稳定引用，避免每行现造对象让 PlCard 的 memo 失效
   const poolRowStyle = useMemo(() => ({ gap: gridColumnGap ?? CARD_GRID.columnGap }), [gridColumnGap])
-  const poolRowGapStyle = useMemo(() => ({ marginTop: gridRowGap ?? CARD_GRID.rowGap }), [gridRowGap])
-  // 网格尾巴（状态行 / 终点行）与最后一行卡之间的间隙 = 同一档的行间隙
-  const tailGapStyle = useMemo(() => ({ marginTop: gridRowGap ?? CARD_GRID.rowGap }), [gridRowGap])
+  // 定高虚拟化行高：封面正方 + 标题两行（显式行高）+ 元信息行（显式行高），
+  // 与 PlCard 的样式常量逐值对应；改 PlCard 度量必须同步这里，否则滚动位置漂移
+  const poolRowHeight = useMemo(() => {
+    const titleBlock = PL_CARD.titleMarginTop
+      + FONT_SIZE.body * PL_CARD.titleLineHeightRatio * PL_CARD.titleLines
+    const metaBlock = PL_CARD.metaMarginTop
+      + Math.max(PL_CARD.dotSize, FONT_SIZE.caption * PL_CARD.titleLineHeightRatio)
+    return cardWidth + titleBlock + metaBlock
+  }, [cardWidth])
 
   // chip 行 = 「推荐」+ 平台热门 + 行尾「全部分类」，装配逻辑见 hooks/playlistChipItems
   const chipItems = usePlaylistChipItems(cats.items, selection)
@@ -130,10 +138,11 @@ export const PlaylistPage = ({
 
   const keyExtractor = useCallback((row: PoolRow) => row.key, [])
 
-  // 一行「当前档列数」张卡：列间隙吃本档列向 gap，行间距吃行首 margin（首行不吃）
-  const renderPoolRow = useCallback<ListRenderItem<PoolRow>>(({ item, index }) => (
-    <View style={[styles.row, poolRowStyle, index > 0 ? poolRowGapStyle : null]}>
-      {item.items.map(pl => (
+  // 一行「当前档列数」张卡：行间距由 FixedWindowList 的 rowGap 统一挂在外层，
+  // 行内只负责横排与列向 gap
+  const renderPoolRow = useCallback((row: PoolRow, _index: number) => (
+    <View style={[styles.row, poolRowStyle]}>
+      {row.items.map(pl => (
         <PlCard
           key={`${pl.source}-${pl.id}`}
           width={cardWidth}
@@ -143,12 +152,12 @@ export const PlaylistPage = ({
           tint={PLATFORM_TINTS[pl.source as PlatformTintKey]}
           meta={[pl.play_count, pl.total ? `${pl.total} 首` : null]
             .filter(Boolean)
-            .join(' · ')}
+            .join(' · ') || ' '}
           onPress={() => handlePoolPress(pl)}
         />
       ))}
     </View>
-  ), [cardWidth, handlePoolPress, poolRowGapStyle, poolRowStyle])
+  ), [cardWidth, handlePoolPress, poolRowStyle])
 
   // —— 列表头：池子标题行（分类条已上移到吸顶层，不参与滚动）——
   // 分类条成了常驻横条后，Section 默认的 26 上间距（叠上分类条自身 4 下内距）观感偏空，
@@ -167,8 +176,8 @@ export const PlaylistPage = ({
     <View>
       {poolTip ? <EmptyTip text={poolTip} /> : null}
       {!poolTip && (showStatus || showEnd) ? (
-        // 状态行 / 终点行与卡行之间隔一个行间隙
-        <View style={tailGapStyle}>
+        // 状态行 / 终点行与卡行之间的行间隙由 FixedWindowList 每行的 marginBottom 提供
+        <View>
           {showStatus ? (
             <PagingStatus
               disabled={pool.batchLoading}
@@ -210,6 +219,10 @@ export const PlaylistPage = ({
         footerComponent={listFooter}
         topInset={viewportTopInset}
         bottomInset={viewportBottomInset}
+        // 定高窗口：行高按主题常量算出，行间距吃本档栅格行间隙
+        rowHeight={poolRowHeight}
+        rowGap={gridRowGap ?? CARD_GRID.rowGap}
+        overscan={3}
         // 顶部让位已由吸顶分类条在列表外承担：清掉 PageListView 自带的顶栏留白，
         // 否则标题行会与分类条之间多出一整条顶栏高
         contentContainerStyle={styles.listContent}

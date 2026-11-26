@@ -151,9 +151,12 @@ export const PlaylistPage = ({
   ), [cardWidth, handlePoolPress, poolRowGapStyle, poolRowStyle])
 
   // —— 列表头：池子标题行（分类条已上移到吸顶层，不参与滚动）——
+  // 分类条成了常驻横条后，Section 默认的 26 上间距（叠上分类条自身 4 下内距）观感偏空，
+  // 本页收到 14，标题与分类条之间不再出现一条大留白
   const listHeader = (
     <Section
       sub
+      style={styles.poolSection}
       title={poolTitle}
       right={countText ? <PlCount text={countText} /> : undefined}
     />
@@ -231,6 +234,10 @@ const styles = StyleSheet.create({
   /** 列表内容顶部不再留顶栏高（由上方分类条让位） */
   listContent: {
     paddingTop: 0,
+  },
+  /** 池子标题行：贴近上方吸顶分类条（分类条底部另有 4 内距） */
+  poolSection: {
+    marginTop: 14,
   },
   /** 一行：横排本体（间隙按宽屏档在渲染期给） */
   row: {

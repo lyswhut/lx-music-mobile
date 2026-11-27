@@ -1139,11 +1139,12 @@ export const SHEET = {
   rowPaddingX: 14,
   rowRadius: 14,
   rowGap: 12,
-  /** 动效：遮罩 300ms、体贴 400ms、退场 420ms；token 文件内不能前向引用 MOTION */
-  bodyDuration: 400,
-  exitDuration: 420,
-  /** 遮罩模糊淡入时长：与体展开尾段重叠，消除挂载瞬间的「啪」 */
-  blurFadeIn: 360,
+  /**
+   * 动效：入 280ms / 出 260ms，遮罩与体贴共用同一条曲线、同起同止。
+   * 400ms 在真机上偏长——位移铺得越开，遮罩「加深」这段就越容易被眼睛捕捉到。
+   */
+  bodyDuration: 280,
+  exitDuration: 260,
   /** 触底判定距离（px，近似 FlatList 的比例语义） */
   endReachThreshold: 300,
   /** 浮层虚拟化回收参数：视口最高 78% 窗口高，首屏略有余、批间不空窗 */

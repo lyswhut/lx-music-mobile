@@ -408,30 +408,49 @@ public class UtilsModule extends ReactContextBaseJavaModule {
     if (window == null) return;
     window.setBackgroundDrawable(new ColorDrawable(gestureFusionColor));
     WindowCompat.setDecorFitsSystemWindows(window, false);
+    // 不先声明「窗口自绘系统栏背景」，setNavigationBarColor 在部分 ROM / API 上会被直接忽略
+    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
     window.setNavigationBarColor(Color.TRANSPARENT);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
       window.setNavigationBarContrastEnforced(false);
     }
+    // 注：手势导航下小白条本身的颜色由系统按「它下面的内容」自动决定，
+    // 这里只影响三键导航的图标明暗（见 7090385839619833893 一文的实测结论）。
     new WindowInsetsControllerCompat(window, window.getDecorView())
       .setAppearanceLightNavigationBars(gestureFusionLightIcons);
   }
 
   /**
-   * 看门狗：每次全局布局后检查 decor 是否被抢回 fitsSystemWindows=true
-   * （RNN 转场 apply 的标志动作），是则同帧抢回。
-   * 只在状态确实被改走时才动作，正常帧仅一次布尔读取。
+   * 看门狗：在每一帧「绘制前」检查 RNN 是否把窗口抢回了非 edge 模式，是则当场抢回并取消这一帧绘制。
+   *
+   * 两个关键点：
+   * 1. 检测信号不能用 ViewCompat.getFitsSystemWindows(decor)——WindowCompat 改的是
+   *    systemUiVisibility 布局标志 / Window 内部标志，从不写 View 的 fitsSystemWindows 属性，
+   *    那个判断永远为 false（这正是看门狗此前形同虚设的原因）。
+   *    改盯 RNN 每次 applyOptions 必做的那件事：setNavigationBarBackgroundColor
+   *    会把 window.navigationBarColor 写成不透明主题色。我们一旦是透明就说明被抢了。
+   *    （API<30 再加一道 LAYOUT_HIDE_NAVIGATION 标志判断，覆盖只改布局不改色的情况。）
+   * 2. 用 OnPreDraw 而不是 OnGlobalLayout：后者在 layout 之后、draw 之前，此时错误布局
+   *    已经算好，救回来也只能下一帧生效，这一帧错误状态照样会上屏。
+   *    OnPreDraw 回调里返回 false 可以取消本帧绘制——错误状态一帧都不会被画出来，
+   *    代价只是跳过一帧（约 16ms 的画面静止），肉眼不可见。
    */
   private void installGestureFusionWatchdog(Activity activity) {
     View decor = activity.getWindow().getDecorView();
     // 同一 decor 只挂一次；Activity 重建后 decor 变了，重挂到新 decor
     if (gestureFusionDecor == decor) return;
     gestureFusionDecor = decor;
-    decor.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-      if (!gestureFusionEnabled) return;
-      if (!decor.isAttachedToWindow()) return;
-      if (ViewCompat.getFitsSystemWindows(decor)) {
-        applyGestureFusion(activity);
-      }
+    decor.getViewTreeObserver().addOnPreDrawListener(() -> {
+      if (!gestureFusionEnabled) return true;
+      if (!decor.isAttachedToWindow()) return true;
+      Window window = activity.getWindow();
+      if (window == null) return true;
+      boolean colorReset = window.getNavigationBarColor() != Color.TRANSPARENT;
+      boolean layoutReset = Build.VERSION.SDK_INT < Build.VERSION_CODES.R
+        && (decor.getSystemUiVisibility() & View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION) == 0;
+      if (!colorReset && !layoutReset) return true;
+      applyGestureFusion(activity);
+      return false; // 取消本帧绘制，等下一帧带着正确状态再画
     });
   }
 

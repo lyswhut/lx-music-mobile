@@ -23,7 +23,6 @@ import {
   ART_INK,
   FONT_SIZE,
   FONT_WEIGHT,
-  GLASS_PERF,
   MOTION,
   SHEET,
   Z_LAYER,
@@ -35,13 +34,6 @@ import { blurNativeRegistered } from '../Glass'
 
 /** 浮层统一缓动 */
 const EASE = Easing.bezier(MOTION.easing[0], MOTION.easing[1], MOTION.easing[2], MOTION.easing[3])
-
-/**
- * 遮罩淡入专用曲线：progress 走的是体位移的强 ease-out（起步猛、尾段缓），
- * 直接复用会让蒙板在头 150ms 就冲到近全黑——「打开瞬间啪地加蒙板」的观感来源。
- * 这里反着用 ease-in：前半段压慢、随体减速同步补深，加深过程与运动节奏一致。
- */
-const MASK_EASE = Easing.in(Easing.quad)
 
 /**
  * 浮层「虚拟化主体」的行配置（可选）。
@@ -125,58 +117,65 @@ export function Sheet<T = unknown>({
   const { height: windowHeight } = useWindowDimensions()
   // 退场动画播完前保持挂载
   const [mounted, setMounted] = useState(visible)
-  /**
-   * 遮罩是整屏面积的模糊，挂载即要做全屏截图 + RenderScript 模糊（一次性重活）。
-   * 必须等入场动画播完再挂——放进动画帧里会掉帧（autoUpdate=false 也躲不开挂载那次采样）。
-   * 「挂载瞬间啪一下加深」的老问题交给淡入解决：blurOpacity 0→1 补 360ms，
-   * 体停住后遮罩继续平滑加深到位，观感连续、动画不掉帧。
-   */
-  const [blurReady, setBlurReady] = useState(false)
+  /** 遮罩打开即刻到位（不淡入）；关闭时随退场淡出，所以也要一个动画值 */
+  const maskOpacity = useMemo(() => new Animated.Value(1), []) // eslint-disable-line react-hooks/exhaustive-deps
   const progress = useMemo(() => new Animated.Value(visible ? 1 : 0), []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (visible) setMounted(true)
-    const animation = Animated.timing(progress, {
-      toValue: visible ? 1 : 0,
-      duration: visible ? SHEET.bodyDuration : SHEET.exitDuration,
-      easing: EASE,
-      // 位移与遮罩 opacity 均可原生驱动（maxHeight 是静态样式），走原生后不依赖 JS 帧
-      useNativeDriver: true,
-    })
-    animation.start(({ finished }) => {
-      if (!visible && finished) setMounted(false)
-    })
-    return () => animation.stop()
-  }, [visible, progress])
-
-  // 遮罩模糊延后到入场结束；退场期间保持（撤模糊会看到背景瞬间变清），播完再复位
-  useEffect(() => {
-    if (!visible) {
-      const timer = setTimeout(() => setBlurReady(false), SHEET.exitDuration)
-      return () => clearTimeout(timer)
-    }
-    const timer = setTimeout(() => setBlurReady(true), SHEET.bodyDuration)
-    return () => clearTimeout(timer)
-  }, [visible])
+  /** 体贴是否已完成过一次布局（连着开时不必再等 onLayout） */
+  const laidOutRef = useRef(false)
+  /** 本轮入场是否已起跑，防 onLayout 与 effect 双触发 */
+  const startedRef = useRef(false)
 
   /**
-   * 模糊层淡入：blurReady 翻转时 BlurView 才挂载，直接满 alpha 出现会让
-   * 背景「啪」地糊一下；挂上后补一段短淡入，与体展开的尾帧衔接。
-   * 复位走 0 时长（彼时整层遮罩已随退场淡到 0，无需动画）。
+   * 入场：体贴首帧布局完成的那一刻立刻起跑位移。
+   * 必须在 onLayout 里直接起、不经过 setState 再渲染一轮——多一轮渲染就是多一帧空白等待，
+   * 真机上会明确感觉到「点了之后先愣一下再弹」。挂载与测量已经在这一帧里付完，
+   * 位移一开始就是纯原生动画，不会再和布局抢 UI 线程。
    */
-  const blurOpacity = useMemo(() => new Animated.Value(0), [])
-  /** 遮罩淡入值：progress 的 ease-in 映射（曲线说明见 MASK_EASE 注释），memo 防重渲染重建绑定 */
-  const maskOpacity = useMemo(
-    () => progress.interpolate({ inputRange: [0, 1], outputRange: [0, 1], easing: MASK_EASE }),
-    [progress],
-  )
-  useEffect(() => {
-    Animated.timing(blurOpacity, {
-      toValue: blurReady ? 1 : 0,
-      duration: blurReady ? SHEET.blurFadeIn : 0,
+  const startEntrance = useCallback(() => {
+    if (startedRef.current) return
+    startedRef.current = true
+    maskOpacity.setValue(1)
+    Animated.timing(progress, {
+      toValue: 1,
+      duration: SHEET.bodyDuration,
+      easing: EASE,
       useNativeDriver: true,
     }).start()
-  }, [blurReady, blurOpacity])
+  }, [progress, maskOpacity])
+
+  // 打开：挂载并等首帧布局；关闭：正常退场，播完卸载
+  useEffect(() => {
+    if (visible) {
+      startedRef.current = false
+      setMounted(true)
+      // 连着开（上次还没卸载完）体贴已布局，不必再等 onLayout
+      if (laidOutRef.current) startEntrance()
+      return
+    }
+    const body = Animated.timing(progress, {
+      toValue: 0,
+      duration: SHEET.exitDuration,
+      easing: EASE,
+      useNativeDriver: true,
+    })
+    const mask = Animated.timing(maskOpacity, {
+      toValue: 0,
+      duration: SHEET.exitDuration,
+      easing: EASE,
+      useNativeDriver: true,
+    })
+    body.start(({ finished }) => {
+      if (!finished) return
+      startedRef.current = false
+      setMounted(false)
+      laidOutRef.current = false
+    })
+    mask.start()
+    return () => {
+      body.stop()
+      mask.stop()
+    }
+  }, [visible, progress, maskOpacity, startEntrance])
 
   // Android 物理返回键：浮层开着时先收浮层
   useEffect(() => {
@@ -249,7 +248,8 @@ export function Sheet<T = unknown>({
     listSentEndForContentLengthRef.current = 0
   }, [visible])
 
-  if (!mounted) return null
+  // 打开那一刻就渲染（不等 setMounted 再渲染一轮），退场期间靠 mounted 续命
+  if (!visible && !mounted) return null
 
   // translateY(100%) 是自身高度的百分比，但 RN 的 translateY 只接受 number（百分比字符串会直接崩溃），
   // 且体贴高度随内容变化并被 max-height 78% 截断，故用窗口高像素近似：向下位移一整屏必然完全出屏。
@@ -274,23 +274,19 @@ export function Sheet<T = unknown>({
 
   return (
     <View style={styles.root} accessibilityViewIsModal>
-      {/* 遮罩：容器必须透底（Android BlurView 采样窗口身后内容，自带底色会被一起糊进去），
-          故 BlurView 在前（下）、染色层在后（上）；原生模块未注册时只渲染染色层，天然降级。 */}
+      {/* 遮罩：染色层是常驻的那一层；iOS 另叠一层面板模糊（BlurView 在前、染色在后）。 */}
       <Animated.View style={[styles.mask, { opacity: maskOpacity }]}>
-        {blurNativeRegistered && blurReady && (
-          <Animated.View style={[StyleSheet.absoluteFill, { opacity: blurOpacity }]}>
-            <BlurView
-              style={StyleSheet.absoluteFill}
-              blurAmount={SHEET.maskBlur}
-              blurType={theme.scheme}
-              // Android：染色由下方 maskTint 层承担，关掉库自带 overlay；
-              // autoUpdate 与常驻玻璃位同一开关。整屏面积模糊下，浮层开着时身后页面并不动，
-              // 冻结快照无可观感代价，纯省开销。iOS：系统「降低透明度」时的纯色兜底。
-              {...(Platform.OS === 'android'
-                ? { overlayColor: 'transparent', autoUpdate: GLASS_PERF.androidAutoUpdate }
-                : { reducedTransparencyFallbackColor: withAlpha(ART_INK.veil, SHEET.maskAlpha) })}
-            />
-          </Animated.View>
+        {/* Android 不挂模糊：BlurView 一挂上就是一次全屏截图 + RenderScript 采样，
+            是 UI 线程上二三十毫秒的单帧长任务，每次打开都得付一次，动画怎么调都盖不住
+            （播放页之所以顺，就是它没有这一步）。遮罩本身已经是 55% 黑，少了模糊观感差别很小。
+            iOS 的面板模糊很廉价，保留。 */}
+        {blurNativeRegistered && Platform.OS === 'ios' && (
+          <BlurView
+            style={StyleSheet.absoluteFill}
+            blurAmount={SHEET.maskBlur}
+            blurType={theme.scheme}
+            reducedTransparencyFallbackColor={withAlpha(ART_INK.veil, SHEET.maskAlpha)}
+          />
         )}
         <View pointerEvents="none" style={styles.maskTint} />
         <Pressable
@@ -303,6 +299,11 @@ export function Sheet<T = unknown>({
 
       {/* .sheet-body：渐变 + 顶边 1px 高光；78% 窗口高内滚动 */}
       <Animated.View
+        onLayout={() => {
+          laidOutRef.current = true
+          // 首帧布局完成就起跑，不等下一轮渲染
+          if (visible) startEntrance()
+        }}
         style={[
           styles.bodyWrap,
           {

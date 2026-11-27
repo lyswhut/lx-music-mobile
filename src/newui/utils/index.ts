@@ -6,6 +6,7 @@ export {
   type NewUiContentPlatform,
 } from './contentPlatform'
 export { formatCacheSize, formatCount, formatDuration } from './format'
+export { fuseGestureBar, installGestureBarFusion } from './gestureBar'
 export { hashString } from './hash'
 export { playQueue } from './play'
 export { getQualityFallback, isQualitySupported } from './quality'

@@ -11,6 +11,8 @@ import {
   WelcomeScreen,
 } from '@/newui/screens'
 import { ThemeProvider } from '@/newui/theme'
+// 直连具体模块（不走 @/newui/utils 桶口），与 wySonglistDetail 同一做法
+import { installGestureBarFusion } from '@/newui/utils/gestureBar'
 import { installWySonglistDetailWeapi } from '@/newui/utils/wySonglistDetail'
 
 import {
@@ -39,6 +41,8 @@ const withNewUiProviders = (Component: ComponentType<any>) =>
 export const registerNewUiScreens = () => {
   // 网易歌单详情 weapi 优先通道（详见 utils/wySonglistDetail 注释）
   installWySonglistDetailWeapi()
+  // 手势栏融合全局重铺监听（RNN 转场会抢回非 edge 布局，详见 utils/gestureBar 注释）
+  installGestureBarFusion()
   Navigation.registerComponent(NEW_UI_MAIN_SCREEN, () => withNewUiProviders(MainScreen))
   Navigation.registerComponent(NEW_UI_PLAYER_SCREEN, () => withNewUiProviders(PlayerScreen))
   Navigation.registerComponent(NEW_UI_SEARCH_SCREEN, () => withNewUiProviders(SearchScreen))

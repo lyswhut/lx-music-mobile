@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Navigation } from 'react-native-navigation'
 
 import { newUiStatusBarStyle, useTheme, useThemeMode } from '@/newui/theme'
+import { fuseGestureBar } from '@/newui/utils'
 
 /** 系统栏配色跟随新 UI 主题（启动 options 用深色打底，挂载后 mergeOptions 校正） */
 export const useNewUiSystemBar = (componentId: string) => {
@@ -10,6 +11,8 @@ export const useNewUiSystemBar = (componentId: string) => {
   const mountedRef = useRef(false)
 
   useEffect(() => {
+    // 手势栏融合不依赖 RNN 转场，首帧就要铺上，别被 mountedRef 跳过
+    fuseGestureBar(theme.colors.bg, scheme === 'light')
     // 首帧配色已由 setRoot / push 的 options 带上，这次 mergeOptions 会落在转场起步帧，跳过；
     // 之后主题真的切换时再合并。
     if (!mountedRef.current) {

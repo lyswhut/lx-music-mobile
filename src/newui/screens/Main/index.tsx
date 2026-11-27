@@ -15,7 +15,7 @@ import {
 import { useApiSupport, emitPageEndReached, useNickName, useRecentPlayRecorder, useSafeArea } from '@/newui/hooks'
 // 直连 navigation/entry（绕开桶口），与各页跳播放同一做法，防 register→screens→pages 循环引用
 import { pushNewUiPlayer, pushNewUiSearch } from '@/newui/navigation/entry'
-import { subscribeNewUiTab } from '@/newui/utils'
+import { fuseGestureBar, subscribeNewUiTab } from '@/newui/utils'
 import { RANK_PAGING, newUiStatusBarStyle, useTheme, useThemeMode } from '@/newui/theme'
 
 import { MinePage, PlaylistPage, RankPage, SettingPage } from './pages'
@@ -105,6 +105,8 @@ export const MainScreen = ({ componentId }: MainScreenProps) => {
 
   // 系统栏配色跟随新 UI 主题（启动用深色打底，这里校正为实际 scheme）
   useEffect(() => {
+    // 手势栏与底栏同色：窗口底色 / 导航栏色都取 bg，关掉手势条对比度蒙层
+    fuseGestureBar(theme.colors.bg, scheme === 'light')
     Navigation.mergeOptions(componentId, {
       statusBar: { style: newUiStatusBarStyle(scheme) },
       navigationBar: { backgroundColor: theme.colors.bg },

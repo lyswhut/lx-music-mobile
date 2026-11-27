@@ -1142,6 +1142,8 @@ export const SHEET = {
   /** 动效：遮罩 300ms、体贴 400ms、退场 420ms；token 文件内不能前向引用 MOTION */
   bodyDuration: 400,
   exitDuration: 420,
+  /** 遮罩模糊淡入时长：与体展开尾段重叠，消除挂载瞬间的「啪」 */
+  blurFadeIn: 360,
   /** 触底判定距离（px，近似 FlatList 的比例语义） */
   endReachThreshold: 300,
   /** 浮层虚拟化回收参数：视口最高 78% 窗口高，首屏略有余、批间不空窗 */

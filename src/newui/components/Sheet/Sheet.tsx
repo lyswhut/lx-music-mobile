@@ -37,6 +37,13 @@ import { blurNativeRegistered } from '../Glass'
 const EASE = Easing.bezier(MOTION.easing[0], MOTION.easing[1], MOTION.easing[2], MOTION.easing[3])
 
 /**
+ * 遮罩淡入专用曲线：progress 走的是体位移的强 ease-out（起步猛、尾段缓），
+ * 直接复用会让蒙板在头 150ms 就冲到近全黑——「打开瞬间啪地加蒙板」的观感来源。
+ * 这里反着用 ease-in：前半段压慢、随体减速同步补深，加深过程与运动节奏一致。
+ */
+const MASK_EASE = Easing.in(Easing.quad)
+
+/**
  * 浮层「虚拟化主体」的行配置（可选）。
  * 传入后自带滚动容器由 ScrollView 换成 FlatList，handle/标题/副题进列表头部 cell，
  * 挂载视图数退化为屏内行 + windowSize 余量；仍只有一层滚动容器，不嵌第二层。
@@ -119,8 +126,10 @@ export function Sheet<T = unknown>({
   // 退场动画播完前保持挂载
   const [mounted, setMounted] = useState(visible)
   /**
-   * 遮罩是整屏面积的模糊，挂载即要做全屏截图 + RenderScript 模糊，与入场位移撞帧会掉帧；
-   * 延到入场播完再挂，染色层从头就在，模糊晚到 400ms 在深色遮罩上几乎看不出。
+   * 遮罩是整屏面积的模糊，挂载即要做全屏截图 + RenderScript 模糊（一次性重活）。
+   * 必须等入场动画播完再挂——放进动画帧里会掉帧（autoUpdate=false 也躲不开挂载那次采样）。
+   * 「挂载瞬间啪一下加深」的老问题交给淡入解决：blurOpacity 0→1 补 360ms，
+   * 体停住后遮罩继续平滑加深到位，观感连续、动画不掉帧。
    */
   const [blurReady, setBlurReady] = useState(false)
   const progress = useMemo(() => new Animated.Value(visible ? 1 : 0), []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -149,6 +158,25 @@ export function Sheet<T = unknown>({
     const timer = setTimeout(() => setBlurReady(true), SHEET.bodyDuration)
     return () => clearTimeout(timer)
   }, [visible])
+
+  /**
+   * 模糊层淡入：blurReady 翻转时 BlurView 才挂载，直接满 alpha 出现会让
+   * 背景「啪」地糊一下；挂上后补一段短淡入，与体展开的尾帧衔接。
+   * 复位走 0 时长（彼时整层遮罩已随退场淡到 0，无需动画）。
+   */
+  const blurOpacity = useMemo(() => new Animated.Value(0), [])
+  /** 遮罩淡入值：progress 的 ease-in 映射（曲线说明见 MASK_EASE 注释），memo 防重渲染重建绑定 */
+  const maskOpacity = useMemo(
+    () => progress.interpolate({ inputRange: [0, 1], outputRange: [0, 1], easing: MASK_EASE }),
+    [progress],
+  )
+  useEffect(() => {
+    Animated.timing(blurOpacity, {
+      toValue: blurReady ? 1 : 0,
+      duration: blurReady ? SHEET.blurFadeIn : 0,
+      useNativeDriver: true,
+    }).start()
+  }, [blurReady, blurOpacity])
 
   // Android 物理返回键：浮层开着时先收浮层
   useEffect(() => {
@@ -248,19 +276,21 @@ export function Sheet<T = unknown>({
     <View style={styles.root} accessibilityViewIsModal>
       {/* 遮罩：容器必须透底（Android BlurView 采样窗口身后内容，自带底色会被一起糊进去），
           故 BlurView 在前（下）、染色层在后（上）；原生模块未注册时只渲染染色层，天然降级。 */}
-      <Animated.View style={[styles.mask, { opacity: progress }]}>
+      <Animated.View style={[styles.mask, { opacity: maskOpacity }]}>
         {blurNativeRegistered && blurReady && (
-          <BlurView
-            style={StyleSheet.absoluteFill}
-            blurAmount={SHEET.maskBlur}
-            blurType={theme.scheme}
-            // Android：染色由下方 maskTint 层承担，关掉库自带 overlay；
-            // autoUpdate 与常驻玻璃位同一开关。整屏面积模糊下，浮层开着时身后页面并不动，
-            // 冻结快照无可观感代价，纯省开销。iOS：系统「降低透明度」时的纯色兜底。
-            {...(Platform.OS === 'android'
-              ? { overlayColor: 'transparent', autoUpdate: GLASS_PERF.androidAutoUpdate }
-              : { reducedTransparencyFallbackColor: withAlpha(ART_INK.veil, SHEET.maskAlpha) })}
-          />
+          <Animated.View style={[StyleSheet.absoluteFill, { opacity: blurOpacity }]}>
+            <BlurView
+              style={StyleSheet.absoluteFill}
+              blurAmount={SHEET.maskBlur}
+              blurType={theme.scheme}
+              // Android：染色由下方 maskTint 层承担，关掉库自带 overlay；
+              // autoUpdate 与常驻玻璃位同一开关。整屏面积模糊下，浮层开着时身后页面并不动，
+              // 冻结快照无可观感代价，纯省开销。iOS：系统「降低透明度」时的纯色兜底。
+              {...(Platform.OS === 'android'
+                ? { overlayColor: 'transparent', autoUpdate: GLASS_PERF.androidAutoUpdate }
+                : { reducedTransparencyFallbackColor: withAlpha(ART_INK.veil, SHEET.maskAlpha) })}
+            />
+          </Animated.View>
         )}
         <View pointerEvents="none" style={styles.maskTint} />
         <Pressable

@@ -6,18 +6,25 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.core.app.LocaleManagerCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.os.LocaleListCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -36,6 +43,16 @@ public class UtilsModule extends ReactContextBaseJavaModule {
   private final ReactApplicationContext reactContext;
 
   private int listenerCount = 0;
+
+  // ---------- 手势栏融合看门狗 ----------
+  // RNN 每次屏幕转场都会把窗口抢回非 edge 布局（setDecorFitsSystemWindows(true)），
+  // JS 事件经桥接回来至少晚 1-2 帧，肉眼能看到手势栏跳变。
+  // 看门狗挂在 GlobalLayout 上：同一帧内发现被抢回就立刻抢回来，错误状态来不及绘制。
+  private boolean gestureFusionEnabled = false;
+  private int gestureFusionColor = 0;
+  private boolean gestureFusionLightIcons = false;
+  // 记录已挂看门狗的 decor：Activity 重建后 decor 会换，需重挂
+  private View gestureFusionDecor = null;
 
   UtilsEvent utilsEvent;
 
@@ -354,6 +371,96 @@ public class UtilsModule extends ReactContextBaseJavaModule {
     params.putInt("width", rect.width());
     params.putInt("height", rect.height());
     promise.resolve(params);
+  }
+
+  /**
+   * 把系统手势导航栏与 App 底栏融成同一块底色（edge-to-edge 版）：
+   * 1. 内容延伸到手势栏之下，App 底栏自己铺到物理屏幕底边——手势条直接浮在
+   *    底栏像素上，不再依赖「系统透出窗口底色」这种各 ROM 表现不一的路子；
+   * 2. 导航栏设成透明，关掉 Android 10+ 对手势条的强制对比度蒙层；
+   * 3. 窗口底色仍同步为主题 bg：RNN 在转场时会把布局抢回非 edge 模式，
+   *    那些过渡帧里透出的也是这层，不会闪出色带；
+   * 4. 手势条明暗按主题走（浅色底用深色条）。
+   * 主题切换、每个屏幕 componentDidAppear 时从 JS 再调一次即可（RNN 会重置布局模式），
+   * 整段在 UI 线程执行。
+   */
+  @ReactMethod
+  public void setGestureBarAppearance(String colorHex, boolean lightIcons) {
+    Activity activity = reactContext.getCurrentActivity();
+    if (activity == null) return;
+    activity.runOnUiThread(() -> {
+      try {
+        int color = Color.parseColor(colorHex);
+        gestureFusionColor = color;
+        gestureFusionLightIcons = lightIcons;
+        gestureFusionEnabled = true;
+        applyGestureFusion(activity);
+        installGestureFusionWatchdog(activity);
+      } catch (IllegalArgumentException ignored) {
+        // 色值解析失败时保持系统默认，不让主题切换把导航栏搞崩
+      }
+    });
+  }
+
+  /** 融合主体：edge 布局 + 透明导航栏 + 关蒙层 + 窗口底色兜底 + 手势条明暗 */
+  private void applyGestureFusion(Activity activity) {
+    Window window = activity.getWindow();
+    if (window == null) return;
+    window.setBackgroundDrawable(new ColorDrawable(gestureFusionColor));
+    WindowCompat.setDecorFitsSystemWindows(window, false);
+    window.setNavigationBarColor(Color.TRANSPARENT);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      window.setNavigationBarContrastEnforced(false);
+    }
+    new WindowInsetsControllerCompat(window, window.getDecorView())
+      .setAppearanceLightNavigationBars(gestureFusionLightIcons);
+  }
+
+  /**
+   * 看门狗：每次全局布局后检查 decor 是否被抢回 fitsSystemWindows=true
+   * （RNN 转场 apply 的标志动作），是则同帧抢回。
+   * 只在状态确实被改走时才动作，正常帧仅一次布尔读取。
+   */
+  private void installGestureFusionWatchdog(Activity activity) {
+    View decor = activity.getWindow().getDecorView();
+    // 同一 decor 只挂一次；Activity 重建后 decor 变了，重挂到新 decor
+    if (gestureFusionDecor == decor) return;
+    gestureFusionDecor = decor;
+    decor.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+      if (!gestureFusionEnabled) return;
+      if (!decor.isAttachedToWindow()) return;
+      if (ViewCompat.getFitsSystemWindows(decor)) {
+        applyGestureFusion(activity);
+      }
+    });
+  }
+
+  /**
+   * 底部导航栏（含手势条区域）的 inset 高度，单位 dp。
+   * JS 侧据此给 TabBar / Sheet 补底部留白，避免内容被手势条压住。
+   */
+  @ReactMethod
+  public void getNavigationBarHeight(Promise promise) {
+    Activity activity = reactContext.getCurrentActivity();
+    if (activity == null) {
+      promise.resolve(0);
+      return;
+    }
+    activity.runOnUiThread(() -> {
+      try {
+        Window window = activity.getWindow();
+        WindowInsetsCompat insets = window == null
+          ? null
+          : ViewCompat.getRootWindowInsets(window.getDecorView());
+        int px = insets == null
+          ? 0
+          : insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
+        float density = activity.getResources().getDisplayMetrics().density;
+        promise.resolve(px / density);
+      } catch (Exception e) {
+        promise.resolve(0);
+      }
+    });
   }
 
   @ReactMethod

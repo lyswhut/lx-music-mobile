@@ -29,4 +29,28 @@ export default createStyle({
     flexWrap: 'wrap',
     paddingTop: 5,
   },
+  colorList: {
+    flexGrow: 0,
+    flexShrink: 1,
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    paddingTop: 5,
+  },
+  colorItem: {
+    padding: 4,
+  },
+  colorDot: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  tip: {
+    paddingTop: 2,
+    paddingLeft: 28,
+  },
+  tipText: {
+    fontSize: 12,
+  },
 })

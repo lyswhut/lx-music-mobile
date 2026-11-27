@@ -2,17 +2,21 @@ import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import { type NativeScrollEvent, type NativeSyntheticEvent, View, TouchableOpacity, Animated } from 'react-native'
 import Text from '@/components/common/Text'
 import { createStyle } from '@/utils/tools'
-import { type Lines } from 'lrc-file-parser'
 import { useTheme } from '@/store/theme/hook'
 import { BorderWidths } from '@/theme'
 import { formatPlayTime2 } from '@/utils'
 import { Icon } from '@/components/common/Icon'
 
+// 歌词行基础结构：逐行（Lines）与逐字（WordLyricLine）行均包含 time/text 字段
+interface BaseLine {
+  time: number
+  text: string
+}
 
 export interface PlayLineType {
   updateScrollInfo: (scrollInfo: NativeSyntheticEvent<NativeScrollEvent>['nativeEvent'] | null) => void
   updateLayoutInfo: (listLayoutInfo: { spaceHeight: number, lineHeights: number[] }) => void
-  updateLyricLines: (lyricLines: Lines) => void
+  updateLyricLines: (lyricLines: BaseLine[]) => void
   setVisible: (visible: boolean) => void
 }
 
@@ -26,7 +30,7 @@ export default forwardRef<PlayLineType, PlayLineProps>(({ onPlayLine }, ref) => 
   const theme = useTheme()
   const [scrollInfo, setScrollInfo] = useState<NativeSyntheticEvent<NativeScrollEvent>['nativeEvent'] | null>(null)
   const [listLayoutInfo, setListLayoutInfo] = useState<{ spaceHeight: number, lineHeights: number[] }>({ spaceHeight: 0, lineHeights: [] })
-  const [lyricLines, setLyricLines] = useState<Lines>([])
+  const [lyricLines, setLyricLines] = useState<BaseLine[]>([])
   const [visible, setVisible] = useState(false)
   const opsAnim = useRef<Animated.Value>(
     new Animated.Value(0),

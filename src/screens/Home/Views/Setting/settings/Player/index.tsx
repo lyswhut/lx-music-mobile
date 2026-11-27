@@ -11,6 +11,10 @@ import IsShowBluetoothFullLyric from './IsShowBluetoothFullLyric'
 import IsShowNotificationImage from './IsShowNotificationImage'
 import IsShowLyricTranslation from './IsShowLyricTranslation'
 import IsShowLyricRoma from './IsShowLyricRoma'
+import IsShowWordLyric from './IsShowWordLyric'
+import WordLyricColor from './WordLyricColor'
+import WordLyricBrightness from './WordLyricBrightness'
+import WordLyricContrast from './WordLyricContrast'
 import IsS2T from './IsS2T'
 import MaxCache from './MaxCache'
 import { useI18n } from '@/lang'
@@ -30,6 +34,10 @@ export default memo(() => {
       <IsShowNotificationImage />
       <IsShowLyricTranslation />
       <IsShowLyricRoma />
+      <IsShowWordLyric />
+      <WordLyricColor />
+      <WordLyricBrightness />
+      <WordLyricContrast />
       <IsS2T />
       <MaxCache />
       <PlayHighQuality />

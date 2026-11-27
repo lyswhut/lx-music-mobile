@@ -1,0 +1,323 @@
+{
+  "_note": "自动映射缓存（件 → RN 文件，按引用打分）。manual 段人工钉死覆盖，不受 --refresh-map 影响。重算：node scripts/newui-parity.mjs --refresh-map",
+  "auto": {
+    "_base": [
+      "components/PlActions/PlActions.tsx",
+      "components/Chip/Chip.tsx",
+      "components/Section/Section.tsx",
+      "components/Art/Art.tsx",
+      "components/PagingStatus/PagingStatus.tsx",
+      "screens/Main/pages/MinePage.tsx"
+    ],
+    "common-control/chip-row": [
+      "components/ChipRow/ChipRow.tsx"
+    ],
+    "common-control/eq-bars": [
+      "components/IconButton/IconButton.tsx",
+      "components/SongRow/EqBars.tsx",
+      "components/SongRow/SongRow.tsx",
+      "screens/Player/sheets/TimerSheet.tsx"
+    ],
+    "common-control/group-label": [
+      "components/FoldToggle/FoldToggle.tsx",
+      "components/GroupLabel/GroupLabel.tsx",
+      "screens/Main/sheets/SourceSheet.tsx",
+      "screens/Main/sheets/MoreSheet.tsx",
+      "screens/Main/sheets/PlIdSheet.tsx"
+    ],
+    "common-control/hscroll-recent": [
+      "components/RecentCard/RecentCard.tsx"
+    ],
+    "common-control/minibar": [
+      "components/Minibar/Minibar.tsx"
+    ],
+    "common-control/op-box": [
+      "components/OpFileButton/OpFileButton.tsx",
+      "screens/Main/sheets/CreateListSheet.tsx",
+      "components/OpInputRow/OpInputRow.tsx",
+      "screens/Main/sheets/SourceSheet.tsx",
+      "screens/Main/sheets/NameSheet.tsx",
+      "screens/Main/sheets/PlIdSheet.tsx"
+    ],
+    "common-control/opt-list": [
+      "components/OptionRow/OptionRow.tsx",
+      "screens/Main/sheets/MoreSheet.tsx",
+      "components/FoldMore/FoldMore.tsx",
+      "screens/Main/sheets/SourceSheet.tsx"
+    ],
+    "common-control/page-head": [
+      "components/PageHeader/PageHeader.tsx"
+    ],
+    "common-control/pulse-dot": [
+      "components/IconButton/IconButton.tsx",
+      "components/TopBar/TopBar.tsx",
+      "screens/Main/index.tsx"
+    ],
+    "common-control/q-chips": [
+      "screens/Player/sheets/TimerSheet.tsx"
+    ],
+    "common-control/sheet-chrome": [
+      "components/Sheet/Sheet.tsx",
+      "components/ConfirmSheet/ConfirmSheet.tsx",
+      "screens/Player/sheets/QueueSheet.tsx",
+      "components/Toast/Toast.tsx",
+      "screens/Main/sheets/PlTagsSheet.tsx",
+      "screens/Player/index.tsx"
+    ],
+    "common-control/sprite": [],
+    "common-control/tabbar": [
+      "components/TabBar/TabBar.tsx",
+      "screens/Main/index.tsx"
+    ],
+    "common-control/toast": [
+      "components/Toast/Toast.tsx"
+    ],
+    "common-control/toggle": [
+      "components/Switch/Switch.tsx"
+    ],
+    "common-control/topbar": [
+      "components/TopBar/TopBar.tsx",
+      "components/BrandAvatar/BrandAvatar.tsx"
+    ],
+    "home/artist-card": [
+      "components/ArtistCard/ArtistCard.tsx"
+    ],
+    "home/banner": [
+      "components/Banner/Banner.tsx"
+    ],
+    "home/daily-card": [
+      "components/DailyCard/DailyCard.tsx"
+    ],
+    "home/pl-card": [
+      "screens/Main/pages/HomePage.tsx",
+      "components/PlCard/PlCard.tsx",
+      "screens/Search/SearchResultPanel.tsx"
+    ],
+    "home/quick-row": [
+      "components/QuickRow/QuickRow.tsx"
+    ],
+    "home/section-note": [
+      "components/SectionNote/SectionNote.tsx"
+    ],
+    "home/song-list": [
+      "components/SongRow/SongRow.tsx",
+      "screens/Player/sheets/QueueSheet.tsx",
+      "components/Chip/Chip.tsx",
+      "screens/SonglistDetail/PlaylistHero.tsx"
+    ],
+    "mine/fav-card": [
+      "components/FavCard/FavCard.tsx"
+    ],
+    "mine/mine-head": [
+      "components/MineHeader/MineHeader.tsx"
+    ],
+    "mine/offline": [
+      "screens/Offline/OfflineScreen.tsx",
+      "components/FavCard/FavCard.tsx",
+      "screens/Main/pages/MinePage.tsx"
+    ],
+    "mine/song-list-compact": [
+      "components/SongRow/SongRow.tsx",
+      "screens/Main/pages/MinePage.tsx",
+      "screens/Player/sheets/QueueSheet.tsx"
+    ],
+    "mine/stat-row": [
+      "components/StatRow/StatRow.tsx",
+      "screens/Main/pages/MinePage.tsx"
+    ],
+    "player/_layer": [
+      "components/StageDots/StageDots.tsx",
+      "screens/Player/index.tsx"
+    ],
+    "player/lrc-float": [
+      "components/LrcFloat/LrcFloat.tsx"
+    ],
+    "player/lyric": [
+      "components/LyricList/LyricList.tsx"
+    ],
+    "player/player-bg": [
+      "components/PlayerBg/PlayerBg.tsx",
+      "screens/Player/index.tsx"
+    ],
+    "player/player-controls": [
+      "components/GhostButton/GhostButton.tsx",
+      "components/PcButton/PcButton.tsx",
+      "components/PlActions/PlActions.tsx",
+      "components/PlayerMeta/PlayerMeta.tsx",
+      "screens/Main/pages/HomePage.tsx",
+      "screens/Player/index.tsx"
+    ],
+    "player/player-meta": [
+      "components/PlayerMeta/PlayerMeta.tsx"
+    ],
+    "player/player-source": [
+      "components/PlayerSource/PlayerSource.tsx"
+    ],
+    "player/player-tools": [
+      "components/PlayerToolButton/PlayerToolButton.tsx",
+      "screens/Player/index.tsx"
+    ],
+    "player/player-top": [
+      "components/PlayerTop/PlayerTop.tsx"
+    ],
+    "player/seek-time": [
+      "components/SeekTime/SeekTime.tsx"
+    ],
+    "player/seek": [
+      "components/LrcFloat/LrcFloat.tsx",
+      "components/Minibar/Minibar.tsx",
+      "components/SeekControl/SeekControl.tsx",
+      "components/SeekTime/SeekTime.tsx",
+      "screens/Player/index.tsx"
+    ],
+    "player/stage": [
+      "components/DiscArt/DiscArt.tsx"
+    ],
+    "playlist/my-pl": [
+      "components/MyPlCard/MyPlCard.tsx"
+    ],
+    "playlist/pl-count": [
+      "components/PlCount/PlCount.tsx"
+    ],
+    "radio/detail": [
+      "components/Minibar/Minibar.tsx",
+      "components/SongRow/SongRow.tsx",
+      "screens/SonglistDetail/PlaylistHero.tsx"
+    ],
+    "radio/episode": [
+      "components/Art/Art.tsx",
+      "components/ArtistCard/ArtistCard.tsx",
+      "components/ChartArt/ChartArt.tsx",
+      "screens/Player/sheets/CommentNode.tsx",
+      "screens/SonglistDetail/PlaylistHero.tsx"
+    ],
+    "radio/home": [
+      "components/SongRow/SongRow.tsx",
+      "screens/SonglistDetail/PlaylistHero.tsx"
+    ],
+    "rank/chart-art": [
+      "components/ChartArt/ChartArt.tsx"
+    ],
+    "rank/rank-grid": [
+      "components/ChartArt/ChartArt.tsx",
+      "components/RankCard/RankCard.tsx",
+      "screens/SonglistDetail/PlaylistHero.tsx"
+    ],
+    "rank/rank-group": [
+      "components/RankGroupHead/RankGroupHead.tsx",
+      "screens/Main/pages/RankPage.tsx"
+    ],
+    "search/_layer": [
+      "screens/Radio/PodcastSearchScreen.tsx"
+    ],
+    "search/sc-body": [
+      "screens/Search/SearchIdlePanel.tsx"
+    ],
+    "search/sc-result": [
+      "screens/Search/SearchResultPanel.tsx"
+    ],
+    "search/sc-tabs": [
+      "screens/Search/SearchResultPanel.tsx"
+    ],
+    "search/sc-top": [
+      "components/SearchTop/SearchTop.tsx"
+    ],
+    "setting/set-hero": [
+      "components/SetHero/SetHero.tsx",
+      "screens/Main/pages/SettingPage.tsx"
+    ],
+    "setting/settings-group": [
+      "components/SettingsRow/SettingsRow.tsx",
+      "screens/Main/pages/SettingPage.tsx",
+      "components/SettingsGroup/SettingsGroup.tsx"
+    ],
+    "sheets/comment-sheet": [
+      "screens/Player/sheets/CommentNode.tsx",
+      "components/Sheet/Sheet.tsx",
+      "screens/Player/sheets/CommentSheet.tsx"
+    ],
+    "sheets/confirm-sheet": [
+      "components/ConfirmSheet/ConfirmSheet.tsx"
+    ],
+    "sheets/more-sheet": [
+      "screens/Main/sheets/MoreSheet.tsx",
+      "screens/Main/sheets/SourceSheet.tsx"
+    ],
+    "sheets/name-sheet": [
+      "screens/Main/sheets/NameSheet.tsx"
+    ],
+    "sheets/plid-sheet": [
+      "components/Chip/Chip.tsx",
+      "components/ChipFlow/ChipFlow.tsx"
+    ],
+    "sheets/queue-sheet": [
+      "screens/Player/sheets/QueueSheet.tsx",
+      "components/SongRow/SongRow.tsx",
+      "components/Chip/Chip.tsx"
+    ],
+    "sheets/source-sheet": [
+      "screens/Main/sheets/SourceSheet.tsx"
+    ],
+    "sheets/timer-sheet": [
+      "screens/Player/sheets/TimerSheet.tsx"
+    ],
+    "songlist-detail/_layer": [
+      "components/CoverWash/CoverWash.tsx",
+      "components/EmptyTip/EmptyTip.tsx",
+      "components/Toast/Toast.tsx",
+      "screens/Search/SearchScreen.tsx",
+      "screens/SonglistDetail/SonglistDetailScreen.tsx"
+    ],
+    "songlist-detail/pl-actions": [
+      "components/PlActions/PlActions.tsx",
+      "components/GhostButton/GhostButton.tsx",
+      "components/IconButton/IconButton.tsx"
+    ],
+    "songlist-detail/pl-bg": [
+      "components/CoverWash/CoverWash.tsx",
+      "screens/SonglistDetail/SonglistDetailScreen.tsx"
+    ],
+    "songlist-detail/pl-hero": [
+      "screens/SonglistDetail/PlaylistHero.tsx"
+    ],
+    "songlist-detail/pl-top": [
+      "components/PlTop/PlTop.tsx",
+      "components/IconButton/IconButton.tsx",
+      "screens/SonglistDetail/SonglistDetailScreen.tsx"
+    ],
+    "songlist-detail/pl-tracks": [
+      "components/EmptyTip/EmptyTip.tsx"
+    ]
+  },
+  "manual": {
+    "mine/offline": [
+      "screens/Offline/OfflineScreen.tsx"
+    ],
+    "mine/mine-head": [
+      "components/MineHeader/MineHeader.tsx",
+      "components/BrandAvatar/BrandAvatar.tsx",
+      "components/PillButton/PillButton.tsx"
+    ],
+    "setting/settings-group": [
+      "components/SettingsRow/SettingsRow.tsx",
+      "screens/Main/pages/SettingPage.tsx",
+      "components/SettingsGroup/SettingsGroup.tsx",
+      "components/GroupLabel/GroupLabel.tsx"
+    ],
+    "radio/home": [
+      "screens/Radio/RadioHomeScreen.tsx",
+      "components/PodcastRow/PodcastRow.tsx"
+    ],
+    "radio/detail": [
+      "screens/Radio/PodcastDetailScreen.tsx",
+      "screens/Radio/EpisodeRow.tsx",
+      "screens/Radio/PodcastHero.tsx"
+    ],
+    "radio/episode": [
+      "screens/Radio/EpisodeScreen.tsx"
+    ],
+    "sheets/name-sheet": [
+      "screens/Main/sheets/NameSheet.tsx"
+    ]
+  }
+}

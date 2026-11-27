@@ -23,6 +23,10 @@ declare namespace LX {
       albumName: string // 歌曲专辑名称
       picUrl?: string | null // 歌曲图片链接
       toggleMusicInfo?: MusicInfoOnline | null
+      // 新增（2026-10-15，可选字段，纯增量）：这首歌「署名第一位歌手」的平台侧 id。
+      // 目前只有 tx 源的在线曲目带得出（utils/musicSdk/tx/*），其余平台/本地无此键；
+      // 旧逻辑一律不读此字段。
+      singerMid?: string
     }
 
     interface MusicInfoMeta_online extends MusicInfoMetaBase {

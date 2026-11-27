@@ -201,6 +201,14 @@ export const getListMusicSync = (id: string | null) => {
   return id ? allMusicList.get(id) ?? [] : []
 }
 
+// 「在途存储读」登记表：同一 listId 的并发首读共享同一个 Promise（single-flight）。
+// 修复（2026-10-22 newui todo「我喜欢只能加一首歌」根因）：缓存未命中时多个消费方
+// （新 UI 的 useLoveSongs ×MinePage/MoreSheet/Minibar/Player、useMyPlaylists.fillCounts、
+// 以及收藏写入自身走的 listMusicAdd→getListMusics）会各自发起一次冷读，拿到同一份
+// 陈旧快照后先后 setMusicList 互相覆盖——期间追加的歌整份丢失、「我喜欢」退化成
+// 只剩最后添加的一首。签名与「返回全量列表并写入缓存」的既有语义一字未动。
+const loadingMusicList = new Map<string, Promise<LX.Music.MusicInfo[]>>()
+
 /**
  * 获取列表内的歌曲
  * @param listId
@@ -208,8 +216,14 @@ export const getListMusicSync = (id: string | null) => {
 export const getListMusics = async(listId: string): Promise<LX.Music.MusicInfo[]> => {
   if (!listId) return []
   if (allMusicList.has(listId)) return allMusicList.get(listId)!
-  const list = await getListMusicsFromStore(listId)
-  return setMusicList(listId, list)
+  let loading = loadingMusicList.get(listId)
+  if (loading == null) {
+    loading = getListMusicsFromStore(listId)
+      .then(list => setMusicList(listId, list))
+      .finally(() => { loadingMusicList.delete(listId) })
+    loadingMusicList.set(listId, loading)
+  }
+  return loading
 }
 
 export const listMusicOverwrite = async(listId: string, musicInfos: LX.Music.MusicInfo[]): Promise<string[]> => {

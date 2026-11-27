@@ -22,6 +22,8 @@ declare namespace LX {
       author: string
       homepage: string
       version: string
+      /** 在线导入时的脚本链接，用于行内刷新；本机导入没有 */
+      importUrl?: string
       sources?: UserApiSources
     }
 

@@ -1,0 +1,42 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>pending</title>
+<iframe id="f" style="width:900px;height:1200px"></iframe>
+<script>
+/* 取证「榜名与平台行统一白墨」：179 张卡全铺，逐张核对
+ * 遮罩只有一档（.rk-scrim）、卡内不再有通用 .art-scrim、两行字的计算色一律白、
+ * 没有任何卡带 --rk-ink 内联变量，另外确认图不裂、无 JS 报错。
+ * 命中数不是断言项：32 张封面顶到 146 个真榜名里的 96 个，剩下的走符号回落（img 与 svg 两支之和 = 卡数） */
+const f = document.getElementById('f'); const out = [];
+f.onload = () => {
+  const w = f.contentWindow, d = f.contentDocument;
+  w.onerror = (m, s, l) => out.push('ERR ' + m + '@' + l);
+  const st = d.createElement('style');
+  st.textContent = '*,*::before,*::after{transition:none!important;animation:none!important}';
+  d.head.appendChild(st);
+  try {
+    w.eval("currentTab='rank'; activeSource='wy'; rnkShown=400; paintRankGrid(); void 0");
+    const cards = [...d.querySelectorAll('.rk-card')];
+    const img = cards.filter((c) => c.querySelector('img.rk-emblem'));
+    const broken = img.filter((c) => { const i = c.querySelector('img'); return i.complete && i.naturalWidth === 0; });
+    out.push('cards=' + cards.length, 'img=' + img.length,
+      'svg=' + cards.filter((c) => c.querySelector('svg.rk-emblem')).length, 'broken=' + broken.length);
+    const cs = (el) => getComputedStyle(el);
+    const nameColors = new Set(cards.map((c) => cs(c.querySelector('.rk-name')).color));
+    const subColors = new Set(cards.map((c) => cs(c.querySelector('.rk-sub')).color));
+    const shadows = new Set(cards.map((c) => cs(c.querySelector('.rk-name')).textShadow));
+    out.push('榜名色=' + [...nameColors].join(','), '平台行色=' + [...subColors].join(','), '字影档=' + shadows.size);
+    out.push('rk-scrim=' + cards.filter((c) => c.querySelector('.rk-scrim')).length,
+      '卡内art-scrim=' + cards.filter((c) => c.querySelector('.art-scrim')).length,
+      '残留--rk-ink=' + cards.filter((c) => c.style.getPropertyValue('--rk-ink') !== '').length);
+    /* 遮罩梯度实际生效的那一档：读计算样式，确保 32 张走的是同一档（回落支没有遮罩，会多出一个 none 档） */
+    const grads = new Set(cards.map((c) => { const s = c.querySelector('.rk-scrim'); return s ? cs(s).backgroundImage : 'none'; }));
+    out.push('梯度档=' + grads.size, [...grads][0] || '');
+    /* 卡片实际尺寸（决定带位置，与求解器用的 168 对齐） */
+    const r = cards[0].getBoundingClientRect();
+    out.push('卡尺寸=' + Math.round(r.width) + 'x' + Math.round(r.height));
+  } catch (e) { out.push('THROW ' + e.message); }
+  const p = document.createElement('pre'); p.textContent = 'RESULT|' + out.join('|'); document.body.appendChild(p);
+};
+f.src = 'file:///mnt/data/owner/lx-music-mobile/new_design/index.html';
+</script>

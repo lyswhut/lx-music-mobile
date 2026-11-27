@@ -6,18 +6,25 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.core.app.LocaleManagerCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.os.LocaleListCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -36,6 +43,16 @@ public class UtilsModule extends ReactContextBaseJavaModule {
   private final ReactApplicationContext reactContext;
 
   private int listenerCount = 0;
+
+  // ---------- 手势栏融合看门狗 ----------
+  // RNN 每次屏幕转场都会把窗口抢回非 edge 布局（setDecorFitsSystemWindows(true)），
+  // JS 事件经桥接回来至少晚 1-2 帧，肉眼能看到手势栏跳变。
+  // 看门狗挂在 GlobalLayout 上：同一帧内发现被抢回就立刻抢回来，错误状态来不及绘制。
+  private boolean gestureFusionEnabled = false;
+  private int gestureFusionColor = 0;
+  private boolean gestureFusionLightIcons = false;
+  // 记录已挂看门狗的 decor：Activity 重建后 decor 会换，需重挂
+  private View gestureFusionDecor = null;
 
   UtilsEvent utilsEvent;
 
@@ -354,6 +371,115 @@ public class UtilsModule extends ReactContextBaseJavaModule {
     params.putInt("width", rect.width());
     params.putInt("height", rect.height());
     promise.resolve(params);
+  }
+
+  /**
+   * 把系统手势导航栏与 App 底栏融成同一块底色（edge-to-edge 版）：
+   * 1. 内容延伸到手势栏之下，App 底栏自己铺到物理屏幕底边——手势条直接浮在
+   *    底栏像素上，不再依赖「系统透出窗口底色」这种各 ROM 表现不一的路子；
+   * 2. 导航栏设成透明，关掉 Android 10+ 对手势条的强制对比度蒙层；
+   * 3. 窗口底色仍同步为主题 bg：RNN 在转场时会把布局抢回非 edge 模式，
+   *    那些过渡帧里透出的也是这层，不会闪出色带；
+   * 4. 手势条明暗按主题走（浅色底用深色条）。
+   * 主题切换、每个屏幕 componentDidAppear 时从 JS 再调一次即可（RNN 会重置布局模式），
+   * 整段在 UI 线程执行。
+   */
+  @ReactMethod
+  public void setGestureBarAppearance(String colorHex, boolean lightIcons) {
+    Activity activity = reactContext.getCurrentActivity();
+    if (activity == null) return;
+    activity.runOnUiThread(() -> {
+      try {
+        int color = Color.parseColor(colorHex);
+        gestureFusionColor = color;
+        gestureFusionLightIcons = lightIcons;
+        gestureFusionEnabled = true;
+        applyGestureFusion(activity);
+        installGestureFusionWatchdog(activity);
+      } catch (IllegalArgumentException ignored) {
+        // 色值解析失败时保持系统默认，不让主题切换把导航栏搞崩
+      }
+    });
+  }
+
+  /** 融合主体：edge 布局 + 透明导航栏 + 关蒙层 + 窗口底色兜底 + 手势条明暗 */
+  private void applyGestureFusion(Activity activity) {
+    Window window = activity.getWindow();
+    if (window == null) return;
+    window.setBackgroundDrawable(new ColorDrawable(gestureFusionColor));
+    WindowCompat.setDecorFitsSystemWindows(window, false);
+    // 不先声明「窗口自绘系统栏背景」，setNavigationBarColor 在部分 ROM / API 上会被直接忽略
+    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+    window.setNavigationBarColor(Color.TRANSPARENT);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      window.setNavigationBarContrastEnforced(false);
+    }
+    // 注：手势导航下小白条本身的颜色由系统按「它下面的内容」自动决定，
+    // 这里只影响三键导航的图标明暗（见 7090385839619833893 一文的实测结论）。
+    new WindowInsetsControllerCompat(window, window.getDecorView())
+      .setAppearanceLightNavigationBars(gestureFusionLightIcons);
+  }
+
+  /**
+   * 看门狗：在每一帧「绘制前」检查 RNN 是否把窗口抢回了非 edge 模式，是则当场抢回并取消这一帧绘制。
+   *
+   * 两个关键点：
+   * 1. 检测信号不能用 ViewCompat.getFitsSystemWindows(decor)——WindowCompat 改的是
+   *    systemUiVisibility 布局标志 / Window 内部标志，从不写 View 的 fitsSystemWindows 属性，
+   *    那个判断永远为 false（这正是看门狗此前形同虚设的原因）。
+   *    改盯 RNN 每次 applyOptions 必做的那件事：setNavigationBarBackgroundColor
+   *    会把 window.navigationBarColor 写成不透明主题色。我们一旦是透明就说明被抢了。
+   *    （API<30 再加一道 LAYOUT_HIDE_NAVIGATION 标志判断，覆盖只改布局不改色的情况。）
+   * 2. 用 OnPreDraw 而不是 OnGlobalLayout：后者在 layout 之后、draw 之前，此时错误布局
+   *    已经算好，救回来也只能下一帧生效，这一帧错误状态照样会上屏。
+   *    OnPreDraw 回调里返回 false 可以取消本帧绘制——错误状态一帧都不会被画出来，
+   *    代价只是跳过一帧（约 16ms 的画面静止），肉眼不可见。
+   */
+  private void installGestureFusionWatchdog(Activity activity) {
+    View decor = activity.getWindow().getDecorView();
+    // 同一 decor 只挂一次；Activity 重建后 decor 变了，重挂到新 decor
+    if (gestureFusionDecor == decor) return;
+    gestureFusionDecor = decor;
+    decor.getViewTreeObserver().addOnPreDrawListener(() -> {
+      if (!gestureFusionEnabled) return true;
+      if (!decor.isAttachedToWindow()) return true;
+      Window window = activity.getWindow();
+      if (window == null) return true;
+      boolean colorReset = window.getNavigationBarColor() != Color.TRANSPARENT;
+      boolean layoutReset = Build.VERSION.SDK_INT < Build.VERSION_CODES.R
+        && (decor.getSystemUiVisibility() & View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION) == 0;
+      if (!colorReset && !layoutReset) return true;
+      applyGestureFusion(activity);
+      return false; // 取消本帧绘制，等下一帧带着正确状态再画
+    });
+  }
+
+  /**
+   * 底部导航栏（含手势条区域）的 inset 高度，单位 dp。
+   * JS 侧据此给 TabBar / Sheet 补底部留白，避免内容被手势条压住。
+   */
+  @ReactMethod
+  public void getNavigationBarHeight(Promise promise) {
+    Activity activity = reactContext.getCurrentActivity();
+    if (activity == null) {
+      promise.resolve(0);
+      return;
+    }
+    activity.runOnUiThread(() -> {
+      try {
+        Window window = activity.getWindow();
+        WindowInsetsCompat insets = window == null
+          ? null
+          : ViewCompat.getRootWindowInsets(window.getDecorView());
+        int px = insets == null
+          ? 0
+          : insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
+        float density = activity.getResources().getDisplayMetrics().density;
+        promise.resolve(px / density);
+      } catch (Exception e) {
+        promise.resolve(0);
+      }
+    });
   }
 
   @ReactMethod

@@ -9,7 +9,7 @@ type LimitDetailCache = Map<string, DetailPageCache | ListDetailInfo['list']>
 type CacheValue = LimitDetailCache | ListInfo
 
 const cache = new Map<string, CacheValue>()
-const LIST_LOAD_LIMIT = 30
+export const LIST_LOAD_LIMIT = 30
 
 
 /**

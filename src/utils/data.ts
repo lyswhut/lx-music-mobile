@@ -551,17 +551,22 @@ const matchInfo = (scriptInfo: string) => {
 
   return infos as Record<keyof typeof INFO_NAMES, string>
 }
-export const addUserApi = async(script: string): Promise<LX.UserApi.UserApiInfo> => {
+export const addUserApi = async(script: string, url?: string): Promise<LX.UserApi.UserApiInfo> => {
   const result = /^\/\*[\S|\s]+?\*\//.exec(script)
   if (!result) throw new Error(global.i18n.t('user_api_add_failed_tip'))
 
-  let scriptInfo = matchInfo(result[0])
+  const scriptInfo = matchInfo(result[0])
+  const trimmedUrl = url?.trim()
+  const importUrl = trimmedUrl != null && /^https?:\/\//.test(trimmedUrl)
+    ? trimmedUrl.slice(0, 2048)
+    : undefined
 
   scriptInfo.name ||= `user_api_${new Date().toLocaleString()}`
   const apiInfo: LX.UserApi.UserApiInfo = {
     id: `user_api_${Math.random().toString().substring(2, 5)}_${Date.now()}`,
     ...scriptInfo,
     allowShowUpdateAlert: true,
+    ...(importUrl ? { importUrl } : {}),
   }
   userApis.push(apiInfo)
   await saveDataMultiple([
@@ -569,6 +574,41 @@ export const addUserApi = async(script: string): Promise<LX.UserApi.UserApiInfo>
     [`${userApiPrefix}${apiInfo.id}`, script],
   ])
   return apiInfo
+}
+/** 刷新：保留 id / 缓存链接 / 更新提醒开关，只覆盖脚本与脚本头声明的元信息 */
+export const updateUserApiScript = async(id: string, script: string): Promise<LX.UserApi.UserApiInfo> => {
+  const result = /^\/\*[\S|\s]+?\*\//.exec(script)
+  if (!result) throw new Error(global.i18n.t('user_api_add_failed_tip'))
+
+  const index = userApis.findIndex(api => api.id === id)
+  if (index < 0) throw new Error('user api not found')
+  const prev = userApis[index]
+  const oldScript = await getUserApiScript(id)
+  const updated: LX.UserApi.UserApiInfo = {
+    ...prev,
+    ...matchInfo(result[0]),
+    id: prev.id,
+    importUrl: prev.importUrl,
+    allowShowUpdateAlert: prev.allowShowUpdateAlert,
+  }
+  userApis[index] = updated
+  try {
+    await saveDataMultiple([
+      [userApiPrefix, userApis],
+      [`${userApiPrefix}${id}`, script],
+    ])
+  } catch (err) {
+    // saveDataMultiple 先删后写，失败时把旧脚本写回去，别把能用的音源刷没了
+    userApis[index] = prev
+    try {
+      await saveDataMultiple([
+        [userApiPrefix, userApis],
+        [`${userApiPrefix}${id}`, oldScript],
+      ])
+    } catch { /* 回滚也失败时保留原始错误 */ }
+    throw err
+  }
+  return updated
 }
 export const removeUserApi = async(ids: string[]) => {
   if (!userApis) return []

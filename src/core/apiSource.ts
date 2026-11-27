@@ -3,7 +3,7 @@ import musicSdk from '@/utils/musicSdk'
 // import apiSourceInfo from '@renderer/utils/musicSdk/api-source-info'
 import { updateSetting } from './common'
 import settingState from '@/store/setting/state'
-import { destroyUserApi, setUserApi } from './userApi'
+import { destroyUserApi, refreshUserApi, setUserApi } from './userApi'
 import apiSourceInfo from '@/utils/musicSdk/api-source-info'
 
 
@@ -40,5 +40,12 @@ export const setApiSource = (apiId: string) => {
       global.state_event.apiSourceUpdated(apiId)
     })
   }
+}
+
+/** 刷新缓存链接对应的音源；仅当前生效那份需要重新加载进引擎 */
+export const refreshApiSource = async(id: string): Promise<LX.UserApi.UserApiInfo> => {
+  const info = await refreshUserApi(id)
+  if (id === settingState.setting['common.apiSource']) setApiSource(id)
+  return info
 }
 

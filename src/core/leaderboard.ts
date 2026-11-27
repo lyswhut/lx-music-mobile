@@ -30,7 +30,7 @@ interface PageCache { data: ListDetailInfo, sourcePage: number }
 type CacheValue = Map<string, PageCache | ListDetailInfo['list']>
 
 const cache = new Map<string, CacheValue>()
-const LIST_LOAD_LIMIT = 30
+export const LIST_LOAD_LIMIT = 30
 
 export const getBoardsList = async(source: LX.OnlineSource) => {
   // const source = (await getLeaderboardSetting()).source as LX.OnlineSource

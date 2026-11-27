@@ -111,6 +111,8 @@ export type NAV_ID_Type = typeof NAV_MENUS[number]['id']
 
 export const LXM_FILE_EXT_RXP = ['json', 'lxmc', 'bin']
 export const USER_API_SOURCE_FILE_EXT_RXP = ['js']
+/** 音源脚本体积上限，导入与刷新共用 */
+export const USER_API_SCRIPT_MAX_SIZE = 9_000_000
 
 export const MUSIC_TOGGLE_MODE = {
   listLoop: 'listLoop', // 列表循环
@@ -128,15 +130,20 @@ export const MUSIC_TOGGLE_MODE_LIST = [
   MUSIC_TOGGLE_MODE.none,
 ] as const
 
+/** 默认集成音源脚本（启动时自动安装并激活，见 core/init/userApi） */
+export const DEFAULT_USER_API_URL = 'https://gh-proxy.org/raw.githubusercontent.com/pdone/lx-music-source/main/flower/latest.js'
+/** 默认集成音源在脚本头里声明的名字，用于判断是否已安装 */
+export const DEFAULT_USER_API_NAME = '野花🌷'
+
 export const DEFAULT_SETTING = {
   leaderboard: {
-    source: 'kw' as LX.OnlineSource,
-    boardId: 'kw__16',
+    source: 'tx' as LX.OnlineSource,
+    boardId: 'tx__4',
   },
 
   songList: {
-    source: 'kw' as LX.OnlineSource,
-    sortId: 'new',
+    source: 'tx' as LX.OnlineSource,
+    sortId: '-1',
     tagName: '',
     tagId: '',
   },

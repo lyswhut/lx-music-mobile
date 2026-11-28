@@ -33,7 +33,7 @@ const formatMusicInfo = (musicInfo: LX.Player.PlayMusic) => {
 }
 
 const getCurrentFullLyric = (targetId: string | null) => {
-  return (settingState.setting['player.isShowBluetoothFullLyric'] && targetId &&
+  return ((settingState.setting['player.isShowBluetoothFullLyric'] || settingState.setting['player.isShowCarWithLyric']) && targetId &&
       playerState.musicInfo.id == targetId && playerState.musicInfo.lrc)
     ? playerState.musicInfo.lrc
     : undefined
@@ -215,7 +215,8 @@ const updateMetaInfo = async(mInfo: LX.Player.MusicInfo) => {
   if (mInfo.pic) prevArtwork = mInfo.pic
   let title: string
   let artist: string
-  if (playerState.lastLyric == null) {
+  const isCarWith = settingState.setting['player.isShowCarWithLyric']
+  if (playerState.lastLyric == null || isCarWith) {
     title = mInfo.name ?? 'Unknow'
     artist = mInfo.singer ?? 'Unknow'
   } else {
@@ -229,6 +230,7 @@ const updateMetaInfo = async(mInfo: LX.Player.MusicInfo) => {
     artwork,
     duration: state.prevDuration || 0,
     lyric: getCurrentFullLyric(mInfo.id),
+    ...(isCarWith ? { lyricLine: playerState.lastLyric ?? '' } : {}),
   }, state.isPlaying)
 }
 

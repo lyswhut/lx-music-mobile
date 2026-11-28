@@ -173,6 +173,8 @@ export interface NowPlayingTitles {
   artist?: string
   album?: string
   lyric?: string
+  /** 当前这一句，交给车机端逐句显示 */
+  lyricLine?: string
 }
 export const updateNowPlayingTitles = async(titles: NowPlayingTitles) => {
   // console.log('set playing titles', titles)

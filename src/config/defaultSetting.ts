@@ -1,6 +1,10 @@
 const defaultSetting: LX.AppSetting = {
   version: '2.1',
   'common.isAutoTheme': false,
+  /** 连着 CarWith 时按车机自己报的浅色/深色切主题 */
+  'common.followCarWithTheme': false,
+  /** 连着 CarWith 时按所在城市的日出日落切浅/深主题 */
+  'common.followSunTheme': false,
   'common.langId': null,
   'common.apiSource': '',
   'common.sourceNameType': 'alias',
@@ -34,6 +38,8 @@ const defaultSetting: LX.AppSetting = {
   'player.isS2t': false,
   'player.isShowBluetoothLyric': false,
   'player.isShowBluetoothFullLyric': false,
+  /** 是否把歌词交给 CarWith / Jovi InCar 车机端显示 */
+  'player.isShowCarWithLyric': false,
 
   // 'playDetail.isZoomActiveLrc': false,
   // 'playDetail.isShowLyricProgressSetting': false,

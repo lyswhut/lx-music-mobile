@@ -40,6 +40,12 @@ const handleSetLyric = async(lyric: string, translation = '', romalrc = '') => {
       lyric,
     })
   }
+  if (settingState.setting['player.isShowCarWithLyric']) {
+    void updateNowPlayingTitles({
+      lyric,
+      lyricLine: '',
+    })
+  }
 }
 
 /**

@@ -44,6 +44,7 @@ import { addTempPlayList } from '@/core/player/tempPlayList'
 const filterInfoByPlayMusic = musicInfo => {
   switch (musicInfo.source) {
     case 'kw':
+    case 'sd':
       musicInfo = dataVerify([
         { key: 'name', types: ['string'], required: true, max: 200 },
         { key: 'singer', types: ['string'], required: true, max: 200 },

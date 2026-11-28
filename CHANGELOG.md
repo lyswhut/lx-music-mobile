@@ -6,6 +6,17 @@ Project versioning adheres to [Semantic Versioning](http://semver.org/).
 Commit convention is based on [Conventional Commits](http://conventionalcommits.org).
 Change log format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [1.9.3](https://github.com/lyswhut/lx-music-mobile/compare/v1.9.2...v1.9.3) - 2026-11-28
+
+### 修复
+
+- 修复某些歌词时间标签解析错误的问题
+
+### 变更
+
+- 由于音频卸载功能在某些设备上遇到问题，该版本开始将禁用音频卸载，若它在你的设备上没有遇到播放问题，可以再次手动启用
+- 修复 wy 歌单无法加载的问题
+
 ## [1.9.2](https://github.com/lyswhut/lx-music-mobile/compare/v1.9.1...v1.9.2) - 2026-10-30
 
 ### 修复

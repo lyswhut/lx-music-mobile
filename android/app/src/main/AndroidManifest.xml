@@ -2,6 +2,9 @@
   xmlns:tools="http://schemas.android.com/tools"
   package="cn.toside.music.mobile">
 
+    <!-- SuperLyricApi 要求 minSdk 26；该功能仅在 Android 8.0+ 启用，保留 app 的 minSdk 21 -->
+    <uses-sdk tools:overrideLibrary="com.hchen.superlyricapi" />
+
     <!-- 获取读写外置存储权限 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

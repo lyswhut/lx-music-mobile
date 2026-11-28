@@ -7,6 +7,7 @@ import {
   toggleRoma as lrcToggleRoma,
   init as lrcInit,
 } from '@/plugins/lyric'
+import { clearSuperLyric, setSuperLyric } from '@/core/superLyric'
 import {
   playDesktopLyric,
   setDesktopLyric,
@@ -35,6 +36,8 @@ export const init = async() => {
 const handleSetLyric = async(lyric: string, translation = '', romalrc = '') => {
   lrcSetLyric(lyric, translation, romalrc)
   await setDesktopLyric(lyric, translation, romalrc)
+  if (lyric) void setSuperLyric(lyric, translation, romalrc)
+  else void clearSuperLyric()
   if (settingState.setting['player.isShowBluetoothFullLyric']) {
     void updateNowPlayingTitles({
       lyric,

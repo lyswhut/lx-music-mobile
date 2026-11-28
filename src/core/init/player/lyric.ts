@@ -1,6 +1,7 @@
 import { init as initLyricPlayer, toggleTranslation, toggleRoma, play, pause, stop, setLyric, setPlaybackRate } from '@/core/lyric'
 import { updateSetting } from '@/core/common'
 import { onDesktopLyricPositionChange, showDesktopLyric, onLyricLinePlay, showRemoteLyric } from '@/core/desktopLyric'
+import { setSuperLyricEnabled } from '@/core/superLyric'
 import playerState from '@/store/player/state'
 import { updateNowPlayingTitles } from '@/plugins/player/utils'
 import { setLastLyric } from '@/core/player/playInfo'
@@ -38,6 +39,11 @@ export default async(setting: LX.AppSetting) => {
   if (setting['player.isShowBluetoothLyric']) {
     showRemoteLyric(true).catch(() => {
       updateSetting({ 'player.isShowBluetoothLyric': false })
+    })
+  }
+  if (setting['player.isShowSuperLyric']) {
+    void setSuperLyricEnabled(true).catch((err) => {
+      console.log(err)
     })
   }
   onDesktopLyricPositionChange(position => {

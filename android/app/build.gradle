@@ -117,6 +117,14 @@ android {
         versionName verName
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = '21'
+    }
+
     splits {
         abi {
             reset()
@@ -191,6 +199,11 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
     implementation("com.facebook.react:flipper-integration")
+    // SuperLyric lyric publish API (JitPack repository is added by the React Native Gradle plugin).
+    implementation('com.github.HChenX:SuperLyricApi:4.0') {
+        // SuperLyricApi is built with Kotlin 2.2; keep the project's Kotlin 1.9 stdlib.
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+    }
     // implementation "androidx.javascriptengine:javascriptengine:1.0.0-alpha07"
     // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation 'wang.harlon.quickjs:wrapper-android:2.4.0'
@@ -203,3 +216,16 @@ dependencies {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+
+// SuperLyricApi 4.0 is compiled with Java 21 bytecode. Only the app module needs Java 21;
+// this callback is registered after React Native's Java 17 alignment and overrides it.
+androidComponents {
+    finalizeDsl { extension ->
+        extension.compileOptions.sourceCompatibility = JavaVersion.VERSION_21
+        extension.compileOptions.targetCompatibility = JavaVersion.VERSION_21
+    }
+}
+
+kotlin {
+    jvmToolchain(21)
+}

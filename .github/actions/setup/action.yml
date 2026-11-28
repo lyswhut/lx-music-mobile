@@ -13,7 +13,7 @@ runs:
       uses: actions/setup-java@v4
       with:
         distribution: 'microsoft'
-        java-version: '17'
+        java-version: '21'
         cache: gradle
 
     - name: Get npm cache directory
